@@ -1,0 +1,144 @@
+name: Sync Documentation and Deploy
+
+on:
+  # Run daily at 2 AM UTC
+  schedule:
+    - cron: '0 2 * * *'
+
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      skip_discovery:
+        description: 'Skip repository discovery'
+        required: false
+        type: boolean
+        default: false
+      clean_build:
+        description: 'Clean build (remove cache)'
+        required: false
+        type: boolean
+        default: false
+
+  # Run on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'scripts/**'
+      - 'config/**'
+      - '.github/workflows/**'
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  sync-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Setup Nushell
+        uses: hustcer/setup-nu@v3
+        with:
+          version: '*'
+
+      - name: Authenticate GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          gh auth status
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.nu
+
+      - name: Discover repositories
+        if: ${{ !inputs.skip_discovery }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: nu scripts/discover-repos.nu --org raibid-labs --verbose
+
+      - name: Sync submodules
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          nu scripts/sync-submodules.nu --verbose
+
+      - name: Update documentation
+        run: nu scripts/update-docs.nu --generate-index --verbose
+
+      - name: Commit submodule changes
+        run: |
+          git add .gitmodules docs/content/projects
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update documentation submodules [skip ci]" || echo "No changes to commit"
+            git push || echo "No changes to push"
+          else
+            echo "No submodule changes to commit"
+          fi
+
+      - name: Clean build cache
+        if: ${{ inputs.clean_build }}
+        run: |
+          rm -rf public .quartz-cache
+
+      - name: Build with Quartz
+        run: npx quartz build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: sync-and-build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  notify:
+    needs: [sync-and-build, deploy]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Report status
+        run: |
+          if [ "${{ needs.sync-and-build.result }}" = "success" ] && [ "${{ needs.deploy.result }}" = "success" ]; then
+            echo "✅ Documentation sync and deployment completed successfully"
+          else
+            echo "❌ Documentation sync or deployment failed"
+            exit 1
+          fi
