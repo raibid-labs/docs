@@ -29,11 +29,9 @@ on:
       - 'config/**'
       - '.github/workflows/**'
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Sets permissions of the GITHUB_TOKEN
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 # Allow only one concurrent deployment
 concurrency:
@@ -41,7 +39,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  sync-and-build:
+  sync-build-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -110,35 +108,18 @@ jobs:
       - name: Build with Quartz
         run: npx quartz build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./public
-
-  deploy:
-    needs: sync-and-build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  notify:
-    needs: [sync-and-build, deploy]
-    runs-on: ubuntu-latest
-    if: always()
-
-    steps:
-      - name: Report status
+      - name: Deploy to gh-pages
         run: |
-          if [ "${{ needs.sync-and-build.result }}" = "success" ] && [ "${{ needs.deploy.result }}" = "success" ]; then
-            echo "✅ Documentation sync and deployment completed successfully"
-          else
-            echo "❌ Documentation sync or deployment failed"
-            exit 1
-          fi
+          cd public
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Deploy documentation - $(date +'%Y-%m-%d %H:%M:%S')"
+          git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:gh-pages
+
+      - name: Report status
+        if: success()
+        run: |
+          echo "✅ Documentation sync and deployment completed successfully"
+          echo "🌐 Site will be available at: https://raibid-labs.github.io/docs"
