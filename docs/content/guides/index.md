@@ -10,7 +10,14 @@ Welcome to the raibid-labs guides section. Here you'll find tutorials, how-to gu
 
 ## 📚 Available Guides
 
-*Guides will be added here as they are created.*
+### Getting Started
+- [[getting-started|Getting Started with Raibid Labs]] - Introduction to the raibid-labs ecosystem
+- [[quartz-setup|Quartz Setup Guide]] - Setting up and configuring Quartz for documentation
+- [[obsidian-usage|Using Obsidian]] - Working with this repository as an Obsidian vault
+
+### Private Documentation
+- [[private-docs-setup|Private Documentation Setup]] - Creating a companion internal docs repository
+- [[public-vs-private-comparison|Public vs Private Comparison]] - Understanding the two-repo approach
 
 ## 🎯 Guide Categories
 
