@@ -10,7 +10,9 @@ This section contains documentation aggregated from all active raibid-labs repos
 
 ## Active Projects
 
-- [[raibid-cli/index|Raibid cli]]
+- [[bevy-mcp-ref/index|Bevy mcp-ref]]
+- [[raibid-ci/index|Raibid ci]]
+- [[tauri-ref/index|Tauri ref]]
 
 ## Navigation
 
@@ -20,7 +22,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-10-29 20:06:59
+**Last Updated**: 2025-11-03 17:51:23
 
 ---
 
