@@ -12,7 +12,7 @@
 
 def main [
     --input: string = "discovered-repos.json"  # Input file from discover-repos.nu
-    --target: string = "docs/content/projects"  # Target directory for submodules
+    --target: string = "content/projects"  # Target directory for submodules
     --dry-run  # Show what would be done without making changes
     --verbose  # Enable verbose logging
 ] {

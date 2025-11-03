@@ -11,7 +11,7 @@
 #   Updated content directory with organized docs
 
 def main [
-    --source: string = "docs/content/projects"  # Submodules directory
+    --source: string = "content/projects"  # Submodules directory
     --verbose  # Enable verbose logging
     --generate-index  # Generate index.md files for each project
 ] {
