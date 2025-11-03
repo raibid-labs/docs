@@ -60,12 +60,10 @@ jobs:
         with:
           version: '*'
 
-      - name: Authenticate GitHub CLI
+      - name: Verify GitHub CLI authentication
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-          gh auth status
+        run: gh auth status
 
       - name: Install dependencies
         run: npm ci || npm install
