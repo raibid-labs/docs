@@ -93,6 +93,11 @@ def main [
         }
     }
 
+    # Stage .gitmodules changes before removing stale submodules
+    if not ($dry_run) and ($added > 0) {
+        git add .gitmodules
+    }
+
     # Identify and remove stale submodules
     let discovered_paths = $discovered | each {|repo| $"($target)/($repo.name)" }
     let stale = $existing_submodules | where {|sm|
