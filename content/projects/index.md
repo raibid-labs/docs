@@ -10,6 +10,7 @@ This section contains documentation aggregated from all active raibid-labs repos
 
 ## Active Projects
 
+- [[ardour-mcp/index|Ardour mcp]]
 - [[bevy-mcp-ref/index|Bevy mcp-ref]]
 - [[osai/index|Osai]]
 - [[raibid-ci/index|Raibid ci]]
@@ -23,7 +24,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-11-04 03:07:42
+**Last Updated**: 2025-11-05 03:08:54
 
 ---
 
