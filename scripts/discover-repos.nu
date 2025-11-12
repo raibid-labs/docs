@@ -35,7 +35,8 @@ def main [
         archived: .archived,
         private: .private,
         default_branch: .default_branch,
-        updated_at: .updated_at
+        updated_at: .updated_at,
+        pushed_at: .pushed_at
     }' | lines | each { |line| $line | from json }
 
     if ($verbose) {
@@ -82,8 +83,8 @@ def main [
 
     print $"✅ ($filtered | length) repositories passed filters"
 
-    # Check for docs directory in each repository
-    print "📁 Checking for /docs directories..."
+    # Check for docs directory and collect version info
+    print "📁 Checking for /docs directories and version info..."
     let with_docs = $filtered | each {|repo|
         let has_docs = (
             gh api $"/repos/($repo.full_name)/contents/docs"
@@ -91,12 +92,47 @@ def main [
             | get exit_code
         ) == 0
 
+        # Get latest release/tag info
+        let latest_release = (
+            gh api $"/repos/($repo.full_name)/releases/latest"
+            | complete
+            | if ($in.exit_code == 0) {
+                $in.stdout | from json | select tag_name name published_at
+            } else {
+                null
+            }
+        )
+
+        # Get latest tag if no release
+        let latest_tag = if ($latest_release == null) {
+            (
+                gh api $"/repos/($repo.full_name)/tags" --jq '.[0].name'
+                | complete
+                | if ($in.exit_code == 0) { $in.stdout | str trim } else { null }
+            )
+        } else {
+            null
+        }
+
+        let version_info = {
+            latest_release: $latest_release,
+            latest_tag: $latest_tag,
+            last_updated: $repo.updated_at,
+            last_push: $repo.pushed_at
+        }
+
         if ($has_docs) {
             if ($verbose) { print $"   ✓ ($repo.name): Has /docs directory" }
-            $repo | insert has_docs true | insert docs_path "docs"
+            $repo
+            | insert has_docs true
+            | insert docs_path "docs"
+            | insert version_info $version_info
         } else {
             if ($verbose) { print $"   ✗ ($repo.name): No /docs directory" }
-            $repo | insert has_docs false | insert docs_path null
+            $repo
+            | insert has_docs false
+            | insert docs_path null
+            | insert version_info $version_info
         }
     }
 

@@ -19,6 +19,10 @@ on:
         type: boolean
         default: false
 
+  # Trigger from other raibid-labs repositories
+  repository_dispatch:
+    types: [docs-updated, release-published]
+
   # Run on push to main branch
   push:
     branches:
@@ -121,3 +125,7 @@ jobs:
         run: |
           echo "✅ Documentation sync and deployment completed successfully"
           echo "🌐 Site will be available at: https://raibid-labs.github.io/docs"
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "🔔 Triggered by: ${{ github.event.client_payload.repository }}"
+            echo "📦 Event type: ${{ github.event.action }}"
+          fi

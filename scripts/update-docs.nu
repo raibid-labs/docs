@@ -17,6 +17,13 @@ def main [
 ] {
     print "📚 Updating documentation from submodules..."
 
+    # Load discovered repos metadata if available
+    let repos_metadata = if ("discovered-repos.json" | path exists) {
+        open discovered-repos.json
+    } else {
+        []
+    }
+
     # Update all submodules to latest
     print "🔄 Pulling latest changes from all submodules..."
     git submodule update --remote --merge | complete
@@ -40,6 +47,9 @@ def main [
         let project_path = $"($source)/($project)"
         let docs_path = $"($project_path)/docs"
 
+        # Find metadata for this project
+        let metadata = $repos_metadata | where {|r| $r.name == $project } | first
+
         if ($docs_path | path exists) {
             print $"✓ Processing: ($project)"
 
@@ -48,7 +58,7 @@ def main [
                 let index_path = $"($docs_path)/index.md"
                 if not ($index_path | path exists) {
                     if ($verbose) { print $"   📝 Generating index for ($project)" }
-                    generate_project_index $project $docs_path
+                    generate_project_index $project $docs_path $metadata
                 }
             }
 
@@ -83,7 +93,7 @@ def main [
 }
 
 # Generate index.md for a project
-def generate_project_index [project: string, docs_path: string] {
+def generate_project_index [project: string, docs_path: string, metadata: record] {
     let index_path = $"($docs_path)/index.md"
 
     # Try to get project info from git
@@ -91,9 +101,32 @@ def generate_project_index [project: string, docs_path: string] {
         | complete
         | if ($in.exit_code == 0) { $in.stdout | str trim } else { "" }
 
-    let last_updated = git -C $docs_path log -1 --format="%ai"
+    let last_commit_date = git -C $docs_path log -1 --format="%ai"
         | complete
         | if ($in.exit_code == 0) { $in.stdout | str trim } else { "Unknown" }
+
+    # Extract version information
+    let version_badge = if ($metadata != null and $metadata.version_info != null) {
+        let vi = $metadata.version_info
+        if ($vi.latest_release != null) {
+            let tag = $vi.latest_release.tag_name
+            let date = $vi.latest_release.published_at | split row 'T' | first
+            $"**Latest Release**: [($tag)](($repo_url)/releases/tag/($tag)) (($date))"
+        } else if ($vi.latest_tag != null) {
+            $"**Latest Tag**: ($vi.latest_tag)"
+        } else {
+            ""
+        }
+    } else {
+        ""
+    }
+
+    let last_push = if ($metadata != null and $metadata.version_info != null) {
+        let push_date = $metadata.version_info.last_push | split row 'T' | first
+        $"**Last Push**: ($push_date)"
+    } else {
+        ""
+    }
 
     # Get list of markdown files
     let docs = ls $docs_path
@@ -116,6 +149,13 @@ def generate_project_index [project: string, docs_path: string] {
     # Build repository line
     let repo_line = if ($repo_url != "") { $"**Repository**: ($repo_url)" } else { "" }
 
+    # Build version section
+    let version_section = if ($version_badge != "") {
+        [$"\n## Version Information\n" $version_badge $last_push] | str join "\n"
+    } else {
+        ""
+    }
+
     let content = [$"---
 title: ($project)
 description: Documentation for ($project)
@@ -129,7 +169,9 @@ tags: [project, ($project)]
 Documentation for the ($project) project from raibid-labs.
 
 ($repo_line)
-**Last Updated**: ($last_updated)
+($version_section)
+
+**Last Commit**: ($last_commit_date)
 
 ## Documentation
 

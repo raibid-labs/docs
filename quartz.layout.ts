@@ -8,8 +8,8 @@ export const sharedPageComponents: SharedLayout = {
   afterBody: [],
   footer: Component.Footer({
     links: {
-      GitHub: "https://github.com/jackyzha0/quartz",
-      "Discord Community": "https://discord.gg/cRFFHYye7t",
+      "Raibid Labs": "https://github.com/raibid-labs",
+      "Documentation Hub": "https://github.com/raibid-labs/docs",
     },
   }),
 }
@@ -22,6 +22,7 @@ export const defaultContentPageLayout: PageLayout = {
       condition: (page) => page.fileData.slug !== "index",
     }),
     Component.ArticleTitle(),
+    Component.VersionBadge(),
     Component.ContentMeta(),
     Component.TagList(),
   ],
