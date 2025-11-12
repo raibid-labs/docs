@@ -11,6 +11,7 @@ This section contains documentation aggregated from all active raibid-labs repos
 ## Active Projects
 
 - [[ardour-mcp/index|Ardour mcp]]
+- [[bevy-mcp-ratatui-ref/index|Bevy mcp-ratatui-ref]]
 - [[bevy-mcp-ref/index|Bevy mcp-ref]]
 - [[dgx-music/index|Dgx music]]
 - [[dgx-pixels/index|Dgx pixels]]
@@ -18,6 +19,7 @@ This section contains documentation aggregated from all active raibid-labs repos
 - [[osai/index|Osai]]
 - [[raibid-ci/index|Raibid ci]]
 - [[tauri-ref/index|Tauri ref]]
+- [[webatui-ref/index|Webatui ref]]
 
 ## Navigation
 
@@ -27,7 +29,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-11-11 03:10:55
+**Last Updated**: 2025-11-12 03:09:46
 
 ---
 
