@@ -53,13 +53,18 @@ def main [
         if ($docs_path | path exists) {
             print $"✓ Processing: ($project)"
 
-            # Generate index.md if requested and doesn't exist
-            if ($generate_index) {
+            # Check if this is a git submodule - don't generate index inside submodules
+            let is_submodule = ($"($project_path)/.git" | path exists)
+
+            # Generate index.md if requested, doesn't exist, and not a submodule
+            if ($generate_index and not $is_submodule) {
                 let index_path = $"($docs_path)/index.md"
                 if not ($index_path | path exists) {
                     if ($verbose) { print $"   📝 Generating index for ($project)" }
                     generate_project_index $project $docs_path $metadata
                 }
+            } else if ($generate_index and $is_submodule) {
+                if ($verbose) { print $"   ⏭️  Skipping index generation (submodule)" }
             }
 
             # Validate markdown files
