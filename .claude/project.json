@@ -1,0 +1,155 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../templates/repo-types/typescript-docs.json",
+  "description": "Raibid Labs documentation site built with Quartz - digital garden publishing platform",
+
+  "project": {
+    "name": "raibid-labs-docs",
+    "type": "typescript-docs",
+    "description": "Raibid Labs documentation site - Quartz-powered digital garden with submodule integration",
+    "repository": "https://github.com/raibid-labs/docs"
+  },
+
+  "language": {
+    "primary": "typescript",
+    "secondary": ["javascript", "markdown", "nushell"]
+  },
+
+  "buildCommands": {
+    "build": "npm run build",
+    "test": "npm test",
+    "lint": "npm run check",
+    "format": "npm run format",
+    "dev": "npm run dev",
+    "serve": "npm run dev",
+    "discover": "npm run discover",
+    "sync": "npm run sync",
+    "update": "npm run update",
+    "pipeline": "npm run pipeline"
+  },
+
+  "contextFiles": [
+    "package.json",
+    "tsconfig.json",
+    "quartz.config.ts",
+    "quartz.layout.ts",
+    "README.md",
+    "CLAUDE.md",
+    "INTEGRATION.md",
+    "content/**/*.md",
+    "scripts/*.nu"
+  ],
+
+  "fileStructure": {
+    "content/": "Markdown documentation content",
+    "quartz/": "Quartz static site generator core",
+    "scripts/": "Nushell automation scripts (discover, sync, update)",
+    "docs/": "Additional documentation",
+    "config/": "Configuration files"
+  },
+
+  "framework": {
+    "quartz": {
+      "version": "4.5.2",
+      "features": [
+        "Digital garden publishing",
+        "Obsidian-compatible",
+        "Git submodule integration",
+        "Automated repository discovery",
+        "Content synchronization",
+        "Dark mode support",
+        "Full-text search",
+        "Graph visualization"
+      ],
+      "automationScripts": {
+        "discover": "scripts/discover-repos.nu - Discover organization repositories",
+        "sync": "scripts/sync-submodules.nu - Sync git submodules",
+        "update": "scripts/update-docs.nu - Update documentation index",
+        "pipeline": "scripts/build-site.nu - Full build pipeline"
+      }
+    }
+  },
+
+  "tools": {
+    "packageManager": "npm",
+    "nodejs": ">=10.9.2",
+    "typescript": "^5.7.2",
+    "nushell": {
+      "version": "latest",
+      "usage": "Cross-platform automation scripts for repository management"
+    },
+    "quartz": {
+      "version": "4.5.2",
+      "cli": "./quartz/bootstrap-cli.mjs"
+    }
+  },
+
+  "rules": {
+    "typescript": [
+      "Follow Quartz configuration patterns",
+      "Use TypeScript for config files",
+      "Maintain strict type checking"
+    ],
+    "documentation": [
+      "Write clear, concise content in markdown",
+      "Use Obsidian-compatible formatting",
+      "Include frontmatter metadata",
+      "Link related documents",
+      "Keep navigation logical",
+      "Update index when adding content"
+    ],
+    "automation": [
+      "Use Nushell scripts for cross-platform automation",
+      "Run discover script to find new repositories",
+      "Sync submodules regularly",
+      "Update documentation index after content changes",
+      "Use pipeline script for full builds"
+    ],
+    "submodules": [
+      "Content is managed via git submodules",
+      "Each repository becomes a submodule under content/",
+      "Sync script handles submodule updates",
+      "Discover script finds new repositories to add"
+    ]
+  },
+
+  "workflows": {
+    "setup": [
+      "npm install",
+      "npm run discover - Find repositories",
+      "npm run sync - Initialize submodules"
+    ],
+    "development": [
+      "npm run dev - Start dev server with hot reload",
+      "npm run update - Update documentation index",
+      "npm run sync - Sync repository content",
+      "npm run check - Lint and type check"
+    ],
+    "content": [
+      "npm run discover - Discover new repositories",
+      "npm run sync - Sync all submodule content",
+      "npm run update -- --generate-index - Regenerate index",
+      "npm run pipeline - Full build and deployment pipeline"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "npm run check",
+      "npm run build"
+    ],
+    "deployment": {
+      "branch": "v4",
+      "trigger": "push to main branch",
+      "preview": "Deploy preview for pull requests"
+    }
+  },
+
+  "documentation": {
+    "readme": "Installation, development, and automation workflow",
+    "claude": "CLAUDE.md - AI assistant integration guide",
+    "integration": "INTEGRATION.md - Submodule and automation details"
+  }
+}
