@@ -13,6 +13,7 @@ This section contains documentation aggregated from all active raibid-labs repos
 - [[ardour-mcp/index|Ardour mcp]]
 - [[dgx-music/index|Dgx music]]
 - [[dgx-pixels/index|Dgx pixels]]
+- [[dgx-spark-mcp/index|Dgx spark-mcp]]
 - [[fsrs/index|Fsrs]]
 - [[grimware/index|Grimware]]
 - [[mop/index|Mop]]
@@ -30,7 +31,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-11-14 04:56:09
+**Last Updated**: 2025-11-14 14:10:58
 
 ---
 
