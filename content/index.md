@@ -12,6 +12,7 @@ This is the central documentation hub for the **raibid-labs** organization. Here
 
 - [[content/projects/index|Projects Overview]] - Browse all project documentation
 - [[content/guides/index|Guides]] - Tutorials and how-to guides
+- [[content/blog/index|Development Blog]] - Automated activity reports from Sparky
 - Search - Use the search bar above to find specific topics
 
 ## 📚 What's Inside
@@ -31,6 +32,7 @@ This documentation hub automatically aggregates content from all public reposito
 ```
 📁 Projects         → Documentation from individual repositories
 📁 Guides          → Cross-project tutorials and guides
+📁 Blog            → Automated development activity reports (Sparky)
 ```
 
 ## 🔄 Updates
