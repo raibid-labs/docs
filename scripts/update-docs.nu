@@ -64,7 +64,7 @@ def main [
                     generate_project_index $project $docs_path $metadata
                 }
             } else if ($generate_index and $is_submodule) {
-                if ($verbose) { print $"   ⏭️  Skipping index generation (submodule)" }
+                if ($verbose) { print "   ⏭️  Skipping index generation (submodule)" }
             }
 
             # Validate markdown files
