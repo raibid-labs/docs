@@ -1,0 +1,159 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for Rust service repositories (grimware, raibid-ci pattern)",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "rust-service",
+    "description": "Rust-based service or infrastructure tool",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "rust",
+    "secondary": ["nushell", "dockerfile"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "dev": "just dev",
+    "check": "just check",
+    "clippy": "cargo clippy --all-targets --all-features -- -D warnings",
+    "doc": "cargo doc --no-deps --open"
+  },
+
+  "contextFiles": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "Justfile",
+    "README.md",
+    "CONTRIBUTING.md",
+    "src/lib.rs",
+    "src/main.rs"
+  ],
+
+  "fileStructure": {
+    "src/": "Rust source code",
+    "tests/": "Integration tests",
+    "benches/": "Benchmarks",
+    "examples/": "Example usage",
+    "scripts/": "Nushell automation scripts",
+    "docker/": "Docker configurations"
+  },
+
+  "tools": {
+    "cargo": {
+      "version": "latest stable",
+      "features": ["clippy", "rustfmt", "cargo-watch", "cargo-nextest"]
+    },
+    "just": {
+      "version": "latest",
+      "justfile": "Required - defines standard build tasks"
+    },
+    "nushell": {
+      "version": "latest",
+      "usage": "Cross-platform scripting and automation"
+    },
+    "docker": {
+      "baseImage": "rust:alpine",
+      "multiStage": true
+    }
+  },
+
+  "rules": {
+    "rust": [
+      "Follow Rust API Guidelines (https://rust-lang.github.io/api-guidelines/)",
+      "Run clippy with -D warnings (deny all warnings)",
+      "Use rustfmt with default settings",
+      "Write comprehensive doc comments for public APIs",
+      "Prefer Result<T, E> over panicking",
+      "Use #[must_use] for important return values",
+      "Keep unsafe blocks minimal and well-documented"
+    ],
+    "testing": [
+      "Unit tests in same file as implementation (mod tests)",
+      "Integration tests in tests/ directory",
+      "Use cargo-nextest for faster test execution",
+      "Benchmark performance-critical code",
+      "Test error cases and edge conditions"
+    ],
+    "dependencies": [
+      "Minimize dependencies - evaluate carefully",
+      "Prefer well-maintained crates",
+      "Document why each dependency is needed",
+      "Keep Cargo.lock in version control",
+      "Run cargo audit regularly"
+    ]
+  },
+
+  "mcpServers": {
+    "rust-analyzer": {
+      "command": "rust-analyzer",
+      "description": "Rust language server for enhanced IDE features"
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "rustup default stable",
+      "rustup component add clippy rustfmt",
+      "cargo install cargo-nextest cargo-audit",
+      "just setup"
+    ],
+    "development": [
+      "just dev - Start development server with hot reload",
+      "just test - Run all tests",
+      "just check - Type check without building",
+      "just clippy - Lint code"
+    ],
+    "ci": [
+      "just ci - Run full CI pipeline locally",
+      "Includes: format check, clippy, tests, audit"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "cargo fmt --check",
+      "cargo clippy -- -D warnings",
+      "cargo test --all-features",
+      "cargo audit",
+      "cargo build --release"
+    ],
+    "dockerBuild": true,
+    "releaseAutomation": true
+  },
+
+  "documentation": {
+    "readme": "Include installation, usage, examples",
+    "contributing": "Rust-specific contribution guidelines",
+    "architecture": "Document module structure and design decisions",
+    "api": "Comprehensive rustdoc for public APIs"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for Rust projects",
+    "tasks": {
+      "default": "list",
+      "build": "cargo build",
+      "release": "cargo build --release",
+      "test": "cargo nextest run",
+      "check": "cargo check --all-targets --all-features",
+      "clippy": "cargo clippy --all-targets --all-features -- -D warnings",
+      "fmt": "cargo fmt",
+      "fmt-check": "cargo fmt --check",
+      "audit": "cargo audit",
+      "ci": "just fmt-check && just clippy && just test && just audit",
+      "dev": "cargo watch -x run",
+      "doc": "cargo doc --no-deps --open",
+      "clean": "cargo clean",
+      "setup": "rustup component add clippy rustfmt && cargo install cargo-nextest cargo-audit"
+    }
+  }
+}

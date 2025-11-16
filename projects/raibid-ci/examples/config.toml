@@ -1,0 +1,73 @@
+# raibid-cli Example Configuration (TOML format)
+# ===============================================
+
+[cluster]
+name = "dgx-spark-ci"
+namespace = "raibid-ci"
+kubeconfig = "~/.kube/config"
+
+[api]
+host = "localhost"
+port = 8080
+timeout_seconds = 30
+
+[agents]
+min_count = 0
+max_count = 8
+idle_timeout_minutes = 5
+image = "raibid/rust-builder:latest"
+
+[agents.resources]
+cpu = "2"
+memory = "4Gi"
+
+[agents.limits]
+cpu = "4"
+memory = "8Gi"
+
+[gitea]
+url = "http://gitea.raibid-ci.svc.cluster.local:3000"
+admin_user = "admin"
+org_name = "mirrored"
+
+[gitea.registry]
+enabled = true
+url = "http://gitea.raibid-ci.svc.cluster.local:5000"
+
+[redis]
+url = "redis://redis.raibid-ci.svc.cluster.local:6379"
+stream_name = "ci-jobs"
+consumer_group = "ci-workers"
+max_stream_length = 10000
+
+[keda]
+polling_interval = 30
+cooldown_period = 300
+jobs_per_agent = 2
+
+[flux]
+repository_url = "http://gitea.raibid-ci.svc.cluster.local:3000/admin/flux-config.git"
+branch = "main"
+path = "clusters/dgx-spark"
+sync_interval_minutes = 1
+
+[tui]
+refresh_interval_ms = 1000
+panel_proportions = [70, 15, 15]
+theme = "dark"
+mouse_enabled = true
+
+[logging]
+level = "info"
+format = "text"
+
+[mirrors]
+default_sync_interval = 60
+auto_sync_enabled = true
+
+[cache]
+enabled = true
+backend = "local"
+path = "/var/cache/raibid"
+max_size_gb = 100
+retention_days = 30

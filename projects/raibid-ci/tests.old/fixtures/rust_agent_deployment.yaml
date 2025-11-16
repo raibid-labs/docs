@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-agent
+  namespace: raibid-ci
+  labels:
+    app: rust-agent
+    agent-type: rust
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rust-agent
+  template:
+    metadata:
+      labels:
+        app: rust-agent
+        agent-type: rust
+    spec:
+      containers:
+      - name: rust-agent
+        image: raibid/rust-agent:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: REDIS_HOST
+          value: redis.raibid-ci.svc.cluster.local
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_STREAM
+          value: build-jobs
+        - name: CACHE_PATH
+          value: /cache
+        - name: RUST_LOG
+          value: info
+        resources:
+          requests:
+            cpu: "2"
+            memory: 4Gi
+          limits:
+            cpu: "4"
+            memory: 8Gi
+        volumeMounts:
+        - name: cache
+          mountPath: /cache
+      volumes:
+      - name: cache
+        persistentVolumeClaim:
+          claimName: rust-agent-cache
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rust-agent
+  namespace: raibid-ci
+spec:
+  selector:
+    app: rust-agent
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: http
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rust-agent-cache
+  namespace: raibid-ci
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: local-path

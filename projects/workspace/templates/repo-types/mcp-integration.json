@@ -1,0 +1,227 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for Model Context Protocol (MCP) server development",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "mcp-server",
+    "description": "MCP server integration for {{INTEGRATION_TARGET}}",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "python",
+    "secondary": ["typescript", "json"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "dev": "just dev",
+    "mcp-inspect": "just mcp-inspect"
+  },
+
+  "contextFiles": [
+    "pyproject.toml",
+    "README.md",
+    "src/{{package_name}}/__init__.py",
+    "src/{{package_name}}/server.py",
+    "tests/test_server.py"
+  ],
+
+  "fileStructure": {
+    "src/{{package_name}}/": "Main server implementation",
+    "src/{{package_name}}/server.py": "MCP server entry point",
+    "src/{{package_name}}/tools.py": "Tool implementations",
+    "src/{{package_name}}/resources.py": "Resource implementations (optional)",
+    "src/{{package_name}}/prompts.py": "Prompt implementations (optional)",
+    "tests/": "Pytest test suite",
+    "examples/": "Usage examples",
+    "docs/": "Documentation"
+  },
+
+  "mcpConcepts": {
+    "tools": "Functions that Claude can call to perform actions",
+    "resources": "Data that Claude can access (files, APIs, databases)",
+    "prompts": "Pre-configured prompt templates",
+    "sampling": "LLM sampling capabilities (optional)"
+  },
+
+  "tools": {
+    "packageManager": "uv",
+    "python": ">=3.10",
+    "framework": "mcp",
+    "dependencies": [
+      "mcp>=1.0.0",
+      "pydantic>=2.0.0",
+      "httpx (for API calls)",
+      "aiofiles (for async file operations)"
+    ],
+    "testing": {
+      "pytest": ">=8.0.0",
+      "pytest-asyncio": "For async tests",
+      "pytest-mock": "For mocking",
+      "mcp-test-utils": "MCP-specific testing utilities"
+    }
+  },
+
+  "rules": {
+    "mcp": [
+      "All tools must have comprehensive docstrings",
+      "Use type hints for all parameters and return values",
+      "Implement proper error handling with descriptive messages",
+      "Tools should be atomic and focused",
+      "Validate all inputs with Pydantic",
+      "Return structured data (not plain strings)",
+      "Use async/await for I/O operations",
+      "Implement timeouts for external calls"
+    ],
+    "python": [
+      "Follow MCP Python SDK conventions",
+      "Use async def for all tool implementations",
+      "Type all function parameters and returns",
+      "Use Pydantic models for complex parameters",
+      "Handle exceptions gracefully",
+      "Log important operations",
+      "Document expected environment variables"
+    ],
+    "testing": [
+      "Test each tool independently",
+      "Mock external API calls",
+      "Test error conditions",
+      "Verify parameter validation",
+      "Test async behavior",
+      "Include integration tests",
+      "Aim for >90% coverage"
+    ],
+    "security": [
+      "Never log secrets or credentials",
+      "Validate and sanitize all inputs",
+      "Use environment variables for configuration",
+      "Implement rate limiting where appropriate",
+      "Document security considerations",
+      "Use HTTPS for external calls"
+    ]
+  },
+
+  "mcpServerStructure": {
+    "initialization": "Set up server instance with metadata",
+    "toolRegistration": "Register all available tools with schemas",
+    "resourceRegistration": "Register resources (if applicable)",
+    "promptRegistration": "Register prompts (if applicable)",
+    "errorHandling": "Implement global error handlers",
+    "logging": "Configure structured logging"
+  },
+
+  "workflows": {
+    "setup": [
+      "uv venv",
+      "source .venv/bin/activate",
+      "uv pip install -e '.[dev]'",
+      "just setup"
+    ],
+    "development": [
+      "just dev - Run MCP server in development mode",
+      "just mcp-inspect - Inspect server capabilities",
+      "just test - Run test suite",
+      "just lint - Check code quality"
+    ],
+    "testing": [
+      "just test-unit - Unit tests only",
+      "just test-integration - Integration tests",
+      "just test-coverage - Generate coverage report"
+    ],
+    "distribution": [
+      "just build - Build distribution packages",
+      "just publish - Publish to PyPI"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "ruff check .",
+      "mypy src/",
+      "pytest tests/ --cov=src --cov-report=xml",
+      "MCP server validation"
+    ],
+    "publishing": {
+      "pypi": "Automated on version tags",
+      "npm": "If TypeScript bindings included"
+    }
+  },
+
+  "documentation": {
+    "readme": "Include installation, configuration, available tools, examples",
+    "contributing": "MCP development guidelines",
+    "toolDocumentation": "Comprehensive docs for each tool",
+    "examples": "Real-world usage examples",
+    "troubleshooting": "Common issues and solutions"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for MCP projects",
+    "tasks": {
+      "default": "list",
+      "setup": "uv pip install -e '.[dev]'",
+      "dev": "python -m {{package_name}}",
+      "test": "pytest tests/ -v",
+      "test-unit": "pytest tests/unit/ -v",
+      "test-integration": "pytest tests/integration/ -v",
+      "test-coverage": "pytest tests/ --cov=src --cov-report=html --cov-report=term",
+      "lint": "ruff check . && mypy src/",
+      "fmt": "ruff format .",
+      "mcp-inspect": "mcp dev src/{{package_name}}/server.py",
+      "build": "uv build",
+      "publish": "uv publish",
+      "clean": "rm -rf dist/ build/ *.egg-info .pytest_cache .mypy_cache .ruff_cache"
+    }
+  },
+
+  "exampleToolImplementation": {
+    "comment": "Example MCP tool structure",
+    "code": "from mcp.server import Server\nfrom pydantic import BaseModel, Field\n\nclass ToolInput(BaseModel):\n    \"\"\"Input schema for the tool.\"\"\"\n    param1: str = Field(description=\"Description of param1\")\n    param2: int = Field(default=10, description=\"Description of param2\")\n\n@server.tool()\nasync def example_tool(input: ToolInput) -> str:\n    \"\"\"Tool description that Claude will see.\n    \n    This should explain what the tool does and when to use it.\n    \"\"\"\n    # Validate and process input\n    # Perform the operation\n    # Return structured result\n    return {\"result\": \"success\", \"data\": ...}"
+  },
+
+  "exampleServerSetup": {
+    "comment": "Example MCP server setup",
+    "code": "from mcp.server import Server\nfrom mcp.server.stdio import stdio_server\n\nserver = Server(\"example-server\")\n\n# Register tools\n# Register resources\n# Register prompts\n\nasync def main():\n    async with stdio_server() as (read_stream, write_stream):\n        await server.run(\n            read_stream,\n            write_stream,\n            server.create_initialization_options()\n        )\n\nif __name__ == \"__main__\":\n    import asyncio\n    asyncio.run(main())"
+  },
+
+  "integration": {
+    "claudeDesktop": {
+      "config": "~/.config/claude/config.json (Linux/Mac) or %APPDATA%/Claude/config.json (Windows)",
+      "example": {
+        "mcpServers": {
+          "{{server_name}}": {
+            "command": "uv",
+            "args": ["--directory", "/path/to/server", "run", "{{package_name}}"],
+            "env": {
+              "API_KEY": "${API_KEY}"
+            }
+          }
+        }
+      }
+    },
+    "claudeCLI": {
+      "command": "claude mcp add {{server_name}} uv --directory /path/to/server run {{package_name}}"
+    }
+  },
+
+  "bestPractices": [
+    "Keep tools focused and single-purpose",
+    "Use descriptive names for tools and parameters",
+    "Provide comprehensive docstrings",
+    "Validate all inputs thoroughly",
+    "Return structured, parseable data",
+    "Handle errors gracefully with helpful messages",
+    "Implement proper logging for debugging",
+    "Test thoroughly including error cases",
+    "Document all configuration options",
+    "Version your server API"
+  ]
+}

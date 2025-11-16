@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="architecture"/><meta name="twitter:description" content="Sparky Architecture Version: 1.0 Date: 2025-11-12 Status: Design Phase Overview Sparky is an AI-powered automation system that monitors git activity across all raibid-labs repositories, generates intelligent summaries, and produces engaging content for blogs and social media."/><meta property="og:description" content="Sparky Architecture Version: 1.0 Date: 2025-11-12 Status: Design Phase Overview Sparky is an AI-powered automation system that monitors git activity across all raibid-labs repositories, generates intelligent summaries, and produces engaging content for blogs and social media."/><meta property="og:image:alt" content="Sparky Architecture Version: 1.0 Date: 2025-11-12 Status: Design Phase Overview Sparky is an AI-powered automation system that monitors git activity across all raibid-labs repositories, generates intelligent summaries, and produces engaging content for blogs and social media."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/architecture"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/architecture"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Sparky Architecture Version: 1.0 Date: 2025-11-12 Status: Design Phase Overview Sparky is an AI-powered automation system that monitors git activity across all raibid-labs repositories, generates intelligent summaries, and produces engaging content for blogs and social media."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/sparky/docs/architecture-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/architecture-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/sparky/docs/architecture-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/sparky/docs/architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-527"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-527" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/sparky/">sparky</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/sparky/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>architecture</a></div></nav><h1 class="article-title">architecture</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:16.134Z">Nov 16, 2025</time><span>8 min read</span></p></div></div><article class="popover-hint"><h1 id="sparky-architecture">Sparky Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sparky-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Version:</strong> 1.0
+<strong>Date:</strong> 2025-11-12
+<strong>Status:</strong> Design Phase</p>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sparky is an AI-powered automation system that monitors git activity across all raibid-labs repositories, generates intelligent summaries, and produces engaging content for blogs and social media.</p>
+<h2 id="core-mission">Core Mission<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-mission" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Transform raw development activity into compelling narratives that:</p>
+<ul>
+<li>Keep stakeholders informed</li>
+<li>Celebrate team accomplishments</li>
+<li>Build community engagement</li>
+<li>Maintain organization memory</li>
+<li>Enable data-driven insights</li>
+</ul>
+<h2 id="system-architecture">System Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#system-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                     Sparky Orchestrator                          │
+│              (Event-Driven Meta-Coordinator)                     │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+         ┌───────────────┼───────────────┐
+         │               │               │
+         ▼               ▼               ▼
+┌─────────────────┐ ┌─────────────┐ ┌──────────────────┐
+│  Data Collector │ │ Analyzer    │ │ Content Generator│
+│    (Agents)     │ │  (Agents)   │ │    (Agents)      │
+└────────┬────────┘ └──────┬──────┘ └────────┬─────────┘
+         │                 │                  │
+         ▼                 ▼                  ▼
+┌─────────────────────────────────────────────────────────┐
+│              Shared State &amp; Memory Layer                 │
+│         (Claude Flow Memory + GitHub Issues/PRs)         │
+└─────────────────────────────────────────────────────────┘
+         │                 │                  │
+         ▼                 ▼                  ▼
+┌─────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│ GitHub API  │  │  raibid-labs    │  │  docs repo      │
+│ (28+ repos) │  │   Database      │  │  (Integration)  │
+└─────────────┘  └─────────────────┘  └─────────────────┘
+</code></pre>
+<h2 id="core-components">Core Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-orchestrator-meta-coordinator">1. Orchestrator (Meta-Coordinator)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-orchestrator-meta-coordinator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Schedule collection jobs (daily, weekly, monthly)</li>
+<li>Coordinate parallel agent execution</li>
+<li>Monitor agent health and progress</li>
+<li>Handle error recovery and retries</li>
+<li>Manage dependency ordering</li>
+<li>Trigger content generation pipelines</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>GitHub Actions workflows (scheduled + webhook triggers)</li>
+<li>State machine for agent lifecycle management</li>
+<li>Health monitoring with dashboards</li>
+<li>Claude Flow session management</li>
+</ul>
+<p><strong>Key Files:</strong></p>
+<pre><code>.github/workflows/
+├── sparky-daily-collection.yml
+├── sparky-weekly-summary.yml
+├── sparky-monthly-digest.yml
+└── sparky-orchestrator.yml
+
+scripts/orchestration/
+├── spawn-collector-agents.sh
+├── spawn-analyzer-agents.sh
+├── spawn-content-agents.sh
+└── health-check.sh
+</code></pre>
+<h3 id="2-data-collector-agents">2. Data Collector Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-data-collector-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose:</strong> Gather git activity data from all raibid-labs repositories</p>
+<p><strong>Agent Types:</strong></p>
+<ul>
+<li><strong>Commit Collector:</strong> Fetch all commits since last run</li>
+<li><strong>PR Collector:</strong> Gather PR data (created, merged, commented)</li>
+<li><strong>Issue Collector:</strong> Collect issue activity</li>
+<li><strong>Release Collector:</strong> Track releases and tags</li>
+<li><strong>Contributor Collector:</strong> Analyze contributor activity</li>
+</ul>
+<p><strong>Technology:</strong></p>
+<ul>
+<li>Octokit (GitHub GraphQL API for efficiency)</li>
+<li>raibid-cli patterns for repository discovery</li>
+<li>Concurrent collection (4-8 repos in parallel)</li>
+<li>Rate limit management (GitHub App: 5000 req/hr)</li>
+</ul>
+<p><strong>Output:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;collection_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2025-11-12-daily&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;timestamp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2025-11-12T00:00:00Z&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;repositories&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;raibid-cli&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;commits&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;pull_requests&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;issues&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;contributors&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="3-analyzer-agents">3. Analyzer Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-analyzer-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose:</strong> Extract insights and patterns from collected data</p>
+<p><strong>Agent Types:</strong></p>
+<ul>
+<li><strong>Activity Analyzer:</strong> Calculate metrics (commits/day, PR velocity, etc.)</li>
+<li><strong>Trend Detector:</strong> Identify patterns (productivity spikes, focus areas)</li>
+<li><strong>Impact Scorer:</strong> Determine significance of changes</li>
+<li><strong>Contributor Profiler:</strong> Analyze individual/team contributions</li>
+<li><strong>Project Health:</strong> Assess repository health metrics</li>
+</ul>
+<p><strong>Technology:</strong></p>
+<ul>
+<li>Python data analysis (pandas, numpy)</li>
+<li>Claude API for semantic analysis</li>
+<li>Pattern recognition algorithms</li>
+<li>Time-series analysis for trends</li>
+</ul>
+<p><strong>Output:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;analysis_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2025-11-12-daily-analysis&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;insights&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;top_contributors&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;active_projects&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;productivity_score&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">8.5</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;trending_topics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;kubernetes&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ai-agents&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;notable_changes&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="4-content-generator-agents">4. Content Generator Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-content-generator-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose:</strong> Transform data and insights into engaging content</p>
+<p><strong>Agent Types:</strong></p>
+<ul>
+<li><strong>Daily Digest Generator:</strong> Short summary for daily updates</li>
+<li><strong>Weekly Report Generator:</strong> Comprehensive weekly overview</li>
+<li><strong>Monthly Review Generator:</strong> In-depth monthly analysis</li>
+<li><strong>Blog Post Generator:</strong> Long-form content for external publication</li>
+<li><strong>Social Media Generator:</strong> Tweets, LinkedIn posts, etc.</li>
+</ul>
+<p><strong>Technology:</strong></p>
+<ul>
+<li>Claude 4 / GPT-4o for high-quality content</li>
+<li>Template system for consistent formatting</li>
+<li>Tone adaptation (technical vs. marketing)</li>
+<li>Multi-format output (Markdown, HTML, JSON)</li>
+</ul>
+<p><strong>Content Types:</strong></p>
+<pre><code>Daily:   200-300 words, bullet points, key highlights
+Weekly:  800-1200 words, narrative style, metrics + stories
+Monthly: 2000-3000 words, comprehensive review, trends
+Blog:    1500-2500 words, polished, SEO-optimized
+Social:  280 chars (Twitter), 1300 chars (LinkedIn)
+</code></pre>
+<h3 id="5-shared-state--memory-layer">5. Shared State &amp; Memory Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-shared-state--memory-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose:</strong> Coordinate agent communication and maintain system state</p>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Claude Flow Memory:</strong> Session state, agent coordination</li>
+<li><strong>GitHub Issues/Comments:</strong> Persistent storage, human oversight</li>
+<li><strong>Database:</strong> Historical data, metrics, trends</li>
+<li><strong>File System:</strong> Generated content, artifacts</li>
+</ul>
+<p><strong>Integration:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Before collecting data</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Daily collection 2025-11-12&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During analysis</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;data/2025-11-12-collection.json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;sparky/daily/2025-11-12/collection&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># After content generation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --task-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;daily-2025-11-12&quot;</span></span></code></pre></figure>
+<h2 id="event-driven-triggers">Event-Driven Triggers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-driven-triggers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scheduled-events">Scheduled Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scheduled-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Daily Collection:</strong> Every day at 00:00 UTC</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">schedule</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">cron</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'0 0 * * *'</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Daily at midnight</span></span></code></pre></figure>
+<p><strong>Weekly Summary:</strong> Every Monday at 08:00 UTC</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">schedule</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">cron</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'0 8 * * 1'</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Monday 8 AM</span></span></code></pre></figure>
+<p><strong>Monthly Review:</strong> First day of month at 09:00 UTC</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">schedule</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">cron</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'0 9 1 * *'</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # 1st of month, 9 AM</span></span></code></pre></figure>
+<h3 id="webhook-events">Webhook Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#webhook-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>On Push to Main:</strong> Trigger immediate analysis for important repos</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  push</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    branches</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">main</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    paths</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'src/**'</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'docs/**'</span></span></code></pre></figure>
+<p><strong>On Release:</strong> Generate release announcement content</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  release</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">published</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span></code></pre></figure>
+<h2 id="parallel-execution-strategy">Parallel Execution Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-execution-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="daily-collection-phase-1">Daily Collection (Phase 1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#daily-collection-phase-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Parallel Agents:</strong> 4-6 collectors</p>
+<pre><code>Collector 1: Repos 1-5   (raibid-ci, raibid-cli, xptui, agents, docs)
+Collector 2: Repos 6-10  (mop, osai, hack-agent-lightning, upterm, BrowserOS)
+Collector 3: Repos 11-15 (dgx-spark, dgx-music, dgx-pixels, hack-k8s, hack-browser)
+Collector 4: Repos 16-20 (ardour, cosmos-nvim, music-generation-mcp, ...)
+Collector 5: Repos 21-25 (...)
+Collector 6: Repos 26-28 (...)
+</code></pre>
+<p><strong>Execution Time:</strong> ~5-10 minutes (parallel)</p>
+<h3 id="analysis-phase-phase-2---sequential-after-collection">Analysis Phase (Phase 2 - Sequential After Collection)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#analysis-phase-phase-2---sequential-after-collection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Parallel Agents:</strong> 3-4 analyzers</p>
+<pre><code>Analyzer 1: Activity metrics (commits, PRs, issues)
+Analyzer 2: Trend detection (patterns, focus areas)
+Analyzer 3: Contributor analysis (individual performance)
+Analyzer 4: Impact scoring (change significance)
+</code></pre>
+<p><strong>Execution Time:</strong> ~3-5 minutes (parallel)</p>
+<h3 id="content-generation-phase-3---sequential-after-analysis">Content Generation (Phase 3 - Sequential After Analysis)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#content-generation-phase-3---sequential-after-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Parallel Agents:</strong> 2-3 generators</p>
+<pre><code>Generator 1: Daily digest + social media
+Generator 2: Weekly report (if Monday)
+Generator 3: Blog post (if significant activity)
+</code></pre>
+<p><strong>Execution Time:</strong> ~5-8 minutes (parallel)</p>
+<p><strong>Total Pipeline:</strong> 13-23 minutes end-to-end</p>
+<h2 id="integration-with-raibid-labs-ecosystem">Integration with raibid-labs Ecosystem<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-with-raibid-labs-ecosystem" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="integration-with-raibid-cli">Integration with raibid-cli<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-with-raibid-cli" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Use existing repository discovery patterns:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Discover all raibid-labs repositories</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">raibid-cli</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> json</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repos.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Filter repos with recent activity</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repos.json</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.[] | select(.updated_at > &quot;2025-11-11&quot;)'</span></span></code></pre></figure>
+<h3 id="integration-with-docs-repository">Integration with docs Repository<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-with-docs-repository" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Publish summaries to documentation hub:</p>
+<pre><code>content/updates/
+├── daily/
+│   ├── 2025-11-12.md
+│   ├── 2025-11-13.md
+│   └── ...
+├── weekly/
+│   ├── 2025-W45.md
+│   └── ...
+└── monthly/
+    ├── 2025-11.md
+    └── ...
+</code></pre>
+<h3 id="integration-with-raibid-ci-orchestrator">Integration with raibid-ci Orchestrator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-with-raibid-ci-orchestrator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Use proven GitHub Actions patterns:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Reuse orchestrator patterns</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">- </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Check Readiness</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">./.github/actions/check-readiness</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">- </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Spawn Collector Agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">./.github/actions/spawn-agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  with</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    agent_type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">collector</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    parallel_count</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">6</span></span></code></pre></figure>
+<h2 id="data-flow">Data Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>GitHub Repos (28+)
+    ↓ (Collection via GitHub API)
+Raw Activity Data (JSON)
+    ↓ (Analysis via AI + algorithms)
+Insights &amp; Metrics (JSON)
+    ↓ (Generation via Claude API)
+Content Artifacts (MD, HTML, JSON)
+    ↓ (Publishing)
+├─→ docs repository (updates/)
+├─→ GitHub Issues (summaries as comments)
+├─→ Blog platform (Beehiiv, Dev.to)
+└─→ Social media (Twitter, LinkedIn)
+</code></pre>
+<h2 id="state-management">State Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#state-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="agent-states">Agent States<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-states" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">SPAWNING</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> → </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">INITIALIZING</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> → </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">COLLECTING</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">ANALYZING</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">GENERATING</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ↓           ↓                    ↓</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">  PAUSED</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ← → </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">DEGRADED</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> → </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">UNHEALTHY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> → </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">FAILED</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ↓                                 ↓</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">  COMPLETE</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ← ← ← ← ← ← ← ← ← ← ← ← </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">RETRY</span></span></code></pre></figure>
+<h3 id="session-management">Session Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create session for daily pipeline</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">session_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;sparky-daily-$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y-%m-%d)&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Restore context between phases</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-restore</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$session_id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export metrics at end</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-end</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$session_id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --export-metrics</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span></code></pre></figure>
+<h2 id="error-handling--recovery">Error Handling &amp; Recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-handling--recovery" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="retry-strategy">Retry Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#retry-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">retry</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  max_attempts</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">3</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  backoff</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">exponential</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # 1s, 2s, 4s</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  on_failure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">notify_human</span></span></code></pre></figure>
+<h3 id="health-monitoring">Health Monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#health-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">health_check</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  interval</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">30</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// seconds</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  thresholds</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">    response_time</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">5000</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,    </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// ms</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">    error_count</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">    timeout</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">300</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            // seconds</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  on_unhealthy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;spawn_troubleshooter&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="fallback-modes">Fallback Modes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fallback-modes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Degraded Mode:</strong> Skip non-critical analysis, basic summary only</li>
+<li><strong>Manual Mode:</strong> Human review required before publishing</li>
+<li><strong>Emergency Stop:</strong> Halt all operations, notify maintainers</li>
+</ul>
+<h2 id="scalability-considerations">Scalability Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scalability-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="current-scale-28-repositories">Current Scale (28 repositories)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#current-scale-28-repositories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Collection: ~10 minutes</li>
+<li>Analysis: ~5 minutes</li>
+<li>Generation: ~8 minutes</li>
+<li><strong>Total: ~23 minutes</strong></li>
+</ul>
+<h3 id="future-scale-100-repositories">Future Scale (100+ repositories)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-scale-100-repositories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Increase parallel collectors: 6 → 12</li>
+<li>Implement caching layer (Redis)</li>
+<li>Use incremental collection (delta only)</li>
+<li>Batch GraphQL queries</li>
+<li><strong>Target: &lt;30 minutes</strong></li>
+</ul>
+<h3 id="cost-projections">Cost Projections<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-projections" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Daily Pipeline:</strong></p>
+<ul>
+<li>GitHub API: Free (GitHub App: 5000 req/hr)</li>
+<li>Claude API: ~$0.50/day (summarization)</li>
+<li>Infrastructure: ~$20/month (Vercel, DB)</li>
+<li><strong>Monthly: ~$35</strong></li>
+</ul>
+<p><strong>At Scale (100 repos):</strong></p>
+<ul>
+<li>Claude API: ~$1.50/day</li>
+<li>Infrastructure: ~$50/month</li>
+<li><strong>Monthly: ~$95</strong></li>
+</ul>
+<h2 id="security--privacy">Security &amp; Privacy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security--privacy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="api-keys">API Keys<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#api-keys" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Store in GitHub Secrets</li>
+<li>Rotate every 90 days</li>
+<li>Use GitHub Apps (not personal tokens)</li>
+</ul>
+<h3 id="data-handling">Data Handling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-handling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Only public repository data</li>
+<li>No sensitive information in summaries</li>
+<li>Human review for external publication</li>
+</ul>
+<h3 id="access-control">Access Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#access-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>GitHub App permissions: read-only</li>
+<li>Limited to raibid-labs organization</li>
+<li>Audit logs for all operations</li>
+</ul>
+<h2 id="monitoring--observability">Monitoring &amp; Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitoring--observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dashboards">Dashboards<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dashboards" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>╔════════════════════════════════════════════════╗
+║      Sparky Daily Pipeline Dashboard           ║
+║ Progress: ██████████████░░░░ 75%              ║
+╠════════════════════════════════════════════════╣
+║ Phase 1: Collection       ✅ COMPLETE (8m 23s) ║
+║   Collector 1 (repos 1-5)   ✅ 5/5 repos       ║
+║   Collector 2 (repos 6-10)  ✅ 5/5 repos       ║
+║   Collector 3 (repos 11-15) ✅ 5/5 repos       ║
+║   Collector 4 (repos 16-20) ✅ 5/5 repos       ║
+║   Collector 5 (repos 21-25) ✅ 5/5 repos       ║
+║   Collector 6 (repos 26-28) ✅ 3/3 repos       ║
+╠════════════════════════════════════════════════╣
+║ Phase 2: Analysis         🔄 IN PROGRESS (2m)  ║
+║   Activity Analyzer         ✅ COMPLETE        ║
+║   Trend Detector            🔄 RUNNING         ║
+║   Contributor Profiler      ⏳ PENDING         ║
+║   Impact Scorer             ⏳ PENDING         ║
+╠════════════════════════════════════════════════╣
+║ Phase 3: Content          ⏳ PENDING           ║
+║   Daily Digest              ⏳ QUEUED          ║
+║   Social Media Posts        ⏳ QUEUED          ║
+╚════════════════════════════════════════════════╝
+</code></pre>
+<h3 id="metrics">Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Collection Metrics:</strong></p>
+<ul>
+<li>Repositories processed: 28/28</li>
+<li>Commits collected: 127</li>
+<li>PRs collected: 15</li>
+<li>Issues collected: 8</li>
+<li>Duration: 8m 23s</li>
+</ul>
+<p><strong>Analysis Metrics:</strong></p>
+<ul>
+<li>Insights generated: 12</li>
+<li>Trends detected: 3</li>
+<li>Contributors profiled: 8</li>
+<li>Duration: 4m 12s</li>
+</ul>
+<p><strong>Content Metrics:</strong></p>
+<ul>
+<li>Daily digest: 287 words</li>
+<li>Social posts: 3 generated</li>
+<li>Blog post: 1 drafted</li>
+<li>Duration: 6m 45s</li>
+</ul>
+<h2 id="future-enhancements">Future Enhancements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-enhancements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-2-q1-2026">Phase 2 (Q1 2026)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-q1-2026" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Slack/Discord integration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Real-time updates (webhooks)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Custom report templates</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Interactive dashboards</li>
+</ul>
+<h3 id="phase-3-q2-2026">Phase 3 (Q2 2026)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-q2-2026" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> ML-based anomaly detection</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Predictive analytics</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Automated A/B testing for content</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Multi-organization support</li>
+</ul>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="existing-patterns">Existing Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#existing-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Event-driven orchestration: <code>/home/beengud/raibid-labs/agents/ORCHESTRATOR_AUTOMATION_PLAN.md</code></li>
+<li>Parallel coordination: <code>/home/beengud/raibid-labs/xptui/scripts/dev/agent-coordination.md</code></li>
+<li>Meta-orchestrator: <code>/home/beengud/raibid-labs/mop/docs/agents/orchestration.md</code></li>
+<li>Repository management: <code>/home/beengud/raibid-labs/raibid-cli/SUMMARY.md</code></li>
+</ul>
+<h3 id="technology-stack">Technology Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technology-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>GitHub Actions (orchestration)</li>
+<li>Octokit (GitHub API)</li>
+<li>Claude API (content generation)</li>
+<li>Claude Flow (agent coordination)</li>
+<li>Nushell (scripting)</li>
+<li>Rust (performance-critical components)</li>
+<li>Python (data analysis)</li>
+</ul>
+<hr/>
+<p><strong>Next:</strong> See <a href="../../../components" class="internal alias" data-slug="components">components.md</a> for detailed component specifications</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-312" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#sparky-architecture" data-for="sparky-architecture">Sparky Architecture</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#core-mission" data-for="core-mission">Core Mission</a></li><li class="depth-1"><a href="#system-architecture" data-for="system-architecture">System Architecture</a></li><li class="depth-1"><a href="#core-components" data-for="core-components">Core Components</a></li><li class="depth-2"><a href="#1-orchestrator-meta-coordinator" data-for="1-orchestrator-meta-coordinator">1. Orchestrator (Meta-Coordinator)</a></li><li class="depth-2"><a href="#2-data-collector-agents" data-for="2-data-collector-agents">2. Data Collector Agents</a></li><li class="depth-2"><a href="#3-analyzer-agents" data-for="3-analyzer-agents">3. Analyzer Agents</a></li><li class="depth-2"><a href="#4-content-generator-agents" data-for="4-content-generator-agents">4. Content Generator Agents</a></li><li class="depth-2"><a href="#5-shared-state--memory-layer" data-for="5-shared-state--memory-layer">5. Shared State &amp; Memory Layer</a></li><li class="depth-1"><a href="#event-driven-triggers" data-for="event-driven-triggers">Event-Driven Triggers</a></li><li class="depth-2"><a href="#scheduled-events" data-for="scheduled-events">Scheduled Events</a></li><li class="depth-2"><a href="#webhook-events" data-for="webhook-events">Webhook Events</a></li><li class="depth-1"><a href="#parallel-execution-strategy" data-for="parallel-execution-strategy">Parallel Execution Strategy</a></li><li class="depth-2"><a href="#daily-collection-phase-1" data-for="daily-collection-phase-1">Daily Collection (Phase 1)</a></li><li class="depth-2"><a href="#analysis-phase-phase-2---sequential-after-collection" data-for="analysis-phase-phase-2---sequential-after-collection">Analysis Phase (Phase 2 - Sequential After Collection)</a></li><li class="depth-2"><a href="#content-generation-phase-3---sequential-after-analysis" data-for="content-generation-phase-3---sequential-after-analysis">Content Generation (Phase 3 - Sequential After Analysis)</a></li><li class="depth-1"><a href="#integration-with-raibid-labs-ecosystem" data-for="integration-with-raibid-labs-ecosystem">Integration with raibid-labs Ecosystem</a></li><li class="depth-2"><a href="#integration-with-raibid-cli" data-for="integration-with-raibid-cli">Integration with raibid-cli</a></li><li class="depth-2"><a href="#integration-with-docs-repository" data-for="integration-with-docs-repository">Integration with docs Repository</a></li><li class="depth-2"><a href="#integration-with-raibid-ci-orchestrator" data-for="integration-with-raibid-ci-orchestrator">Integration with raibid-ci Orchestrator</a></li><li class="depth-1"><a href="#data-flow" data-for="data-flow">Data Flow</a></li><li class="depth-1"><a href="#state-management" data-for="state-management">State Management</a></li><li class="depth-2"><a href="#agent-states" data-for="agent-states">Agent States</a></li><li class="depth-2"><a href="#session-management" data-for="session-management">Session Management</a></li><li class="depth-1"><a href="#error-handling--recovery" data-for="error-handling--recovery">Error Handling &amp; Recovery</a></li><li class="depth-2"><a href="#retry-strategy" data-for="retry-strategy">Retry Strategy</a></li><li class="depth-2"><a href="#health-monitoring" data-for="health-monitoring">Health Monitoring</a></li><li class="depth-2"><a href="#fallback-modes" data-for="fallback-modes">Fallback Modes</a></li><li class="depth-1"><a href="#scalability-considerations" data-for="scalability-considerations">Scalability Considerations</a></li><li class="depth-2"><a href="#current-scale-28-repositories" data-for="current-scale-28-repositories">Current Scale (28 repositories)</a></li><li class="depth-2"><a href="#future-scale-100-repositories" data-for="future-scale-100-repositories">Future Scale (100+ repositories)</a></li><li class="depth-2"><a href="#cost-projections" data-for="cost-projections">Cost Projections</a></li><li class="depth-1"><a href="#security--privacy" data-for="security--privacy">Security &amp; Privacy</a></li><li class="depth-2"><a href="#api-keys" data-for="api-keys">API Keys</a></li><li class="depth-2"><a href="#data-handling" data-for="data-handling">Data Handling</a></li><li class="depth-2"><a href="#access-control" data-for="access-control">Access Control</a></li><li class="depth-1"><a href="#monitoring--observability" data-for="monitoring--observability">Monitoring &amp; Observability</a></li><li class="depth-2"><a href="#dashboards" data-for="dashboards">Dashboards</a></li><li class="depth-2"><a href="#metrics" data-for="metrics">Metrics</a></li><li class="depth-1"><a href="#future-enhancements" data-for="future-enhancements">Future Enhancements</a></li><li class="depth-2"><a href="#phase-2-q1-2026" data-for="phase-2-q1-2026">Phase 2 (Q1 2026)</a></li><li class="depth-2"><a href="#phase-3-q2-2026" data-for="phase-3-q2-2026">Phase 3 (Q2 2026)</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="depth-2"><a href="#existing-patterns" data-for="existing-patterns">Existing Patterns</a></li><li class="depth-2"><a href="#technology-stack" data-for="technology-stack">Technology Stack</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

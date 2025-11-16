@@ -1,0 +1,148 @@
+# Docker Compose configuration for raibid-ci local development and testing
+# This allows testing server and agent containers without Kubernetes
+#
+# Usage:
+#   docker-compose up -d         # Start all services in background
+#   docker-compose logs -f       # Follow logs
+#   docker-compose down          # Stop and remove all services
+#   docker-compose build         # Rebuild images after code changes
+
+version: '3.8'
+
+services:
+  # Redis with Streams for job queue
+  redis:
+    image: redis:7-bookworm
+    container_name: raibid-redis
+    ports:
+      - "6379:6379"
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfilename appendonly.aof
+      --save 60 1
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    networks:
+      - raibid-network
+
+  # raibid-server - API server and job dispatcher
+  server:
+    build:
+      context: .
+      dockerfile: crates/server/Dockerfile
+      args:
+        - RUST_VERSION=1.82
+    image: raibid-server:latest
+    container_name: raibid-server
+    ports:
+      - "8080:8080"  # HTTP API
+      - "8081:8081"  # Metrics
+    environment:
+      # Server configuration
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8080
+      - METRICS_PORT=8081
+
+      # Redis connection
+      - REDIS_URL=redis://redis:6379
+      - REDIS_STREAM_KEY=raibid:jobs
+      - REDIS_CONSUMER_GROUP=raibid-agents
+
+      # Logging
+      - RUST_LOG=info,raibid_server=debug
+      - RUST_BACKTRACE=1
+
+      # Development mode
+      - ENVIRONMENT=development
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - raibid-network
+    volumes:
+      # Mount source for hot reload (if using cargo-watch)
+      - ./crates/server/src:/app/src:ro
+      # Mount logs directory
+      - ./logs:/var/log/raibid
+
+  # raibid-agent - CI agent (scaled manually)
+  # To scale: docker-compose up -d --scale agent=3
+  agent:
+    build:
+      context: .
+      dockerfile: crates/agent/Dockerfile
+      args:
+        - RUST_VERSION=1.82
+    image: raibid-agent:latest
+    # No container_name - allow scaling
+    environment:
+      # Redis connection
+      - REDIS_URL=redis://redis:6379
+      - REDIS_STREAM_KEY=raibid:jobs
+      - REDIS_CONSUMER_GROUP=raibid-agents
+
+      # Agent configuration
+      - AGENT_CONCURRENCY=2
+      - AGENT_POLL_INTERVAL=5
+
+      # Logging
+      - RUST_LOG=info,raibid_agent=debug
+      - RUST_BACKTRACE=1
+
+      # Development mode
+      - ENVIRONMENT=development
+    depends_on:
+      redis:
+        condition: service_healthy
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - raibid-network
+    volumes:
+      # Mount Docker socket for Docker-in-Docker builds
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Workspace for builds (shared across agents via volume)
+      - agent-workspace:/workspace
+      # Cargo cache (shared across agents)
+      - cargo-cache:/home/agent/.cargo
+    # Resource limits (optional, for testing resource constraints)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+networks:
+  raibid-network:
+    driver: bridge
+    name: raibid-network
+
+volumes:
+  redis-data:
+    name: raibid-redis-data
+  agent-workspace:
+    name: raibid-agent-workspace
+  cargo-cache:
+    name: raibid-cargo-cache

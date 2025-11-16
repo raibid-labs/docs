@@ -1,0 +1,102 @@
+---
+title: Raibid-CI System Architecture on DGX Spark
+---
+graph TB
+    subgraph "NVIDIA DGX Spark (ARM64)"
+        subgraph "k3s Cluster"
+            subgraph "gitops-system namespace"
+                flux[Flux GitOps Operator<br/>Continuous Reconciliation]
+            end
+
+            subgraph "keda-system namespace"
+                keda[KEDA Autoscaler<br/>Job Queue Monitor]
+            end
+
+            subgraph "raibid-ci namespace"
+                api[Rust API Server<br/>Job Management & Orchestration]
+                redis[Redis Streams<br/>Job Queue]
+                gitea[Gitea<br/>Git Server + OCI Registry]
+
+                subgraph "Ephemeral CI Agents"
+                    agent1[CI Agent Pod 1]
+                    agent2[CI Agent Pod 2]
+                    agentN[CI Agent Pod N]
+                end
+            end
+
+            subgraph "Storage Layer"
+                gitea_pv[(Gitea PersistentVolume<br/>Git Repos + OCI Images)]
+                redis_pv[(Redis PersistentVolume<br/>Job Queue Data)]
+            end
+
+            k8s_api[Kubernetes API Server]
+        end
+
+        subgraph "Hardware Resources"
+            gpu[GPU Resources<br/>NVIDIA Grace Hopper]
+            storage[NVMe Storage]
+            network[10GbE Network]
+        end
+    end
+
+    subgraph "External Services"
+        github[GitHub<br/>Source Repository]
+        tui[Ratatui TUI Client<br/>Monitoring & Control]
+    end
+
+    %% External connections
+    github -->|Webhook / Mirror| gitea
+    tui -->|REST API| api
+
+    %% Internal connections
+    api -->|Publish Jobs| redis
+    api -->|Query Status| k8s_api
+
+    keda -->|Watch Queue| redis
+    keda -->|Scale Pods| k8s_api
+
+    flux -->|Sync GitOps| gitea
+    flux -->|Apply Manifests| k8s_api
+
+    k8s_api -->|Schedule| agent1
+    k8s_api -->|Schedule| agent2
+    k8s_api -->|Schedule| agentN
+
+    agent1 -->|Fetch Code| gitea
+    agent2 -->|Fetch Code| gitea
+    agentN -->|Fetch Code| gitea
+
+    agent1 -->|Pull/Push Images| gitea
+    agent2 -->|Pull/Push Images| gitea
+    agentN -->|Pull/Push Images| gitea
+
+    agent1 -->|Pop Job| redis
+    agent2 -->|Pop Job| redis
+    agentN -->|Pop Job| redis
+
+    agent1 -->|Update Status| redis
+    agent2 -->|Update Status| redis
+    agentN -->|Update Status| redis
+
+    %% Storage connections
+    gitea -.->|Persistent Data| gitea_pv
+    redis -.->|Persistent Data| redis_pv
+
+    %% Resource allocation
+    agent1 -.->|Allocate| gpu
+    agent2 -.->|Allocate| gpu
+    agentN -.->|Allocate| gpu
+
+    gitea -.->|Use| storage
+    redis -.->|Use| storage
+
+    %% Styling
+    classDef ephemeral fill:#ffebcc,stroke:#ff9900,stroke-width:2px,stroke-dasharray: 5 5
+    classDef persistent fill:#ccf0ff,stroke:#0066cc,stroke-width:2px
+    classDef external fill:#f0ccff,stroke:#9900cc,stroke-width:2px
+    classDef hardware fill:#e0e0e0,stroke:#666666,stroke-width:2px
+
+    class agent1,agent2,agentN ephemeral
+    class gitea,redis,flux,keda,api,gitea_pv,redis_pv persistent
+    class github,tui external
+    class gpu,storage,network hardware

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>OSC_API</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="OSC_API"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="OSC_API"/><meta name="twitter:description" content="Ardour OSC API Reference Complete reference for Ardour’s Open Sound Control (OSC) API."/><meta property="og:description" content="Ardour OSC API Reference Complete reference for Ardour’s Open Sound Control (OSC) API."/><meta property="og:image:alt" content="Ardour OSC API Reference Complete reference for Ardour’s Open Sound Control (OSC) API."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/ardour-mcp/docs/OSC_API"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/ardour-mcp/docs/OSC_API"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Ardour OSC API Reference Complete reference for Ardour’s Open Sound Control (OSC) API."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/ardour-mcp/docs/OSC_API-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/ardour-mcp/docs/OSC_API-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/ardour-mcp/docs/OSC_API-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/ardour-mcp/docs/OSC_API"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-44"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-44" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/ardour-mcp/">ardour mcp</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/ardour-mcp/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>OSC_API</a></div></nav><h1 class="article-title">OSC_API</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:04.921Z">Nov 16, 2025</time><span>4 min read</span></p></div></div><article class="popover-hint"><h1 id="ardour-osc-api-reference">Ardour OSC API Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ardour-osc-api-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Complete reference for Ardour’s Open Sound Control (OSC) API. This document lists all OSC commands and feedback messages used by Ardour MCP.</p>
+<h2 id="osc-basics">OSC Basics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#osc-basics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="protocol">Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Transport</strong>: UDP (User Datagram Protocol)</li>
+<li><strong>Default Port</strong>: 3819 (Ardour server)</li>
+<li><strong>Feedback Port</strong>: Configurable (default: 3820)</li>
+<li><strong>Address Pattern</strong>: <code>/path/to/command</code></li>
+<li><strong>Type Tags</strong>: <code>i</code> (int), <code>f</code> (float), <code>s</code> (string), <code>b</code> (blob)</li>
+</ul>
+<h3 id="message-format">Message Format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#message-format" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>/address/pattern &lt;type-tag> &lt;value1> &lt;value2> ...
+
+Example:
+/strip/gain 1 f -6.0
+</code></pre>
+<h2 id="transport-control">Transport Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transport-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-ardour-receives">Commands (Ardour receives)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-ardour-receives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/transport_play</code></td><td>-</td><td>-</td><td>Start playback</td></tr><tr><td><code>/transport_stop</code></td><td>-</td><td>-</td><td>Stop playback</td></tr><tr><td><code>/transport_pause</code></td><td>-</td><td>-</td><td>Toggle pause</td></tr><tr><td><code>/rec_enable_toggle</code></td><td>-</td><td>-</td><td>Toggle global record enable</td></tr><tr><td><code>/toggle_roll</code></td><td>-</td><td>-</td><td>Toggle play/stop</td></tr><tr><td><code>/goto_start</code></td><td>-</td><td>-</td><td>Go to session start</td></tr><tr><td><code>/goto_end</code></td><td>-</td><td>-</td><td>Go to session end</td></tr><tr><td><code>/rewind</code></td><td>-</td><td>-</td><td>Fast rewind</td></tr><tr><td><code>/ffwd</code></td><td>-</td><td>-</td><td>Fast forward</td></tr><tr><td><code>/set_transport_speed</code></td><td><code>f</code></td><td>speed</td><td>Set transport speed (-1.0 to 1.0)</td></tr><tr><td><code>/locate</code></td><td><code>i</code></td><td>frame</td><td>Jump to frame position</td></tr><tr><td><code>/loop_toggle</code></td><td>-</td><td>-</td><td>Toggle loop mode</td></tr><tr><td><code>/set_loop_range</code></td><td><code>ii</code></td><td>start, end</td><td>Set loop range (frames)</td></tr><tr><td><code>/toggle_punch_in</code></td><td>-</td><td>-</td><td>Toggle punch-in recording</td></tr><tr><td><code>/toggle_punch_out</code></td><td>-</td><td>-</td><td>Toggle punch-out recording</td></tr></tbody></table></div>
+<h3 id="feedback-ardour-sends">Feedback (Ardour sends)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-ardour-sends" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Message</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/transport_frame</code></td><td><code>i</code></td><td>frame</td><td>Current playback frame</td></tr><tr><td><code>/transport_speed</code></td><td><code>f</code></td><td>speed</td><td>Current transport speed</td></tr><tr><td><code>/record_enabled</code></td><td><code>i</code></td><td>enabled</td><td>Global record enable (0/1)</td></tr><tr><td><code>/loop_toggle</code></td><td><code>i</code></td><td>enabled</td><td>Loop mode enabled (0/1)</td></tr><tr><td><code>/punch_in</code></td><td><code>i</code></td><td>enabled</td><td>Punch-in enabled (0/1)</td></tr><tr><td><code>/punch_out</code></td><td><code>i</code></td><td>enabled</td><td>Punch-out enabled (0/1)</td></tr></tbody></table></div>
+<h2 id="session-information">Session Information<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-information" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/refresh</code></td><td>-</td><td>-</td><td>Request full state refresh</td></tr><tr><td><code>/save_state</code></td><td>-</td><td>-</td><td>Save session</td></tr></tbody></table></div>
+<h3 id="feedback">Feedback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Message</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/session_name</code></td><td><code>s</code></td><td>name</td><td>Session name</td></tr><tr><td><code>/sample_rate</code></td><td><code>i</code></td><td>rate</td><td>Session sample rate (Hz)</td></tr><tr><td><code>/tempo</code></td><td><code>f</code></td><td>bpm</td><td>Current tempo (BPM)</td></tr><tr><td><code>/time_signature</code></td><td><code>ii</code></td><td>beats, beat_type</td><td>Time signature (e.g., 4/4)</td></tr><tr><td><code>/n_tracks</code></td><td><code>i</code></td><td>count</td><td>Number of tracks</td></tr><tr><td><code>/dirty</code></td><td><code>i</code></td><td>dirty</td><td>Session modified since save (0/1)</td></tr></tbody></table></div>
+<h2 id="trackstrip-control">Track/Strip Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trackstrip-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Ardour uses “strip” to refer to tracks and busses. Strip IDs are 1-based.</p>
+<h3 id="commands-1">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/strip/list</code></td><td>-</td><td>-</td><td>Request track list</td></tr><tr><td><code>/strip/name</code></td><td><code>is</code></td><td>strip_id, name</td><td>Set track name</td></tr><tr><td><code>/strip/gain</code></td><td><code>if</code></td><td>strip_id, gain_db</td><td>Set track gain (-inf to +6dB)</td></tr><tr><td><code>/strip/fader</code></td><td><code>if</code></td><td>strip_id, position</td><td>Set fader position (0.0 to 1.0)</td></tr><tr><td><code>/strip/pan_stereo_position</code></td><td><code>if</code></td><td>strip_id, position</td><td>Set pan position (-1.0 to 1.0)</td></tr><tr><td><code>/strip/mute</code></td><td><code>if</code></td><td>strip_id, mute</td><td>Mute track (0=unmute, 1=mute)</td></tr><tr><td><code>/strip/solo</code></td><td><code>if</code></td><td>strip_id, solo</td><td>Solo track (0=unsolo, 1=solo)</td></tr><tr><td><code>/strip/recenable</code></td><td><code>if</code></td><td>strip_id, enable</td><td>Arm track for recording (0/1)</td></tr><tr><td><code>/strip/monitor_input</code></td><td><code>if</code></td><td>strip_id, enable</td><td>Monitor input (0/1)</td></tr><tr><td><code>/strip/monitor_disk</code></td><td><code>if</code></td><td>strip_id, enable</td><td>Monitor disk (0/1)</td></tr><tr><td><code>/strip/select</code></td><td><code>ii</code></td><td>strip_id, select</td><td>Select track (0/1)</td></tr><tr><td><code>/strip/hide</code></td><td><code>ii</code></td><td>strip_id, hide</td><td>Hide track (0/1)</td></tr></tbody></table></div>
+<h3 id="feedback-1">Feedback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Message</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/strip/name</code></td><td><code>is</code></td><td>strip_id, name</td><td>Track name</td></tr><tr><td><code>/strip/gain</code></td><td><code>if</code></td><td>strip_id, gain_db</td><td>Track gain (dB)</td></tr><tr><td><code>/strip/fader</code></td><td><code>if</code></td><td>strip_id, position</td><td>Fader position</td></tr><tr><td><code>/strip/pan_stereo_position</code></td><td><code>if</code></td><td>strip_id, position</td><td>Pan position</td></tr><tr><td><code>/strip/mute</code></td><td><code>ii</code></td><td>strip_id, mute</td><td>Mute state (0/1)</td></tr><tr><td><code>/strip/solo</code></td><td><code>ii</code></td><td>strip_id, solo</td><td>Solo state (0/1)</td></tr><tr><td><code>/strip/recenable</code></td><td><code>ii</code></td><td>strip_id, enable</td><td>Record arm state (0/1)</td></tr><tr><td><code>/strip/monitor_input</code></td><td><code>ii</code></td><td>strip_id, enable</td><td>Monitor input (0/1)</td></tr><tr><td><code>/strip/monitor_disk</code></td><td><code>ii</code></td><td>strip_id, enable</td><td>Monitor disk (0/1)</td></tr></tbody></table></div>
+<h2 id="track-creation">Track Creation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#track-creation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-2">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/add_audio_track</code></td><td><code>i</code></td><td>count</td><td>Add audio track(s)</td></tr><tr><td><code>/add_midi_track</code></td><td><code>i</code></td><td>count</td><td>Add MIDI track(s)</td></tr><tr><td><code>/remove_strip</code></td><td><code>i</code></td><td>strip_id</td><td>Remove track/bus</td></tr></tbody></table></div>
+<h2 id="mixer-operations">Mixer Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mixer-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="send-control">Send Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#send-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/strip/send/gain</code></td><td><code>iif</code></td><td>strip_id, send_id, gain_db</td><td>Set send gain</td></tr><tr><td><code>/strip/send/fader</code></td><td><code>iif</code></td><td>strip_id, send_id, position</td><td>Set send fader</td></tr><tr><td><code>/strip/send/enable</code></td><td><code>iii</code></td><td>strip_id, send_id, enable</td><td>Enable send (0/1)</td></tr></tbody></table></div>
+<h3 id="plugin-control">Plugin Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#plugin-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/strip/plugin/parameter</code></td><td><code>iiif</code></td><td>strip_id, plugin_id, param_id, value</td><td>Set plugin parameter</td></tr><tr><td><code>/strip/plugin/activate</code></td><td><code>iii</code></td><td>strip_id, plugin_id, activate</td><td>Activate plugin (0/1)</td></tr></tbody></table></div>
+<h2 id="markers">Markers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#markers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-3">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/add_marker</code></td><td><code>s</code></td><td>name</td><td>Add marker at current position</td></tr><tr><td><code>/add_marker</code></td><td><code>is</code></td><td>frame, name</td><td>Add marker at specific frame</td></tr><tr><td><code>/remove_marker</code></td><td><code>s</code></td><td>name</td><td>Remove marker by name</td></tr><tr><td><code>/locate</code></td><td><code>s</code></td><td>marker_name</td><td>Jump to marker</td></tr></tbody></table></div>
+<h3 id="feedback-2">Feedback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Message</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/marker</code></td><td><code>is</code></td><td>frame, name</td><td>Marker position and name</td></tr></tbody></table></div>
+<h2 id="automation">Automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-4">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/strip/gain/automation</code></td><td><code>ii</code></td><td>strip_id, mode</td><td>Set gain automation mode</td></tr><tr><td><code>/strip/pan/automation</code></td><td><code>ii</code></td><td>strip_id, mode</td><td>Set pan automation mode</td></tr></tbody></table></div>
+<p><strong>Automation Modes:</strong></p>
+<ul>
+<li><code>0</code>: Manual</li>
+<li><code>1</code>: Play</li>
+<li><code>2</code>: Write</li>
+<li><code>3</code>: Touch</li>
+</ul>
+<h2 id="selection">Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-5">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/select/strip</code></td><td><code>i</code></td><td>strip_id</td><td>Select specific strip</td></tr><tr><td><code>/select/gain</code></td><td><code>f</code></td><td>gain_db</td><td>Set selected strip gain</td></tr><tr><td><code>/select/pan</code></td><td><code>f</code></td><td>position</td><td>Set selected strip pan</td></tr><tr><td><code>/select/mute</code></td><td><code>i</code></td><td>mute</td><td>Mute selected strip (0/1)</td></tr><tr><td><code>/select/solo</code></td><td><code>i</code></td><td>solo</td><td>Solo selected strip (0/1)</td></tr></tbody></table></div>
+<h3 id="feedback-3">Feedback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Message</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/select/strip_id</code></td><td><code>i</code></td><td>strip_id</td><td>Currently selected strip</td></tr><tr><td><code>/select/name</code></td><td><code>s</code></td><td>name</td><td>Selected strip name</td></tr></tbody></table></div>
+<h2 id="cue-control-ardour-8x">Cue Control (Ardour 8.x)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cue-control-ardour-8x" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="commands-6">Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commands-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Command</th><th>Type Tags</th><th>Args</th><th>Description</th></tr></thead><tbody><tr><td><code>/cue/fire</code></td><td><code>i</code></td><td>cue_id</td><td>Trigger cue</td></tr><tr><td><code>/cue/stop</code></td><td><code>i</code></td><td>cue_id</td><td>Stop cue</td></tr><tr><td><code>/cue/load</code></td><td><code>ii</code></td><td>bank, cue_id</td><td>Load cue to bank</td></tr></tbody></table></div>
+<h2 id="custom-commands">Custom Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#custom-commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Ardour also supports user-defined OSC commands via Lua scripts.</p>
+<h2 id="osc-configuration-in-ardour">OSC Configuration in Ardour<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#osc-configuration-in-ardour" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="preferences">Preferences<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#preferences" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Edit → Preferences → Control Surfaces → Open Sound Control (OSC)</strong></p>
+<p>Settings:</p>
+<ul>
+<li><strong>OSC Server Port</strong>: Port Ardour listens on (default: 3819)</li>
+<li><strong>Feedback</strong>: Enable/configure feedback messages</li>
+<li><strong>Gain Mode</strong>: dB or Fader (0.0-1.0)</li>
+<li><strong>Debug Mode</strong>: Enable OSC message logging</li>
+<li><strong>Default Strip Types</strong>: Audio, MIDI, Busses, VCAs</li>
+<li><strong>Default Feedback</strong>: Choose feedback categories</li>
+<li><strong>Bank Size</strong>: Number of strips in a bank (0 = unlimited)</li>
+</ul>
+<h3 id="feedback-options">Feedback Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-options" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Enable desired feedback:</p>
+<ul>
+<li>✅ <strong>Transport</strong>: Playback position, speed, record state</li>
+<li>✅ <strong>Strips</strong>: Track/bus parameters</li>
+<li>✅ <strong>Metering</strong>: Level meters (can be high bandwidth)</li>
+<li>✅ <strong>Timecode</strong>: SMPTE timecode</li>
+<li>✅ <strong>Selection</strong>: Selected strip changes</li>
+<li>✅ <strong>Heartbeat</strong>: Periodic connection check</li>
+</ul>
+<h2 id="error-handling">Error Handling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-handling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-errors">Common Errors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-errors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Invalid strip ID</strong>: No response (silently ignored)</li>
+<li><strong>Invalid parameter value</strong>: May be clamped to valid range</li>
+<li><strong>Unknown command</strong>: Silently ignored</li>
+<li><strong>Network errors</strong>: No explicit error messages</li>
+</ul>
+<h3 id="best-practices">Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Validate inputs</strong> before sending commands</li>
+<li><strong>Use feedback</strong> to verify command execution</li>
+<li><strong>Implement timeouts</strong> for feedback (1-2 seconds)</li>
+<li><strong>Handle missing feedback</strong> gracefully</li>
+<li><strong>Refresh state</strong> periodically to stay synchronized</li>
+</ol>
+<h2 id="testing-osc-commands">Testing OSC Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing-osc-commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="using-python">Using Python<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#using-python" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> pythonosc </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> udp_client</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create client</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">client </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> udp_client.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">SimpleUDPClient</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;127.0.0.1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">3819</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Send commands</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">client.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">send_message</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/transport_play&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, [])</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">client.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">send_message</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/strip/gain&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, [</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">6.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">])</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">client.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">send_message</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/strip/name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, [</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Vocals&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">])</span></span></code></pre></figure>
+<h3 id="using-osculator-or-osc-testing-tools">Using osculator or OSC Testing Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#using-osculator-or-osc-testing-tools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Many GUI and CLI tools exist for testing OSC:</p>
+<ul>
+<li><strong>osculator</strong> (macOS)</li>
+<li><strong>OSCTest</strong> (cross-platform)</li>
+<li><strong>TouchOSC</strong> (mobile)</li>
+<li><strong>Pure Data</strong> with OSC objects</li>
+<li><strong>Max/MSP</strong> with OSC objects</li>
+</ul>
+<h2 id="performance-considerations">Performance Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="command-latency">Command Latency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#command-latency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Typical latency: 1-10ms for local connections</li>
+<li>Network latency: Depends on network conditions</li>
+<li>Ardour processing: Usually &lt; 1ms</li>
+</ul>
+<h3 id="feedback-rate">Feedback Rate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feedback-rate" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Transport feedback: ~30-60 Hz</li>
+<li>Metering feedback: Up to 20 Hz (configurable, can be intensive)</li>
+<li>Parameter feedback: On change only</li>
+</ul>
+<h3 id="bandwidth">Bandwidth<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bandwidth" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Commands: Low bandwidth (&lt; 1KB/s typical)</li>
+<li>Feedback: Can be high with metering enabled (up to 100KB/s)</li>
+<li>Recommendation: Disable metering feedback if not needed</li>
+</ul>
+<h2 id="version-compatibility">Version Compatibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version-compatibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This reference is based on <strong>Ardour 8.x</strong>. Earlier versions may have different commands or behavior.</p>
+<h3 id="version-differences">Version Differences<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version-differences" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Ardour 7.x</strong>: Most commands compatible, some cue commands missing</li>
+<li><strong>Ardour 6.x</strong>: Fewer automation options, different plugin addressing</li>
+<li><strong>Ardour 5.x and earlier</strong>: Significant differences, not recommended</li>
+</ul>
+<h2 id="resources">Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://manual.ardour.org/using-control-surfaces/controlling-ardour-with-osc/" class="external">Official Ardour OSC Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="http://opensoundcontrol.org/spec-1_0" class="external">OSC Specification<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://python-osc.readthedocs.io/" class="external">python-osc Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<p>This reference covers the most commonly used OSC commands. For a complete list, consult the <a href="https://manual.ardour.org/" class="external">official Ardour manual<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-13" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#ardour-osc-api-reference" data-for="ardour-osc-api-reference">Ardour OSC API Reference</a></li><li class="depth-1"><a href="#osc-basics" data-for="osc-basics">OSC Basics</a></li><li class="depth-2"><a href="#protocol" data-for="protocol">Protocol</a></li><li class="depth-2"><a href="#message-format" data-for="message-format">Message Format</a></li><li class="depth-1"><a href="#transport-control" data-for="transport-control">Transport Control</a></li><li class="depth-2"><a href="#commands-ardour-receives" data-for="commands-ardour-receives">Commands (Ardour receives)</a></li><li class="depth-2"><a href="#feedback-ardour-sends" data-for="feedback-ardour-sends">Feedback (Ardour sends)</a></li><li class="depth-1"><a href="#session-information" data-for="session-information">Session Information</a></li><li class="depth-2"><a href="#commands" data-for="commands">Commands</a></li><li class="depth-2"><a href="#feedback" data-for="feedback">Feedback</a></li><li class="depth-1"><a href="#trackstrip-control" data-for="trackstrip-control">Track/Strip Control</a></li><li class="depth-2"><a href="#commands-1" data-for="commands-1">Commands</a></li><li class="depth-2"><a href="#feedback-1" data-for="feedback-1">Feedback</a></li><li class="depth-1"><a href="#track-creation" data-for="track-creation">Track Creation</a></li><li class="depth-2"><a href="#commands-2" data-for="commands-2">Commands</a></li><li class="depth-1"><a href="#mixer-operations" data-for="mixer-operations">Mixer Operations</a></li><li class="depth-2"><a href="#send-control" data-for="send-control">Send Control</a></li><li class="depth-2"><a href="#plugin-control" data-for="plugin-control">Plugin Control</a></li><li class="depth-1"><a href="#markers" data-for="markers">Markers</a></li><li class="depth-2"><a href="#commands-3" data-for="commands-3">Commands</a></li><li class="depth-2"><a href="#feedback-2" data-for="feedback-2">Feedback</a></li><li class="depth-1"><a href="#automation" data-for="automation">Automation</a></li><li class="depth-2"><a href="#commands-4" data-for="commands-4">Commands</a></li><li class="depth-1"><a href="#selection" data-for="selection">Selection</a></li><li class="depth-2"><a href="#commands-5" data-for="commands-5">Commands</a></li><li class="depth-2"><a href="#feedback-3" data-for="feedback-3">Feedback</a></li><li class="depth-1"><a href="#cue-control-ardour-8x" data-for="cue-control-ardour-8x">Cue Control (Ardour 8.x)</a></li><li class="depth-2"><a href="#commands-6" data-for="commands-6">Commands</a></li><li class="depth-1"><a href="#custom-commands" data-for="custom-commands">Custom Commands</a></li><li class="depth-1"><a href="#osc-configuration-in-ardour" data-for="osc-configuration-in-ardour">OSC Configuration in Ardour</a></li><li class="depth-2"><a href="#preferences" data-for="preferences">Preferences</a></li><li class="depth-2"><a href="#feedback-options" data-for="feedback-options">Feedback Options</a></li><li class="depth-1"><a href="#error-handling" data-for="error-handling">Error Handling</a></li><li class="depth-2"><a href="#common-errors" data-for="common-errors">Common Errors</a></li><li class="depth-2"><a href="#best-practices" data-for="best-practices">Best Practices</a></li><li class="depth-1"><a href="#testing-osc-commands" data-for="testing-osc-commands">Testing OSC Commands</a></li><li class="depth-2"><a href="#using-python" data-for="using-python">Using Python</a></li><li class="depth-2"><a href="#using-osculator-or-osc-testing-tools" data-for="using-osculator-or-osc-testing-tools">Using osculator or OSC Testing Tools</a></li><li class="depth-1"><a href="#performance-considerations" data-for="performance-considerations">Performance Considerations</a></li><li class="depth-2"><a href="#command-latency" data-for="command-latency">Command Latency</a></li><li class="depth-2"><a href="#feedback-rate" data-for="feedback-rate">Feedback Rate</a></li><li class="depth-2"><a href="#bandwidth" data-for="bandwidth">Bandwidth</a></li><li class="depth-1"><a href="#version-compatibility" data-for="version-compatibility">Version Compatibility</a></li><li class="depth-2"><a href="#version-differences" data-for="version-differences">Version Differences</a></li><li class="depth-1"><a href="#resources" data-for="resources">Resources</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

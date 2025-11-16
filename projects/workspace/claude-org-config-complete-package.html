@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>claude-org-config-complete-package</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="claude-org-config-complete-package"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="claude-org-config-complete-package"/><meta name="twitter:description" content="Claude Organization Configuration - Complete Bootstrap Package Version: 1.0 Created: 2025-11-12 Purpose: Bootstrap centralized Claude configuration for an entire GitHub organization 📦 Package Contents This file contains everything you need to set up org-wide Claude configuration: Quick Start Instru..."/><meta property="og:description" content="Claude Organization Configuration - Complete Bootstrap Package Version: 1.0 Created: 2025-11-12 Purpose: Bootstrap centralized Claude configuration for an entire GitHub organization 📦 Package Contents This file contains everything you need to set up org-wide Claude configuration: Quick Start Instru..."/><meta property="og:image:alt" content="Claude Organization Configuration - Complete Bootstrap Package Version: 1.0 Created: 2025-11-12 Purpose: Bootstrap centralized Claude configuration for an entire GitHub organization 📦 Package Contents This file contains everything you need to set up org-wide Claude configuration: Quick Start Instru..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/workspace/claude-org-config-complete-package"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/workspace/claude-org-config-complete-package"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Claude Organization Configuration - Complete Bootstrap Package Version: 1.0 Created: 2025-11-12 Purpose: Bootstrap centralized Claude configuration for an entire GitHub organization 📦 Package Contents This file contains everything you need to set up org-wide Claude configuration: Quick Start Instru..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/workspace/claude-org-config-complete-package-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/workspace/claude-org-config-complete-package-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/workspace/claude-org-config-complete-package-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/workspace/claude-org-config-complete-package"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-535"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-535" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/workspace/">workspace</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>claude org config complete package</a></div></nav><h1 class="article-title">claude-org-config-complete-package</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:17.086Z">Nov 16, 2025</time><span>15 min read</span></p></div></div><article class="popover-hint"><h1 id="claude-organization-configuration---complete-bootstrap-package">Claude Organization Configuration - Complete Bootstrap Package<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#claude-organization-configuration---complete-bootstrap-package" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Version</strong>: 1.0<br/>
+<strong>Created</strong>: 2025-11-12<br/>
+<strong>Purpose</strong>: Bootstrap centralized Claude configuration for an entire GitHub organization</p>
+<hr/>
+<h2 id="-package-contents">📦 Package Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-package-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This file contains everything you need to set up org-wide Claude configuration:</p>
+<ol>
+<li><a href="#-quick-start-instructions" class="internal alias">Quick Start Instructions</a></li>
+<li><a href="#file-1-readmemd-for-config-repo" class="internal alias">File 1: README.md for Config Repo</a></li>
+<li><a href="#file-2-bootstrap-prompt-for-claude-code" class="internal alias">File 2: Bootstrap Prompt for Claude Code</a></li>
+<li><a href="#file-3-detailed-quick-start-guide" class="internal alias">File 3: Detailed Quick Start Guide</a></li>
+<li><a href="#-how-to-extract-files" class="internal alias">How to Extract Files</a></li>
+</ol>
+<hr/>
+<h2 id="-quick-start-instructions">🚀 Quick Start Instructions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-quick-start-instructions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>What you’ll do:</strong></p>
+<ol>
+<li>Create/navigate to your <code>claude-org-config</code> repository</li>
+<li>Copy the README (File 1) into your repo</li>
+<li>Start Claude Code and paste the Bootstrap Prompt (File 2)</li>
+<li>Follow the interactive process to analyze and configure all repos</li>
+</ol>
+<p><strong>Prerequisites:</strong></p>
+<ul>
+<li>GitHub org with repos you want to configure</li>
+<li><code>gh</code> CLI installed and authenticated</li>
+<li>Claude Code installed</li>
+</ul>
+<p><strong>Estimated time:</strong> 15-30 minutes (depending on org size)</p>
+<hr/>
+<h1 id="file-1-readmemd-for-config-repo">File 1: README.md for Config Repo<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-1-readmemd-for-config-repo" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Save as:</strong> <code>README.md</code> in your <code>claude-org-config</code> repository</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Claude Organization Configuration</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Centralized Claude configuration, rules, and context for the entire GitHub organization.**</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Purpose</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">This repository provides:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Shared configuration**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> that all repos can inherit</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Org-wide rules**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> for code style, architecture, and conventions</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Branding &amp; flavor**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> to maintain consistency across projects</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **MCP server configs**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> for org-level tooling</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Cross-repo context**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> for Claude to understand the full organization</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Repository Structure</span></span>
+<span data-line> </span></code></pre></figure>
+<p>claude-org-config/
+├── .claude/
+│   ├── base-project.json      # Base configuration for all repos
+│   ├── rules/
+│   │   ├── code-style.md      # Coding standards
+│   │   ├── architecture.md    # Architecture patterns
+│   │   └── conventions.md     # Naming, structure conventions
+│   └── prompts/
+│       ├── branding.md        # Org voice/tone
+│       └── review-checklist.md
+├── mcp/
+│   ├── org-servers.json       # Shared MCP server configurations
+│   └── server-configs/
+├── templates/
+│   ├── repo-claude-config.json  # Template for new repos
+│   └── repo-types/              # Config by repo type
+│       ├── service.json
+│       ├── library.json
+│       └── infrastructure.json
+├── docs/
+│   ├── SETUP.md               # How to add this config to a repo
+│   └── CUSTOMIZATION.md       # How to override for specific repos
+└── scripts/
+├── sync-to-repos.sh       # Distribute config updates
+├── validate-repo.sh       # Check repo compliance
+└── init-repo.sh           # Bootstrap new repo</p>
+<pre><code>
+## Usage in Individual Repos
+
+Each repository in the org should have a `.claude/project.json` that references this config:
+
+```json
+{
+  &quot;name&quot;: &quot;my-service&quot;,
+  &quot;description&quot;: &quot;Description of this specific repo&quot;,
+  &quot;extends&quot;: &quot;github:yourorg/claude-org-config/.claude/base-project.json&quot;,
+  &quot;rules&quot;: {
+    &quot;org_rules&quot;: [
+      &quot;github:yourorg/claude-org-config/.claude/rules/code-style.md&quot;,
+      &quot;github:yourorg/claude-org-config/.claude/rules/architecture.md&quot;
+    ],
+    &quot;repo_specific&quot;: [
+      &quot;./CONTRIBUTING.md&quot;
+    ]
+  },
+  &quot;context&quot;: {
+    &quot;org_context&quot;: &quot;github:yourorg/claude-org-config/.claude/prompts/branding.md&quot;
+  }
+}
+</code></pre>
+<h2 id="setup-for-new-repositories">Setup for New Repositories<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#setup-for-new-repositories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="automatic-setup-recommended">Automatic Setup (Recommended)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automatic-setup-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># From within a repo in the org</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -fsSL</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://raw.githubusercontent.com/yourorg/claude-org-config/main/scripts/init-repo.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> bash</span></span></code></pre></figure>
+<h3 id="manual-setup">Manual Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#manual-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create <code>.claude/</code> directory in your repo</li>
+<li>Copy the template config:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .claude/project.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  https://raw.githubusercontent.com/yourorg/claude-org-config/main/templates/repo-claude-config.json</span></span></code></pre></figure>
+</li>
+<li>Update the <code>name</code> and <code>description</code> fields</li>
+<li>Commit and push</li>
+</ol>
+<h2 id="configuration-inheritance">Configuration Inheritance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-inheritance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Repos can inherit and override org-level configuration:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;extends&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github:yourorg/claude-org-config/.claude/base-project.json&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;org_rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;inherit&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Use all org rules</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;additional&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [          </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Add repo-specific rules</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">      &quot;./docs/ARCHITECTURE.md&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;overrides&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {            </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Override specific org settings</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;style&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;repo-specific-style&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h2 id="org-wide-rules--standards">Org-Wide Rules &amp; Standards<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#org-wide-rules--standards" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>All repositories should follow:</p>
+<ul>
+<li>✅ Use org-approved MCP servers (defined in <code>mcp/org-servers.json</code>)</li>
+<li>✅ Include <code>.claude/project.json</code> that extends base config</li>
+<li>✅ Follow coding standards in <code>.claude/rules/code-style.md</code></li>
+<li>✅ Apply org branding/voice from <code>.claude/prompts/branding.md</code></li>
+<li>✅ Non-fork repos include standard files: README.md, LICENSE, CONTRIBUTING.md</li>
+</ul>
+<h2 id="mcp-servers">MCP Servers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mcp-servers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Shared MCP servers available to all repos:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;mcpServers&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;org-context&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;command&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;npx&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;args&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;-y&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;@yourorg/org-context-server&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;env&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">        &quot;GITHUB_ORG&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;yourorg&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;repo-standards&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;command&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;npx&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;args&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;-y&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;@yourorg/standards-validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h2 id="updating-org-configuration">Updating Org Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#updating-org-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>Make changes to this repo</li>
+<li>Create a PR for review</li>
+<li>After merge, repos can pull latest:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Manual update</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/sync-to-repos.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or via GitHub Actions (if configured)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workflow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sync-claude-config</span></span></code></pre></figure>
+</li>
+</ol>
+<h2 id="validation">Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Check if a repo is compliant:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># From any org repo</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -fsSL</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://raw.githubusercontent.com/yourorg/claude-org-config/main/scripts/validate-repo.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> bash</span></span></code></pre></figure>
+<h2 id="repository-types">Repository Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#repository-types" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Different repo types can use specialized configs:</p>
+<ul>
+<li><strong>Service repos</strong>: <code>templates/repo-types/service.json</code></li>
+<li><strong>Library repos</strong>: <code>templates/repo-types/library.json</code></li>
+<li><strong>Infrastructure</strong>: <code>templates/repo-types/infrastructure.json</code></li>
+</ul>
+<p>Specify in your repo’s <code>.claude/project.json</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;extends&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github:yourorg/claude-org-config/templates/repo-types/service.json&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;my-service&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h2 id="contributing">Contributing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#contributing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Changes to org-wide configuration should:</p>
+<ol>
+<li>Be discussed with engineering leadership</li>
+<li>Have clear motivation and examples</li>
+<li>Include migration guide for existing repos</li>
+<li>Be backwards compatible when possible</li>
+</ol>
+<h2 id="questions">Questions?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#questions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>See <a href="../../docs/SETUP" class="internal" data-slug="docs/SETUP">SETUP.md</a> for detailed setup instructions</li>
+<li>See <a href="../../docs/CUSTOMIZATION" class="internal" data-slug="docs/CUSTOMIZATION">CUSTOMIZATION.md</a> for override patterns</li>
+<li>Open an issue for org-wide config questions</li>
+</ul>
+<pre><code>
+---
+
+# File 2: Bootstrap Prompt for Claude Code
+
+**Usage:** Copy this entire section and paste it into Claude Code
+
+```markdown
+# CLAUDE CODE BOOTSTRAP PROMPT
+
+## Context
+
+I have created a new GitHub repository called `claude-org-config` (or similar name) that will contain centralized Claude configuration for my entire GitHub organization. I need you to:
+
+1. **Analyze all repositories** in my GitHub organization to understand common patterns
+2. **Bootstrap the `claude-org-config` repository** with appropriate structure and content
+3. **Create `.claude/project.json` files** in each existing repo that reference the org-level config
+
+## My GitHub Organization Details
+
+- **Organization name**: [YOUR_ORG_NAME]
+- **Config repo name**: [YOUR_CONFIG_REPO_NAME] (e.g., `claude-org-config`)
+- **Number of repos (approx)**: [NUMBER]
+- **My GitHub token**: Available in environment as `GITHUB_TOKEN` or `GH_TOKEN`
+
+## Step 1: Analyze Organization Repositories
+
+First, discover and analyze all repositories in the organization:
+
+```bash
+# List all repos in the org (non-archived, excluding forks by default)
+gh repo list [ORG_NAME] --limit 1000 --json name,description,primaryLanguage,isPrivate,isFork,languages,createdAt,updatedAt
+</code></pre>
+<p>For each repository, analyze:</p>
+<ul>
+<li><strong>Primary language(s)</strong> - to create language-specific rules</li>
+<li><strong>Repository type</strong> - service, library, infrastructure, docs, etc.</li>
+<li><strong>Common patterns</strong> - shared dependencies, naming conventions, structure</li>
+<li><strong>Existing <code>.claude/</code> configs</strong> - what’s already there</li>
+<li><strong>Tech stack</strong> - frameworks, tools, platforms</li>
+</ul>
+<p><strong>Output a summary table</strong> showing:</p>
+<ul>
+<li>Repo name</li>
+<li>Type (service/library/infra/etc)</li>
+<li>Primary language</li>
+<li>Has existing .claude config? (yes/no)</li>
+<li>Key characteristics</li>
+</ul>
+<h2 id="step-2-create-the-config-repository-structure">Step 2: Create the Config Repository Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2-create-the-config-repository-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>In the <code>claude-org-config</code> repository, create this structure:</p>
+<pre><code>claude-org-config/
+├── README.md                          # Already provided, enhance based on org analysis
+├── .claude/
+│   ├── base-project.json              # Base config all repos inherit
+│   ├── rules/
+│   │   ├── code-style.md              # Extract from existing repos
+│   │   ├── architecture.md            # Common architecture patterns
+│   │   ├── security.md                # Security best practices
+│   │   └── conventions.md             # Naming, structure conventions
+│   └── prompts/
+│       ├── branding.md                # Org voice/tone
+│       ├── review-checklist.md        # What to check in PRs
+│       └── context.md                 # Org-level context for Claude
+├── mcp/
+│   ├── org-servers.json               # Shared MCP server configurations
+│   └── server-configs/
+│       └── README.md
+├── templates/
+│   ├── repo-claude-config.json        # Base template for new repos
+│   └── repo-types/
+│       ├── typescript-service.json    # For TS/Node services
+│       ├── python-service.json        # For Python services
+│       ├── go-service.json            # For Go services
+│       ├── library.json               # For libraries
+│       ├── infrastructure.json        # For IaC/Kubernetes repos
+│       └── docs.json                  # For documentation repos
+├── docs/
+│   ├── SETUP.md                       # How to add config to a repo
+│   ├── CUSTOMIZATION.md               # How to override
+│   └── MIGRATION.md                   # Migrating existing repos
+└── scripts/
+    ├── sync-to-repos.sh               # Distribute updates
+    ├── validate-repo.sh               # Check compliance
+    ├── init-repo.sh                   # Bootstrap new repo
+    └── analyze-org.sh                 # Repo analysis script
+</code></pre>
+<h3 id="critical-files-to-generate">Critical Files to Generate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#critical-files-to-generate" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-claudebase-projectjson">1. <code>.claude/base-project.json</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-claudebase-projectjson" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Based on org analysis, create a base configuration with:</p>
+<ul>
+<li>Common MCP servers used across repos</li>
+<li>Shared rules all repos should follow</li>
+<li>Org-level context</li>
+<li>Default knowledge sources</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;schema_version&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.0&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;org-base-config&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;description&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Base Claude configuration for all [ORG_NAME] repositories&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;github:[ORG_NAME]/claude-org-config/.claude/rules/code-style.md&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;github:[ORG_NAME]/claude-org-config/.claude/rules/architecture.md&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;github:[ORG_NAME]/claude-org-config/.claude/rules/conventions.md&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;context&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;org_branding&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github:[ORG_NAME]/claude-org-config/.claude/prompts/branding.md&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;org_standards&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github:[ORG_NAME]/claude-org-config/.claude/prompts/context.md&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;mcp_servers&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Based on analysis, include commonly used MCP servers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;preferred_tools&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // List based on org analysis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h4 id="2-clauderulescode-stylemd">2. <code>.claude/rules/code-style.md</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-clauderulescode-stylemd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Extract from existing repos and create unified style guide:</p>
+<ul>
+<li>Language-specific conventions (identified from analysis)</li>
+<li>Common linting/formatting tools</li>
+<li>Preferred patterns</li>
+<li>Anti-patterns to avoid</li>
+</ul>
+<h4 id="3-claudepromptsbrandingmd">3. <code>.claude/prompts/branding.md</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-claudepromptsbrandingmd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Create org voice/personality:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#61AFEF;--shiki-dark-text-decoration:inherit;">ORG_NAME</span><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">] Voice &amp; Branding</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">When working on [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#61AFEF;--shiki-dark-text-decoration:inherit;">ORG_NAME</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] code:</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Tone</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [Based on existing docs/README analysis]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Terminology</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> We say &quot;X&quot; not &quot;Y&quot;</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [Extract from existing repos]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Code Philosophy</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [Principles extracted from analysis]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Communication Style</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [For commit messages, PR descriptions, etc.]</span></span></code></pre></figure>
+<h4 id="4-templatesrepo-typesjson">4. <code>templates/repo-types/*.json</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-templatesrepo-typesjson" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Create type-specific templates based on the languages/types found:</p>
+<ul>
+<li>One template per major repo type identified</li>
+<li>Include appropriate rules, context, and tooling</li>
+<li>Add type-specific conventions</li>
+</ul>
+<h2 id="step-3-initialize-each-repository">Step 3: Initialize Each Repository<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3-initialize-each-repository" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>For each repository in the organization (excluding forks and the config repo itself):</p>
+<ol>
+<li><strong>Clone or checkout the repo</strong> (or use GitHub API)</li>
+<li><strong>Create <code>.claude/</code> directory</strong> if it doesn’t exist</li>
+<li><strong>Generate <code>.claude/project.json</code></strong> that:
+<ul>
+<li>Extends appropriate template from <code>claude-org-config</code></li>
+<li>Includes repo-specific name/description</li>
+<li>References existing CONTRIBUTING.md, README.md if present</li>
+<li>Adds repo-specific context</li>
+</ul>
+</li>
+</ol>
+<p>Example generated config:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;repo-name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;description&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Actual description from GitHub&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;extends&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github:[ORG_NAME]/claude-org-config/templates/repo-types/[TYPE].json&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;org_rules&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;inherit&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;repo_specific&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">      &quot;./CONTRIBUTING.md&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">      &quot;./docs/ARCHITECTURE.md&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;context&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;readme&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;./README.md&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Create a branch</strong> <code>feat/add-claude-org-config</code></li>
+<li><strong>Commit the changes</strong></li>
+<li><strong>Create a Pull Request</strong> (optional - can batch these)</li>
+</ol>
+<h2 id="step-4-generate-supporting-scripts">Step 4: Generate Supporting Scripts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4-generate-supporting-scripts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Create shell scripts in <code>scripts/</code>:</p>
+<h3 id="scriptsinit-reposh"><code>scripts/init-repo.sh</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scriptsinit-reposh" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Bash script to bootstrap a new repo with org config</p>
+<h3 id="scriptsvalidate-reposh"><code>scripts/validate-repo.sh</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scriptsvalidate-reposh" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Check if a repo is compliant with org standards:</p>
+<ul>
+<li>Has <code>.claude/project.json</code></li>
+<li>Extends org config</li>
+<li>Includes required files</li>
+<li>MCP servers match org standards</li>
+</ul>
+<h3 id="scriptssync-to-repossh"><code>scripts/sync-to-repos.sh</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scriptssync-to-repossh" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Update all repos when org config changes</p>
+<h2 id="step-5-documentation">Step 5: Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-5-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Generate comprehensive docs:</p>
+<h3 id="docssetupmd"><code>docs/SETUP.md</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#docssetupmd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Step-by-step guide for adding org config to a new/existing repo</p>
+<h3 id="docscustomizationmd"><code>docs/CUSTOMIZATION.md</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#docscustomizationmd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How to override org settings for specific repo needs</p>
+<h3 id="docsmigrationmd"><code>docs/MIGRATION.md</code><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#docsmigrationmd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>How to migrate existing <code>.claude/</code> configs to use org config</p>
+<h2 id="execution-plan">Execution Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#execution-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Execute this in phases:</p>
+<p><strong>Phase 1: Discovery</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze the org</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ORG] --limit 1000 --json name,languages,description,primaryLanguage,isPrivate,isFork </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> org-repos.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze each repo for patterns</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create summary table</span></span></code></pre></figure>
+<p><strong>Phase 2: Bootstrap Config Repo</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [CONFIG_REPO]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create structure</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate base configs based on analysis</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create type templates</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Write rules and prompts</span></span></code></pre></figure>
+<p><strong>Phase 3: Initialize Repos</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># For each repo:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Clone</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Create .claude/project.json</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Create PR</span></span></code></pre></figure>
+<p><strong>Phase 4: Validation</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run validate-repo.sh on all repos</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate compliance report</span></span></code></pre></figure>
+<h2 id="important-considerations">Important Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#important-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>Do NOT modify forks</strong> - skip repositories where <code>isFork: true</code></li>
+<li><strong>Handle existing <code>.claude/</code> configs</strong> - merge rather than replace</li>
+<li><strong>Respect private repos</strong> - ensure tokens have appropriate access</li>
+<li><strong>Batch PRs</strong> - maybe do 5-10 at a time, not all at once</li>
+<li><strong>Type detection</strong> - use smart heuristics for repo type classification</li>
+</ol>
+<h2 id="output-format">Output Format<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#output-format" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>For each phase, provide:</p>
+<ol>
+<li><strong>Summary of findings</strong> (tables, statistics)</li>
+<li><strong>Generated files</strong> (show content or save to filesystem)</li>
+<li><strong>Actions taken</strong> (commands executed)</li>
+<li><strong>Next steps</strong> (what I should review/approve)</li>
+<li><strong>Validation results</strong> (compliance report)</li>
+</ol>
+<h2 id="questions-to-ask-me">Questions to Ask Me<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#questions-to-ask-me" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before proceeding, ask me:</p>
+<ol>
+<li>Which GitHub org should I analyze?</li>
+<li>What’s the exact name of the config repo?</li>
+<li>Should I auto-create PRs or just prepare branches?</li>
+<li>Are there specific repos to exclude beyond forks?</li>
+<li>Should I include archived repositories?</li>
+<li>What MCP servers are you currently using that should be org-wide?</li>
+</ol>
+<hr/>
+<h2 id="ready-to-start">Ready to Start?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ready-to-start" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Once you have the answers above, execute this plan. Start with Phase 1 (Discovery) and show me the analysis before proceeding to Phase 2.</p>
+<pre><code>
+---
+
+# File 3: Detailed Quick Start Guide
+
+**Reference:** Use this for step-by-step execution
+
+```markdown
+# Quick Start Guide
+
+## What You Have
+
+This package contains:
+1. **README.md** - Documentation for your `claude-org-config` repository
+2. **bootstrap-org-config.md** - Comprehensive prompt for Claude Code
+3. **This guide** - Step-by-step instructions
+
+## Getting Started
+
+### Step 1: Set Up the Config Repository
+
+```bash
+# Navigate to your claude-org-config repo
+cd /path/to/claude-org-config
+
+# Copy the README from File 1 above
+# (manually copy and paste, or extract using the instructions below)
+
+# Edit with your actual org name
+# Replace [YOUR_ORG_NAME] placeholders
+sed -i '' 's/yourorg/YOUR_ACTUAL_ORG/g' README.md
+
+# Commit
+git add README.md
+git commit -m &quot;docs: initialize org config repo&quot;
+git push
+</code></pre>
+<h3 id="step-2-prepare-your-environment">Step 2: Prepare Your Environment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2-prepare-your-environment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Make sure you have:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GitHub CLI installed and authenticated</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> auth</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> status</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify org access</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> YOUR_ORG</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --limit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 5</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Ensure you have appropriate permissions</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Read access to all repos you want to analyze</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Write access to create .claude/ configs</span></span></code></pre></figure>
+<h3 id="step-3-start-claude-code">Step 3: Start Claude Code<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3-start-claude-code" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Option A: From the config repo</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /path/to/claude-org-config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-code</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Option B: From a workspace containing all repos</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /path/to/org-workspace</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-code</span></span></code></pre></figure>
+<h3 id="step-4-run-the-bootstrap-prompt">Step 4: Run the Bootstrap Prompt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-4-run-the-bootstrap-prompt" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Copy File 2 (the bootstrap prompt) and paste it into Claude Code, then answer these questions:</p>
+<ol>
+<li><strong>GitHub org name</strong>: <code>your-org-name</code></li>
+<li><strong>Config repo name</strong>: <code>claude-org-config</code> (or whatever you named it)</li>
+<li><strong>Auto-create PRs</strong>: <code>no</code> (review first) or <code>yes</code> (if confident)</li>
+<li><strong>Exclude repos</strong>: List any repos to skip beyond forks</li>
+<li><strong>Include archived</strong>: Usually <code>no</code></li>
+<li><strong>Org-wide MCP servers</strong>: List any MCP servers everyone should use</li>
+</ol>
+<p>Example conversation:</p>
+<pre><code>You: [paste the bootstrap prompt]
+
+Claude Code: I see you want to bootstrap your org config. Let me ask a few questions:
+1. Which GitHub org should I analyze?
+
+You: acme-corp
+
+Claude Code: 2. What's the exact name of the config repo?
+
+You: claude-org-config
+
+[... continue answering ...]
+</code></pre>
+<h3 id="step-5-review-phase-1-discovery">Step 5: Review Phase 1 (Discovery)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-5-review-phase-1-discovery" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Claude Code will analyze all repos and show you:</p>
+<ul>
+<li>Summary table of all repos</li>
+<li>Detected patterns</li>
+<li>Proposed categorization</li>
+<li>Common languages/frameworks</li>
+</ul>
+<p><strong>Review this carefully</strong> before proceeding to Phase 2.</p>
+<h3 id="step-6-execute-phase-2-bootstrap-config-repo">Step 6: Execute Phase 2 (Bootstrap Config Repo)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-6-execute-phase-2-bootstrap-config-repo" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Claude Code will create:</p>
+<ul>
+<li>Directory structure</li>
+<li>Base configuration files</li>
+<li>Rules and prompts</li>
+<li>Templates for different repo types</li>
+<li>Scripts for management</li>
+</ul>
+<p><strong>Review the generated files</strong> and make adjustments to:</p>
+<ul>
+<li>Branding/voice in <code>.claude/prompts/branding.md</code></li>
+<li>Code style rules in <code>.claude/rules/code-style.md</code></li>
+<li>Any org-specific conventions</li>
+</ul>
+<h3 id="step-7-execute-phase-3-initialize-repos">Step 7: Execute Phase 3 (Initialize Repos)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-7-execute-phase-3-initialize-repos" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Claude Code will:</p>
+<ul>
+<li>Create <code>.claude/project.json</code> in each repo</li>
+<li>Choose appropriate template based on analysis</li>
+<li>Create branches/PRs</li>
+</ul>
+<p><strong>Review the PRs</strong> before merging.</p>
+<h3 id="step-8-validate">Step 8: Validate<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-8-validate" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Run validation to check compliance:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># From the config repo</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/validate-repo.sh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /path/to/some-repo</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or validate all repos</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> repo</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ../*/</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  ./scripts/validate-repo.sh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span></code></pre></figure>
+<h2 id="customization-after-bootstrap">Customization After Bootstrap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#customization-after-bootstrap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="adding-new-rules">Adding New Rules<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adding-new-rules" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-org-config</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Edit or create new rule files</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">vim</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .claude/rules/new-rule.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Update base-project.json to reference it</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">vim</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .claude/base-project.json</span></span></code></pre></figure>
+<h3 id="creating-new-repo-type-templates">Creating New Repo Type Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#creating-new-repo-type-templates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-org-config/templates/repo-types</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cp</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> typescript-service.json</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> rust-service.json</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Edit rust-service.json with Rust-specific config</span></span></code></pre></figure>
+<h3 id="updating-existing-repos">Updating Existing Repos<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#updating-existing-repos" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>After changing org config:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Manual sync</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/sync-to-repos.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or trigger via GitHub Actions if you set that up</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workflow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sync-claude-config</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> your-org/some-repo</span></span></code></pre></figure>
+<h2 id="common-issues--solutions">Common Issues &amp; Solutions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues--solutions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="permission-denied-when-accessing-repos">”Permission denied” when accessing repos<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#permission-denied-when-accessing-repos" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check your GitHub token has correct scopes</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> auth</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> refresh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -s</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo,read:org</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or set PAT with appropriate permissions</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> GITHUB_TOKEN</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ghp_</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">...</span></span></code></pre></figure>
+<h3 id="too-many-repos-to-process">”Too many repos to process”<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#too-many-repos-to-process" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Edit the prompt to process in batches:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Process first 20 repos</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> YOUR_ORG</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --limit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 20</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Then next 20</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> YOUR_ORG</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --limit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 20</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --skip</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 20</span></span></code></pre></figure>
+<h3 id="existing-claude-configs-conflict">Existing <code>.claude/</code> configs conflict<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#existing-claude-configs-conflict" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Claude Code should merge, but review carefully:</p>
+<ul>
+<li>Back up existing configs first</li>
+<li>Ensure repo-specific rules are preserved</li>
+<li>Check that overrides work as expected</li>
+</ul>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>After bootstrap:</p>
+<ol>
+<li><strong>Add to org onboarding docs</strong> - new repos should use this config</li>
+<li><strong>Set up GitHub Actions</strong> - auto-sync config updates</li>
+<li><strong>Create MCP server</strong> - for cross-repo context (advanced)</li>
+<li><strong>Schedule validation</strong> - weekly checks for compliance</li>
+<li><strong>Document exceptions</strong> - some repos might need special config</li>
+</ol>
+<h2 id="getting-help">Getting Help<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#getting-help" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Config repo issues</strong>: Open issue in <code>claude-org-config</code> repo</li>
+<li><strong>Per-repo issues</strong>: Check that repo’s <code>.claude/project.json</code></li>
+<li><strong>Claude Code issues</strong>: See <a href="https://docs.claude.com/claude-code" class="external">https://docs.claude.com/claude-code<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>MCP server issues</strong>: Check <code>mcp/org-servers.json</code></li>
+</ul>
+<h2 id="example-end-to-end-flow">Example: End-to-End Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-end-to-end-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Set up</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/code/acme-corp/claude-org-config</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (copy README from File 1)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> add</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> README.md</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;&amp; </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> commit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;docs: init&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;&amp; </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Start Claude Code</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-code</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Paste bootstrap prompt (File 2) and answer questions</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Review Phase 1 output</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (Claude shows repo analysis table)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Approve Phase 2</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">You:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Looks good, proceed with Phase 2&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 6. Review generated configs</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (Claude creates all files)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 7. Approve Phase 3 (or do manually)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">You:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Create PRs for first 5 repos as a test&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 8. Review PRs on GitHub, merge when satisfied</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 9. Roll out to remaining repos</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 10. Set up automation</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup-github-actions.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # If Claude generates this</span></span></code></pre></figure>
+<h2 id="pro-tips">Pro Tips<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pro-tips" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Start small</strong>: Test with 2-3 repos before rolling out org-wide</li>
+<li><strong>Use repo types</strong>: Categorize repos to avoid one-size-fits-all config</li>
+<li><strong>Version your config</strong>: Tag releases of claude-org-config</li>
+<li><strong>Document deviations</strong>: If a repo needs special config, document why</li>
+<li><strong>Automate validation</strong>: Run in CI to catch drift</li>
+<li><strong>Iterate</strong>: Start simple, add rules/structure as patterns emerge</li>
+</ul>
+<p>Ready? Start with Step 1! 🚀</p>
+<pre><code>
+---
+
+## 📝 How to Extract Files
+
+### Method 1: Manual Copy/Paste
+
+1. **For README.md**: Copy everything between the triple backticks in &quot;File 1&quot;
+2. **For Bootstrap Prompt**: Copy everything between the triple backticks in &quot;File 2&quot;
+3. **For Quick Start**: Copy everything between the triple backticks in &quot;File 3&quot;
+
+### Method 2: Script Extraction
+
+Save this package file as `claude-org-config-package.md`, then run:
+
+```bash
+# Extract README
+sed -n '/^# File 1: README.md/,/^---$/p' claude-org-config-package.md | \
+  sed '1d;$d' | sed '1,/^```markdown$/d' | sed '/^```$/,$d' > README.md
+
+# Extract Bootstrap Prompt
+sed -n '/^# File 2: Bootstrap Prompt/,/^---$/p' claude-org-config-package.md | \
+  sed '1d;$d' | sed '1,/^```markdown$/d' | sed '/^```$/,$d' > bootstrap-prompt.md
+
+# Extract Quick Start
+sed -n '/^# File 3: Detailed Quick Start/,/^---$/p' claude-org-config-package.md | \
+  sed '1d;$d' | sed '1,/^```markdown$/d' | sed '/^```$/,$d' > QUICKSTART.md
+</code></pre>
+<h3 id="method-3-use-this-simple-extraction-script">Method 3: Use this simple extraction script<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#method-3-use-this-simple-extraction-script" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># save as extract.sh and run: bash extract.sh claude-org-config-package.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FILE</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">$1</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Extracting File 1: README.md...&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">awk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^# File 1: README.md/,/^---$/'</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FILE</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  sed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^```markdown$/,/^```$/p'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '1d;$d'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> README.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Extracting File 2: bootstrap-prompt.md...&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">awk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^# File 2: Bootstrap Prompt/,/^---$/'</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FILE</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  sed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^```markdown$/,/^```$/p'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '1d;$d'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> bootstrap-prompt.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Extracting File 3: QUICKSTART.md...&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">awk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^# File 3: Detailed Quick Start/,/^---$/'</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FILE</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  sed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/^```markdown$/,/^```$/p'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '1d;$d'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> QUICKSTART.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Done! Files extracted:&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ls</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -lh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> README.md</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> bootstrap-prompt.md</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> QUICKSTART.md</span></span></code></pre></figure>
+<hr/>
+<h2 id="-what-to-do-now">🎯 What to Do Now<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-what-to-do-now" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>This file is already saved</strong> to <code>~/Downloads/claude-org-config-complete-package.md</code></li>
+<li><strong>Navigate to your config repo</strong>: <code>cd /path/to/claude-org-config</code></li>
+<li><strong>Extract the README</strong>:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Copy the README section from File 1, or use extraction script</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Edit to replace 'yourorg' with your actual org name</span></span></code></pre></figure>
+</li>
+<li><strong>Start Claude Code</strong>: <code>claude-code</code></li>
+<li><strong>Paste the Bootstrap Prompt</strong> (from File 2) into Claude Code</li>
+<li><strong>Follow the Quick Start Guide</strong> (File 3) for detailed steps</li>
+</ol>
+<hr/>
+<h2 id="-additional-resources">📚 Additional Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-additional-resources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Claude Code docs</strong>: <a href="https://docs.claude.com/claude-code" class="external">https://docs.claude.com/claude-code<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>MCP documentation</strong>: <a href="https://modelcontextprotocol.io" class="external">https://modelcontextprotocol.io<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><strong>GitHub CLI</strong>: <a href="https://cli.github.com" class="external">https://cli.github.com<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<h2 id="-license">📄 License<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-license" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This bootstrap package is provided as-is for organizational use. Modify as needed for your org’s requirements.</p>
+<hr/>
+<p><strong>Questions or issues?</strong> Open a discussion in your <code>claude-org-config</code> repository after bootstrap.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-320" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#claude-organization-configuration---complete-bootstrap-package" data-for="claude-organization-configuration---complete-bootstrap-package">Claude Organization Configuration - Complete Bootstrap Package</a></li><li class="depth-1"><a href="#-package-contents" data-for="-package-contents">📦 Package Contents</a></li><li class="depth-1"><a href="#-quick-start-instructions" data-for="-quick-start-instructions">🚀 Quick Start Instructions</a></li><li class="depth-0"><a href="#file-1-readmemd-for-config-repo" data-for="file-1-readmemd-for-config-repo">File 1: README.md for Config Repo</a></li><li class="depth-1"><a href="#setup-for-new-repositories" data-for="setup-for-new-repositories">Setup for New Repositories</a></li><li class="depth-2"><a href="#automatic-setup-recommended" data-for="automatic-setup-recommended">Automatic Setup (Recommended)</a></li><li class="depth-2"><a href="#manual-setup" data-for="manual-setup">Manual Setup</a></li><li class="depth-1"><a href="#configuration-inheritance" data-for="configuration-inheritance">Configuration Inheritance</a></li><li class="depth-1"><a href="#org-wide-rules--standards" data-for="org-wide-rules--standards">Org-Wide Rules &amp; Standards</a></li><li class="depth-1"><a href="#mcp-servers" data-for="mcp-servers">MCP Servers</a></li><li class="depth-1"><a href="#updating-org-configuration" data-for="updating-org-configuration">Updating Org Configuration</a></li><li class="depth-1"><a href="#validation" data-for="validation">Validation</a></li><li class="depth-1"><a href="#repository-types" data-for="repository-types">Repository Types</a></li><li class="depth-1"><a href="#contributing" data-for="contributing">Contributing</a></li><li class="depth-1"><a href="#questions" data-for="questions">Questions?</a></li><li class="depth-1"><a href="#step-2-create-the-config-repository-structure" data-for="step-2-create-the-config-repository-structure">Step 2: Create the Config Repository Structure</a></li><li class="depth-2"><a href="#critical-files-to-generate" data-for="critical-files-to-generate">Critical Files to Generate</a></li><li class="depth-1"><a href="#step-3-initialize-each-repository" data-for="step-3-initialize-each-repository">Step 3: Initialize Each Repository</a></li><li class="depth-1"><a href="#step-4-generate-supporting-scripts" data-for="step-4-generate-supporting-scripts">Step 4: Generate Supporting Scripts</a></li><li class="depth-2"><a href="#scriptsinit-reposh" data-for="scriptsinit-reposh">scripts/init-repo.sh</a></li><li class="depth-2"><a href="#scriptsvalidate-reposh" data-for="scriptsvalidate-reposh">scripts/validate-repo.sh</a></li><li class="depth-2"><a href="#scriptssync-to-repossh" data-for="scriptssync-to-repossh">scripts/sync-to-repos.sh</a></li><li class="depth-1"><a href="#step-5-documentation" data-for="step-5-documentation">Step 5: Documentation</a></li><li class="depth-2"><a href="#docssetupmd" data-for="docssetupmd">docs/SETUP.md</a></li><li class="depth-2"><a href="#docscustomizationmd" data-for="docscustomizationmd">docs/CUSTOMIZATION.md</a></li><li class="depth-2"><a href="#docsmigrationmd" data-for="docsmigrationmd">docs/MIGRATION.md</a></li><li class="depth-1"><a href="#execution-plan" data-for="execution-plan">Execution Plan</a></li><li class="depth-1"><a href="#important-considerations" data-for="important-considerations">Important Considerations</a></li><li class="depth-1"><a href="#output-format" data-for="output-format">Output Format</a></li><li class="depth-1"><a href="#questions-to-ask-me" data-for="questions-to-ask-me">Questions to Ask Me</a></li><li class="depth-1"><a href="#ready-to-start" data-for="ready-to-start">Ready to Start?</a></li><li class="depth-2"><a href="#step-2-prepare-your-environment" data-for="step-2-prepare-your-environment">Step 2: Prepare Your Environment</a></li><li class="depth-2"><a href="#step-3-start-claude-code" data-for="step-3-start-claude-code">Step 3: Start Claude Code</a></li><li class="depth-2"><a href="#step-4-run-the-bootstrap-prompt" data-for="step-4-run-the-bootstrap-prompt">Step 4: Run the Bootstrap Prompt</a></li><li class="depth-2"><a href="#step-5-review-phase-1-discovery" data-for="step-5-review-phase-1-discovery">Step 5: Review Phase 1 (Discovery)</a></li><li class="depth-2"><a href="#step-6-execute-phase-2-bootstrap-config-repo" data-for="step-6-execute-phase-2-bootstrap-config-repo">Step 6: Execute Phase 2 (Bootstrap Config Repo)</a></li><li class="depth-2"><a href="#step-7-execute-phase-3-initialize-repos" data-for="step-7-execute-phase-3-initialize-repos">Step 7: Execute Phase 3 (Initialize Repos)</a></li><li class="depth-2"><a href="#step-8-validate" data-for="step-8-validate">Step 8: Validate</a></li><li class="depth-1"><a href="#customization-after-bootstrap" data-for="customization-after-bootstrap">Customization After Bootstrap</a></li><li class="depth-2"><a href="#adding-new-rules" data-for="adding-new-rules">Adding New Rules</a></li><li class="depth-2"><a href="#creating-new-repo-type-templates" data-for="creating-new-repo-type-templates">Creating New Repo Type Templates</a></li><li class="depth-2"><a href="#updating-existing-repos" data-for="updating-existing-repos">Updating Existing Repos</a></li><li class="depth-1"><a href="#common-issues--solutions" data-for="common-issues--solutions">Common Issues &amp; Solutions</a></li><li class="depth-2"><a href="#permission-denied-when-accessing-repos" data-for="permission-denied-when-accessing-repos">”Permission denied” when accessing repos</a></li><li class="depth-2"><a href="#too-many-repos-to-process" data-for="too-many-repos-to-process">”Too many repos to process”</a></li><li class="depth-2"><a href="#existing-claude-configs-conflict" data-for="existing-claude-configs-conflict">Existing .claude/ configs conflict</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-1"><a href="#getting-help" data-for="getting-help">Getting Help</a></li><li class="depth-1"><a href="#example-end-to-end-flow" data-for="example-end-to-end-flow">Example: End-to-End Flow</a></li><li class="depth-1"><a href="#pro-tips" data-for="pro-tips">Pro Tips</a></li><li class="depth-2"><a href="#method-3-use-this-simple-extraction-script" data-for="method-3-use-this-simple-extraction-script">Method 3: Use this simple extraction script</a></li><li class="depth-1"><a href="#-what-to-do-now" data-for="-what-to-do-now">🎯 What to Do Now</a></li><li class="depth-1"><a href="#-additional-resources" data-for="-additional-resources">📚 Additional Resources</a></li><li class="depth-1"><a href="#-license" data-for="-license">📄 License</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

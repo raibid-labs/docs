@@ -1,0 +1,68 @@
+# Sample Configuration for Testing
+# This is a complete, valid configuration file for raibid-ci
+
+cluster:
+  name: dgx-spark-dev
+  kubeconfig: ~/.kube/config
+  namespace: raibid-ci
+  context: default
+
+api:
+  host: 0.0.0.0
+  port: 8080
+  log_level: info
+  workers: 4
+  max_connections: 100
+
+agents:
+  rust:
+    enabled: true
+    image: raibid/rust-agent:latest
+    max_replicas: 5
+    min_replicas: 1
+    cache_size: 20Gi
+    cache_path: /cache
+    resources:
+      requests:
+        cpu: "2"
+        memory: 4Gi
+      limits:
+        cpu: "4"
+        memory: 8Gi
+
+redis:
+  host: redis.raibid-ci.svc.cluster.local
+  port: 6379
+  stream: build-jobs
+  consumer_group: raibid-workers
+  password: null
+  max_connections: 10
+
+gitea:
+  url: http://gitea.raibid-ci.svc.cluster.local:3000
+  admin_user: raibid-admin
+  admin_token: ${GITEA_ADMIN_TOKEN}
+  org_name: raibid-ci
+
+flux:
+  enabled: true
+  git_url: http://gitea.raibid-ci.svc.cluster.local:3000/raibid-ci/fleet.git
+  git_branch: main
+  sync_interval: 5m
+
+keda:
+  enabled: true
+  polling_interval: 30
+  cooldown_period: 300
+  min_replica_count: 1
+  max_replica_count: 10
+
+monitoring:
+  enabled: true
+  prometheus_endpoint: http://prometheus:9090
+  metrics_port: 9091
+
+logging:
+  level: info
+  format: json
+  output: stdout

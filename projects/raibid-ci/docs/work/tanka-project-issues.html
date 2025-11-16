@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>tanka-project-issues</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="tanka-project-issues"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="tanka-project-issues"/><meta name="twitter:description" content="Tanka + Tilt Deployment Project Issues This document contains all issues for migrating raibid-ci deployment to Tanka + Tilt."/><meta property="og:description" content="Tanka + Tilt Deployment Project Issues This document contains all issues for migrating raibid-ci deployment to Tanka + Tilt."/><meta property="og:image:alt" content="Tanka + Tilt Deployment Project Issues This document contains all issues for migrating raibid-ci deployment to Tanka + Tilt."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/tanka-project-issues"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/tanka-project-issues"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Tanka + Tilt Deployment Project Issues This document contains all issues for migrating raibid-ci deployment to Tanka + Tilt."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/tanka-project-issues-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/tanka-project-issues-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/tanka-project-issues-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/raibid-ci/docs/work/tanka-project-issues"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-463"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-463" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/">raibid ci</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/work/">work</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>tanka project issues</a></div></nav><h1 class="article-title">tanka-project-issues</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:14.286Z">Nov 16, 2025</time><span>15 min read</span></p></div></div><article class="popover-hint"><h1 id="tanka--tilt-deployment-project-issues">Tanka + Tilt Deployment Project Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tanka--tilt-deployment-project-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This document contains all issues for migrating raibid-ci deployment to Tanka + Tilt.</p>
+<h2 id="workstream-organization">Workstream Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Workstream 1: Foundation</strong> - Tanka project structure and base configuration
+<strong>Workstream 2: Infrastructure</strong> - Tanka configs for external dependencies
+<strong>Workstream 3: Applications</strong> - Tanka configs for raibid components
+<strong>Workstream 4: Docker</strong> - Container images for server and agent
+<strong>Workstream 5: Tilt Integration</strong> - Development orchestration with Tilt
+<strong>Workstream 6: Documentation</strong> - Developer experience and guides</p>
+<hr/>
+<h2 id="workstream-1-foundation">Workstream 1: Foundation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-1-foundation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-11-initialize-tanka-project-structure">Issue 1.1: Initialize Tanka Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-11-initialize-tanka-project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: initialize Tanka project with base structure</p>
+<p><strong>Description</strong>:
+Set up the foundational Tanka project structure following best practices from tanka.dev and the mop-core reference.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Install Tanka CLI (<code>tk</code>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Initialize Tanka project: <code>tk init</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create directory structure:
+<pre><code>tanka/
+├── environments/
+│   └── local/
+│       ├── main.jsonnet
+│       └── spec.json
+├── lib/
+│   ├── raibid/
+│   │   ├── config.libsonnet
+│   │   └── util.libsonnet
+│   └── k8s.libsonnet
+├── vendor/
+└── jsonnetfile.json
+</code></pre>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure <code>jsonnetfile.json</code> with dependencies:
+<ul>
+<li>grafana/jsonnet-libs (tanka-util for Helm)</li>
+<li>jsonnet-libs/k8s-libsonnet</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Run <code>jb install</code> to vendor dependencies</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>spec.json</code> for local k3s cluster (<a href="https://127.0.0.1:6443" class="external">https://127.0.0.1:6443<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set default namespace: <code>raibid-system</code></li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li><code>tk show environments/local</code> runs without errors</li>
+<li>Dependencies are vendored correctly</li>
+<li>Base structure follows Tanka conventions</li>
+</ul>
+<p><strong>Labels</strong>: tanka, infrastructure, foundation</p>
+<p><strong>Dependencies</strong>: None</p>
+<hr/>
+<h3 id="issue-12-create-base-jsonnet-libraries">Issue 1.2: Create Base Jsonnet Libraries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-12-create-base-jsonnet-libraries" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create reusable jsonnet libraries for common patterns</p>
+<p><strong>Description</strong>:
+Build reusable jsonnet libraries that will be used across all component configurations. These provide abstractions for common Kubernetes patterns and raibid-specific configuration.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/config.libsonnet</code>:
+<ul>
+<li>Namespace management</li>
+<li>Common labels and annotations</li>
+<li>Resource naming conventions</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/util.libsonnet</code>:
+<ul>
+<li>Helper functions for merging configs</li>
+<li>Environment variable builders</li>
+<li>Secret reference helpers</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/helm.libsonnet</code>:
+<ul>
+<li>Wrapper for Helm chart integration</li>
+<li>Chart vendoring helpers</li>
+<li>Values file merging utilities</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/k8s.libsonnet</code>:
+<ul>
+<li>Kubernetes API shortcuts</li>
+<li>Resource template generators</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add comprehensive inline documentation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create example usage in <code>examples/</code> directory</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Libraries can be imported and used in jsonnet files</li>
+<li>Helper functions work correctly with test cases</li>
+<li>Documentation explains usage patterns</li>
+</ul>
+<p><strong>Labels</strong>: tanka, jsonnet, libraries</p>
+<p><strong>Dependencies</strong>: Issue 1.1</p>
+<hr/>
+<h2 id="workstream-2-infrastructure-components">Workstream 2: Infrastructure Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-2-infrastructure-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-21-wrap-redis-helm-chart-in-tanka">Issue 2.1: Wrap Redis Helm Chart in Tanka<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-21-wrap-redis-helm-chart-in-tanka" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for Redis with Streams</p>
+<p><strong>Description</strong>:
+Wrap the Bitnami Redis Helm chart in jsonnet to manage Redis deployment via Tanka. Configure for Redis Streams support as the job queue.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/charts/redis.libsonnet</code>:
+<ul>
+<li>Import tanka-util helm wrapper</li>
+<li>Define chart location: <code>vendor/redis</code></li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Vendor Redis Helm chart: <code>helm pull bitnami/redis --untar -d tanka/vendor/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create values configuration in jsonnet:
+<ul>
+<li>Architecture: standalone (MVP)</li>
+<li>Redis Streams enabled</li>
+<li>Persistence: enabled</li>
+<li>Resource limits</li>
+<li>Service configuration</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Redis to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure initialization job for streams setup</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add healthcheck configuration</li>
+</ul>
+<p><strong>Reference Configuration</strong> (from <code>infra/redis/values.yaml</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">architecture</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">standalone</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">auth</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">false</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # MVP - add auth later</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">master</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  persistence</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8Gi</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li><code>tk show environments/local</code> includes Redis resources</li>
+<li><code>tk diff environments/local</code> shows expected changes</li>
+<li>Configuration matches existing <code>infra/redis/</code> functionality</li>
+</ul>
+<p><strong>Labels</strong>: tanka, redis, infrastructure, helm</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2</p>
+<hr/>
+<h3 id="issue-22-wrap-gitea-helm-chart-in-tanka">Issue 2.2: Wrap Gitea Helm Chart in Tanka<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-22-wrap-gitea-helm-chart-in-tanka" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for Gitea with OCI registry</p>
+<p><strong>Description</strong>:
+Wrap the Gitea Helm chart in jsonnet to manage Gitea deployment with OCI registry support via Tanka.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/charts/gitea.libsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Vendor Gitea Helm chart: <code>helm pull gitea-charts/gitea --untar -d tanka/vendor/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create values configuration in jsonnet:
+<ul>
+<li>OCI registry enabled</li>
+<li>PostgreSQL database</li>
+<li>Persistent storage</li>
+<li>Service configuration (NodePort for dev)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Gitea to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure init container for database migrations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add post-install configuration hook</li>
+</ul>
+<p><strong>Reference Configuration</strong> (from <code>infra/gitea/values.yaml</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">gitea</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  config</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    packages</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      ENABLED</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    server</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      PROTOCOL</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">http</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      DOMAIN</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">gitea.local</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Gitea deployment includes OCI registry</li>
+<li>PostgreSQL dependency correctly configured</li>
+<li>Configuration matches existing <code>infra/gitea/</code> functionality</li>
+</ul>
+<p><strong>Labels</strong>: tanka, gitea, infrastructure, helm</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2</p>
+<hr/>
+<h3 id="issue-23-wrap-keda-helm-chart-in-tanka">Issue 2.3: Wrap KEDA Helm Chart in Tanka<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-23-wrap-keda-helm-chart-in-tanka" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for KEDA autoscaling</p>
+<p><strong>Description</strong>:
+Wrap the KEDA Helm chart in jsonnet to manage KEDA deployment for event-driven autoscaling via Tanka.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/charts/keda.libsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Vendor KEDA Helm chart: <code>helm pull kedacore/keda --untar -d tanka/vendor/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create values configuration in jsonnet:
+<ul>
+<li>Operator configuration</li>
+<li>Metrics server</li>
+<li>Admission webhooks</li>
+<li>Service account setup</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add KEDA to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create ScaledJob CRD wrapper in <code>lib/raibid/scaledjob.libsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add TriggerAuthentication helpers</li>
+</ul>
+<p><strong>Reference Configuration</strong> (from <code>infra/keda/values.yaml</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">operator</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  replicaCount</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">metricsServer</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  replicaCount</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>KEDA operator deploys successfully</li>
+<li>CRDs are included in output</li>
+<li>Configuration matches existing <code>infra/keda/</code> functionality</li>
+</ul>
+<p><strong>Labels</strong>: tanka, keda, infrastructure, helm, autoscaling</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2</p>
+<hr/>
+<h3 id="issue-24-wrap-flux-helm-chart-in-tanka">Issue 2.4: Wrap Flux Helm Chart in Tanka<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-24-wrap-flux-helm-chart-in-tanka" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for Flux GitOps</p>
+<p><strong>Description</strong>:
+Wrap the Flux Helm chart in jsonnet to manage Flux deployment for GitOps workflows via Tanka.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/charts/flux.libsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Vendor Flux Helm chart: <code>helm pull fluxcd-community/flux2 --untar -d tanka/vendor/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create values configuration in jsonnet:
+<ul>
+<li>Source controller</li>
+<li>Kustomize controller</li>
+<li>Helm controller</li>
+<li>Notification controller</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Flux to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure GitRepository CRD for Gitea</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Kustomization CRD for auto-deployment</li>
+</ul>
+<p><strong>Reference Configuration</strong> (from <code>infra/flux/</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">source.toolkit.fluxcd.io/v1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">GitRepository</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">raibid-ci</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">raibid-system</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  interval</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1m0s</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  url</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">http://gitea.raibid-gitea.svc.cluster.local:3000/raibid/raibid-ci.git</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  ref</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    branch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">main</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Flux controllers deploy successfully</li>
+<li>GitRepository can connect to Gitea</li>
+<li>Configuration matches existing <code>infra/flux/</code> functionality</li>
+</ul>
+<p><strong>Labels</strong>: tanka, flux, infrastructure, helm, gitops</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2, Issue 2.2</p>
+<hr/>
+<h2 id="workstream-3-application-deployments">Workstream 3: Application Deployments<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-3-application-deployments" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-31-create-tanka-configuration-for-server">Issue 3.1: Create Tanka Configuration for Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-31-create-tanka-configuration-for-server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for raibid-server deployment</p>
+<p><strong>Description</strong>:
+Create jsonnet configuration for deploying the raibid-server application with proper Kubernetes resources (Deployment, Service, ConfigMap, etc.).</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/server.libsonnet</code>:
+<ul>
+<li>Deployment with health probes</li>
+<li>Service (ClusterIP)</li>
+<li>ConfigMap for configuration</li>
+<li>Environment variable management</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add server to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure resource limits:
+<ul>
+<li>CPU: 500m request, 1000m limit</li>
+<li>Memory: 512Mi request, 1Gi limit</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add liveness and readiness probes (HTTP on <code>/health</code>)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure logging (JSON format for production)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add pod anti-affinity preferences</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create HorizontalPodAutoscaler (optional)</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Server deployment is properly templated</li>
+<li>Health checks are configured</li>
+<li>Configuration follows Kubernetes best practices</li>
+<li>Resources are appropriately limited</li>
+</ul>
+<p><strong>Labels</strong>: tanka, server, application, deployment</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2, Issue 4.1</p>
+<hr/>
+<h3 id="issue-32-create-tanka-configuration-for-agent-scaledjob">Issue 3.2: Create Tanka Configuration for Agent ScaledJob<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-32-create-tanka-configuration-for-agent-scaledjob" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for raibid-agent ScaledJob</p>
+<p><strong>Description</strong>:
+Create jsonnet configuration for deploying the raibid-agent as a KEDA ScaledJob that scales based on Redis Streams queue depth.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/agent.libsonnet</code>:
+<ul>
+<li>Job template with agent container</li>
+<li>KEDA ScaledJob wrapper</li>
+<li>TriggerAuthentication for Redis</li>
+<li>Redis Streams scaler configuration</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add agent ScaledJob to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure scaling parameters:
+<ul>
+<li>pollingInterval: 10s</li>
+<li>maxReplicaCount: 10</li>
+<li>minReplicaCount: 0 (scale to zero)</li>
+<li>lagThreshold: 5 (messages)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure agent resources:
+<ul>
+<li>CPU: 1000m request, 2000m limit</li>
+<li>Memory: 2Gi request, 4Gi limit</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add workspace volume (emptyDir)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure graceful shutdown</li>
+</ul>
+<p><strong>Reference Configuration</strong> (from <code>infra/keda/scaledjob.yaml</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">apiVersion</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">keda.sh/v1alpha1</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">kind</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ScaledJob</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">raibid-agent-rust</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">spec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  pollingInterval</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  maxReplicaCount</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  scalingStrategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;default&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  jobTargetRef</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    template</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      spec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        containers</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">agent</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">raibid-agent:latest</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>ScaledJob properly configured for Redis Streams</li>
+<li>Agent scales from 0 to 10 based on queue depth</li>
+<li>Configuration matches existing <code>infra/keda/scaledjob.yaml</code></li>
+</ul>
+<p><strong>Labels</strong>: tanka, agent, application, keda, autoscaling</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2, Issue 2.3, Issue 4.2</p>
+<hr/>
+<h3 id="issue-33-create-tanka-configuration-for-secrets-and-configmaps">Issue 3.3: Create Tanka Configuration for Secrets and ConfigMaps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-33-create-tanka-configuration-for-secrets-and-configmaps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tanka configuration for application secrets and config</p>
+<p><strong>Description</strong>:
+Create jsonnet configuration for managing application secrets and configuration data needed by server and agents.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>lib/raibid/secrets.libsonnet</code>:
+<ul>
+<li>Secret templates for sensitive data</li>
+<li>ConfigMap templates for non-sensitive config</li>
+<li>External secrets integration (future)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add common ConfigMap with:
+<ul>
+<li>Redis connection parameters</li>
+<li>Gitea URLs</li>
+<li>Queue stream names</li>
+<li>Log levels</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create Secret placeholders:
+<ul>
+<li>Redis auth (future)</li>
+<li>Gitea credentials</li>
+<li>Docker registry credentials</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add to <code>environments/local/main.jsonnet</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document secret management workflow</li>
+</ul>
+<p><strong>Note</strong>: For MVP, secrets can be empty/disabled. Production deployment will need proper secret management.</p>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>ConfigMaps contain all necessary configuration</li>
+<li>Secrets are properly templated (even if empty)</li>
+<li>Configuration is referenced correctly by server and agent</li>
+</ul>
+<p><strong>Labels</strong>: tanka, configuration, secrets</p>
+<p><strong>Dependencies</strong>: Issue 1.1, Issue 1.2</p>
+<hr/>
+<h2 id="workstream-4-docker-images">Workstream 4: Docker Images<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-4-docker-images" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-41-create-dockerfile-for-server">Issue 4.1: Create Dockerfile for Server<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-41-create-dockerfile-for-server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create optimized Dockerfile for raibid-server</p>
+<p><strong>Description</strong>:
+Create a multi-stage Dockerfile for building and running the raibid-server application optimized for ARM64 (DGX Spark).</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>crates/server/Dockerfile</code>:
+<ul>
+<li>Stage 1: Rust builder with all dependencies</li>
+<li>Stage 2: Build the server binary</li>
+<li>Stage 3: Minimal runtime image (Debian slim)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure build optimizations:
+<ul>
+<li>Use cargo chef for dependency caching</li>
+<li>Multi-arch support (ARM64 + x86_64)</li>
+<li>Link-time optimization (LTO)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add healthcheck script</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure non-root user execution</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add OCI image labels</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize layer caching for fast rebuilds</li>
+</ul>
+<p><strong>Target Image Size</strong>: &lt; 100MB</p>
+<p><strong>Example Multi-stage Structure</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light one-dark-pro"><code data-language="dockerfile" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> rust:1.82-bookworm </span><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">AS</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> chef</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install cargo-chef</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> chef </span><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">AS</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> planner</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate recipe</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> chef </span><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">AS</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> builder</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Build application</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> debian:bookworm-slim </span><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">AS</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> runtime</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Copy binary and run</span></span></code></pre></figure>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Image builds successfully on ARM64 and x86_64</li>
+<li>Binary runs and serves HTTP requests</li>
+<li>Healthcheck passes</li>
+<li>Image follows Docker best practices</li>
+</ul>
+<p><strong>Labels</strong>: docker, server, build</p>
+<p><strong>Dependencies</strong>: None (can start in parallel)</p>
+<hr/>
+<h3 id="issue-42-optimize-agent-dockerfile">Issue 4.2: Optimize Agent Dockerfile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-42-optimize-agent-dockerfile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: optimize agent Dockerfile with build stage</p>
+<p><strong>Description</strong>:
+Enhance the existing agent Dockerfile (<code>crates/agent/Dockerfile</code>) to include build stage for the agent binary and optimize for production.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add builder stage to existing Dockerfile:
+<ul>
+<li>Build raibid-agent binary from source</li>
+<li>Use cargo-chef for dependency caching</li>
+<li>Copy binary to runtime stage</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update runtime stage:
+<ul>
+<li>Copy agent binary from builder</li>
+<li>Configure startup command</li>
+<li>Add environment variables</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test with actual agent code</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize build cache layers</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add docker-compose for local testing</li>
+</ul>
+<p><strong>Current State</strong>: Dockerfile exists but doesn’t build agent binary</p>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Agent binary is built and included in image</li>
+<li>Image runs agent successfully</li>
+<li>Build uses layer caching effectively</li>
+<li>Image size is optimized</li>
+</ul>
+<p><strong>Labels</strong>: docker, agent, build</p>
+<p><strong>Dependencies</strong>: None (can start in parallel)</p>
+<hr/>
+<h3 id="issue-43-create-docker-compose-for-local-testing">Issue 4.3: Create Docker Compose for Local Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-43-create-docker-compose-for-local-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create docker-compose.yml for local service testing</p>
+<p><strong>Description</strong>:
+Create a Docker Compose configuration for testing server and agent containers locally without Kubernetes.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>docker-compose.yml</code> in root:
+<ul>
+<li>Redis service</li>
+<li>Server service</li>
+<li>Agent service (manual trigger)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure networking between services</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add volume mounts for development</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>.env.example</code> with configuration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add health checks for all services</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document usage in README</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li><code>docker-compose up</code> starts all services</li>
+<li>Services can communicate with each other</li>
+<li>Health checks pass</li>
+<li>Useful for integration testing</li>
+</ul>
+<p><strong>Labels</strong>: docker, testing, development</p>
+<p><strong>Dependencies</strong>: Issue 4.1, Issue 4.2</p>
+<hr/>
+<h2 id="workstream-5-tilt-integration">Workstream 5: Tilt Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-5-tilt-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-51-create-base-tiltfile-with-k3s-management">Issue 5.1: Create Base Tiltfile with K3s Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-51-create-base-tiltfile-with-k3s-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: create Tiltfile for k3s cluster management</p>
+<p><strong>Description</strong>:
+Create the base Tiltfile that manages the local k3s cluster and provides foundation for resource orchestration.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>Tiltfile</code> in root directory</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add k3s cluster lifecycle management:
+<ul>
+<li>Check if k3s is running</li>
+<li>Start k3s if needed (via script)</li>
+<li>Configure kubectl context</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add cluster validation:
+<ul>
+<li>Verify cluster is ready</li>
+<li>Check required namespaces</li>
+<li>Validate CRDs are installed</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add helper functions:
+<ul>
+<li>Namespace creation</li>
+<li>Context switching</li>
+<li>Resource cleanup</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Tilt UI settings:
+<ul>
+<li>Resource groups</li>
+<li>Log highlighting</li>
+<li>Port forwards</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li><code>tilt up</code> starts k3s cluster if needed</li>
+<li>Cluster is properly configured and ready</li>
+<li>Tilt UI displays cluster status</li>
+</ul>
+<p><strong>Labels</strong>: tilt, k3s, orchestration</p>
+<p><strong>Dependencies</strong>: None (can start in parallel)</p>
+<hr/>
+<h3 id="issue-52-add-docker-build-to-tiltfile">Issue 5.2: Add Docker Build to Tiltfile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-52-add-docker-build-to-tiltfile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: configure Docker image builds in Tiltfile</p>
+<p><strong>Description</strong>:
+Add Docker build configuration to Tiltfile for server and agent images with live reload support.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add <code>docker_build()</code> for server:
+<ul>
+<li>Dockerfile path: <code>crates/server/Dockerfile</code></li>
+<li>Context: repository root</li>
+<li>Build args for optimization</li>
+<li>Live update configuration</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add <code>docker_build()</code> for agent:
+<ul>
+<li>Dockerfile path: <code>crates/agent/Dockerfile</code></li>
+<li>Context: repository root</li>
+<li>Build args for optimization</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure build triggers:
+<ul>
+<li>Watch Rust source files</li>
+<li>Watch Cargo.toml files</li>
+<li>Rebuild on changes</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add build optimization:
+<ul>
+<li>Use BuildKit</li>
+<li>Layer caching</li>
+<li>Parallel builds</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add image push (for remote dev)</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Images build on <code>tilt up</code></li>
+<li>Changes trigger rebuilds</li>
+<li>Builds are fast with caching</li>
+<li>Live updates work for development</li>
+</ul>
+<p><strong>Labels</strong>: tilt, docker, build</p>
+<p><strong>Dependencies</strong>: Issue 4.1, Issue 4.2, Issue 5.1</p>
+<hr/>
+<h3 id="issue-53-add-tanka-deployment-to-tiltfile">Issue 5.3: Add Tanka Deployment to Tiltfile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-53-add-tanka-deployment-to-tiltfile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: integrate Tanka deployments in Tiltfile</p>
+<p><strong>Description</strong>:
+Integrate Tanka deployment commands into Tiltfile so <code>tilt up</code> deploys all Kubernetes resources via Tanka.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tanka integration to Tiltfile:
+<ul>
+<li>Use <code>local()</code> to run <code>tk show</code> and parse YAML</li>
+<li>Or use <code>k8s_yaml(local('tk show environments/local'))</code></li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create resource definitions for each component:
+<ul>
+<li>Redis (from Tanka)</li>
+<li>Gitea (from Tanka)</li>
+<li>KEDA (from Tanka)</li>
+<li>Flux (from Tanka)</li>
+<li>Server (from Tanka)</li>
+<li>Agent ScaledJob (from Tanka)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure resource dependencies:
+<ul>
+<li>Server depends on Redis</li>
+<li>Agent depends on Server and KEDA</li>
+<li>Flux depends on Gitea</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add resource grouping in Tilt UI:
+<ul>
+<li>Infrastructure (Redis, Gitea, KEDA, Flux)</li>
+<li>Applications (Server, Agent)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure auto-reload on Tanka changes</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li><code>tilt up</code> deploys all resources via Tanka</li>
+<li>Resources appear in Tilt UI</li>
+<li>Dependencies are respected</li>
+<li>Changes to jsonnet trigger re-deployment</li>
+</ul>
+<p><strong>Labels</strong>: tilt, tanka, deployment, orchestration</p>
+<p><strong>Dependencies</strong>: Issue 5.1, Issue 5.2, All Workstream 2 issues, Issue 3.1, Issue 3.2</p>
+<hr/>
+<h3 id="issue-54-add-port-forwarding-and-shortcuts-to-tiltfile">Issue 5.4: Add Port Forwarding and Shortcuts to Tiltfile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-54-add-port-forwarding-and-shortcuts-to-tiltfile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: configure port forwards and shortcuts in Tiltfile</p>
+<p><strong>Description</strong>:
+Add convenient port forwards and Tilt UI shortcuts for accessing services during development.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add port forwards:
+<ul>
+<li>Server: 8080 <span>→</span> server-service:8080</li>
+<li>Gitea: 3000 <span>→</span> gitea-service:3000</li>
+<li>Redis: 6379 <span>→</span> redis-service:6379</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tilt UI links:
+<ul>
+<li>Server API: <a href="http://localhost:8080" class="external">http://localhost:8080<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Gitea Web: <a href="http://localhost:3000" class="external">http://localhost:3000<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Redis CLI: redis-cli -h localhost</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tilt buttons/triggers:
+<ul>
+<li>“Trigger Job” - Send test job to Redis</li>
+<li>“Scale Agent” - Manually trigger agent scale</li>
+<li>“Reset Data” - Clear Redis and restart</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add log streaming configuration:
+<ul>
+<li>Server logs highlighted</li>
+<li>Agent logs with job context</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document shortcuts in Tiltfile comments</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>All services accessible via localhost</li>
+<li>Tilt UI has clickable links</li>
+<li>Buttons trigger expected actions</li>
+<li>Developer experience is smooth</li>
+</ul>
+<p><strong>Labels</strong>: tilt, development, dx</p>
+<p><strong>Dependencies</strong>: Issue 5.3</p>
+<hr/>
+<h3 id="issue-55-add-live-reload-for-development">Issue 5.5: Add Live Reload for Development<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-55-add-live-reload-for-development" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: configure live reload for Rust development in Tilt</p>
+<p><strong>Description</strong>:
+Add live reload capabilities to Tiltfile so Rust code changes are quickly reflected in running containers without full rebuilds.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Configure <code>live_update</code> for server:
+<ul>
+<li>Sync Rust source files</li>
+<li>Run <code>cargo build</code> inside container</li>
+<li>Restart server binary</li>
+<li>Fall back to full rebuild on Cargo.toml changes</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure <code>live_update</code> for agent (optional):
+<ul>
+<li>Agent runs as jobs, so full rebuild is fine</li>
+<li>Or implement similar sync for testing</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add file watching optimization:
+<ul>
+<li>Ignore <code>target/</code> directory</li>
+<li>Watch <code>src/</code>, <code>Cargo.toml</code>, <code>Cargo.lock</code></li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add restart triggers:
+<ul>
+<li>Restart on binary change</li>
+<li>Restart on config change</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test and optimize for performance</li>
+</ul>
+<p><strong>Note</strong>: Live reload for compiled languages like Rust is tricky. May need cargo-watch in container.</p>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Source changes trigger fast recompile</li>
+<li>Server restarts with new code</li>
+<li>Faster than full Docker rebuild</li>
+<li>Falls back correctly when needed</li>
+</ul>
+<p><strong>Labels</strong>: tilt, development, live-reload, dx</p>
+<p><strong>Dependencies</strong>: Issue 5.2, Issue 5.3</p>
+<hr/>
+<h2 id="workstream-6-documentation--polish">Workstream 6: Documentation &amp; Polish<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-6-documentation--polish" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-61-document-tanka-project-structure">Issue 6.1: Document Tanka Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-61-document-tanka-project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: docs: create comprehensive Tanka project documentation</p>
+<p><strong>Description</strong>:
+Create documentation explaining the Tanka project structure, how to use it, and how to extend it.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>tanka/README.md</code>:
+<ul>
+<li>Project structure overview</li>
+<li>How Tanka works with Helm</li>
+<li>How to add new components</li>
+<li>How to modify configurations</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document jsonnet libraries:
+<ul>
+<li>Each library in <code>lib/</code> gets doc comments</li>
+<li>Usage examples</li>
+<li>Common patterns</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create troubleshooting guide:
+<ul>
+<li>Common errors</li>
+<li>How to debug jsonnet</li>
+<li>How to inspect generated YAML</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tanka workflow guide:
+<ul>
+<li>Development workflow</li>
+<li>Testing changes</li>
+<li>Deploying to production</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Documentation is clear and comprehensive</li>
+<li>Examples are working and tested</li>
+<li>New contributors can understand the structure</li>
+<li>Troubleshooting covers common issues</li>
+</ul>
+<p><strong>Labels</strong>: documentation, tanka</p>
+<p><strong>Dependencies</strong>: All Workstream 1 and 2 issues</p>
+<hr/>
+<h3 id="issue-62-document-tilt-development-workflow">Issue 6.2: Document Tilt Development Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-62-document-tilt-development-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: docs: create Tilt development workflow documentation</p>
+<p><strong>Description</strong>:
+Create documentation explaining how to use Tilt for development, debugging, and testing.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>docs/TILT_WORKFLOW.md</code>:
+<ul>
+<li>How to start development environment</li>
+<li>How to use Tilt UI</li>
+<li>How to view logs</li>
+<li>How to debug issues</li>
+<li>How to trigger actions</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update root README.md:
+<ul>
+<li>Quick start with Tilt</li>
+<li>Prerequisites (just, tilt, tanka, k3s)</li>
+<li>First-time setup steps</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create video/GIF walkthrough:
+<ul>
+<li><code>tilt up</code> demo</li>
+<li>Showing live reload</li>
+<li>Showing Tilt UI features</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document common workflows:
+<ul>
+<li>Making changes to server</li>
+<li>Testing agent jobs</li>
+<li>Updating infrastructure</li>
+</ul>
+</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>New developers can get started quickly</li>
+<li>Common workflows are documented</li>
+<li>Screenshots/videos show Tilt in action</li>
+<li>README is updated with Tilt instructions</li>
+</ul>
+<p><strong>Labels</strong>: documentation, tilt, dx</p>
+<p><strong>Dependencies</strong>: All Workstream 5 issues</p>
+<hr/>
+<h3 id="issue-63-update-justfile-with-tanka-and-tilt-commands">Issue 6.3: Update Justfile with Tanka and Tilt Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-63-update-justfile-with-tanka-and-tilt-commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: feat: add Tanka and Tilt commands to justfile</p>
+<p><strong>Description</strong>:
+Update the justfile with convenient commands for working with Tanka and Tilt.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tanka commands:
+<ul>
+<li><code>just tk-show</code> - Show generated YAML</li>
+<li><code>just tk-diff</code> - Diff against cluster</li>
+<li><code>just tk-apply</code> - Apply to cluster</li>
+<li><code>just tk-fmt</code> - Format jsonnet files</li>
+<li><code>just tk-validate</code> - Validate jsonnet</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Tilt commands:
+<ul>
+<li><code>just dev</code> - Start Tilt (alias for <code>tilt up</code>)</li>
+<li><code>just dev-down</code> - Stop Tilt (alias for <code>tilt down</code>)</li>
+<li><code>just dev-ci</code> - Run Tilt CI mode</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add combined commands:
+<ul>
+<li><code>just deploy-local</code> - Deploy via Tanka directly</li>
+<li><code>just reset-local</code> - Reset local cluster</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update justfile documentation</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Commands work correctly</li>
+<li>Commands are well documented</li>
+<li>Shortcuts improve developer experience</li>
+</ul>
+<p><strong>Labels</strong>: dx, justfile, tooling</p>
+<p><strong>Dependencies</strong>: All Workstream 1-5 issues</p>
+<hr/>
+<h3 id="issue-64-create-cicd-workflow-for-tanka-validation">Issue 6.4: Create CI/CD Workflow for Tanka Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-64-create-cicd-workflow-for-tanka-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Title</strong>: ci: add GitHub Actions workflow for Tanka validation</p>
+<p><strong>Description</strong>:
+Create GitHub Actions workflow that validates Tanka configurations on every PR.</p>
+<p><strong>Tasks</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>.github/workflows/tanka-validate.yml</code>:
+<ul>
+<li>Install Tanka and jsonnet tools</li>
+<li>Install jsonnet-bundler</li>
+<li>Vendor dependencies</li>
+<li>Run <code>tk fmt --check</code></li>
+<li>Run <code>tk show</code> to validate</li>
+<li>Report errors</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add to required checks</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add badge to README</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add workflow documentation</li>
+</ul>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul>
+<li>Workflow runs on PRs</li>
+<li>Invalid jsonnet is caught</li>
+<li>Errors are clear and actionable</li>
+</ul>
+<p><strong>Labels</strong>: ci, tanka, validation</p>
+<p><strong>Dependencies</strong>: Issue 6.1</p>
+<hr/>
+<h2 id="summary">Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Total Issues</strong>: 23 issues across 6 workstreams</p>
+<p><strong>Parallel Workstreams</strong>:</p>
+<ul>
+<li>Workstream 1-2 can run first (foundation + infrastructure)</li>
+<li>Workstream 3-4 can run in parallel after 1-2</li>
+<li>Workstream 5 depends on 1-4</li>
+<li>Workstream 6 can run alongside 5</li>
+</ul>
+<p><strong>Estimated Timeline</strong>:</p>
+<ul>
+<li>Workstream 1: 1-2 days</li>
+<li>Workstream 2: 2-3 days</li>
+<li>Workstream 3: 2-3 days</li>
+<li>Workstream 4: 1-2 days</li>
+<li>Workstream 5: 2-3 days</li>
+<li>Workstream 6: 1-2 days</li>
+</ul>
+<p><strong>Total</strong>: ~2-3 weeks with parallel work</p>
+<p><strong>Key Milestones</strong>:</p>
+<ol>
+<li>Tanka project structure complete (after WS1)</li>
+<li>Infrastructure managed by Tanka (after WS2)</li>
+<li>Applications deployable via Tanka (after WS3)</li>
+<li><code>tilt up</code> works end-to-end (after WS5)</li>
+<li>Documentation complete (after WS6)</li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-248" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#tanka--tilt-deployment-project-issues" data-for="tanka--tilt-deployment-project-issues">Tanka + Tilt Deployment Project Issues</a></li><li class="depth-1"><a href="#workstream-organization" data-for="workstream-organization">Workstream Organization</a></li><li class="depth-1"><a href="#workstream-1-foundation" data-for="workstream-1-foundation">Workstream 1: Foundation</a></li><li class="depth-2"><a href="#issue-11-initialize-tanka-project-structure" data-for="issue-11-initialize-tanka-project-structure">Issue 1.1: Initialize Tanka Project Structure</a></li><li class="depth-2"><a href="#issue-12-create-base-jsonnet-libraries" data-for="issue-12-create-base-jsonnet-libraries">Issue 1.2: Create Base Jsonnet Libraries</a></li><li class="depth-1"><a href="#workstream-2-infrastructure-components" data-for="workstream-2-infrastructure-components">Workstream 2: Infrastructure Components</a></li><li class="depth-2"><a href="#issue-21-wrap-redis-helm-chart-in-tanka" data-for="issue-21-wrap-redis-helm-chart-in-tanka">Issue 2.1: Wrap Redis Helm Chart in Tanka</a></li><li class="depth-2"><a href="#issue-22-wrap-gitea-helm-chart-in-tanka" data-for="issue-22-wrap-gitea-helm-chart-in-tanka">Issue 2.2: Wrap Gitea Helm Chart in Tanka</a></li><li class="depth-2"><a href="#issue-23-wrap-keda-helm-chart-in-tanka" data-for="issue-23-wrap-keda-helm-chart-in-tanka">Issue 2.3: Wrap KEDA Helm Chart in Tanka</a></li><li class="depth-2"><a href="#issue-24-wrap-flux-helm-chart-in-tanka" data-for="issue-24-wrap-flux-helm-chart-in-tanka">Issue 2.4: Wrap Flux Helm Chart in Tanka</a></li><li class="depth-1"><a href="#workstream-3-application-deployments" data-for="workstream-3-application-deployments">Workstream 3: Application Deployments</a></li><li class="depth-2"><a href="#issue-31-create-tanka-configuration-for-server" data-for="issue-31-create-tanka-configuration-for-server">Issue 3.1: Create Tanka Configuration for Server</a></li><li class="depth-2"><a href="#issue-32-create-tanka-configuration-for-agent-scaledjob" data-for="issue-32-create-tanka-configuration-for-agent-scaledjob">Issue 3.2: Create Tanka Configuration for Agent ScaledJob</a></li><li class="depth-2"><a href="#issue-33-create-tanka-configuration-for-secrets-and-configmaps" data-for="issue-33-create-tanka-configuration-for-secrets-and-configmaps">Issue 3.3: Create Tanka Configuration for Secrets and ConfigMaps</a></li><li class="depth-1"><a href="#workstream-4-docker-images" data-for="workstream-4-docker-images">Workstream 4: Docker Images</a></li><li class="depth-2"><a href="#issue-41-create-dockerfile-for-server" data-for="issue-41-create-dockerfile-for-server">Issue 4.1: Create Dockerfile for Server</a></li><li class="depth-2"><a href="#issue-42-optimize-agent-dockerfile" data-for="issue-42-optimize-agent-dockerfile">Issue 4.2: Optimize Agent Dockerfile</a></li><li class="depth-2"><a href="#issue-43-create-docker-compose-for-local-testing" data-for="issue-43-create-docker-compose-for-local-testing">Issue 4.3: Create Docker Compose for Local Testing</a></li><li class="depth-1"><a href="#workstream-5-tilt-integration" data-for="workstream-5-tilt-integration">Workstream 5: Tilt Integration</a></li><li class="depth-2"><a href="#issue-51-create-base-tiltfile-with-k3s-management" data-for="issue-51-create-base-tiltfile-with-k3s-management">Issue 5.1: Create Base Tiltfile with K3s Management</a></li><li class="depth-2"><a href="#issue-52-add-docker-build-to-tiltfile" data-for="issue-52-add-docker-build-to-tiltfile">Issue 5.2: Add Docker Build to Tiltfile</a></li><li class="depth-2"><a href="#issue-53-add-tanka-deployment-to-tiltfile" data-for="issue-53-add-tanka-deployment-to-tiltfile">Issue 5.3: Add Tanka Deployment to Tiltfile</a></li><li class="depth-2"><a href="#issue-54-add-port-forwarding-and-shortcuts-to-tiltfile" data-for="issue-54-add-port-forwarding-and-shortcuts-to-tiltfile">Issue 5.4: Add Port Forwarding and Shortcuts to Tiltfile</a></li><li class="depth-2"><a href="#issue-55-add-live-reload-for-development" data-for="issue-55-add-live-reload-for-development">Issue 5.5: Add Live Reload for Development</a></li><li class="depth-1"><a href="#workstream-6-documentation--polish" data-for="workstream-6-documentation--polish">Workstream 6: Documentation &amp; Polish</a></li><li class="depth-2"><a href="#issue-61-document-tanka-project-structure" data-for="issue-61-document-tanka-project-structure">Issue 6.1: Document Tanka Project Structure</a></li><li class="depth-2"><a href="#issue-62-document-tilt-development-workflow" data-for="issue-62-document-tilt-development-workflow">Issue 6.2: Document Tilt Development Workflow</a></li><li class="depth-2"><a href="#issue-63-update-justfile-with-tanka-and-tilt-commands" data-for="issue-63-update-justfile-with-tanka-and-tilt-commands">Issue 6.3: Update Justfile with Tanka and Tilt Commands</a></li><li class="depth-2"><a href="#issue-64-create-cicd-workflow-for-tanka-validation" data-for="issue-64-create-cicd-workflow-for-tanka-validation">Issue 6.4: Create CI/CD Workflow for Tanka Validation</a></li><li class="depth-1"><a href="#summary" data-for="summary">Summary</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

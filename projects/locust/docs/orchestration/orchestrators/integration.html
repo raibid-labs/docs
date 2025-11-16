@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>integration</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="integration"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="integration"/><meta name="twitter:description" content="Integration Orchestrator Overview The Integration Orchestrator manages the final phase of the Locust project, ensuring the framework is production-ready with comprehensive documentation, example applications, and robust testing infrastructure."/><meta property="og:description" content="Integration Orchestrator Overview The Integration Orchestrator manages the final phase of the Locust project, ensuring the framework is production-ready with comprehensive documentation, example applications, and robust testing infrastructure."/><meta property="og:image:alt" content="Integration Orchestrator Overview The Integration Orchestrator manages the final phase of the Locust project, ensuring the framework is production-ready with comprehensive documentation, example applications, and robust testing infrastructure."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/orchestrators/integration"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/orchestrators/integration"/><link rel="icon" href="../../../../../static/icon.png"/><meta name="description" content="Integration Orchestrator Overview The Integration Orchestrator manages the final phase of the Locust project, ensuring the framework is production-ready with comprehensive documentation, example applications, and robust testing infrastructure."/><meta name="generator" content="Quartz"/><link href="../../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/orchestrators/integration-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/orchestrators/integration-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/orchestrators/integration-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/locust/docs/orchestration/orchestrators/integration"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-370"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-370" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../../projects/locust/">locust</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../../projects/locust/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../../projects/locust/docs/orchestration/">orchestration</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../../projects/locust/docs/orchestration/orchestrators/">orchestrators</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>integration</a></div></nav><h1 class="article-title">integration</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:10.507Z">Nov 16, 2025</time><span>12 min read</span></p></div></div><article class="popover-hint"><h1 id="integration-orchestrator">Integration Orchestrator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-orchestrator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The Integration Orchestrator manages the final phase of the Locust project, ensuring the framework is production-ready with comprehensive documentation, example applications, and robust testing infrastructure. This orchestrator oversees Phase 4 of the project, coordinating four critical workstreams (WS-12 through WS-15) that deliver integration patterns, reference implementations, documentation, and CI/CD infrastructure. Operating during weeks 7-12, this orchestrator transforms the feature-complete framework into a polished, deployable product ready for community adoption.</p>
+<h2 id="architectural-responsibility">Architectural Responsibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architectural-responsibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    IO[Integration Orchestrator]\n\n    subgraph \&quot;Workstreams\&quot;\n        WS12[WS-12: Integration Patterns&lt;br/>Migration &amp; Best Practices]\n        WS13[WS-13: Example Applications&lt;br/>Reference Implementations]\n        WS14[WS-14: Documentation&lt;br/>Guides &amp; API Reference]\n        WS15[WS-15: Testing &amp; CI/CD&lt;br/>Quality &amp; Automation]\n    end\n\n    subgraph \&quot;Deliverables\&quot;\n        IP[Integration&lt;br/>Patterns]\n        EA[Example&lt;br/>Apps]\n        DOC[Complete&lt;br/>Documentation]\n        CI[CI/CD&lt;br/>Pipeline]\n    end\n\n    subgraph \&quot;Outputs\&quot;\n        CRATE[crates.io&lt;br/>Package]\n        GH[GitHub&lt;br/>Release]\n        DOCS[docs.rs&lt;br/>Documentation]\n        EXAMPLES[Example&lt;br/>Repository]\n    end\n\n    IO --> WS12\n    IO --> WS13\n    IO --> WS14\n    IO --> WS15\n\n    WS12 --> IP\n    WS13 --> EA\n    WS14 --> DOC\n    WS15 --> CI\n\n    IP --> CRATE\n    EA --> EXAMPLES\n    DOC --> DOCS\n    CI --> GH&quot;">graph TB
+    IO[Integration Orchestrator]
+
+    subgraph &quot;Workstreams&quot;
+        WS12[WS-12: Integration Patterns&lt;br/>Migration &amp; Best Practices]
+        WS13[WS-13: Example Applications&lt;br/>Reference Implementations]
+        WS14[WS-14: Documentation&lt;br/>Guides &amp; API Reference]
+        WS15[WS-15: Testing &amp; CI/CD&lt;br/>Quality &amp; Automation]
+    end
+
+    subgraph &quot;Deliverables&quot;
+        IP[Integration&lt;br/>Patterns]
+        EA[Example&lt;br/>Apps]
+        DOC[Complete&lt;br/>Documentation]
+        CI[CI/CD&lt;br/>Pipeline]
+    end
+
+    subgraph &quot;Outputs&quot;
+        CRATE[crates.io&lt;br/>Package]
+        GH[GitHub&lt;br/>Release]
+        DOCS[docs.rs&lt;br/>Documentation]
+        EXAMPLES[Example&lt;br/>Repository]
+    end
+
+    IO --> WS12
+    IO --> WS13
+    IO --> WS14
+    IO --> WS15
+
+    WS12 --> IP
+    WS13 --> EA
+    WS14 --> DOC
+    WS15 --> CI
+
+    IP --> CRATE
+    EA --> EXAMPLES
+    DOC --> DOCS
+    CI --> GH
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="mission-statement">Mission Statement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mission-statement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>To ensure the Locust framework achieves production readiness through comprehensive documentation, exemplary reference implementations, robust testing, and seamless integration capabilities, establishing it as the definitive overlay framework for the ratatui ecosystem with a clear path to community adoption and long-term success.</p>
+<h2 id="scope--boundaries">Scope &amp; Boundaries<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scope--boundaries" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="in-scope">In Scope<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#in-scope" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Integration strategies and patterns</li>
+<li>Migration guides for existing apps</li>
+<li>Example application development</li>
+<li>Comprehensive documentation suite</li>
+<li>Testing infrastructure and coverage</li>
+<li>CI/CD pipeline implementation</li>
+<li>Publishing and release management</li>
+<li>Performance validation</li>
+<li>Community onboarding materials</li>
+</ul>
+<h3 id="out-of-scope">Out of Scope<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#out-of-scope" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Core framework changes (except critical bugs)</li>
+<li>New plugin development</li>
+<li>Feature additions beyond v0.1.0</li>
+<li>Long-term maintenance planning</li>
+<li>Community management infrastructure</li>
+</ul>
+<h2 id="workstream-management">Workstream Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ws-12-integration-patterns">WS-12: Integration Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-12-integration-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Lead Agent</strong>: docs-architect
+<strong>Timeline</strong>: Week 7-9
+<strong>Status</strong>: Planning
+<strong>Priority</strong>: High</p>
+<h4 id="objectives">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>Document integration strategies for different app types</li>
+<li>Create migration guides from vanilla ratatui</li>
+<li>Develop best practices and anti-patterns</li>
+<li>Build integration testing framework</li>
+</ol>
+<h4 id="key-deliverables">Key Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Integration Guide Structure</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Quick Start (5-minute integration)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Integration Strategies</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> New applications</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Existing applications</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Complex architectures</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Migration Guides</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> From vanilla ratatui</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> From other overlay systems</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Patterns &amp; Best Practices</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Event handling patterns</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> State management</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Performance optimization</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">5.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Troubleshooting Guide</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Common issues</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Debug techniques</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">   -</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Performance profiling</span></span></code></pre></figure>
+<h4 id="integration-patterns">Integration Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Pattern 1: Simple Integration</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> integrate_basic</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">register_plugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Box</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">NavigationPlugin</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()));</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // In event loop</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> outcome</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">on_event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    if</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> !</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">outcome</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">consumed {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">handle_event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // In draw loop</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    terminal</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">draw</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">f</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">draw</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">f</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">render_overlay</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">f</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    })</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Pattern 2: Advanced Integration</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> LocustIntegration</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Backend</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Locust</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> LocustConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    plugins</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Box</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">dyn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> LocustPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>>>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Backend</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">LocustIntegration</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> builder</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> IntegrationBuilder</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">B</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        IntegrationBuilder</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> with_default_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_navigation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">            .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_omnibar</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">            .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_tooltips</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="ws-13-example-applications">WS-13: Example Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-13-example-applications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Lead Agent</strong>: coder-examples
+<strong>Timeline</strong>: Week 8-10
+<strong>Status</strong>: Blocked (awaiting WS-12)
+<strong>Priority</strong>: High</p>
+<h4 id="objectives-1">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>Build three showcase applications</li>
+<li>Create tutorial examples</li>
+<li>Develop benchmark applications</li>
+<li>Implement real-world use cases</li>
+</ol>
+<h4 id="example-applications">Example Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-applications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<h5 id="1-multi-pane-dashboard">1. Multi-Pane Dashboard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-multi-pane-dashboard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Analytics Dashboard&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Multiple synchronized panes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Real-time data updates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Navigation between widgets</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Command palette for actions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tooltips for data points</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Keyboard-driven interface</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">structure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Top bar with tabs</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Left sidebar with menu</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Main area with charts</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Bottom status bar</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">demonstrates</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Complex layout integration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Multiple plugin coordination</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Performance with updates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Custom widget adapters</span></span></code></pre></figure>
+<h5 id="2-log-viewer">2. Log Viewer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-log-viewer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Advanced Log Viewer&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Streaming log display</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Jump-to-line navigation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Search with highlighting</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Filter command palette</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tooltip log details</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Bookmarks and markers</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">demonstrates</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Large data handling</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Efficient navigation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Search integration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Performance optimization</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Custom commands</span></span></code></pre></figure>
+<h5 id="3-file-browser">3. File Browser<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-file-browser" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Terminal File Manager&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tree view navigation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Hint-based jumping</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Command operations</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Preview tooltips</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Batch operations</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Theme customization</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">demonstrates</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tree widget adapter</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">File system integration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Batch command execution</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Configuration system</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Theme application</span></span></code></pre></figure>
+<h4 id="tutorial-examples">Tutorial Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tutorial-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">examples/</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 01-basic-integration/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">     # Minimal setup</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 02-navigation/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            # Navigation plugin</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 03-omnibar/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">              # Command palette</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 04-custom-plugin/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Plugin development</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 05-configuration/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Config and themes</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 06-performance/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # Optimization tips</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">└──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 07-advanced/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            # Complex scenarios</span></span></code></pre></figure>
+<h3 id="ws-14-documentation">WS-14: Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-14-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Lead Agent</strong>: docs-architect-senior
+<strong>Timeline</strong>: Week 9-11
+<strong>Status</strong>: Planning
+<strong>Priority</strong>: Critical</p>
+<h4 id="objectives-2">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>Write comprehensive user documentation</li>
+<li>Create complete API reference</li>
+<li>Develop tutorial series</li>
+<li>Build architecture documentation</li>
+</ol>
+<h4 id="documentation-structure">Documentation Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">documentation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  user_guide</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">getting_started</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">installation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">quick_start</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">first_app</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">core_concepts</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">architecture_overview</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">plugin_system</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">event_handling</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">navigation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">omnibar</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">overlays</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">configuration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">customization</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">themes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">keybindings</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">custom_plugins</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  api_reference</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">core</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">locust</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">plugin_trait</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">context</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">events</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">navigation_api</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">omnibar_api</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">overlay_api</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">utilities</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">helpers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">builders</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">testing</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  tutorials</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Build a Dashboard in 30 Minutes&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Creating Your First Plugin&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Advanced Navigation Techniques&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Performance Optimization Guide&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Testing Locust Applications&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  architecture</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">design_decisions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">performance_characteristics</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">security_considerations</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">future_roadmap</span></span></code></pre></figure>
+<h4 id="documentation-standards">Documentation Standards<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-standards" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">standards</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  coverage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    public_api</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;100%&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    examples</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;all non-trivial functions&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    tutorials</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;common use cases&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  quality</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    grammar</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;professional&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    code_examples</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tested and runnable&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    diagrams</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;where helpful&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    cross_references</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;comprehensive&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  formats</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Markdown (repository)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Rustdoc (API)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">mdBook (user guide)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Video tutorials (optional)</span></span></code></pre></figure>
+<h3 id="ws-15-testing--cicd">WS-15: Testing &amp; CI/CD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-15-testing--cicd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Lead Agent</strong>: tester-automation
+<strong>Timeline</strong>: Week 10-12
+<strong>Status</strong>: Planning
+<strong>Priority</strong>: Critical</p>
+<h4 id="objectives-3">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>Build comprehensive test suite</li>
+<li>Setup CI/CD pipeline</li>
+<li>Create release automation</li>
+<li>Implement quality gates</li>
+</ol>
+<h4 id="testing-infrastructure">Testing Infrastructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing-infrastructure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">test_suite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  unit_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    coverage_target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">85%</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    categories</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">core_functionality</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">plugin_systems</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">event_handling</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">rendering</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  integration_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    coverage_target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">75%</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    scenarios</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">plugin_interactions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">full_app_integration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">configuration_loading</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">theme_application</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  performance_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    benchmarks</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">event_processing_speed</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">render_overhead</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">memory_usage</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">startup_time</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    regression_threshold</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5%</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  example_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">all_examples_compile</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">all_examples_run</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">no_panics</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">performance_acceptable</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  doc_tests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">all_examples_in_docs_run</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">all_code_snippets_compile</span></span></code></pre></figure>
+<h4 id="cicd-pipeline">CI/CD Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cicd-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Locust CI/CD</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  push</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    branches</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">main</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">develop</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  pull_request</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    branches</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">main</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  release</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">created</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  test</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      matrix</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        os</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">macos-latest</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">windows-latest</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        rust</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">stable</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">beta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">nightly</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">dtolnay/rust-toolchain@stable</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo build --all-features</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo test --all-features</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo bench --no-run</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  coverage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">taiki-e/install-action@cargo-tarpaulin</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo tarpaulin --out Xml</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">codecov/codecov-action@v3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  lint</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo clippy -- -D warnings</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo fmt -- --check</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  publish</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">github.event_name == 'release'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo publish --token ${{ secrets.CRATES_TOKEN }}</span></span></code></pre></figure>
+<h4 id="release-process">Release Process<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-process" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Release automation script</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Version bump</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> bump</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $VERSION_TYPE</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # major, minor, patch</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Update CHANGELOG</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cliff</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --tag</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> v</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$NEW_VERSION</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> CHANGELOG.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run full test suite</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --all-features</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> bench</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Build documentation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> doc</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --all-features</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-deps</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create git tag</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tag</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -a</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> v</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$NEW_VERSION</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Release v</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$NEW_VERSION</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Push and trigger CI/CD</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --tags</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Publish to crates.io</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> publish</span></span></code></pre></figure>
+<h2 id="orchestration-strategy">Orchestration Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#orchestration-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="timeline-coordination">Timeline Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#timeline-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;gantt\n    title Integration Phase Timeline\n    dateFormat YYYY-WW\n    section Integration\n    WS-12 Patterns    :ws12, 2024-07, 3w\n    WS-13 Examples    :ws13, 2024-08, 3w\n    WS-14 Docs        :ws14, 2024-09, 3w\n    WS-15 CI/CD       :ws15, 2024-10, 3w\n\n    section Milestones\n    Beta Release      :milestone, 2024-09, 0\n    RC Release        :milestone, 2024-11, 0\n    v0.1.0 Release    :milestone, 2024-12, 0&quot;">gantt
+    title Integration Phase Timeline
+    dateFormat YYYY-WW
+    section Integration
+    WS-12 Patterns    :ws12, 2024-07, 3w
+    WS-13 Examples    :ws13, 2024-08, 3w
+    WS-14 Docs        :ws14, 2024-09, 3w
+    WS-15 CI/CD       :ws15, 2024-10, 3w
+
+    section Milestones
+    Beta Release      :milestone, 2024-09, 0
+    RC Release        :milestone, 2024-11, 0
+    v0.1.0 Release    :milestone, 2024-12, 0
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="parallel-execution">Parallel Execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">week_7-8</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  parallel</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-12</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Integration patterns design</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-13</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Example app planning</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-14</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Documentation outline</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">CI/CD setup</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">week_9-10</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  parallel</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-12</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Pattern implementation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-13</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Building examples</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-14</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Writing documentation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Test suite development</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">week_11-12</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  parallel</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-13</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Example polishing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-14</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Documentation review</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">WS-15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Release preparation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">All</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Final integration testing</span></span></code></pre></figure>
+<h2 id="spawn-commands">Spawn Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="initialize-orchestrator">Initialize Orchestrator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#initialize-orchestrator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create orchestrator agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --role</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Integration Orchestrator for Locust Phase 4&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Manage WS-12 through WS-15. Focus on production readiness, documentation quality, and smooth developer experience. Ensure comprehensive testing and reliable CI/CD.&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Initialize orchestrator memory</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> store</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust/orchestrators/integration/config&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --value</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;phase&quot;: 4,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;weeks&quot;: &quot;7-12&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;workstreams&quot;: [&quot;WS-12&quot;, &quot;WS-13&quot;, &quot;WS-14&quot;, &quot;WS-15&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;priority&quot;: &quot;production_readiness&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;agents&quot;: 4</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span></code></pre></figure>
+<h3 id="spawn-workstream-agents">Spawn Workstream Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-workstream-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># WS-12: Integration Patterns Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;create-integration-patterns&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;type&quot;: &quot;docs-architect&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;name&quot;: &quot;ws12-patterns&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;expertise&quot;: [&quot;system-design&quot;, &quot;best-practices&quot;, &quot;migration&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;memory_key&quot;: &quot;locust/ws12/status&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># WS-13: Examples Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;build-example-apps&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;type&quot;: &quot;coder&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;name&quot;: &quot;ws13-examples&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;expertise&quot;: [&quot;ratatui&quot;, &quot;rust&quot;, &quot;ui-development&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;memory_key&quot;: &quot;locust/ws13/status&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># WS-14: Documentation Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;write-documentation&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;type&quot;: &quot;docs-architect&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;name&quot;: &quot;ws14-documentation&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;expertise&quot;: [&quot;technical-writing&quot;, &quot;api-docs&quot;, &quot;tutorials&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;memory_key&quot;: &quot;locust/ws14/status&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># WS-15: Testing/CI Agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;setup-testing-ci&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;type&quot;: &quot;tester&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;name&quot;: &quot;ws15-testing&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;expertise&quot;: [&quot;test-automation&quot;, &quot;ci-cd&quot;, &quot;github-actions&quot;],</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;memory_key&quot;: &quot;locust/ws15/status&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span></code></pre></figure>
+<h2 id="quality-assurance">Quality Assurance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quality-assurance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="documentation-quality">Documentation Quality<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-quality" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">documentation_qa</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  completeness</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All public APIs documented</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All features explained</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All examples runnable</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  clarity</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Technical but accessible</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Progressive complexity</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Clear examples</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  accuracy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Code examples tested</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">API docs generated</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Version synchronized</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  usability</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Quick start under 5 minutes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Common tasks documented</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Troubleshooting guide</span></span></code></pre></figure>
+<h3 id="example-quality">Example Quality<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-quality" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">example_qa</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  functionality</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All features demonstrated</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">No runtime errors</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Performance acceptable</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  code_quality</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Clean, idiomatic Rust</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Well-commented</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Best practices followed</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  educational</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Progressive complexity</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Clear structure</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Inline explanations</span></span></code></pre></figure>
+<h3 id="release-criteria">Release Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">release_gates</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  beta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Core features complete</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Basic documentation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Examples compile</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">CI/CD operational</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  release_candidate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All features complete</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Documentation complete</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All examples working</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Test coverage met</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Performance validated</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  v0.1.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">All RC criteria</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Zero critical bugs</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Published to crates.io</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Documentation on docs.rs</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Examples in separate repo</span></span></code></pre></figure>
+<h2 id="communication-protocols">Communication Protocols<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-protocols" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="status-reporting">Status Reporting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#status-reporting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Daily status updates</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> store</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust/integration/daily/$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y%m%d)&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --value</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;WS-12&quot;: {&quot;progress&quot;: 75, &quot;blockers&quot;: []},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;WS-13&quot;: {&quot;progress&quot;: 50, &quot;blockers&quot;: []},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;WS-14&quot;: {&quot;progress&quot;: 40, &quot;blockers&quot;: []},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;WS-15&quot;: {&quot;progress&quot;: 60, &quot;blockers&quot;: []},</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;overall&quot;: &quot;on-track&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Release readiness report</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> notify</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --to</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-meta&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --subject</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Release Readiness Report&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --body</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;features&quot;: &quot;100%&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;documentation&quot;: &quot;85%&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;testing&quot;: &quot;90%&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;examples&quot;: &quot;100%&quot;,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;ready_for_beta&quot;: true</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  }'</span></span></code></pre></figure>
+<h3 id="coordination-with-other-orchestrators">Coordination with Other Orchestrators<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#coordination-with-other-orchestrators" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Request bug fixes from Core Framework</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> create</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --title</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Critical bug in navigation&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --assigned-to</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust-core-framework&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --priority</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;high&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Navigation fails with custom widgets&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Request documentation from Plugin Development</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust/plugin-dev/api-changes&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --callback</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;update-documentation&quot;</span></span></code></pre></figure>
+<h2 id="performance-validation">Performance Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="benchmark-suite">Benchmark Suite<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#benchmark-suite" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[bench]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> bench_minimal_integration</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Bencher</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Overhead of adding Locust to app</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">||</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        let</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> event</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> KeyEvent</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">KeyCode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Char</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'a'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">), </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">KeyModifiers</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">NONE</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">on_event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">event</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[bench]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> bench_full_stack</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Bencher</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Full plugin stack performance</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">||</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        let</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> locust</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> create_full_locust</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">        render_frame</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> locust</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="performance-targets">Performance Targets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-targets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">performance_targets</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  integration_overhead</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    event_processing</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 1ms&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    render_overlay</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 10ms&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    memory_footprint</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 10MB&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  example_apps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    dashboard_fps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;> 30&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    log_viewer_scroll</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;smooth&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    file_browser_nav</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 50ms&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  startup</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    plugin_init</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 100ms&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    config_load</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 50ms&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    first_render</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 200ms&quot;</span></span></code></pre></figure>
+<h2 id="risk-management">Risk Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="integration-risks">Integration Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Impact</th><th>Probability</th><th>Mitigation</th><th>Owner</th></tr></thead><tbody><tr><td>Breaking changes discovered</td><td>High</td><td>Medium</td><td>Early integration testing</td><td>WS-12</td></tr><tr><td>Example quality issues</td><td>Medium</td><td>Low</td><td>Code reviews, testing</td><td>WS-13</td></tr><tr><td>Documentation incomplete</td><td>High</td><td>Medium</td><td>Parallel writing, automation</td><td>WS-14</td></tr><tr><td>CI/CD failures</td><td>High</td><td>Low</td><td>Multiple platforms, fallbacks</td><td>WS-15</td></tr><tr><td>Performance regression</td><td>High</td><td>Low</td><td>Continuous benchmarking</td><td>All</td></tr></tbody></table></div>
+<h3 id="schedule-risks">Schedule Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#schedule-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Impact</th><th>Probability</th><th>Mitigation</th><th>Owner</th></tr></thead><tbody><tr><td>Documentation lag</td><td>Medium</td><td>High</td><td>Start early, automate</td><td>WS-14</td></tr><tr><td>Example complexity</td><td>Medium</td><td>Medium</td><td>MVP first, iterate</td><td>WS-13</td></tr><tr><td>Test flakiness</td><td>Low</td><td>Medium</td><td>Robust test design</td><td>WS-15</td></tr><tr><td>Release delays</td><td>High</td><td>Low</td><td>Buffer time built in</td><td>Orchestrator</td></tr></tbody></table></div>
+<h2 id="success-metrics">Success Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="quantitative-metrics">Quantitative Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quantitative-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">metrics</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  test_coverage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    unit</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;> 85%&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    integration</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;> 75%&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    documentation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;100%&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  performance</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    benchmarks_passing</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;100%&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    example_fps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;> 30&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    startup_time</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 200ms&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  quality</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    clippy_warnings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    security_issues</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    broken_links</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  adoption</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    crates_io_ready</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    examples_working</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;100%&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    quick_start_time</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;&lt; 5 minutes&quot;</span></span></code></pre></figure>
+<h3 id="qualitative-metrics">Qualitative Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#qualitative-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">goals</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  developer_experience</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Intuitive API</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Clear documentation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Helpful examples</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Easy integration</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  production_readiness</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Stable API</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Reliable performance</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Comprehensive testing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Professional polish</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  community_ready</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Welcoming documentation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Contribution guidelines</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Issue templates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Support channels</span></span></code></pre></figure>
+<h2 id="deployment-strategy">Deployment Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deployment-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="release-phases">Release Phases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-phases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">releases</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  alpha</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1.0-alpha&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    date</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Week 6&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Core functionality&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    audience</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Early testers&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  beta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1.0-beta&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    date</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Week 9&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;All features, limited docs&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    audience</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Beta testers&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  release_candidate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1.0-rc.1&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    date</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Week 11&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Feature complete&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    audience</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Production testing&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  stable</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1.0&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    date</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Week 12&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Production ready&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    audience</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;General availability&quot;</span></span></code></pre></figure>
+<h3 id="publishing-checklist">Publishing Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#publishing-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Pre-Release Checklist</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] All tests passing</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Benchmarks acceptable</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Documentation complete</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Examples working</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] CHANGELOG updated</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Version bumped</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Security audit passed</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] License verified</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Release Process</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Create release branch</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Run full test suite</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Build and test on all platforms</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Generate documentation</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Create git tag</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Publish to crates.io</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Update docs.rs</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Create GitHub release</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Announce on channels</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Post-Release</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Monitor for issues</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Respond to feedback</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Plan patch releases</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Update roadmap</span></span></code></pre></figure>
+<h2 id="community-preparation">Community Preparation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#community-preparation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="launch-materials">Launch Materials<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#launch-materials" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">materials</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  announcement</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Blog post</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Reddit/HN post</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Twitter thread</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Discord announcement</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  documentation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">README</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Getting started guide</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">API documentation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Example repository</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  support</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">GitHub issues</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Discord channel</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Stack Overflow tag</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Email list</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  marketing</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Demo video</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Feature highlights</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Comparison chart</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Use cases</span></span></code></pre></figure>
+<h3 id="community-engagement-plan">Community Engagement Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#community-engagement-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Soft Launch</strong> (Week 11): Beta testers, early feedback</li>
+<li><strong>Public Beta</strong> (Week 12): Wider testing, bug fixes</li>
+<li><strong>Official Launch</strong> (Week 12+): Full announcement, promotion</li>
+<li><strong>Follow-up</strong> (Week 13+): Address feedback, plan v0.2.0</li>
+</ol>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The Integration Orchestrator ensures that the Locust framework transitions from a collection of features to a production-ready, well-documented, thoroughly tested product ready for community adoption. Through careful coordination of integration patterns, example applications, comprehensive documentation, and robust testing infrastructure, this orchestrator delivers the final critical phase that determines the project’s long-term success.</p>
+<p>The work of this orchestrator directly impacts developer adoption and satisfaction. By prioritizing documentation quality, example clarity, and testing reliability, the Integration Orchestrator ensures that Locust launches as a professional, polished framework that developers will trust and enjoy using in their production applications.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-160" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#integration-orchestrator" data-for="integration-orchestrator">Integration Orchestrator</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#architectural-responsibility" data-for="architectural-responsibility">Architectural Responsibility</a></li><li class="depth-1"><a href="#mission-statement" data-for="mission-statement">Mission Statement</a></li><li class="depth-1"><a href="#scope--boundaries" data-for="scope--boundaries">Scope &amp; Boundaries</a></li><li class="depth-2"><a href="#in-scope" data-for="in-scope">In Scope</a></li><li class="depth-2"><a href="#out-of-scope" data-for="out-of-scope">Out of Scope</a></li><li class="depth-1"><a href="#workstream-management" data-for="workstream-management">Workstream Management</a></li><li class="depth-2"><a href="#ws-12-integration-patterns" data-for="ws-12-integration-patterns">WS-12: Integration Patterns</a></li><li class="depth-2"><a href="#ws-13-example-applications" data-for="ws-13-example-applications">WS-13: Example Applications</a></li><li class="depth-2"><a href="#ws-14-documentation" data-for="ws-14-documentation">WS-14: Documentation</a></li><li class="depth-2"><a href="#ws-15-testing--cicd" data-for="ws-15-testing--cicd">WS-15: Testing &amp; CI/CD</a></li><li class="depth-1"><a href="#orchestration-strategy" data-for="orchestration-strategy">Orchestration Strategy</a></li><li class="depth-2"><a href="#timeline-coordination" data-for="timeline-coordination">Timeline Coordination</a></li><li class="depth-2"><a href="#parallel-execution" data-for="parallel-execution">Parallel Execution</a></li><li class="depth-1"><a href="#spawn-commands" data-for="spawn-commands">Spawn Commands</a></li><li class="depth-2"><a href="#initialize-orchestrator" data-for="initialize-orchestrator">Initialize Orchestrator</a></li><li class="depth-2"><a href="#spawn-workstream-agents" data-for="spawn-workstream-agents">Spawn Workstream Agents</a></li><li class="depth-1"><a href="#quality-assurance" data-for="quality-assurance">Quality Assurance</a></li><li class="depth-2"><a href="#documentation-quality" data-for="documentation-quality">Documentation Quality</a></li><li class="depth-2"><a href="#example-quality" data-for="example-quality">Example Quality</a></li><li class="depth-2"><a href="#release-criteria" data-for="release-criteria">Release Criteria</a></li><li class="depth-1"><a href="#communication-protocols" data-for="communication-protocols">Communication Protocols</a></li><li class="depth-2"><a href="#status-reporting" data-for="status-reporting">Status Reporting</a></li><li class="depth-2"><a href="#coordination-with-other-orchestrators" data-for="coordination-with-other-orchestrators">Coordination with Other Orchestrators</a></li><li class="depth-1"><a href="#performance-validation" data-for="performance-validation">Performance Validation</a></li><li class="depth-2"><a href="#benchmark-suite" data-for="benchmark-suite">Benchmark Suite</a></li><li class="depth-2"><a href="#performance-targets" data-for="performance-targets">Performance Targets</a></li><li class="depth-1"><a href="#risk-management" data-for="risk-management">Risk Management</a></li><li class="depth-2"><a href="#integration-risks" data-for="integration-risks">Integration Risks</a></li><li class="depth-2"><a href="#schedule-risks" data-for="schedule-risks">Schedule Risks</a></li><li class="depth-1"><a href="#success-metrics" data-for="success-metrics">Success Metrics</a></li><li class="depth-2"><a href="#quantitative-metrics" data-for="quantitative-metrics">Quantitative Metrics</a></li><li class="depth-2"><a href="#qualitative-metrics" data-for="qualitative-metrics">Qualitative Metrics</a></li><li class="depth-1"><a href="#deployment-strategy" data-for="deployment-strategy">Deployment Strategy</a></li><li class="depth-2"><a href="#release-phases" data-for="release-phases">Release Phases</a></li><li class="depth-2"><a href="#publishing-checklist" data-for="publishing-checklist">Publishing Checklist</a></li><li class="depth-1"><a href="#community-preparation" data-for="community-preparation">Community Preparation</a></li><li class="depth-2"><a href="#launch-materials" data-for="launch-materials">Launch Materials</a></li><li class="depth-2"><a href="#community-engagement-plan" data-for="community-engagement-plan">Community Engagement Plan</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../../postscript.js" type="module"></script></html>

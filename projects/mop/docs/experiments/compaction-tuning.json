@@ -1,0 +1,59 @@
+{
+  "name": "Compaction Interval Optimization",
+  "description": "Optimize compaction interval to balance storage efficiency and CPU usage",
+  "author": "MOP Team",
+  "version": "1.0.0",
+  "changes": [
+    {
+      "type": "configmap",
+      "component": "mimir-compactor-config",
+      "parameter": "compaction_interval",
+      "value": "30m",
+      "description": "Increase compaction interval from 15m to 30m"
+    }
+  ],
+  "success_metrics": [
+    {
+      "name": "compactor_cpu_usage",
+      "query": "avg(rate(container_cpu_usage_seconds_total{pod=~\"mimir-compactor.*\"}[5m]))",
+      "direction": "lower",
+      "threshold": 0.5,
+      "description": "Compactor CPU usage - should decrease"
+    },
+    {
+      "name": "storage_blocks_count",
+      "query": "sum(cortex_bucket_store_blocks_loaded)",
+      "direction": "lower",
+      "threshold": 10000,
+      "description": "Number of storage blocks - may temporarily increase"
+    },
+    {
+      "name": "query_latency_p99",
+      "query": "histogram_quantile(0.99, rate(mimir_request_duration_seconds_bucket[5m]))",
+      "direction": "lower",
+      "threshold": 1.0,
+      "description": "99th percentile query latency - should remain acceptable"
+    },
+    {
+      "name": "compaction_duration",
+      "query": "avg(rate(cortex_compactor_block_compaction_duration_seconds_sum[5m]))",
+      "direction": "lower",
+      "threshold": 300,
+      "description": "Average compaction duration - efficiency metric"
+    }
+  ],
+  "expected_outcomes": {
+    "cpu_reduction": "20-30%",
+    "storage_efficiency": "similar",
+    "query_impact": "minimal (<5%)"
+  },
+  "rollback_criteria": {
+    "query_latency_increase": ">15%",
+    "block_count_increase": ">50%"
+  },
+  "notes": [
+    "Longer compaction intervals reduce CPU but may temporarily increase block count",
+    "Monitor query performance as more blocks may slightly impact query speed",
+    "Consider storage capacity when increasing interval"
+  ]
+}

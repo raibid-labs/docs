@@ -1,0 +1,35 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: raibid-infrastructure
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/name: flux
+    app.kubernetes.io/component: source
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  # Sync interval
+  interval: 1m0s
+
+  # Gitea repository URL (internal cluster service)
+  url: http://gitea.raibid-gitea.svc.cluster.local:3000/raibid/infrastructure
+
+  # Branch to track
+  ref:
+    branch: main
+
+  # Authentication secret
+  secretRef:
+    name: gitea-credentials
+
+  # Ignore patterns
+  ignore: |
+    # Ignore CI files
+    .github/
+    # Ignore documentation
+    *.md
+    docs/
+
+  # Timeout
+  timeout: 60s

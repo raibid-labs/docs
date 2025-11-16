@@ -1,0 +1,63 @@
+[workspace]
+members = ["crates/raibid-core"]
+resolver = "2"
+
+[package]
+name = "raibid-cli"
+version = "0.1.0"
+edition = "2021"
+authors = ["raibid-labs"]
+description = "Meta-management CLI for raibid-labs GitHub organization"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/raibid-labs/raibid-cli"
+readme = "README.md"
+keywords = ["cli", "tui", "git", "github", "devtools"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+# Core library
+raibid-core = { path = "crates/raibid-core" }
+
+# CLI framework
+clap = { version = "4.5", features = ["derive", "cargo", "env"] }
+
+# TUI framework
+ratatui = { version = "0.27", features = ["all-widgets"] }
+crossterm = { version = "0.27" }
+
+# Async runtime
+tokio = { version = "1.37", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Utilities
+dirs = "5.0"
+chrono = "0.4"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tempfile = "3.10"
+mockall = "0.12"
+serial_test = "3.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[[bin]]
+name = "raibid"
+path = "src/main.rs"

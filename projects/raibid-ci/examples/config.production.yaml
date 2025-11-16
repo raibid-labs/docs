@@ -1,0 +1,62 @@
+# Production raibid-cli configuration
+# Example production settings for DGX Spark deployment
+
+cluster:
+  name: raibid-ci-prod
+  api_port: 6443
+  kubeconfig_path: ~/.kube/config
+  namespace: raibid-ci
+
+  # Reserve more resources for production stability
+  reserved_cores: 4
+  reserved_memory_gb: 16
+
+api:
+  # Listen on all interfaces in production
+  host: 0.0.0.0
+  port: 8080
+
+  # Enable TLS for production
+  tls_enabled: true
+  tls_cert_path: /etc/raibid/certs/tls.crt
+  tls_key_path: /etc/raibid/certs/tls.key
+
+agents:
+  types:
+    - rust
+
+  # Keep 2 warm agents ready
+  min_agents: 2
+
+  # Allow up to 15 concurrent agents
+  max_agents: 15
+
+  # Longer timeout for production builds
+  idle_timeout_seconds: 600
+
+  # Conservative scale-down
+  scaledown_delay_seconds: 300
+
+  # Larger cache for better hit rates
+  cache_size_gb: 100
+
+gitea:
+  # Use environment variable for URL (allows easier environment-specific config)
+  url: ${GITEA_URL}
+  admin_user: ${GITEA_ADMIN_USER}
+  admin_password: ${GITEA_ADMIN_PASSWORD}
+  registry_enabled: true
+  registry_port: 5000
+
+redis:
+  host: ${REDIS_HOST}
+  port: 6379
+  password: ${REDIS_PASSWORD}
+  database: 0
+  job_stream: raibid:jobs
+
+ui:
+  tui_enabled: true
+  refresh_rate_ms: 500
+  color_scheme: dark
+  unicode_enabled: true

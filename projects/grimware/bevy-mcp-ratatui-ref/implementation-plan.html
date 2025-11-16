@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>implementation-plan</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="implementation-plan"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="implementation-plan"/><meta name="twitter:description" content="AI-Powered TUI Bevy Reference Implementation Plan Project Overview Goal: Build a reference implementation demonstrating AI prompts → Bevy MCP (BRP) → TUI rendering Foundation: Based on bevy-mcp-ref with bevy_ratatui_camera integration Key Value Proposition: Enable AI assistants to control and visual..."/><meta property="og:description" content="AI-Powered TUI Bevy Reference Implementation Plan Project Overview Goal: Build a reference implementation demonstrating AI prompts → Bevy MCP (BRP) → TUI rendering Foundation: Based on bevy-mcp-ref with bevy_ratatui_camera integration Key Value Proposition: Enable AI assistants to control and visual..."/><meta property="og:image:alt" content="AI-Powered TUI Bevy Reference Implementation Plan Project Overview Goal: Build a reference implementation demonstrating AI prompts → Bevy MCP (BRP) → TUI rendering Foundation: Based on bevy-mcp-ref with bevy_ratatui_camera integration Key Value Proposition: Enable AI assistants to control and visual..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/grimware/bevy-mcp-ratatui-ref/implementation-plan"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/grimware/bevy-mcp-ratatui-ref/implementation-plan"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="AI-Powered TUI Bevy Reference Implementation Plan Project Overview Goal: Build a reference implementation demonstrating AI prompts → Bevy MCP (BRP) → TUI rendering Foundation: Based on bevy-mcp-ref with bevy_ratatui_camera integration Key Value Proposition: Enable AI assistants to control and visual..."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/grimware/bevy-mcp-ratatui-ref/implementation-plan-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/grimware/bevy-mcp-ratatui-ref/implementation-plan-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/grimware/bevy-mcp-ratatui-ref/implementation-plan-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/grimware/bevy-mcp-ratatui-ref/implementation-plan"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-322"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-322" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/grimware/">grimware</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/grimware/bevy-mcp-ratatui-ref/">bevy mcp ratatui ref</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>implementation plan</a></div></nav><h1 class="article-title">implementation-plan</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:09.538Z">Nov 16, 2025</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="ai-powered-tui-bevy-reference-implementation-plan">AI-Powered TUI Bevy Reference Implementation Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ai-powered-tui-bevy-reference-implementation-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="project-overview">Project Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Goal</strong>: Build a reference implementation demonstrating AI prompts <span>→</span> Bevy MCP (BRP) <span>→</span> TUI rendering</p>
+<p><strong>Foundation</strong>: Based on bevy-mcp-ref with bevy_ratatui_camera integration</p>
+<p><strong>Key Value Proposition</strong>: Enable AI assistants to control and visualize Bevy applications in terminal environments, providing headless operation capabilities and ASCII art rendering.</p>
+<hr/>
+<h2 id="phase-1-foundation-setup">Phase 1: Foundation Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-foundation-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective</strong>: Establish project structure with core dependencies and basic TUI rendering capability</p>
+<h3 id="tasks">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="11-project-initialization-and-dependencies">1.1 Project Initialization and Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-project-initialization-and-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Project forked/cloned from bevy-mcp-ref</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Cargo.toml updated with all required dependencies</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Feature flags configured for flexible builds</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Project compiles successfully with base dependencies</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>Cargo.toml</code> - Add bevy_ratatui_camera, ratatui, crossterm dependencies</li>
+<li><code>.gitignore</code> - Ensure build artifacts excluded</li>
+</ul>
+</li>
+<li>
+<p><strong>Dependencies Required</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dependencies</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bevy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.16&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;dynamic_linking&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bevy_brp_extras</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">optional</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bevy_ratatui_camera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.14&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">optional</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bevy_ratatui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.9&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">optional</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ratatui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.30&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">optional</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">crossterm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.28&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">optional</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = []</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">brp</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;bevy/bevy_remote&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;bevy_brp_extras&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;bevy_ratatui_camera&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;bevy_ratatui&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ratatui&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;crossterm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">full</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;brp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tui&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>: <code>cargo check --all-features</code> passes</p>
+</li>
+</ul>
+<hr/>
+<h4 id="12-project-structure-organization">1.2 Project Structure Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-project-structure-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Directory structure follows Rust best practices</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Clear separation of concerns between modules</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation directories created</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Example directories organized</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<pre><code>bevy-mcp-ratatui-ref/
+├── src/
+│   ├── lib.rs              # Library entry point
+│   ├── main.rs             # Binary entry point
+│   ├── tui/
+│   │   ├── mod.rs          # TUI module
+│   │   ├── plugin.rs       # RatatuiCameraPlugin wrapper
+│   │   └── config.rs       # TUI configuration
+│   ├── brp/
+│   │   ├── mod.rs          # BRP module
+│   │   └── tools.rs        # Custom MCP tools
+│   └── systems/
+│       ├── mod.rs          # Game systems
+│       └── demo.rs         # Demo scene systems
+├── examples/
+│   ├── tui_basic.rs        # Basic TUI example
+│   ├── tui_brp.rs          # TUI + BRP example
+│   └── windowed_tui.rs     # Windowed + TUI dual mode
+├── docs/
+│   ├── implementation-plan.md
+│   ├── TUI_GUIDE.md
+│   ├── AI_PROMPTS.md
+│   └── ARCHITECTURE.md
+└── tests/
+    ├── integration_tests.rs
+    └── tui_tests.rs
+</code></pre>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>: Directory structure verified, all module declarations compile</p>
+</li>
+</ul>
+<hr/>
+<h4 id="13-basic-tui-rendering-plugin">1.3 Basic TUI Rendering Plugin<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-basic-tui-rendering-plugin" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> RatatuiCameraPlugin wrapper created</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Simple TUI rendering pipeline functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Camera component properly configured</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Terminal output visible and stable</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/tui/mod.rs</code> - Public module interface</li>
+<li><code>src/tui/plugin.rs</code> - Plugin implementation</li>
+<li><code>src/tui/config.rs</code> - TUI configuration structures</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// src/tui/plugin.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bevy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">prelude</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bevy_ratatui_camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCameraPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> BevyMcpTuiPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> enable_terminal_output</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> render_scale</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Plugin</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> for</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> BevyMcpTuiPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        if</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">enable_terminal_output {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCameraPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">                .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_systems</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Startup</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">setup_tui_camera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> setup_tui_camera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> commands</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Commands</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    commands</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spawn</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">((</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Camera3d</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Transform</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">from_xyz</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">5.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">            .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">looking_at</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Vec3</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">ZERO</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Vec3</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Y</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">),</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Name</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;TUI Camera&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Manual: Run with TUI feature, verify terminal output</li>
+<li>Automated: Unit tests for plugin registration</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="phase-2-core-integration">Phase 2: Core Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-core-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective</strong>: Integrate bevy_ratatui_camera with BRP, enabling dual rendering modes and camera synchronization</p>
+<h3 id="dependencies">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Requires: Phase 1 complete</li>
+</ul>
+<h3 id="tasks-1">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="21-bevy_ratatui_camera-integration">2.1 bevy_ratatui_camera Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-bevy_ratatui_camera-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> RatatuiCamera component properly integrated</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rendering strategies configurable (ASCII, Unicode, Braille)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Depth detection enabled and functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance optimized for real-time rendering</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/tui/rendering.rs</code> - Rendering strategy management</li>
+<li><code>src/tui/widget.rs</code> - Custom ratatui widgets</li>
+<li><code>examples/tui_basic.rs</code> - Basic TUI example</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// src/tui/rendering.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bevy_ratatui_camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RenderingStrategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Reflect</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Clone</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Copy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> enum</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> TuiRenderMode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Ascii</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Braille</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Auto</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Select based on terminal capabilities</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> apply_render_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Query</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Res</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">TuiConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    for</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter_mut</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">rendering_strategy </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> match</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">render_mode {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            TuiRenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Ascii</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Ascii</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            TuiRenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Unicode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            TuiRenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Braille</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Braille</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            TuiRenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Auto</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> detect_terminal_capabilities</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        };</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Visual verification of different rendering modes</li>
+<li>Performance benchmarks for rendering strategies</li>
+<li>Terminal compatibility tests</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="22-brp--tui-dual-rendering-mode">2.2 BRP + TUI Dual Rendering Mode<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-brp--tui-dual-rendering-mode" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Complex</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Both windowed and TUI rendering work simultaneously</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Headless TUI-only mode functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mode switching via configuration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No visual artifacts or performance degradation</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/lib.rs</code> - Dual mode configuration</li>
+<li><code>src/tui/dual_mode.rs</code> - Dual rendering coordination</li>
+<li><code>examples/windowed_tui.rs</code> - Windowed + TUI example</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// src/tui/dual_mode.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> enum</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingMode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    WindowedOnly</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    TuiOnly</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Dual</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">sync_cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> DualModePlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> mode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingMode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Plugin</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> for</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> DualModePlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        match</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">mode {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            RenderingMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">WindowedOnly</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">                app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">DefaultPlugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            RenderingMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">TuiOnly</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">                app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">MinimalPlugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">                    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCameraPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            RenderingMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Dual</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">sync_cameras</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> } </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=></span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">                app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">DefaultPlugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">                    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCameraPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">                if</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> sync_cameras</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">                    app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_systems</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Update</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">sync_camera_transforms</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">                }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Test all three rendering modes independently</li>
+<li>Verify camera synchronization in dual mode</li>
+<li>Performance profiling for each mode</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="23-camera-synchronization-system">2.3 Camera Synchronization System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-camera-synchronization-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> TUI camera mirrors windowed camera position/rotation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Synchronization can be toggled at runtime</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Independent camera control option available</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Smooth transitions without jitter</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/systems/camera_sync.rs</code> - Camera synchronization logic</li>
+<li><code>src/tui/config.rs</code> - Add sync configuration</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// src/systems/camera_sync.rs</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> MainCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Component</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> SyncedTuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> sync_enabled</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> offset</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Transform</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sync_camera_transforms</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    main_camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Query</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Transform</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">With</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">MainCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Without</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>)>,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> tui_cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Query</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Transform</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">SyncedTuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">), </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">With</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    if</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> let</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Ok</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">main_transform</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> main_camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_single</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        for</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> tui_transform</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">synced</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">in</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> tui_cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter_mut</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">            if</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> synced</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">sync_enabled {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">                *</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tui_transform</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">main_transform</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> *</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> synced</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">offset;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Unit tests for transform calculations</li>
+<li>Visual verification of synchronized movement</li>
+<li>Test edge cases (camera deletion, multiple cameras)</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="phase-3-mcp-enhancement">Phase 3: MCP Enhancement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-mcp-enhancement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective</strong>: Extend BRP with AI-friendly tools for TUI control and entity manipulation</p>
+<h3 id="dependencies-1">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Requires: Phase 2 complete</li>
+</ul>
+<h3 id="tasks-2">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="31-ai-friendly-entity-naming-convention">3.1 AI-Friendly Entity Naming Convention<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-ai-friendly-entity-naming-convention" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All entities have descriptive Name components</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Naming convention documented</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Helper functions for name generation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Query by name functionality added</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/brp/naming.rs</code> - Naming utilities</li>
+<li><code>docs/NAMING_CONVENTION.md</code> - Naming guidelines</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// src/brp/naming.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> NameBuilder</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    category</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    index</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Option</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    descriptor</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Option</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> NameBuilder</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">category</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Into</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            category</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> category</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">into</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            index</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> None</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            descriptor</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> None</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> with_index</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">index</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">index </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">index</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> with_descriptor</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">desc</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Into</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">descriptor </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">desc</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">into</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">());</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        let</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> name</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">category;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        if</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> let</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">idx</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">index {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            name</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">push_str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot; {}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">idx</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        if</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> let</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">desc</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">descriptor {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            name</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">push_str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot; ({})&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">desc</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Name</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Examples:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;Sphere 1 (Red)&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;Tree 3 (Oak)&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;Camera (TUI)&quot;</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>: Unit tests for name generation and queries</p>
+</li>
+</ul>
+<hr/>
+<h4 id="32-custom-mcp-tools-for-tui-control">3.2 Custom MCP Tools for TUI Control<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-custom-mcp-tools-for-tui-control" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Complex</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Custom tools registered with bevy_brp_extras</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TUI rendering mode switchable via MCP</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Camera control tools functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tools documented with examples</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/brp/tools.rs</code> - Custom MCP tool implementations</li>
+<li><code>src/brp/mod.rs</code> - Tool registration</li>
+<li><code>docs/MCP_TOOLS.md</code> - Tool documentation</li>
+</ul>
+</li>
+<li>
+<p><strong>Custom Tools to Implement</strong>:</p>
+<ol>
+<li><code>tui/set_render_mode</code> - Change rendering strategy</li>
+<li><code>tui/toggle_output</code> - Enable/disable TUI output</li>
+<li><code>tui/get_camera_config</code> - Query TUI camera settings</li>
+<li><code>tui/set_camera_sync</code> - Control camera synchronization</li>
+<li><code>tui/capture_frame</code> - Capture current TUI frame as string</li>
+<li><code>entity/find_by_name</code> - Query entities by name pattern</li>
+<li><code>entity/list_named</code> - List all named entities</li>
+</ol>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Example custom tool</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> register_tui_tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    app</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_brp_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tui/set_render_mode&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">set_render_mode_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">       .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_brp_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tui/capture_frame&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">capture_frame_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">       .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_brp_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;entity/find_by_name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">find_by_name_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> set_render_mode_tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    In</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">params</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> In</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">SetRenderModeParams</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ResMut</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">TuiConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;(), </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">BrpError</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">render_mode </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> params</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">mode;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Ok</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Integration tests for each tool</li>
+<li>Test via actual MCP calls from Claude</li>
+<li>Error handling verification</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="33-rendering-strategy-selection-via-mcp">3.3 Rendering Strategy Selection via MCP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-rendering-strategy-selection-via-mcp" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> AI can switch between ASCII/Unicode/Braille modes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Terminal capability detection works</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mode changes apply without restart</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Visual feedback of mode changes</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>src/tui/strategy.rs</code> - Strategy selection logic</li>
+<li><code>src/brp/tools.rs</code> - Add strategy switching tool</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// MCP tool for AI to switch rendering modes</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Serialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Deserialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> SetRenderStrategyParams</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> strategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;ascii&quot; | &quot;unicode&quot; | &quot;braille&quot; | &quot;auto&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> apply_immediately</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> set_render_strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    In</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">params</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> In</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">SetRenderStrategyParams</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Query</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RatatuiCamera</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">BrpError</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> strategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> match</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> params</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">strategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">as_str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;ascii&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Ascii</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;unicode&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;braille&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RenderingStrategy</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Braille</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;auto&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> detect_best_strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        _</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> =></span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> return</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Err</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">BrpError</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">InvalidParams</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    };</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    for</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> cameras</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter_mut</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        camera</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">rendering_strategy </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Ok</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Rendering strategy set to: {}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">params</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">strategy))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Test each rendering strategy switch</li>
+<li>Verify terminal detection accuracy</li>
+<li>Performance testing for mode switches</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="phase-4-examples--documentation">Phase 4: Examples &amp; Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-examples--documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective</strong>: Create comprehensive examples and guides demonstrating AI-driven TUI control</p>
+<h3 id="dependencies-2">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Requires: Phase 3 complete</li>
+</ul>
+<h3 id="tasks-3">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="41-interactive-tui-demo-scene">4.1 Interactive TUI Demo Scene<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-interactive-tui-demo-scene" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Rich 3D scene visible in terminal</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Interactive elements controllable via AI</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance optimized for smooth rendering</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Demonstrates all key features</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>examples/tui_interactive_demo.rs</code> - Main demo</li>
+<li><code>src/systems/demo.rs</code> - Demo scene systems</li>
+<li><code>assets/scenes/tui_demo.ron</code> - Scene configuration (optional)</li>
+</ul>
+</li>
+<li>
+<p><strong>Demo Scene Features</strong>:</p>
+<ul>
+<li>5-10 named entities (spheres, cubes, cylinders)</li>
+<li>Animated elements (rotating, bouncing, orbiting)</li>
+<li>Multiple cameras (main, TUI, debug)</li>
+<li>Lighting setup optimized for TUI visibility</li>
+<li>Interactive controls (keyboard + MCP)</li>
+<li>Status display showing FPS, entity count, camera info</li>
+</ul>
+</li>
+<li>
+<p><strong>Implementation Details</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// examples/tui_interactive_demo.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> main</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    App</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">        .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">((</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            MinimalPlugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            RatatuiCameraPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            BrpExtrasPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        ))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">        .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">insert_resource</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">TuiConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            render_mode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> TuiRenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Auto</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            target_fps</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 30</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">            ..</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        })</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">        .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_systems</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Startup</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            setup_demo_scene</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            setup_tui_cameras</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            setup_brp_server</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        ))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">        .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_systems</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Update</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, (</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            rotate_entities</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            bounce_entities</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            orbit_entities</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">            update_status_display</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        ))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">        .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Manual testing in various terminals</li>
+<li>Performance profiling (target 30 FPS in terminal)</li>
+<li>Cross-platform testing (macOS, Linux, Windows)</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="42-ai-prompt-examples-collection">4.2 AI Prompt Examples Collection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-ai-prompt-examples-collection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> 20+ documented prompt examples</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Prompts categorized by use case</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Expected outputs documented</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Troubleshooting guide included</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>docs/AI_PROMPTS.md</code> - Comprehensive prompt guide</li>
+<li><code>docs/PROMPT_PATTERNS.md</code> - Common patterns and best practices</li>
+</ul>
+</li>
+<li>
+<p><strong>Prompt Categories</strong>:</p>
+<ol>
+<li>
+<p><strong>Scene Inspection</strong></p>
+<ul>
+<li>“Show me all entities in the TUI view”</li>
+<li>“What’s the current rendering mode?”</li>
+<li>“List all cameras and their positions”</li>
+</ul>
+</li>
+<li>
+<p><strong>Entity Manipulation</strong></p>
+<ul>
+<li>“Make the red sphere twice as large”</li>
+<li>“Move the blue cube to position (5, 0, 0)”</li>
+<li>“Change the tree’s color to dark green”</li>
+</ul>
+</li>
+<li>
+<p><strong>Camera Control</strong></p>
+<ul>
+<li>“Switch the TUI camera to ASCII mode”</li>
+<li>“Move the TUI camera to look down from above”</li>
+<li>“Enable camera synchronization between window and TUI”</li>
+</ul>
+</li>
+<li>
+<p><strong>Scene Creation</strong></p>
+<ul>
+<li>“Spawn a golden sphere at the center”</li>
+<li>“Create a ring of 8 colored cubes around the origin”</li>
+<li>“Add a spotlight pointing at the main cube”</li>
+</ul>
+</li>
+<li>
+<p><strong>Performance &amp; Debugging</strong></p>
+<ul>
+<li>“Show current FPS and rendering stats”</li>
+<li>“What entities are visible to the TUI camera?”</li>
+<li>“Capture the current TUI frame as text”</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>: Verify each prompt works with actual AI assistant</p>
+</li>
+</ul>
+<hr/>
+<h4 id="43-comprehensive-user-guides">4.3 Comprehensive User Guides<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-comprehensive-user-guides" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Installation guide complete</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Quick start tutorial functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> API reference accurate</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Troubleshooting section comprehensive</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>docs/TUI_GUIDE.md</code> - Complete TUI usage guide</li>
+<li><code>docs/ARCHITECTURE.md</code> - System architecture documentation</li>
+<li><code>docs/TROUBLESHOOTING.md</code> - Common issues and solutions</li>
+<li><code>README.md</code> - Update with TUI features</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation Structure</strong>:</p>
+<p><strong>TUI_GUIDE.md</strong>:</p>
+<ul>
+<li>Introduction to TUI rendering in Bevy</li>
+<li>Installation and setup</li>
+<li>Configuration options</li>
+<li>Rendering modes explained</li>
+<li>Camera setup and controls</li>
+<li>Performance tuning</li>
+<li>Terminal compatibility</li>
+</ul>
+<p><strong>ARCHITECTURE.md</strong>:</p>
+<ul>
+<li>System overview diagram</li>
+<li>Component relationships</li>
+<li>Data flow: AI <span>→</span> MCP <span>→</span> BRP <span>→</span> Bevy <span>→</span> TUI</li>
+<li>Plugin architecture</li>
+<li>Custom tool implementation guide</li>
+</ul>
+<p><strong>TROUBLESHOOTING.md</strong>:</p>
+<ul>
+<li>Common issues and solutions</li>
+<li>Performance optimization tips</li>
+<li>Terminal compatibility fixes</li>
+<li>BRP connection issues</li>
+<li>Rendering artifacts solutions</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>: Technical review, user testing with fresh installation</p>
+</li>
+</ul>
+<hr/>
+<h2 id="phase-5-testing--polish">Phase 5: Testing &amp; Polish<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-testing--polish" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective</strong>: Ensure production quality through comprehensive testing and refinement</p>
+<h3 id="dependencies-3">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Requires: Phase 4 complete</li>
+</ul>
+<h3 id="tasks-4">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="51-integration-test-suite">5.1 Integration Test Suite<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-integration-test-suite" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Complex</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> 90%+ code coverage for critical paths</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All rendering modes tested</li>
+<li class="task-list-item"><input type="checkbox" disabled/> BRP integration tests passing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Cross-platform tests successful</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>tests/integration_tests.rs</code> - Main integration tests</li>
+<li><code>tests/tui_rendering_tests.rs</code> - TUI-specific tests</li>
+<li><code>tests/brp_tools_tests.rs</code> - MCP tool tests</li>
+<li><code>tests/camera_sync_tests.rs</code> - Camera synchronization tests</li>
+</ul>
+</li>
+<li>
+<p><strong>Test Categories</strong>:</p>
+<ol>
+<li>
+<p><strong>TUI Rendering Tests</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_ascii_rendering_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> app</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> create_test_app</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Ascii</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Verify ASCII characters in output</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_unicode_rendering_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> app</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> create_test_app</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Unicode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Verify Unicode characters in output</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_braille_rendering_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> app</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> create_test_app</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">RenderMode</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Braille</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Verify Braille characters in output</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>BRP Integration Tests</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_set_render_mode_via_brp</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Test MCP tool calls</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_find_entity_by_name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Test entity querying</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Camera Synchronization Tests</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_camera_sync_enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Verify cameras stay synchronized</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[test]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> test_camera_sync_disabled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Verify independent camera movement</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Unit tests for individual components</li>
+<li>Integration tests for system interactions</li>
+<li>End-to-end tests with actual BRP calls</li>
+<li>Performance regression tests</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="52-performance-optimization">5.2 Performance Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-performance-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Medium</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> TUI rendering maintains 30 FPS minimum</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Memory usage stable over time</li>
+<li class="task-list-item"><input type="checkbox" disabled/> BRP latency &lt; 50ms for simple operations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No memory leaks detected</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>benches/rendering_bench.rs</code> - Performance benchmarks</li>
+<li><code>src/tui/optimization.rs</code> - Performance optimizations</li>
+<li><code>docs/PERFORMANCE.md</code> - Performance guide</li>
+</ul>
+</li>
+<li>
+<p><strong>Optimization Areas</strong>:</p>
+<ol>
+<li>
+<p><strong>Rendering Performance</strong></p>
+<ul>
+<li>Frame caching for static scenes</li>
+<li>Culling for off-screen entities</li>
+<li>Adaptive rendering quality based on FPS</li>
+<li>Batch character updates</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory Management</strong></p>
+<ul>
+<li>Reuse buffers for character arrays</li>
+<li>Limit history/frame buffer size</li>
+<li>Clean up unused resources</li>
+</ul>
+</li>
+<li>
+<p><strong>BRP Communication</strong></p>
+<ul>
+<li>Response caching for repeated queries</li>
+<li>Batch operations where possible</li>
+<li>Async processing for heavy operations</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>Benchmarking</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// benches/rendering_bench.rs</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> bench_ascii_rendering</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">c</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Criterion</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    c</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">bench_function</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ascii_render_100_entities&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">b</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">|</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">        b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">iter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">||</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            // Benchmark rendering</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    });</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Run benchmarks on different hardware</li>
+<li>Profile with cargo flamegraph</li>
+<li>Memory profiling with valgrind/heaptrack</li>
+<li>Stress tests with 1000+ entities</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h4 id="53-documentation-refinement">5.3 Documentation Refinement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-documentation-refinement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>
+<p><strong>Complexity</strong>: Simple</p>
+</li>
+<li>
+<p><strong>Acceptance Criteria</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All code examples tested and working</li>
+<li class="task-list-item"><input type="checkbox" disabled/> API documentation complete</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Screenshots/GIFs added where helpful</li>
+<li class="task-list-item"><input type="checkbox" disabled/> External review completed</li>
+</ul>
+</li>
+<li>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li>All docs/* files - Final polish</li>
+<li><code>CONTRIBUTING.md</code> - Contribution guidelines</li>
+<li><code>CHANGELOG.md</code> - Version history</li>
+<li><code>LICENSE</code> - License file</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation Improvements</strong>:</p>
+<ul>
+<li>Add terminal recording GIFs to README</li>
+<li>Create video walkthrough for YouTube</li>
+<li>Add architecture diagrams (mermaid)</li>
+<li>Create API reference docs</li>
+<li>Add code comments and rustdoc</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation Checklist</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All code examples compile and run</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All links working</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Consistent terminology throughout</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Adequate troubleshooting coverage</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Installation tested on fresh systems</li>
+<li class="task-list-item"><input type="checkbox" disabled/> AI prompt examples verified</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Strategy</strong>:</p>
+<ul>
+<li>Documentation review by external developer</li>
+<li>Fresh installation test on multiple platforms</li>
+<li>Verify all examples in docs/</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="cross-cutting-concerns">Cross-Cutting Concerns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cross-cutting-concerns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="error-handling-strategy">Error Handling Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-handling-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>All BRP tools return Result types with descriptive errors</li>
+<li>TUI rendering failures degrade gracefully (fallback to simpler mode)</li>
+<li>Logging at appropriate levels (debug, info, warn, error)</li>
+<li>User-friendly error messages with recovery suggestions</li>
+</ul>
+<h3 id="logging-and-debugging">Logging and Debugging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#logging-and-debugging" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Structured logging with tracing crate</li>
+<li>Debug overlays for TUI rendering</li>
+<li>BRP request/response logging option</li>
+<li>Performance metrics logging</li>
+</ul>
+<h3 id="configuration-management">Configuration Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>TOML-based configuration files</li>
+<li>Environment variable overrides</li>
+<li>Runtime configuration via MCP tools</li>
+<li>Sensible defaults for all settings</li>
+</ul>
+<h3 id="platform-compatibility">Platform Compatibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-compatibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Primary</strong>: macOS, Linux</li>
+<li><strong>Secondary</strong>: Windows (with known terminal limitations)</li>
+<li>Terminal capability detection</li>
+<li>Graceful degradation for unsupported features</li>
+</ul>
+<hr/>
+<h2 id="success-metrics">Success Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical-metrics">Technical Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All feature flags compile independently</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test coverage > 85% for core functionality</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TUI rendering maintains 30+ FPS with 100 entities</li>
+<li class="task-list-item"><input type="checkbox" disabled/> BRP latency &lt; 50ms for 95% of operations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Zero memory leaks over 1-hour stress test</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Works on macOS, Linux, and Windows terminals</li>
+</ul>
+<h3 id="user-experience-metrics">User Experience Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#user-experience-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Fresh installation to “Hello World” &lt; 5 minutes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> AI can successfully control app with basic prompts</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation clear enough for Bevy beginners</li>
+<li class="task-list-item"><input type="checkbox" disabled/> At least 3 impressive demo scenes included</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Terminal recording demonstrates wow factor</li>
+</ul>
+<h3 id="community-metrics">Community Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#community-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> GitHub repository with comprehensive README</li>
+<li class="task-list-item"><input type="checkbox" disabled/> At least 5 documented use cases</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Blog post or tutorial article published</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Example integrations with popular Bevy plugins</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Active issue template and contributing guide</li>
+</ul>
+<hr/>
+<h2 id="risk-assessment-and-mitigation">Risk Assessment and Mitigation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-assessment-and-mitigation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical-risks">Technical Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Risk 1: Terminal Compatibility Issues</strong></p>
+<ul>
+<li><strong>Impact</strong>: High</li>
+<li><strong>Probability</strong>: Medium</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Implement capability detection</li>
+<li>Provide fallback rendering modes</li>
+<li>Document known terminal incompatibilities</li>
+<li>Test on wide range of terminals (iTerm2, Alacritty, Windows Terminal, etc.)</li>
+</ul>
+</li>
+</ul>
+<p><strong>Risk 2: Performance Degradation in TUI Mode</strong></p>
+<ul>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Probability</strong>: Medium</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Early performance benchmarking</li>
+<li>Adaptive rendering quality</li>
+<li>Frame rate limiting</li>
+<li>Optimization passes in Phase 5</li>
+</ul>
+</li>
+</ul>
+<p><strong>Risk 3: BRP API Changes in Bevy Updates</strong></p>
+<ul>
+<li><strong>Impact</strong>: High</li>
+<li><strong>Probability</strong>: Low</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Pin to specific Bevy version initially</li>
+<li>Monitor Bevy release notes</li>
+<li>Maintain compatibility layer</li>
+<li>Quick response to breaking changes</li>
+</ul>
+</li>
+</ul>
+<p><strong>Risk 4: Complex Camera Synchronization Bugs</strong></p>
+<ul>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Probability</strong>: Medium</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Comprehensive test coverage for sync logic</li>
+<li>Optional synchronization (fail-safe: independent cameras)</li>
+<li>Extensive manual testing</li>
+<li>Clear documentation of sync behavior</li>
+</ul>
+</li>
+</ul>
+<h3 id="project-risks">Project Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Risk 5: Scope Creep</strong></p>
+<ul>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Probability</strong>: High</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Strict adherence to phase boundaries</li>
+<li>MVP features first, enhancements later</li>
+<li>Clear acceptance criteria for each task</li>
+<li>Regular progress reviews</li>
+</ul>
+</li>
+</ul>
+<p><strong>Risk 6: Documentation Falling Behind Implementation</strong></p>
+<ul>
+<li><strong>Impact</strong>: Medium</li>
+<li><strong>Probability</strong>: High</li>
+<li><strong>Mitigation</strong>:
+<ul>
+<li>Documentation as acceptance criteria for each task</li>
+<li>Phase 4 dedicated to documentation</li>
+<li>Examples included with each feature</li>
+<li>Regular documentation reviews</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="timeline-estimates">Timeline Estimates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#timeline-estimates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Phase 1: Foundation Setup</strong> - 2-3 days</p>
+<ul>
+<li>1.1: Project Init - 4 hours</li>
+<li>1.2: Structure - 2 hours</li>
+<li>1.3: Basic TUI Plugin - 8-10 hours</li>
+</ul>
+<p><strong>Phase 2: Core Integration</strong> - 4-5 days</p>
+<ul>
+<li>2.1: bevy_ratatui_camera - 10-12 hours</li>
+<li>2.2: Dual Rendering - 12-16 hours</li>
+<li>2.3: Camera Sync - 6-8 hours</li>
+</ul>
+<p><strong>Phase 3: MCP Enhancement</strong> - 3-4 days</p>
+<ul>
+<li>3.1: Entity Naming - 4 hours</li>
+<li>3.2: Custom Tools - 12-16 hours</li>
+<li>3.3: Strategy Selection - 4-6 hours</li>
+</ul>
+<p><strong>Phase 4: Examples &amp; Documentation</strong> - 3-4 days</p>
+<ul>
+<li>4.1: Interactive Demo - 8-10 hours</li>
+<li>4.2: AI Prompts - 4-6 hours</li>
+<li>4.3: User Guides - 8-12 hours</li>
+</ul>
+<p><strong>Phase 5: Testing &amp; Polish</strong> - 4-5 days</p>
+<ul>
+<li>5.1: Integration Tests - 12-16 hours</li>
+<li>5.2: Performance - 8-10 hours</li>
+<li>5.3: Documentation Polish - 4-6 hours</li>
+</ul>
+<p><strong>Total Estimated Time: 16-21 days</strong></p>
+<hr/>
+<h2 id="phase-dependencies-graph">Phase Dependencies Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-dependencies-graph" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Phase 1 (Foundation)
+    └─→ Phase 2 (Core Integration)
+            └─→ Phase 3 (MCP Enhancement)
+                    └─→ Phase 4 (Examples &amp; Docs)
+                            └─→ Phase 5 (Testing &amp; Polish)
+</code></pre>
+<p>Each phase must be completed before the next begins. Within phases, tasks can be parallelized where dependencies allow.</p>
+<hr/>
+<h2 id="deliverables-summary">Deliverables Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="code-deliverables">Code Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Rust library crate with TUI + BRP support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> 3+ working examples demonstrating features</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Comprehensive test suite (unit + integration)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance benchmarks</li>
+<li class="task-list-item"><input type="checkbox" disabled/> CI/CD configuration (GitHub Actions)</li>
+</ul>
+<h3 id="documentation-deliverables">Documentation Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> README.md with quick start guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Complete API documentation (rustdoc)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TUI integration guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> AI prompt examples (20+)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Architecture documentation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Troubleshooting guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Contributing guidelines</li>
+</ul>
+<h3 id="demo-deliverables">Demo Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#demo-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Interactive TUI demo application</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Terminal recording (asciinema/VHS)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Video walkthrough (5-10 minutes)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Blog post or tutorial article</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Example AI conversation transcripts</li>
+</ul>
+<hr/>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>Review this plan</strong> with stakeholders/team</li>
+<li><strong>Set up development environment</strong> with all dependencies</li>
+<li><strong>Create project repository</strong> with initial structure</li>
+<li><strong>Begin Phase 1.1</strong> - Project initialization</li>
+<li><strong>Schedule regular check-ins</strong> after each phase completion</li>
+</ol>
+<hr/>
+<h2 id="appendix-key-technologies-reference">Appendix: Key Technologies Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#appendix-key-technologies-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="bevy-016">Bevy 0.16+<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bevy-016" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>ECS Architecture</strong>: Entity-Component-System game engine</li>
+<li><strong>BRP</strong>: Bevy Remote Protocol for external control</li>
+<li><strong>Reflection System</strong>: Runtime type information</li>
+</ul>
+<h3 id="bevy_ratatui_camera">bevy_ratatui_camera<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bevy_ratatui_camera" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Version</strong>: 0.14+</li>
+<li><strong>Features</strong>: Depth detection, multiple rendering strategies</li>
+<li><strong>Rendering Modes</strong>: ASCII, Unicode, Braille</li>
+</ul>
+<h3 id="bevy_brp_extras">bevy_brp_extras<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bevy_brp_extras" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Version</strong>: 0.2+</li>
+<li><strong>Extended Tools</strong>: Component mutation, resource mutation</li>
+<li><strong>Discovery</strong>: Format discovery for easier AI integration</li>
+</ul>
+<h3 id="ratatui--crossterm">ratatui + crossterm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ratatui--crossterm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>ratatui</strong>: Terminal UI framework</li>
+<li><strong>crossterm</strong>: Cross-platform terminal manipulation</li>
+<li><strong>Features</strong>: Rich text, layout, events, styling</li>
+</ul>
+<h3 id="mcp-model-context-protocol">MCP (Model Context Protocol)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mcp-model-context-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Purpose</strong>: Standardized AI tool calling protocol</li>
+<li><strong>Server</strong>: bevy_brp_mcp for Bevy integration</li>
+<li><strong>Tools</strong>: Custom tools for game state manipulation</li>
+</ul>
+<hr/>
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-11-10
+<strong>Status</strong>: Planning - Ready for Implementation</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-113" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#ai-powered-tui-bevy-reference-implementation-plan" data-for="ai-powered-tui-bevy-reference-implementation-plan">AI-Powered TUI Bevy Reference Implementation Plan</a></li><li class="depth-1"><a href="#project-overview" data-for="project-overview">Project Overview</a></li><li class="depth-1"><a href="#phase-1-foundation-setup" data-for="phase-1-foundation-setup">Phase 1: Foundation Setup</a></li><li class="depth-2"><a href="#tasks" data-for="tasks">Tasks</a></li><li class="depth-1"><a href="#phase-2-core-integration" data-for="phase-2-core-integration">Phase 2: Core Integration</a></li><li class="depth-2"><a href="#dependencies" data-for="dependencies">Dependencies</a></li><li class="depth-2"><a href="#tasks-1" data-for="tasks-1">Tasks</a></li><li class="depth-1"><a href="#phase-3-mcp-enhancement" data-for="phase-3-mcp-enhancement">Phase 3: MCP Enhancement</a></li><li class="depth-2"><a href="#dependencies-1" data-for="dependencies-1">Dependencies</a></li><li class="depth-2"><a href="#tasks-2" data-for="tasks-2">Tasks</a></li><li class="depth-1"><a href="#phase-4-examples--documentation" data-for="phase-4-examples--documentation">Phase 4: Examples &amp; Documentation</a></li><li class="depth-2"><a href="#dependencies-2" data-for="dependencies-2">Dependencies</a></li><li class="depth-2"><a href="#tasks-3" data-for="tasks-3">Tasks</a></li><li class="depth-1"><a href="#phase-5-testing--polish" data-for="phase-5-testing--polish">Phase 5: Testing &amp; Polish</a></li><li class="depth-2"><a href="#dependencies-3" data-for="dependencies-3">Dependencies</a></li><li class="depth-2"><a href="#tasks-4" data-for="tasks-4">Tasks</a></li><li class="depth-1"><a href="#cross-cutting-concerns" data-for="cross-cutting-concerns">Cross-Cutting Concerns</a></li><li class="depth-2"><a href="#error-handling-strategy" data-for="error-handling-strategy">Error Handling Strategy</a></li><li class="depth-2"><a href="#logging-and-debugging" data-for="logging-and-debugging">Logging and Debugging</a></li><li class="depth-2"><a href="#configuration-management" data-for="configuration-management">Configuration Management</a></li><li class="depth-2"><a href="#platform-compatibility" data-for="platform-compatibility">Platform Compatibility</a></li><li class="depth-1"><a href="#success-metrics" data-for="success-metrics">Success Metrics</a></li><li class="depth-2"><a href="#technical-metrics" data-for="technical-metrics">Technical Metrics</a></li><li class="depth-2"><a href="#user-experience-metrics" data-for="user-experience-metrics">User Experience Metrics</a></li><li class="depth-2"><a href="#community-metrics" data-for="community-metrics">Community Metrics</a></li><li class="depth-1"><a href="#risk-assessment-and-mitigation" data-for="risk-assessment-and-mitigation">Risk Assessment and Mitigation</a></li><li class="depth-2"><a href="#technical-risks" data-for="technical-risks">Technical Risks</a></li><li class="depth-2"><a href="#project-risks" data-for="project-risks">Project Risks</a></li><li class="depth-1"><a href="#timeline-estimates" data-for="timeline-estimates">Timeline Estimates</a></li><li class="depth-1"><a href="#phase-dependencies-graph" data-for="phase-dependencies-graph">Phase Dependencies Graph</a></li><li class="depth-1"><a href="#deliverables-summary" data-for="deliverables-summary">Deliverables Summary</a></li><li class="depth-2"><a href="#code-deliverables" data-for="code-deliverables">Code Deliverables</a></li><li class="depth-2"><a href="#documentation-deliverables" data-for="documentation-deliverables">Documentation Deliverables</a></li><li class="depth-2"><a href="#demo-deliverables" data-for="demo-deliverables">Demo Deliverables</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-1"><a href="#appendix-key-technologies-reference" data-for="appendix-key-technologies-reference">Appendix: Key Technologies Reference</a></li><li class="depth-2"><a href="#bevy-016" data-for="bevy-016">Bevy 0.16+</a></li><li class="depth-2"><a href="#bevy_ratatui_camera" data-for="bevy_ratatui_camera">bevy_ratatui_camera</a></li><li class="depth-2"><a href="#bevy_brp_extras" data-for="bevy_brp_extras">bevy_brp_extras</a></li><li class="depth-2"><a href="#ratatui--crossterm" data-for="ratatui--crossterm">ratatui + crossterm</a></li><li class="depth-2"><a href="#mcp-model-context-protocol" data-for="mcp-model-context-protocol">MCP (Model Context Protocol)</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

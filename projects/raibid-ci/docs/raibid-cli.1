@@ -1,0 +1,432 @@
+.TH RAIBID-CLI 1 "2025-01-15" "raibid-cli 0.1.0" "User Commands"
+.SH NAME
+raibid-cli \- DGX Spark Personal CI Agent Pool management tool
+.SH SYNOPSIS
+.B raibid-cli
+[\fIOPTIONS\fR] [\fICOMMAND\fR]
+.SH DESCRIPTION
+.B raibid-cli
+is a TUI-first developer tool for managing self-hosted CI agents on NVIDIA DGX Spark.
+It provides infrastructure management, job orchestration, agent scaling, and repository
+mirroring capabilities through both command-line interface and interactive terminal UI.
+.PP
+The tool manages ephemeral, auto-scaling CI/CD infrastructure components including k3s,
+Gitea, Redis Streams, KEDA autoscaler, and Flux GitOps.
+.SH OPTIONS
+.TP
+.BR \-v ", " \-\-verbose
+Enable verbose logging output
+.TP
+.BR \-V ", " \-\-version
+Display version information and exit
+.TP
+.BR \-h ", " \-\-help
+Display help information and exit
+.SH COMMANDS
+.SS TUI Dashboard
+.TP
+.B tui
+Launch interactive terminal UI for real-time monitoring and management
+.SS Infrastructure Management
+.TP
+.B setup \fICOMPONENT\fR
+Set up infrastructure component (k3s, gitea, redis, keda, flux, or all)
+.TP
+.B teardown \fICOMPONENT\fR
+Remove infrastructure component
+.TP
+.B status [\fICOMPONENT\fR]
+Show status of infrastructure component(s)
+.SS Job Management
+.TP
+.B job list [\fIOPTIONS\fR]
+List CI jobs with optional filtering
+.RS
+.TP
+.BI \-\-status " STATUS"
+Filter by job status (running, success, failed, pending)
+.TP
+.BI \-\-repo " REPO"
+Filter by repository name
+.TP
+.BI \-\-limit " N"
+Limit number of results (default: 50)
+.TP
+.BI \-\-output " FORMAT"
+Output format (text or json)
+.RE
+.TP
+.B job show \fIJOB-ID\fR [\fIOPTIONS\fR]
+Show detailed information about a specific job
+.RS
+.TP
+.BI \-\-output " FORMAT"
+Output format (text or json)
+.RE
+.TP
+.B job cancel \fIJOB-ID\fR [\fIOPTIONS\fR]
+Cancel a running or pending job
+.RS
+.TP
+.BR \-f ", " \-\-force
+Cancel without confirmation prompt
+.RE
+.TP
+.B job retry \fIJOB-ID\fR
+Retry a failed job
+.SS Agent Management
+.TP
+.B agent list [\fIOPTIONS\fR]
+List build agents
+.RS
+.TP
+.BI \-\-status " STATUS"
+Filter by agent status (running, idle, offline)
+.TP
+.BI \-\-output " FORMAT"
+Output format (text or json)
+.RE
+.TP
+.B agent show \fIAGENT-ID\fR [\fIOPTIONS\fR]
+Show detailed information about a specific agent
+.RS
+.TP
+.BI \-\-output " FORMAT"
+Output format (text or json)
+.RE
+.TP
+.B agent restart \fIAGENT-ID\fR [\fIOPTIONS\fR]
+Restart a build agent
+.RS
+.TP
+.BR \-f ", " \-\-force
+Restart without confirmation prompt
+.RE
+.TP
+.B agent scale \fIOPTIONS\fR
+Scale agent pool to specified count
+.RS
+.TP
+.BI \-\-count " N"
+Target number of agents (required)
+.TP
+.BI \-\-min " N"
+Minimum agent count constraint
+.TP
+.BI \-\-max " N"
+Maximum agent count constraint
+.RE
+.SS Repository Mirroring
+.TP
+.B mirror add \fIGITHUB-URL\fR [\fIOPTIONS\fR]
+Add a repository mirror from GitHub to Gitea
+.RS
+.TP
+.BI \-\-name " NAME"
+Custom mirror name (default: extracted from URL)
+.TP
+.BI \-\-sync-interval " MINUTES"
+Sync interval in minutes (default: 60)
+.RE
+.TP
+.B mirror list [\fIOPTIONS\fR]
+List all repository mirrors
+.RS
+.TP
+.BI \-\-output " FORMAT"
+Output format (text or json)
+.RE
+.TP
+.B mirror sync \fIREPO\fR [\fIOPTIONS\fR]
+Synchronize a repository mirror
+.RS
+.TP
+.BR \-f ", " \-\-force
+Force sync regardless of sync interval
+.RE
+.TP
+.B mirror remove \fIREPO\fR [\fIOPTIONS\fR]
+Remove a repository mirror
+.RS
+.TP
+.BR \-f ", " \-\-force
+Remove without confirmation prompt
+.RE
+.SS Configuration Management
+.TP
+.B config init [\fIOPTIONS\fR]
+Initialize a new configuration file
+.RS
+.TP
+.BI \-o ", " \-\-output " FILE"
+Output file path (default: ~/.config/raibid/config.yaml)
+.TP
+.BR \-m ", " \-\-minimal
+Generate minimal configuration
+.TP
+.BR \-f ", " \-\-force
+Overwrite existing configuration file
+.RE
+.TP
+.B config show [\fIOPTIONS\fR]
+Display current merged configuration
+.RS
+.TP
+.BI \-\-format " FORMAT"
+Output format (yaml, json, or toml)
+.TP
+.BI \-\-file " FILE"
+Show specific file instead of merged config
+.RE
+.TP
+.B config validate [\fIFILE\fR]
+Validate configuration file syntax and values
+.TP
+.B config path
+Show configuration file path being used
+.SH CONFIGURATION
+Configuration files are loaded in the following priority order (highest to lowest):
+.PP
+.RS
+1. Environment variables (RAIBID_*)
+.br
+2. Local file (./raibid.yaml)
+.br
+3. User file (~/.config/raibid/config.yaml)
+.br
+4. System file (/etc/raibid/config.yaml)
+.br
+5. Built-in defaults
+.RE
+.SS Configuration File Format
+Configuration files use YAML or TOML format. Example:
+.PP
+.RS
+.nf
+cluster:
+  name: "dgx-spark-ci"
+  namespace: "raibid-ci"
+
+api:
+  host: "localhost"
+  port: 8080
+
+agents:
+  min_count: 0
+  max_count: 8
+.fi
+.RE
+.SS Environment Variables
+Configuration values can be overridden using environment variables with the RAIBID_ prefix:
+.PP
+.RS
+.nf
+RAIBID_API_HOST="api.example.com"
+RAIBID_API_PORT="9090"
+RAIBID_AGENTS_MAX_COUNT="16"
+RAIBID_GITEA_ADMIN_PASSWORD="secret"
+.fi
+.RE
+.SH TUI KEYBOARD SHORTCUTS
+When using the interactive TUI dashboard:
+.TP
+.B Tab / Shift+Tab
+Navigate between tabs
+.TP
+.B 1-4
+Jump directly to tab (1=Jobs, 2=Agents, 3=Config, 4=Logs)
+.TP
+.B ↑/↓ or j/k
+Navigate list items
+.TP
+.B Enter
+View details of selected item
+.TP
+.B f
+Open filter menu
+.TP
+.B /
+Enter search mode
+.TP
+.B r
+Refresh data
+.TP
+.B ?
+Show help screen
+.TP
+.B q or Ctrl+C
+Quit TUI
+.SH FILES
+.TP
+.I ~/.config/raibid/config.yaml
+User configuration file
+.TP
+.I ./raibid.yaml
+Local project configuration file
+.TP
+.I /etc/raibid/config.yaml
+System-wide configuration file
+.SH ENVIRONMENT
+.TP
+.B RAIBID_API_HOST
+Override API server hostname
+.TP
+.B RAIBID_API_PORT
+Override API server port
+.TP
+.B RAIBID_AGENTS_MIN_COUNT
+Override minimum agent count
+.TP
+.B RAIBID_AGENTS_MAX_COUNT
+Override maximum agent count
+.TP
+.B RAIBID_GITEA_ADMIN_PASSWORD
+Set Gitea admin password (recommended for secrets)
+.TP
+.B RUST_LOG
+Control logging verbosity (e.g., debug, trace)
+.SH EXIT STATUS
+.TP
+.B 0
+Success
+.TP
+.B 1
+General error
+.TP
+.B 2
+Command-line argument error
+.SH EXAMPLES
+.SS Basic Usage
+.PP
+Display version:
+.RS
+.B raibid-cli --version
+.RE
+.PP
+Show help:
+.RS
+.B raibid-cli --help
+.RE
+.SS Infrastructure Management
+.PP
+Set up all infrastructure components:
+.RS
+.B raibid-cli setup all
+.RE
+.PP
+Check system status:
+.RS
+.B raibid-cli status
+.RE
+.PP
+Remove all components:
+.RS
+.B raibid-cli teardown all
+.RE
+.SS Job Management
+.PP
+List all jobs:
+.RS
+.B raibid-cli job list
+.RE
+.PP
+List failed jobs:
+.RS
+.B raibid-cli job list --status failed
+.RE
+.PP
+Show job details:
+.RS
+.B raibid-cli job show a1b2c3
+.RE
+.PP
+Cancel a job:
+.RS
+.B raibid-cli job cancel a1b2c3 --force
+.RE
+.SS Agent Management
+.PP
+List all agents:
+.RS
+.B raibid-cli agent list
+.RE
+.PP
+Scale to 5 agents:
+.RS
+.B raibid-cli agent scale --count 5
+.RE
+.PP
+Scale with constraints:
+.RS
+.B raibid-cli agent scale --count 3 --min 2 --max 8
+.RE
+.SS Repository Mirroring
+.PP
+Add a repository mirror:
+.RS
+.B raibid-cli mirror add github.com/user/repo
+.RE
+.PP
+List all mirrors:
+.RS
+.B raibid-cli mirror list
+.RE
+.PP
+Force sync a mirror:
+.RS
+.B raibid-cli mirror sync github.com/user/repo --force
+.RE
+.SS Configuration
+.PP
+Initialize configuration:
+.RS
+.B raibid-cli config init
+.RE
+.PP
+Show current configuration:
+.RS
+.B raibid-cli config show
+.RE
+.PP
+Show configuration in JSON:
+.RS
+.B raibid-cli config show --format json
+.RE
+.PP
+Validate configuration:
+.RS
+.B raibid-cli config validate
+.RE
+.SS TUI Dashboard
+.PP
+Launch interactive dashboard:
+.RS
+.B raibid-cli tui
+.RE
+.PP
+Launch with debug logging:
+.RS
+.B RUST_LOG=debug raibid-cli tui
+.RE
+.SH NOTES
+.PP
+The current implementation uses mock data for infrastructure commands. Full Kubernetes
+integration will be available in future releases (WS-02 and beyond).
+.PP
+All agents are ephemeral and can scale to zero when idle. The KEDA autoscaler manages
+agent lifecycle based on job queue depth.
+.SH SEE ALSO
+.BR kubectl (1),
+.BR k3s (1),
+.BR flux (1)
+.PP
+Full documentation: https://github.com/raibid-labs/raibid-cli
+.PP
+User guide: /usr/share/doc/raibid-cli/USER_GUIDE.md
+.SH BUGS
+Report bugs at: https://github.com/raibid-labs/raibid-cli/issues
+.SH AUTHOR
+Raibid Labs
+.SH COPYRIGHT
+Copyright © 2025 Raibid Labs.
+Licensed under MIT OR Apache-2.0.

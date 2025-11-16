@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>06-obi-experiments</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="06-obi-experiments"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="06-obi-experiments"/><meta name="twitter:description" content="Workstream 6: OBI Experiments Status 🔴 Not Started Overview Implement the five comprehensive OBI experiments to validate observability capabilities, data quality, performance characteristics, and operational patterns."/><meta property="og:description" content="Workstream 6: OBI Experiments Status 🔴 Not Started Overview Implement the five comprehensive OBI experiments to validate observability capabilities, data quality, performance characteristics, and operational patterns."/><meta property="og:image:alt" content="Workstream 6: OBI Experiments Status 🔴 Not Started Overview Implement the five comprehensive OBI experiments to validate observability capabilities, data quality, performance characteristics, and operational patterns."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/workstreams/06-obi-experiments"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/workstreams/06-obi-experiments"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Workstream 6: OBI Experiments Status 🔴 Not Started Overview Implement the five comprehensive OBI experiments to validate observability capabilities, data quality, performance characteristics, and operational patterns."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/workstreams/06-obi-experiments-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/workstreams/06-obi-experiments-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/workstreams/06-obi-experiments-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/docs/workstreams/06-obi-experiments"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-395"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-395" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/workstreams/">workstreams</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>06 obi experiments</a></div></nav><h1 class="article-title">06-obi-experiments</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.448Z">Nov 16, 2025</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="workstream-6-obi-experiments">Workstream 6: OBI Experiments<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-6-obi-experiments" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="status">Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>🔴 Not Started</p>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Implement the five comprehensive OBI experiments to validate observability capabilities, data quality, performance characteristics, and operational patterns. This workstream focuses on practical validation of the OBI deployment through controlled experiments, creating validation dashboards, and documenting findings for operational teams.</p>
+<h2 id="objectives">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Experiment 1: Baseline Network Observability</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Experiment 2: Service Mesh Integration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Experiment 3: High-Cardinality Metrics</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Experiment 4: Trace-to-Metrics Correlation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Experiment 5: Performance Under Load</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create validation dashboards for each experiment</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Document findings and operational recommendations</li>
+</ul>
+<h2 id="agent-assignment">Agent Assignment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-assignment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Suggested Agent Type</strong>: <code>researcher</code>, <code>tester</code>, <code>perf-analyzer</code>, <code>reviewer</code>
+<strong>Skill Requirements</strong>: Observability engineering, distributed tracing, performance testing, data analysis, dashboard creation</p>
+<h2 id="dependencies">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Workstream 2 must complete OBI integration and deployment</li>
+<li>Workstream 3 must complete Grafana stack deployment</li>
+<li>Sample applications deployed for testing (microservices architecture)</li>
+<li>Load testing tools installed (k6, wrk, or similar)</li>
+<li>Access to Grafana for dashboard creation</li>
+</ul>
+<h2 id="tasks">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="task-61-experiment-1---baseline-network-observability">Task 6.1: Experiment 1 - Baseline Network Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-61-experiment-1---baseline-network-observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Validate basic OBI network observability capabilities by collecting and analyzing TCP/UDP traffic, connection states, and packet-level metrics.</p>
+<p><strong>Experiment Goals</strong>:</p>
+<ul>
+<li>Verify OBI captures all TCP connections</li>
+<li>Validate UDP traffic visibility</li>
+<li>Confirm packet loss detection</li>
+<li>Test connection state tracking</li>
+<li>Validate OTLP export of network metrics</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Test application deployment (simple client-server)</li>
+<li>Network traffic generation scripts</li>
+<li>Validation queries for Mimir (metrics)</li>
+<li>Validation dashboards showing:
+<ul>
+<li>TCP connection rates and states</li>
+<li>UDP packet flow</li>
+<li>Packet loss and retransmission rates</li>
+<li>Network throughput per pod</li>
+</ul>
+</li>
+<li>Experiment report with findings</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/01-baseline/test-app.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/01-baseline/traffic-generator.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/01-baseline/validate.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/01-baseline-network.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/01-baseline-report.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy test application</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/01-baseline/test-app.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate network traffic</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/01-baseline</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./traffic-generator.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --duration</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 5m</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --connections</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 100</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate OBI captured traffic</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./validate.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Query Mimir for metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> port-forward</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-metrics</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> svc/mimir-query-frontend</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 9009:9009</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=obi_tcp_connections_total&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=obi_udp_packets_total&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=obi_packet_loss_ratio&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import dashboard to Grafana</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @/Users/beengud/raibid-labs/mop/dashboards/experiments/01-baseline-network.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify dashboard</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-01/baseline-network-observability&quot;</span></span></code></pre></figure>
+<h3 id="task-62-experiment-2---service-mesh-integration">Task 6.2: Experiment 2 - Service Mesh Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-62-experiment-2---service-mesh-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Test OBI integration with service mesh (Istio/Linkerd) to compare eBPF-based observability with sidcar proxy telemetry.</p>
+<p><strong>Experiment Goals</strong>:</p>
+<ul>
+<li>Deploy sample application with service mesh</li>
+<li>Compare OBI metrics with Envoy/Linkerd metrics</li>
+<li>Validate data consistency and latency</li>
+<li>Identify gaps or discrepancies</li>
+<li>Test multi-protocol support (HTTP/1.1, HTTP/2, gRPC)</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Service mesh deployment configuration</li>
+<li>Sample microservices application (3-5 services)</li>
+<li>Comparison analysis scripts</li>
+<li>Validation dashboards showing:
+<ul>
+<li>OBI vs mesh metrics comparison</li>
+<li>Request rates and error rates</li>
+<li>Latency distributions (p50, p95, p99)</li>
+<li>Protocol-specific metrics</li>
+</ul>
+</li>
+<li>Experiment report with recommendations</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/02-service-mesh/istio-setup.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/02-service-mesh/sample-app.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/02-service-mesh/compare-metrics.py</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/02-service-mesh/validate.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/02-service-mesh-comparison.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/02-service-mesh-report.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy Istio (or Linkerd)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/02-service-mesh</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">istioctl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --set</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> profile=demo</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -y</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> label</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> namespace</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> istio-injection=enabled</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy sample application</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sample-app.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate multi-protocol traffic</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> load-test</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --image=fortio/fortio</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --rm</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -it</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  load</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -qps</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 100</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -t</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 5m</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -c</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 10</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://frontend.mop-experiments.svc.cluster.local:8080</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Compare metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> compare-metrics.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --duration</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 5m</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> comparison-report.html</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run validation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./validate.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import comparison dashboard</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @/Users/beengud/raibid-labs/mop/dashboards/experiments/02-service-mesh-comparison.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># View results</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> comparison-report.html</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-02/service-mesh-comparison&quot;</span></span></code></pre></figure>
+<h3 id="task-63-experiment-3---high-cardinality-metrics">Task 6.3: Experiment 3 - High-Cardinality Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-63-experiment-3---high-cardinality-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Stress test OBI and Mimir’s ability to handle high-cardinality metrics from containerized workloads.</p>
+<p><strong>Experiment Goals</strong>:</p>
+<ul>
+<li>Generate high-cardinality labels (pod IDs, request IDs)</li>
+<li>Test Mimir ingestion and query performance</li>
+<li>Validate OBI’s resource usage under high cardinality</li>
+<li>Identify cardinality limits and optimization strategies</li>
+<li>Test time-series compaction and retention</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>High-cardinality workload generator</li>
+<li>Cardinality analysis scripts</li>
+<li>Performance benchmarks</li>
+<li>Validation dashboards showing:
+<ul>
+<li>Active time series count</li>
+<li>Cardinality distribution</li>
+<li>Query latency vs cardinality</li>
+<li>Mimir resource usage</li>
+<li>OBI overhead metrics</li>
+</ul>
+</li>
+<li>Experiment report with tuning recommendations</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/03-high-cardinality/workload-generator.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/03-high-cardinality/cardinality-analysis.py</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/03-high-cardinality/benchmark.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/03-high-cardinality/validate.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/03-high-cardinality.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/03-high-cardinality-report.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy high-cardinality workload</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/03-high-cardinality</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workload-generator.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Wait for cardinality to build up</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sleep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 300</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze cardinality</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cardinality-analysis.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cardinality-report.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run performance benchmarks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./benchmark.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --queries</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1000</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --concurrency</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 10</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate results</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./validate.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Mimir metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> port-forward</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-metrics</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> svc/mimir-query-frontend</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 9009:9009</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/label/__name__/values&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '. | length'</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=cortex_ingester_active_series&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check OBI overhead</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-system</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> app=obi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import dashboard</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @/Users/beengud/raibid-labs/mop/dashboards/experiments/03-high-cardinality.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># View analysis</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cardinality-report.json</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-03/high-cardinality-analysis&quot;</span></span></code></pre></figure>
+<h3 id="task-64-experiment-4---trace-to-metrics-correlation">Task 6.4: Experiment 4 - Trace-to-Metrics Correlation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-64-experiment-4---trace-to-metrics-correlation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Validate end-to-end observability by correlating distributed traces with metrics using exemplars and derived fields.</p>
+<p><strong>Experiment Goals</strong>:</p>
+<ul>
+<li>Generate correlated traces and metrics</li>
+<li>Test exemplar support in Mimir</li>
+<li>Validate trace ID propagation</li>
+<li>Test Grafana’s trace-to-metrics navigation</li>
+<li>Measure query performance for correlated data</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Instrumented sample application (with OpenTelemetry)</li>
+<li>Trace generation scripts</li>
+<li>Correlation validation scripts</li>
+<li>Validation dashboards showing:
+<ul>
+<li>Metrics with exemplar links</li>
+<li>Trace-to-metrics navigation</li>
+<li>Span duration histograms</li>
+<li>Error rate correlated with traces</li>
+<li>RED (Rate, Errors, Duration) metrics</li>
+</ul>
+</li>
+<li>Experiment report with workflow recommendations</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/04-trace-correlation/instrumented-app.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/04-trace-correlation/generate-traces.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/04-trace-correlation/validate-correlation.py</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/04-trace-correlation/validate.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/04-trace-correlation.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/04-trace-correlation-report.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy instrumented application</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/04-trace-correlation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> instrumented-app.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate traces with errors</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./generate-traces.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --duration</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 10m</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --error-rate</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0.05</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate trace-to-metrics correlation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> validate-correlation.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --sample-size</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 100</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run validation script</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./validate.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Query Tempo for traces</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> port-forward</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-traces</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> svc/tempo-query-frontend</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 3200:3200</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3200/api/search?limit=20&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Query Mimir for metrics with exemplars</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=http_request_duration_seconds_bucket&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.data.result[0].exemplars'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import correlation dashboard</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @/Users/beengud/raibid-labs/mop/dashboards/experiments/04-trace-correlation.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Test navigation in Grafana</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-04/trace-correlation&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Click on exemplar in metric graph, verify trace opens</span></span></code></pre></figure>
+<h3 id="task-65-experiment-5---performance-under-load">Task 6.5: Experiment 5 - Performance Under Load<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-65-experiment-5---performance-under-load" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Stress test the entire observability stack under realistic production load to identify bottlenecks and capacity limits.</p>
+<p><strong>Experiment Goals</strong>:</p>
+<ul>
+<li>Simulate production-level traffic (10k+ RPS)</li>
+<li>Test OBI CPU/memory limits</li>
+<li>Test Grafana stack ingestion capacity</li>
+<li>Measure end-to-end latency (collection to visualization)</li>
+<li>Identify scaling requirements</li>
+<li>Test failure scenarios (component restarts)</li>
+</ul>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Load testing infrastructure</li>
+<li>Performance test scenarios</li>
+<li>Bottleneck analysis reports</li>
+<li>Validation dashboards showing:
+<ul>
+<li>System throughput and latency</li>
+<li>Resource utilization (CPU, memory, I/O)</li>
+<li>Queue depths and backlogs</li>
+<li>Error rates under load</li>
+<li>Recovery time from failures</li>
+</ul>
+</li>
+<li>Experiment report with capacity planning recommendations</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/05-performance/load-test-app.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/05-performance/k6-load-test.js</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/05-performance/chaos-scenarios.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/05-performance/analyze-performance.py</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/experiments/05-performance/validate.sh</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/05-performance-load.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/05-performance-report.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy load test application</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/experiments/05-performance</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> load-test-app.yaml</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run k6 load test (ramp up to 10k RPS)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">k6</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --vus</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 100</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --duration</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 15m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> k6-load-test.js</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Monitor system during load</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> nodes</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-system</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-traces</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> top</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pods</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-logs</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Inject chaos (restart OBI pods during load)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> delete</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-system</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> app=obi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze performance data</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> analyze-performance.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --load-test-results</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> results.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> performance-report.html</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run validation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./validate.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check for data loss during chaos</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GET</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:9009/prometheus/api/v1/query?query=rate(obi_data_points_dropped_total[5m])&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import performance dashboard</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @/Users/beengud/raibid-labs/mop/dashboards/experiments/05-performance-load.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Review results</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> performance-report.html</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-05/performance-under-load&quot;</span></span></code></pre></figure>
+<h3 id="task-66-experiment-validation-dashboard-suite">Task 6.6: Experiment Validation Dashboard Suite<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-66-experiment-validation-dashboard-suite" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Create a comprehensive dashboard suite that consolidates all experiment results for easy comparison and analysis.</p>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Master experiment dashboard</li>
+<li>Comparison views across experiments</li>
+<li>Automated dashboard provisioning</li>
+<li>Dashboard documentation</li>
+<li>Export templates for reporting</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/00-experiment-overview.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/dashboards/experiments/experiments-comparison.json</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/config/grafana/dashboards-experiments.yaml</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiment-dashboards.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Import all experiment dashboards</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/dashboards/experiments</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> dashboard</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> *.json</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/dashboards/db</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">    -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Content-Type: application/json&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">    -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> @</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$dashboard</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify all dashboards</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/search?type=dash-db</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.[] | select(.title | contains(&quot;Experiment&quot;))'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Open experiment overview</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/d/obi-exp-00/experiment-overview&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export dashboard for reporting</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> admin:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ADMIN_PASSWORD</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;http://localhost:3000/api/dashboards/uid/obi-exp-00&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exported-overview.json</span></span></code></pre></figure>
+<h3 id="task-67-experiment-documentation-and-findings">Task 6.7: Experiment Documentation and Findings<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-67-experiment-documentation-and-findings" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Description</strong>: Compile all experiment findings into comprehensive documentation with operational recommendations.</p>
+<p><strong>Deliverables</strong>:</p>
+<ul>
+<li>Individual experiment reports</li>
+<li>Consolidated findings document</li>
+<li>Operational runbooks based on experiments</li>
+<li>Capacity planning guide</li>
+<li>Troubleshooting guide based on experiment learnings</li>
+</ul>
+<p><strong>Files to Create/Modify</strong>:</p>
+<ul>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/experiment-summary.md</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/operational-recommendations.md</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/capacity-planning.md</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/troubleshooting-guide.md</code></li>
+<li><code>/Users/beengud/raibid-labs/mop/docs/experiments/lessons-learned.md</code></li>
+</ul>
+<p><strong>Validation</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify all experiment reports exist</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/docs/experiments</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ls</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -1</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 0</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">-report.md</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> wc</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -l</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Should be 5</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check documentation completeness</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;TODO\|FIXME\|TBD&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> *</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.md</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ||</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;No TODOs found&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate markdown</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">markdownlint</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> *</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check for broken links</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">markdown-link-check</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> *</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate consolidated PDF report (requires pandoc)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">pandoc</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> experiment-summary.md</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> operational-recommendations.md</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments-report.pdf</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --pdf-engine=xelatex</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --toc</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Review final report</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-experiments-report.pdf</span></span></code></pre></figure>
+<h2 id="definition-of-done">Definition of Done<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#definition-of-done" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All 5 experiments completed successfully</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validation dashboards created and tested</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All experiment reports written with findings</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Operational recommendations documented</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Capacity planning guide completed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Troubleshooting guide based on experiments</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No data loss detected during stress tests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance baselines established</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Scaling recommendations provided</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All dashboards imported to Grafana</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Experiment suite can be re-run for regression testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code reviewed by at least one team member</li>
+</ul>
+<h2 id="agent-coordination-hooks">Agent Coordination Hooks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-coordination-hooks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># BEFORE Work:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;workstream-6-obi-experiments&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-restore</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm-mop-ws-6&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># DURING Work:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;/Users/beengud/raibid-labs/mop/experiments/01-baseline/validate.sh&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/mop/ws-6/exp-01&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;/Users/beengud/raibid-labs/mop/experiments/02-service-mesh/compare-metrics.py&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/mop/ws-6/exp-02&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;/Users/beengud/raibid-labs/mop/experiments/03-high-cardinality/benchmark.sh&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/mop/ws-6/exp-03&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;/Users/beengud/raibid-labs/mop/experiments/04-trace-correlation/validate-correlation.py&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/mop/ws-6/exp-04&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;/Users/beengud/raibid-labs/mop/experiments/05-performance/k6-load-test.js&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/mop/ws-6/exp-05&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> notify</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --message</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;OBI experiments completed&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># AFTER Work:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --task-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-6-complete&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-end</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export-metrics</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span></code></pre></figure>
+<h2 id="estimated-effort">Estimated Effort<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#estimated-effort" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Duration</strong>: 8-10 days
+<strong>Complexity</strong>: High</p>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://github.com/obi-metrics/obi" class="external">OBI Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> (placeholder)</li>
+<li><a href="https://grafana.com/docs/grafana/latest/fundamentals/exemplars/" class="external">Grafana Exemplars Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://opentelemetry.io/docs/concepts/observability-primer/" class="external">OpenTelemetry Best Practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://k6.io/docs/" class="external">k6 Load Testing<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://principlesofchaos.org/" class="external">Chaos Engineering Principles<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://prometheus.io/docs/practices/naming/" class="external">Prometheus Cardinality Best Practices<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h2 id="notes">Notes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#notes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Run experiments in isolated namespace to avoid production impact</li>
+<li>Consider using separate Kubernetes cluster for load testing</li>
+<li>Experiments should be repeatable and automated</li>
+<li>Document any unexpected behaviors or bugs discovered</li>
+<li>Performance baselines are environment-specific</li>
+<li>High-cardinality tests may require increased Mimir resources</li>
+<li>Load tests should gradually ramp up to avoid shocking the system</li>
+<li>Monitor for memory leaks during long-running experiments</li>
+<li>Consider using recorded query results for dashboard demos</li>
+<li>Chaos experiments should have rollback plans</li>
+<li>Correlate experiment findings with vendor documentation</li>
+<li>Share findings with OBI and Grafana communities</li>
+<li>Create regression test suite based on experiments</li>
+<li>Budget extra time for troubleshooting unexpected issues</li>
+<li>Consider creating video demos of experiment results</li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-185" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#workstream-6-obi-experiments" data-for="workstream-6-obi-experiments">Workstream 6: OBI Experiments</a></li><li class="depth-1"><a href="#status" data-for="status">Status</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#objectives" data-for="objectives">Objectives</a></li><li class="depth-1"><a href="#agent-assignment" data-for="agent-assignment">Agent Assignment</a></li><li class="depth-1"><a href="#dependencies" data-for="dependencies">Dependencies</a></li><li class="depth-1"><a href="#tasks" data-for="tasks">Tasks</a></li><li class="depth-2"><a href="#task-61-experiment-1---baseline-network-observability" data-for="task-61-experiment-1---baseline-network-observability">Task 6.1: Experiment 1 - Baseline Network Observability</a></li><li class="depth-2"><a href="#task-62-experiment-2---service-mesh-integration" data-for="task-62-experiment-2---service-mesh-integration">Task 6.2: Experiment 2 - Service Mesh Integration</a></li><li class="depth-2"><a href="#task-63-experiment-3---high-cardinality-metrics" data-for="task-63-experiment-3---high-cardinality-metrics">Task 6.3: Experiment 3 - High-Cardinality Metrics</a></li><li class="depth-2"><a href="#task-64-experiment-4---trace-to-metrics-correlation" data-for="task-64-experiment-4---trace-to-metrics-correlation">Task 6.4: Experiment 4 - Trace-to-Metrics Correlation</a></li><li class="depth-2"><a href="#task-65-experiment-5---performance-under-load" data-for="task-65-experiment-5---performance-under-load">Task 6.5: Experiment 5 - Performance Under Load</a></li><li class="depth-2"><a href="#task-66-experiment-validation-dashboard-suite" data-for="task-66-experiment-validation-dashboard-suite">Task 6.6: Experiment Validation Dashboard Suite</a></li><li class="depth-2"><a href="#task-67-experiment-documentation-and-findings" data-for="task-67-experiment-documentation-and-findings">Task 6.7: Experiment Documentation and Findings</a></li><li class="depth-1"><a href="#definition-of-done" data-for="definition-of-done">Definition of Done</a></li><li class="depth-1"><a href="#agent-coordination-hooks" data-for="agent-coordination-hooks">Agent Coordination Hooks</a></li><li class="depth-1"><a href="#estimated-effort" data-for="estimated-effort">Estimated Effort</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="depth-1"><a href="#notes" data-for="notes">Notes</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

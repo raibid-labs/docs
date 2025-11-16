@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>architecture</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="architecture"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="architecture"/><meta name="twitter:description" content="raibid-cli Architecture Overview raibid-cli is a Rust-based terminal user interface (TUI) application for meta-management of repositories within the raibid-labs GitHub organization."/><meta property="og:description" content="raibid-cli Architecture Overview raibid-cli is a Rust-based terminal user interface (TUI) application for meta-management of repositories within the raibid-labs GitHub organization."/><meta property="og:image:alt" content="raibid-cli Architecture Overview raibid-cli is a Rust-based terminal user interface (TUI) application for meta-management of repositories within the raibid-labs GitHub organization."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/raibid-cli/docs/architecture"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/raibid-cli/docs/architecture"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="raibid-cli Architecture Overview raibid-cli is a Rust-based terminal user interface (TUI) application for meta-management of repositories within the raibid-labs GitHub organization."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/raibid-cli/docs/architecture-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/raibid-cli/docs/architecture-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/raibid-cli/docs/architecture-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/raibid-cli/docs/architecture"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-506"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-506" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/raibid-cli/">raibid cli</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/raibid-cli/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>architecture</a></div></nav><h1 class="article-title">architecture</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:15.172Z">Nov 16, 2025</time><span>6 min read</span></p></div></div><article class="popover-hint"><h1 id="raibid-cli-architecture">raibid-cli Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#raibid-cli-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>raibid-cli is a Rust-based terminal user interface (TUI) application for meta-management of repositories within the raibid-labs GitHub organization. It combines organization-wide repository operations with an interactive, keyboard-driven interface.</p>
+<h2 id="design-philosophy">Design Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#design-philosophy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="core-principles">Core Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Developer-First Experience</strong></p>
+<ul>
+<li>Keyboard-driven navigation</li>
+<li>Real-time feedback</li>
+<li>Minimal context switching</li>
+<li>SSH-friendly (terminal-based)</li>
+</ul>
+</li>
+<li>
+<p><strong>Organization-Level Perspective</strong></p>
+<ul>
+<li>Unified view of all repositories</li>
+<li>Batch operations across multiple repos</li>
+<li>Organization-wide insights</li>
+</ul>
+</li>
+<li>
+<p><strong>Safe by Default</strong></p>
+<ul>
+<li>Detect uncommitted changes</li>
+<li>Confirmation for destructive operations</li>
+<li>Rollback capabilities</li>
+<li>Detailed status reporting</li>
+</ul>
+</li>
+<li>
+<p><strong>Extensible Foundation</strong></p>
+<ul>
+<li>Plugin-like command structure</li>
+<li>Reusable core library</li>
+<li>Configuration-driven behavior</li>
+</ul>
+</li>
+</ol>
+<h2 id="system-architecture">System Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#system-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="high-level-components">High-Level Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#high-level-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────┐
+│                   raibid-cli                     │
+│                   (Binary)                       │
+└───────────────────┬─────────────────────────────┘
+                    │
+        ┌───────────┴───────────┐
+        │                       │
+┌───────▼────────┐    ┌────────▼────────┐
+│   TUI Layer    │    │  CLI Commands   │
+│   (ratatui)    │    │    (clap)       │
+└───────┬────────┘    └────────┬────────┘
+        │                      │
+        └──────────┬───────────┘
+                   │
+        ┌──────────▼──────────┐
+        │   Core Library      │
+        │  (raibid-core)      │
+        └──────────┬──────────┘
+                   │
+        ┌──────────┴──────────┐
+        │                     │
+┌───────▼────────┐  ┌────────▼─────────┐
+│  GitHub API    │  │   Git Operations │
+│   (gh cli)     │  │   (git2-rs)      │
+└────────────────┘  └──────────────────┘
+</code></pre>
+<h3 id="component-breakdown">Component Breakdown<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#component-breakdown" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-tui-layer-ratatui">1. TUI Layer (ratatui)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-tui-layer-ratatui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Render interactive terminal interface</li>
+<li>Handle keyboard input</li>
+<li>Manage application state</li>
+<li>Display real-time updates</li>
+<li>Navigate between views</li>
+</ul>
+<p><strong>Key Views:</strong></p>
+<ul>
+<li>Repository list with metadata</li>
+<li>Sync progress view</li>
+<li>Repository details</li>
+<li>Settings/configuration</li>
+<li>Help screen</li>
+</ul>
+<p><strong>Event Loop:</strong></p>
+<pre><code>User Input → Event Handler → State Update → Render → Repeat
+</code></pre>
+<h4 id="2-cli-commands-clap">2. CLI Commands (clap)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-cli-commands-clap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Parse command-line arguments</li>
+<li>Dispatch to appropriate handlers</li>
+<li>Provide non-interactive operations</li>
+<li>Enable scriptable workflows</li>
+</ul>
+<p><strong>Command Structure:</strong></p>
+<pre><code>raibid-cli
+├── sync              # Synchronize repositories
+│   ├── --all        # Sync all repos
+│   ├── --filter     # Sync matching repos
+│   └── --concurrency # Parallel operations
+├── clone             # Clone repositories
+│   ├── --all        # Clone all repos
+│   └── --filter     # Clone matching repos
+├── list              # List repositories
+│   ├── --format     # Output format (json, table, etc.)
+│   └── --filter     # Filter criteria
+├── tui               # Launch interactive TUI
+└── config            # Configuration management
+    ├── init         # Initialize config
+    └── edit         # Edit config
+</code></pre>
+<h4 id="3-core-library-raibid-core">3. Core Library (raibid-core)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-core-library-raibid-core" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Modules:</strong></p>
+<p><strong>github.rs</strong> - GitHub API Integration</p>
+<ul>
+<li>List organization repositories</li>
+<li>Repository metadata retrieval</li>
+<li>Rate limit management</li>
+<li>Authentication handling</li>
+</ul>
+<p><strong>git.rs</strong> - Git Operations</p>
+<ul>
+<li>Clone repositories</li>
+<li>Pull updates</li>
+<li>Detect repository state</li>
+<li>Branch management</li>
+<li>Remote operations</li>
+</ul>
+<p><strong>config.rs</strong> - Configuration Management</p>
+<ul>
+<li>TOML/YAML configuration parsing</li>
+<li>Environment variable overrides</li>
+<li>Default settings</li>
+<li>Validation</li>
+</ul>
+<p><strong>filter.rs</strong> - Repository Filtering</p>
+<ul>
+<li>Pattern matching (glob, regex)</li>
+<li>Metadata-based filtering</li>
+<li>Exclusion lists</li>
+<li>Custom filter expressions</li>
+</ul>
+<p><strong>sync.rs</strong> - Synchronization Engine</p>
+<ul>
+<li>Concurrent operation management</li>
+<li>Progress tracking</li>
+<li>Error recovery</li>
+<li>State persistence</li>
+</ul>
+<p><strong>types.rs</strong> - Shared Data Types</p>
+<ul>
+<li>Repository metadata</li>
+<li>Sync status</li>
+<li>Configuration structures</li>
+<li>Error types</li>
+</ul>
+<h2 id="data-flow">Data Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#data-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="synchronization-flow">Synchronization Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#synchronization-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>1. User initiates sync
+   ↓
+2. Load configuration
+   ↓
+3. Query GitHub API for repo list
+   ↓
+4. Apply filters to determine target repos
+   ↓
+5. For each repository (concurrent):
+   a. Check if local clone exists
+   b. If no: clone repository
+   c. If yes: check local state
+   d. Pull updates if safe
+   e. Report status
+   ↓
+6. Aggregate results
+   ↓
+7. Display summary
+</code></pre>
+<h3 id="tui-state-management">TUI State Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tui-state-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────┐
+│     Application State       │
+├─────────────────────────────┤
+│ - Current View              │
+│ - Repository List           │
+│ - Selected Repository       │
+│ - Sync State (per repo)     │
+│ - Configuration             │
+│ - UI State (scroll, etc.)   │
+└─────────────────────────────┘
+         ↓           ↑
+    Mutations    Reads
+         ↓           ↑
+┌─────────────────────────────┐
+│      Event Handlers         │
+└─────────────────────────────┘
+</code></pre>
+<h2 id="technology-stack">Technology Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technology-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="core-dependencies">Core Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>CLI Framework:</strong></p>
+<ul>
+<li><code>clap</code> v4.x - Command-line argument parsing
+<ul>
+<li>Derive API for ergonomic definitions</li>
+<li>Subcommands for command structure</li>
+<li>Argument validation</li>
+</ul>
+</li>
+</ul>
+<p><strong>TUI Framework:</strong></p>
+<ul>
+<li><code>ratatui</code> v0.27.x - Terminal user interface
+<ul>
+<li>Immediate mode rendering</li>
+<li>Flexible layouts</li>
+<li>Rich widgets (lists, tables, paragraphs, etc.)</li>
+<li>Event handling</li>
+</ul>
+</li>
+</ul>
+<p><strong>Git Integration:</strong></p>
+<ul>
+<li><code>git2</code> v0.18.x - Libgit2 bindings
+<ul>
+<li>Repository operations</li>
+<li>Clone, fetch, pull</li>
+<li>Branch management</li>
+</ul>
+</li>
+</ul>
+<p><strong>GitHub API:</strong></p>
+<ul>
+<li><code>gh</code> CLI - GitHub API access
+<ul>
+<li>Organization queries</li>
+<li>Repository enumeration</li>
+<li>Uses existing authentication</li>
+</ul>
+</li>
+</ul>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li><code>serde</code> v1.x - Serialization/deserialization</li>
+<li><code>toml</code> v0.8.x - TOML parsing</li>
+<li><code>serde_yaml</code> v0.9.x - YAML parsing</li>
+</ul>
+<p><strong>Async Runtime:</strong></p>
+<ul>
+<li><code>tokio</code> v1.x - Asynchronous runtime
+<ul>
+<li>Concurrent operations</li>
+<li>Async I/O</li>
+<li>Task spawning</li>
+</ul>
+</li>
+</ul>
+<p><strong>Error Handling:</strong></p>
+<ul>
+<li><code>anyhow</code> v1.x - Flexible error handling</li>
+<li><code>thiserror</code> v1.x - Custom error types</li>
+</ul>
+<p><strong>Utilities:</strong></p>
+<ul>
+<li><code>crossterm</code> v0.27.x - Terminal manipulation</li>
+<li><code>dirs</code> v5.x - Standard directory locations</li>
+<li><code>chrono</code> v0.4.x - Date/time handling</li>
+</ul>
+<h2 id="configuration">Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="configuration-file-structure">Configuration File Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-file-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location:</strong> <code>~/.config/raibid-cli/config.toml</code></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">general</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">org</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;raibid-labs&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">workspace_root</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;~/raibid-labs&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sync</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">concurrency</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">auto_pull</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">check_uncommitted</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">filter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Include patterns (glob)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">include</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;*&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Exclude patterns</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">exclude</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;*.archive&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;private-*&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Exclude archived repositories</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">exclude_archived</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Exclude forks</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">exclude_forks</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">false</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Key bindings</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">keys.quit</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;q&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">keys.sync</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;s&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">keys.help</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;?&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># UI preferences</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">show_descriptions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">compact_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">false</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Git configuration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ssh_auth</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">depth</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # 0 = full clone</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">github</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GitHub configuration (usually from gh cli)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Override if needed</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># token = &quot;ghp_...&quot;</span></span></code></pre></figure>
+<h3 id="environment-variable-overrides">Environment Variable Overrides<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#environment-variable-overrides" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><code>RAIBID_CLI_ORG</code> - Override organization</li>
+<li><code>RAIBID_CLI_WORKSPACE</code> - Override workspace root</li>
+<li><code>RAIBID_CLI_CONCURRENCY</code> - Override concurrency</li>
+<li><code>GITHUB_TOKEN</code> - GitHub authentication token</li>
+</ul>
+<h2 id="concurrency-model">Concurrency Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#concurrency-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="parallel-repository-operations">Parallel Repository Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-repository-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Main Thread
+    ├─ TUI Event Loop (continuous)
+    └─ Sync Coordinator
+         ├─ Worker Pool (configurable size)
+         │    ├─ Worker 1 → Repository A
+         │    ├─ Worker 2 → Repository B
+         │    ├─ Worker 3 → Repository C
+         │    └─ Worker N → Repository N
+         └─ Progress Aggregator
+              └─ Update TUI State
+</code></pre>
+<h3 id="rate-limiting">Rate Limiting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rate-limiting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>GitHub API rate limits respected</li>
+<li>Configurable local concurrency limits</li>
+<li>Backoff strategy for failures</li>
+<li>Progress reporting with ETA</li>
+</ul>
+<h2 id="error-handling-strategy">Error Handling Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-handling-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="error-categories">Error Categories<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-categories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Fatal Errors</strong> - Stop execution</p>
+<ul>
+<li>Invalid configuration</li>
+<li>Missing authentication</li>
+<li>GitHub API unavailable</li>
+</ul>
+</li>
+<li>
+<p><strong>Recoverable Errors</strong> - Log and continue</p>
+<ul>
+<li>Individual repository sync failures</li>
+<li>Network timeouts (with retry)</li>
+<li>Merge conflicts (skip with warning)</li>
+</ul>
+</li>
+<li>
+<p><strong>Warnings</strong> - Log but don’t fail</p>
+<ul>
+<li>Uncommitted changes detected</li>
+<li>Repository already up-to-date</li>
+<li>Filter matched zero repositories</li>
+</ul>
+</li>
+</ol>
+<h3 id="error-reporting">Error Reporting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#error-reporting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Detailed error messages with context</li>
+<li>Aggregated error summary post-sync</li>
+<li>Per-repository error state in TUI</li>
+<li>Option to export error log</li>
+</ul>
+<h2 id="performance-considerations">Performance Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="optimization-strategies">Optimization Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Caching</strong></p>
+<ul>
+<li>Repository metadata cache</li>
+<li>GitHub API response caching</li>
+<li>TTL-based invalidation</li>
+</ul>
+</li>
+<li>
+<p><strong>Lazy Loading</strong></p>
+<ul>
+<li>Load repository details on demand</li>
+<li>Paginate large repository lists</li>
+<li>Stream results in TUI</li>
+</ul>
+</li>
+<li>
+<p><strong>Shallow Clones</strong></p>
+<ul>
+<li>Configurable clone depth</li>
+<li>Full clones for development repos</li>
+<li>Shallow clones for reference</li>
+</ul>
+</li>
+<li>
+<p><strong>Incremental Updates</strong></p>
+<ul>
+<li>Only fetch changed refs</li>
+<li>Skip up-to-date repositories</li>
+<li>Delta transfers</li>
+</ul>
+</li>
+</ol>
+<h2 id="security-considerations">Security Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="authentication">Authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#authentication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Leverage GitHub CLI’s authentication</li>
+<li>Support SSH keys for Git operations</li>
+<li>Never store credentials in config</li>
+<li>Use system credential helpers</li>
+</ul>
+<h3 id="safe-operations">Safe Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#safe-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Confirm before destructive operations</li>
+<li>Detect uncommitted changes</li>
+<li>Never force-push without explicit flag</li>
+<li>Validate repository URLs</li>
+</ul>
+<h2 id="extensibility">Extensibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#extensibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="plugin-architecture-future">Plugin Architecture (Future)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#plugin-architecture-future" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">trait</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RepoOperation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> execute</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">repo</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Repository</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;()>;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Example: Custom validation plugin</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ValidateRepo</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> RepoOperation</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> for</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ValidateRepo</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;validate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> execute</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">repo</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Repository</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;()> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        // Custom validation logic</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="custom-commands">Custom Commands<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#custom-commands" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Support for repository-specific commands via configuration:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">commands</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">build-all</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Build all Rust projects&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">filter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;*.toml&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">exec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;cd {repo_path} &amp;&amp; just build&quot;</span></span></code></pre></figure>
+<h2 id="testing-strategy">Testing Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="unit-tests">Unit Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unit-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Core library functions</li>
+<li>Filter logic</li>
+<li>Configuration parsing</li>
+<li>Error handling</li>
+</ul>
+<h3 id="integration-tests">Integration Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>GitHub API interactions (mocked)</li>
+<li>Git operations (test repositories)</li>
+<li>End-to-end sync workflows</li>
+</ul>
+<h3 id="tui-tests">TUI Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tui-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>View rendering (snapshot testing)</li>
+<li>Event handling</li>
+<li>State transitions</li>
+</ul>
+<h2 id="future-enhancements">Future Enhancements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-enhancements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-mvp">Phase 1 (MVP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-mvp" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Basic clone and sync</li>
+<li>Simple TUI</li>
+<li>Configuration file support</li>
+</ul>
+<h3 id="phase-2">Phase 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Advanced filtering</li>
+<li>Parallel operations</li>
+<li>Progress tracking</li>
+<li>Error recovery</li>
+</ul>
+<h3 id="phase-3">Phase 3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Repository metadata caching</li>
+<li>Custom hooks/commands</li>
+<li>Integration with raibid-ci</li>
+<li>Statistics and analytics</li>
+</ul>
+<h3 id="phase-4">Phase 4<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Plugin system</li>
+<li>Advanced Git operations</li>
+<li>CI/CD integration</li>
+<li>Team collaboration features</li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-291" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#raibid-cli-architecture" data-for="raibid-cli-architecture">raibid-cli Architecture</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#design-philosophy" data-for="design-philosophy">Design Philosophy</a></li><li class="depth-2"><a href="#core-principles" data-for="core-principles">Core Principles</a></li><li class="depth-1"><a href="#system-architecture" data-for="system-architecture">System Architecture</a></li><li class="depth-2"><a href="#high-level-components" data-for="high-level-components">High-Level Components</a></li><li class="depth-2"><a href="#component-breakdown" data-for="component-breakdown">Component Breakdown</a></li><li class="depth-1"><a href="#data-flow" data-for="data-flow">Data Flow</a></li><li class="depth-2"><a href="#synchronization-flow" data-for="synchronization-flow">Synchronization Flow</a></li><li class="depth-2"><a href="#tui-state-management" data-for="tui-state-management">TUI State Management</a></li><li class="depth-1"><a href="#technology-stack" data-for="technology-stack">Technology Stack</a></li><li class="depth-2"><a href="#core-dependencies" data-for="core-dependencies">Core Dependencies</a></li><li class="depth-1"><a href="#configuration" data-for="configuration">Configuration</a></li><li class="depth-2"><a href="#configuration-file-structure" data-for="configuration-file-structure">Configuration File Structure</a></li><li class="depth-2"><a href="#environment-variable-overrides" data-for="environment-variable-overrides">Environment Variable Overrides</a></li><li class="depth-1"><a href="#concurrency-model" data-for="concurrency-model">Concurrency Model</a></li><li class="depth-2"><a href="#parallel-repository-operations" data-for="parallel-repository-operations">Parallel Repository Operations</a></li><li class="depth-2"><a href="#rate-limiting" data-for="rate-limiting">Rate Limiting</a></li><li class="depth-1"><a href="#error-handling-strategy" data-for="error-handling-strategy">Error Handling Strategy</a></li><li class="depth-2"><a href="#error-categories" data-for="error-categories">Error Categories</a></li><li class="depth-2"><a href="#error-reporting" data-for="error-reporting">Error Reporting</a></li><li class="depth-1"><a href="#performance-considerations" data-for="performance-considerations">Performance Considerations</a></li><li class="depth-2"><a href="#optimization-strategies" data-for="optimization-strategies">Optimization Strategies</a></li><li class="depth-1"><a href="#security-considerations" data-for="security-considerations">Security Considerations</a></li><li class="depth-2"><a href="#authentication" data-for="authentication">Authentication</a></li><li class="depth-2"><a href="#safe-operations" data-for="safe-operations">Safe Operations</a></li><li class="depth-1"><a href="#extensibility" data-for="extensibility">Extensibility</a></li><li class="depth-2"><a href="#plugin-architecture-future" data-for="plugin-architecture-future">Plugin Architecture (Future)</a></li><li class="depth-2"><a href="#custom-commands" data-for="custom-commands">Custom Commands</a></li><li class="depth-1"><a href="#testing-strategy" data-for="testing-strategy">Testing Strategy</a></li><li class="depth-2"><a href="#unit-tests" data-for="unit-tests">Unit Tests</a></li><li class="depth-2"><a href="#integration-tests" data-for="integration-tests">Integration Tests</a></li><li class="depth-2"><a href="#tui-tests" data-for="tui-tests">TUI Tests</a></li><li class="depth-1"><a href="#future-enhancements" data-for="future-enhancements">Future Enhancements</a></li><li class="depth-2"><a href="#phase-1-mvp" data-for="phase-1-mvp">Phase 1 (MVP)</a></li><li class="depth-2"><a href="#phase-2" data-for="phase-2">Phase 2</a></li><li class="depth-2"><a href="#phase-3" data-for="phase-3">Phase 3</a></li><li class="depth-2"><a href="#phase-4" data-for="phase-4">Phase 4</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

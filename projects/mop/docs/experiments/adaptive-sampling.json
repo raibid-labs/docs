@@ -1,0 +1,60 @@
+{
+  "name": "Adaptive Sampling Test",
+  "description": "Test adaptive sampling to reduce ingestion costs while maintaining query quality",
+  "author": "MOP Team",
+  "version": "1.0.0",
+  "changes": [
+    {
+      "type": "deployment",
+      "component": "mimir-distributor",
+      "container": "distributor",
+      "parameter": "SAMPLE_RATE",
+      "value": "0.5",
+      "description": "Reduce sample rate to 50%"
+    }
+  ],
+  "success_metrics": [
+    {
+      "name": "ingestion_rate",
+      "query": "sum(rate(mimir_distributor_samples_in_total[5m]))",
+      "direction": "lower",
+      "threshold": 10000,
+      "description": "Total samples ingested per second - should decrease"
+    },
+    {
+      "name": "query_latency_p95",
+      "query": "histogram_quantile(0.95, rate(mimir_request_duration_seconds_bucket[5m]))",
+      "direction": "lower",
+      "threshold": 0.5,
+      "description": "95th percentile query latency - should remain stable"
+    },
+    {
+      "name": "query_accuracy",
+      "query": "sum(rate(mimir_query_samples_total[5m])) / sum(rate(mimir_query_requests_total[5m]))",
+      "direction": "higher",
+      "threshold": 100,
+      "description": "Average samples per query - indicator of data completeness"
+    },
+    {
+      "name": "storage_usage",
+      "query": "sum(mimir_ingester_memory_series)",
+      "direction": "lower",
+      "threshold": 1000000,
+      "description": "Active time series in memory - should decrease with sampling"
+    }
+  ],
+  "expected_outcomes": {
+    "cost_reduction": "30-50%",
+    "query_impact": "minimal (<5%)",
+    "storage_savings": "30-40%"
+  },
+  "rollback_criteria": {
+    "query_latency_increase": ">20%",
+    "query_accuracy_decrease": ">10%"
+  },
+  "notes": [
+    "This experiment tests the impact of reducing sample rate on cost and quality",
+    "Monitor query accuracy closely to ensure data quality is maintained",
+    "Consider running during low-traffic periods first"
+  ]
+}

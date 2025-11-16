@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>workstream-plan</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="workstream-plan"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="workstream-plan"/><meta name="twitter:description" content="Locust Workstream Plan Overview This document details the 15 workstreams that comprise the Locust plugin framework development project."/><meta property="og:description" content="Locust Workstream Plan Overview This document details the 15 workstreams that comprise the Locust plugin framework development project."/><meta property="og:image:alt" content="Locust Workstream Plan Overview This document details the 15 workstreams that comprise the Locust plugin framework development project."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/workstream-plan"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/workstream-plan"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Locust Workstream Plan Overview This document details the 15 workstreams that comprise the Locust plugin framework development project."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/workstream-plan-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/workstream-plan-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/locust/docs/orchestration/workstream-plan-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/locust/docs/orchestration/workstream-plan"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-373"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-373" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/locust/">locust</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/locust/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/locust/docs/orchestration/">orchestration</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>workstream plan</a></div></nav><h1 class="article-title">workstream-plan</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:10.508Z">Nov 16, 2025</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="locust-workstream-plan">Locust Workstream Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#locust-workstream-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document details the 15 workstreams that comprise the Locust plugin framework development project. Each workstream is designed to be semi-autonomous while maintaining clear dependencies and integration points with related streams. The workstreams are organized into four phases aligned with the project roadmap, with strategic overlaps to maximize parallelization.</p>
+<h2 id="workstream-dependency-graph">Workstream Dependency Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-dependency-graph" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    subgraph \&quot;Phase 1: Core Framework\&quot;\n        WS01[WS-01: Core Types&lt;br/>Week 1-2]\n        WS02[WS-02: Navigation System&lt;br/>Week 2-3]\n        WS03[WS-03: Ratatui Adapters&lt;br/>Week 2-4]\n        WS04[WS-04: Hint Generation&lt;br/>Week 3-4]\n    end\n\n    subgraph \&quot;Phase 2: Omnibar\&quot;\n        WS05[WS-05: Omnibar Core&lt;br/>Week 3-5]\n        WS06[WS-06: Command System&lt;br/>Week 4-6]\n    end\n\n    subgraph \&quot;Phase 3: Overlay Ecosystem\&quot;\n        WS07[WS-07: Tooltip Plugin&lt;br/>Week 5-6]\n        WS08[WS-08: Highlight Plugin&lt;br/>Week 5-7]\n        WS09[WS-09: Configuration Layer&lt;br/>Week 6-8]\n        WS10[WS-10: Theme System&lt;br/>Week 7-8]\n        WS11[WS-11: Keybinding System&lt;br/>Week 7-8]\n    end\n\n    subgraph \&quot;Phase 4: Integration\&quot;\n        WS12[WS-12: Integration Patterns&lt;br/>Week 7-9]\n        WS13[WS-13: Example Apps&lt;br/>Week 8-10]\n        WS14[WS-14: Documentation&lt;br/>Week 9-11]\n        WS15[WS-15: Testing &amp; CI/CD&lt;br/>Week 10-12]\n    end\n\n    WS01 --> WS02\n    WS01 --> WS03\n    WS02 --> WS04\n    WS03 --> WS04\n    WS01 --> WS05\n    WS05 --> WS06\n    WS02 --> WS06\n    WS01 --> WS07\n    WS01 --> WS08\n    WS05 --> WS09\n    WS09 --> WS10\n    WS09 --> WS11\n    WS04 --> WS12\n    WS06 --> WS12\n    WS12 --> WS13\n    WS13 --> WS14\n    WS01 --> WS15&quot;">graph TD
+    subgraph &quot;Phase 1: Core Framework&quot;
+        WS01[WS-01: Core Types&lt;br/>Week 1-2]
+        WS02[WS-02: Navigation System&lt;br/>Week 2-3]
+        WS03[WS-03: Ratatui Adapters&lt;br/>Week 2-4]
+        WS04[WS-04: Hint Generation&lt;br/>Week 3-4]
+    end
+
+    subgraph &quot;Phase 2: Omnibar&quot;
+        WS05[WS-05: Omnibar Core&lt;br/>Week 3-5]
+        WS06[WS-06: Command System&lt;br/>Week 4-6]
+    end
+
+    subgraph &quot;Phase 3: Overlay Ecosystem&quot;
+        WS07[WS-07: Tooltip Plugin&lt;br/>Week 5-6]
+        WS08[WS-08: Highlight Plugin&lt;br/>Week 5-7]
+        WS09[WS-09: Configuration Layer&lt;br/>Week 6-8]
+        WS10[WS-10: Theme System&lt;br/>Week 7-8]
+        WS11[WS-11: Keybinding System&lt;br/>Week 7-8]
+    end
+
+    subgraph &quot;Phase 4: Integration&quot;
+        WS12[WS-12: Integration Patterns&lt;br/>Week 7-9]
+        WS13[WS-13: Example Apps&lt;br/>Week 8-10]
+        WS14[WS-14: Documentation&lt;br/>Week 9-11]
+        WS15[WS-15: Testing &amp; CI/CD&lt;br/>Week 10-12]
+    end
+
+    WS01 --> WS02
+    WS01 --> WS03
+    WS02 --> WS04
+    WS03 --> WS04
+    WS01 --> WS05
+    WS05 --> WS06
+    WS02 --> WS06
+    WS01 --> WS07
+    WS01 --> WS08
+    WS05 --> WS09
+    WS09 --> WS10
+    WS09 --> WS11
+    WS04 --> WS12
+    WS06 --> WS12
+    WS12 --> WS13
+    WS13 --> WS14
+    WS01 --> WS15
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h2 id="phase-1-core-framework-weeks-1-4">Phase 1: Core Framework (Weeks 1-4)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-core-framework-weeks-1-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ws-01-core-types--architecture">WS-01: Core Types &amp; Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-01-core-types--architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 1-2
+<strong>Orchestrator</strong>: Core Framework
+<strong>Priority</strong>: Critical Path
+<strong>Agent Type</strong>: rust-pro</p>
+<h4 id="objectives">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design and implement core types: <code>Locust&lt;B></code>, <code>LocustPlugin&lt;B></code>, <code>LocustContext</code></li>
+<li>Establish plugin trait system with proper lifetimes and generics</li>
+<li>Create event pipeline with consumption patterns</li>
+<li>Implement target registry and overlay state management</li>
+</ul>
+<h4 id="deliverables">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Core type definitions with full trait implementations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Event routing system with priority handling</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Plugin registration and lifecycle management</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Memory-efficient context sharing mechanism</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Comprehensive unit tests (>90% coverage)</li>
+</ul>
+<h4 id="dependencies">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>None (foundation workstream)</li>
+</ul>
+<h4 id="success-criteria">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Clean API surface with zero unsafe code in public interface</li>
+<li>Event handling &lt; 1ms overhead</li>
+<li>Plugin registration &lt; 100μs</li>
+<li>Memory footprint &lt; 1MB base</li>
+</ul>
+<h4 id="spawn-command">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> rust-pro</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-01-core-types&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-01&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement Locust core types with focus on performance and safety. Design plugin trait system with proper lifetime management. Create efficient event pipeline.&quot;</span></span></code></pre></figure>
+<h3 id="ws-02-navigation-system">WS-02: Navigation System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-02-navigation-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 2-3
+<strong>Orchestrator</strong>: Core Framework
+<strong>Priority</strong>: Critical Path
+<strong>Agent Type</strong>: rust-pro</p>
+<h4 id="objectives-1">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Implement <code>NavTarget</code> trait and actions (select, activate, scroll)</li>
+<li>Create navigation state management</li>
+<li>Build keyboard input decoder</li>
+<li>Implement focus management system</li>
+</ul>
+<h4 id="deliverables-1">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> NavTarget trait with standard implementations</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Navigation action dispatch system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Keyboard shortcut generator</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Focus tracking and management</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Navigation event tests</li>
+</ul>
+<h4 id="dependencies-1">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (must complete first)</li>
+</ul>
+<h4 id="success-criteria-1">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Navigation actions &lt; 100μs dispatch time</li>
+<li>Support for 100+ simultaneous targets</li>
+<li>Intuitive hint generation algorithm</li>
+<li>Zero-allocation navigation in hot path</li>
+</ul>
+<h4 id="spawn-command-1">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> rust-pro</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-02-navigation&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-02&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build navigation system with NavTarget trait. Implement efficient focus management and keyboard input decoding. Optimize for large target counts.&quot;</span></span></code></pre></figure>
+<h3 id="ws-03-ratatui-adapters">WS-03: Ratatui Adapters<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-03-ratatui-adapters" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 2-4
+<strong>Orchestrator</strong>: Core Framework
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-2">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Create adapters for ratatui widgets: List, Table, Tabs, Tree</li>
+<li>Implement trait bridges for custom widgets</li>
+<li>Build rendering integration layer</li>
+<li>Create widget introspection system</li>
+</ul>
+<h4 id="deliverables-2">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> List adapter with item navigation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Table adapter with cell/row/column navigation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tabs adapter with tab switching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tree adapter with expand/collapse</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Custom widget adapter framework</li>
+</ul>
+<h4 id="dependencies-2">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (traits and interfaces)</li>
+</ul>
+<h4 id="success-criteria-2">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>All standard ratatui widgets supported</li>
+<li>Adapter overhead &lt; 1% render time</li>
+<li>Seamless integration with existing code</li>
+<li>Custom widget support without core changes</li>
+</ul>
+<h4 id="spawn-command-2">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-03-adapters&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-03&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Create ratatui widget adapters for List, Table, Tabs, Tree. Build extensible adapter framework for custom widgets. Focus on zero-cost abstractions.&quot;</span></span></code></pre></figure>
+<h3 id="ws-04-hint-generation">WS-04: Hint Generation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-04-hint-generation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 3-4
+<strong>Orchestrator</strong>: Core Framework
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-3">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design hint generation algorithm</li>
+<li>Implement keyboard shortcut assignment</li>
+<li>Create hint rendering system</li>
+<li>Build collision detection and resolution</li>
+</ul>
+<h4 id="deliverables-3">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Hint generation engine</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Shortcut assignment algorithm</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Hint overlay renderer</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Collision resolution system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Customizable hint styles</li>
+</ul>
+<h4 id="dependencies-3">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-02: Navigation System (target discovery)</li>
+<li>WS-03: Ratatui Adapters (widget information)</li>
+</ul>
+<h4 id="success-criteria-3">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Unique hints for up to 1000 targets</li>
+<li>Hint generation &lt; 10ms for 100 targets</li>
+<li>Readable, non-conflicting shortcuts</li>
+<li>Configurable hint display styles</li>
+</ul>
+<h4 id="spawn-command-3">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-04-hints&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-04&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement hint generation with intelligent shortcut assignment. Create efficient collision resolution. Build customizable hint rendering.&quot;</span></span></code></pre></figure>
+<h2 id="phase-2-omnibar-weeks-3-6">Phase 2: Omnibar (Weeks 3-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-omnibar-weeks-3-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ws-05-omnibar-core">WS-05: Omnibar Core<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-05-omnibar-core" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 3-5
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: Critical Path
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-4">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design omnibar plugin architecture</li>
+<li>Implement input capture system</li>
+<li>Create rendering overlay</li>
+<li>Build state management</li>
+</ul>
+<h4 id="deliverables-4">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Omnibar plugin implementation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Input field with editing capabilities</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Overlay rendering system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Result display area</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Keyboard navigation</li>
+</ul>
+<h4 id="dependencies-4">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (plugin interface)</li>
+</ul>
+<h4 id="success-criteria-4">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Instant input response (&lt; 16ms)</li>
+<li>Smooth overlay animation</li>
+<li>Memory-efficient result caching</li>
+<li>Extensible provider system</li>
+</ul>
+<h4 id="spawn-command-4">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-05-omnibar&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-05&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build omnibar plugin with input capture and overlay rendering. Create extensible provider system. Focus on responsive user experience.&quot;</span></span></code></pre></figure>
+<h3 id="ws-06-command-system">WS-06: Command System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-06-command-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 4-6
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-5">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Create command registration system</li>
+<li>Implement command filtering/searching</li>
+<li>Build action dispatch mechanism</li>
+<li>Create command provider interface</li>
+</ul>
+<h4 id="deliverables-5">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Command registry with categories</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fuzzy search implementation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Action dispatch system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Built-in command providers</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Command history tracking</li>
+</ul>
+<h4 id="dependencies-5">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-05: Omnibar Core (UI foundation)</li>
+<li>WS-02: Navigation System (action dispatch)</li>
+</ul>
+<h4 id="success-criteria-5">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Sub-millisecond search for 1000+ commands</li>
+<li>Extensible command providers</li>
+<li>Undo/redo support for commands</li>
+<li>Persistent command history</li>
+</ul>
+<h4 id="spawn-command-5">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-06-commands&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-06&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement command system with fuzzy search and action dispatch. Create provider interface for extensibility. Add history and undo support.&quot;</span></span></code></pre></figure>
+<h2 id="phase-3-overlay-ecosystem-weeks-5-8">Phase 3: Overlay Ecosystem (Weeks 5-8)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-overlay-ecosystem-weeks-5-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ws-07-tooltip-plugin">WS-07: Tooltip Plugin<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-07-tooltip-plugin" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 5-6
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: Medium
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-6">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design tooltip plugin system</li>
+<li>Implement hover detection</li>
+<li>Create tooltip rendering</li>
+<li>Build content provider interface</li>
+</ul>
+<h4 id="deliverables-6">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Tooltip plugin implementation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Hover event detection</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Smart positioning algorithm</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rich content support (markdown)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Animation system</li>
+</ul>
+<h4 id="dependencies-6">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (plugin interface)</li>
+</ul>
+<h4 id="success-criteria-6">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Instant tooltip display (&lt; 100ms)</li>
+<li>No overlap with UI elements</li>
+<li>Support for async content loading</li>
+<li>Smooth fade animations</li>
+</ul>
+<h4 id="spawn-command-6">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-07-tooltips&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-07&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Create tooltip plugin with smart positioning and rich content support. Implement hover detection and smooth animations.&quot;</span></span></code></pre></figure>
+<h3 id="ws-08-highlight-plugin">WS-08: Highlight Plugin<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-08-highlight-plugin" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 5-7
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: Medium
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-7">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Create region highlighting system</li>
+<li>Implement tour/onboarding support</li>
+<li>Build spotlight effects</li>
+<li>Create animation framework</li>
+</ul>
+<h4 id="deliverables-7">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Highlight plugin implementation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Region selection system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tour step management</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Spotlight and dim effects</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Transition animations</li>
+</ul>
+<h4 id="dependencies-7">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (plugin interface)</li>
+</ul>
+<h4 id="success-criteria-7">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Smooth highlight transitions</li>
+<li>Multiple simultaneous highlights</li>
+<li>Tour state persistence</li>
+<li>Customizable highlight styles</li>
+</ul>
+<h4 id="spawn-command-7">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-08-highlights&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-08&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build highlight plugin for tours and onboarding. Create spotlight effects and region highlighting. Implement smooth transitions.&quot;</span></span></code></pre></figure>
+<h3 id="ws-09-configuration-layer">WS-09: Configuration Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-09-configuration-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 6-8
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-8">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design configuration schema</li>
+<li>Implement config loading/saving</li>
+<li>Create runtime config updates</li>
+<li>Build validation system</li>
+</ul>
+<h4 id="deliverables-8">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Configuration schema definition</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TOML/YAML/JSON support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Hot-reload capability</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Schema validation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Migration system</li>
+</ul>
+<h4 id="dependencies-8">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-05: Omnibar Core (command integration)</li>
+</ul>
+<h4 id="success-criteria-8">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Type-safe configuration</li>
+<li>Zero-downtime config updates</li>
+<li>Backward compatibility</li>
+<li>Comprehensive validation</li>
+</ul>
+<h4 id="spawn-command-8">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-09-config&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-09&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Create configuration layer with schema validation and hot-reload. Support multiple formats. Build migration system.&quot;</span></span></code></pre></figure>
+<h3 id="ws-10-theme-system">WS-10: Theme System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-10-theme-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 7-8
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: Medium
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-9">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Design theme architecture</li>
+<li>Implement color scheme system</li>
+<li>Create theme inheritance</li>
+<li>Build theme hot-swapping</li>
+</ul>
+<h4 id="deliverables-9">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Theme definition format</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Built-in themes (light, dark, high-contrast)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Theme inheritance system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Runtime theme switching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Color palette generator</li>
+</ul>
+<h4 id="dependencies-9">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-09: Configuration Layer (storage and loading)</li>
+</ul>
+<h4 id="success-criteria-9">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Instant theme switching</li>
+<li>Accessible color schemes</li>
+<li>Theme customization without rebuilding</li>
+<li>Support for color blindness modes</li>
+</ul>
+<h4 id="spawn-command-9">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-10-themes&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-10&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build theme system with inheritance and hot-swapping. Create accessible built-in themes. Implement color palette generation.&quot;</span></span></code></pre></figure>
+<h3 id="ws-11-keybinding-system">WS-11: Keybinding System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-11-keybinding-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 7-8
+<strong>Orchestrator</strong>: Plugin Development
+<strong>Priority</strong>: Medium
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-10">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Create keybinding definition system</li>
+<li>Implement conflict detection</li>
+<li>Build customization interface</li>
+<li>Create preset management</li>
+</ul>
+<h4 id="deliverables-10">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Keybinding configuration schema</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Conflict detection and resolution</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Vi/Emacs preset modes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Runtime rebinding</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Cheatsheet generator</li>
+</ul>
+<h4 id="dependencies-10">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-09: Configuration Layer (storage and validation)</li>
+</ul>
+<h4 id="success-criteria-10">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Zero keybinding conflicts</li>
+<li>Intuitive customization</li>
+<li>Multiple preset support</li>
+<li>Auto-generated documentation</li>
+</ul>
+<h4 id="spawn-command-10">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-11-keybindings&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-11&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Create keybinding system with conflict detection. Build preset management for Vi/Emacs modes. Generate cheatsheets automatically.&quot;</span></span></code></pre></figure>
+<h2 id="phase-4-integration--documentation-weeks-7-12">Phase 4: Integration &amp; Documentation (Weeks 7-12)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-integration--documentation-weeks-7-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="ws-12-integration-patterns">WS-12: Integration Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-12-integration-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 7-9
+<strong>Orchestrator</strong>: Integration
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: docs-architect</p>
+<h4 id="objectives-11">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Document integration strategies</li>
+<li>Create migration guides</li>
+<li>Build integration testing suite</li>
+<li>Develop best practices</li>
+</ul>
+<h4 id="deliverables-11">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Integration guide for existing apps</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Migration strategies document</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration test suite</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Best practices guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Troubleshooting guide</li>
+</ul>
+<h4 id="dependencies-11">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-04: Hint Generation (complete navigation)</li>
+<li>WS-06: Command System (full feature set)</li>
+</ul>
+<h4 id="success-criteria-11">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Clear integration path</li>
+<li>&lt; 1 hour integration time</li>
+<li>Comprehensive test coverage</li>
+<li>Real-world examples</li>
+</ul>
+<h4 id="spawn-command-11">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs-architect</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-12-integration&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-12&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Document integration patterns and create migration guides. Build comprehensive test suite. Develop best practices from real examples.&quot;</span></span></code></pre></figure>
+<h3 id="ws-13-example-applications">WS-13: Example Applications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-13-example-applications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 8-10
+<strong>Orchestrator</strong>: Integration
+<strong>Priority</strong>: High
+<strong>Agent Type</strong>: coder</p>
+<h4 id="objectives-12">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Build showcase applications</li>
+<li>Create tutorial examples</li>
+<li>Develop real-world demos</li>
+<li>Build performance benchmarks</li>
+</ul>
+<h4 id="deliverables-12">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Multi-pane dashboard example</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Log viewer with navigation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> File browser with hints</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Command palette showcase</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance benchmark app</li>
+</ul>
+<h4 id="dependencies-12">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-12: Integration Patterns (guidelines)</li>
+</ul>
+<h4 id="success-criteria-12">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Fully functional examples</li>
+<li>Clear code organization</li>
+<li>Performance targets met</li>
+<li>Educational value</li>
+</ul>
+<h4 id="spawn-command-12">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> coder</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-13-examples&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-13&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build three showcase applications demonstrating all Locust features. Create educational examples with clear code. Include performance benchmarks.&quot;</span></span></code></pre></figure>
+<h3 id="ws-14-documentation">WS-14: Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-14-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 9-11
+<strong>Orchestrator</strong>: Integration
+<strong>Priority</strong>: Critical
+<strong>Agent Type</strong>: docs-architect</p>
+<h4 id="objectives-13">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Write comprehensive documentation</li>
+<li>Create API reference</li>
+<li>Build tutorial series</li>
+<li>Develop architecture guide</li>
+</ul>
+<h4 id="deliverables-13">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Complete API documentation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Getting started guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tutorial series (5+ tutorials)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Architecture documentation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Plugin development guide</li>
+</ul>
+<h4 id="dependencies-13">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-13: Example Applications (reference code)</li>
+</ul>
+<h4 id="success-criteria-13">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>100% API coverage</li>
+<li>Clear, concise writing</li>
+<li>Runnable code examples</li>
+<li>Multiple learning paths</li>
+</ul>
+<h4 id="spawn-command-13">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs-architect</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-14-documentation&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-14&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Write comprehensive documentation including API reference, tutorials, and architecture guide. Ensure 100% coverage with runnable examples.&quot;</span></span></code></pre></figure>
+<h3 id="ws-15-testing--cicd">WS-15: Testing &amp; CI/CD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ws-15-testing--cicd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Week 10-12
+<strong>Orchestrator</strong>: Integration
+<strong>Priority</strong>: Critical
+<strong>Agent Type</strong>: tester</p>
+<h4 id="objectives-14">Objectives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#objectives-14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Build comprehensive test suite</li>
+<li>Setup CI/CD pipeline</li>
+<li>Create release automation</li>
+<li>Implement quality gates</li>
+</ul>
+<h4 id="deliverables-14">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Unit test suite (>80% coverage)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration test suite</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance test suite</li>
+<li class="task-list-item"><input type="checkbox" disabled/> CI/CD pipeline (GitHub Actions)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Release automation scripts</li>
+</ul>
+<h4 id="dependencies-14">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>WS-01: Core Types (throughout development)</li>
+</ul>
+<h4 id="success-criteria-14">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria-14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>All tests passing</li>
+<li>Automated releases</li>
+<li>Performance regression detection</li>
+<li>Security scanning enabled</li>
+</ul>
+<h4 id="spawn-command-14">Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-command-14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tester</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws-15-testing&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-15&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --instructions</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Build comprehensive test suite with >80% coverage. Setup CI/CD pipeline with GitHub Actions. Create release automation.&quot;</span></span></code></pre></figure>
+<h2 id="workstream-coordination">Workstream Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="communication-protocol">Communication Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Each workstream maintains status in shared memory</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> store</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust/workstream/WS-{XX}/status&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --value</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{&quot;progress&quot;: 0.75, &quot;blockers&quot;: [], &quot;next&quot;: &quot;...&quot;}'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Cross-workstream notifications</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> notify</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --from</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-01&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --to</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-02,WS-03,WS-05&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --message</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Core types API finalized v1.0&quot;</span></span></code></pre></figure>
+<h3 id="progress-tracking">Progress Tracking<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#progress-tracking" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tracking</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  daily</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Status update to memory</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Blocker identification</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Dependency checks</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  weekly</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Progress percentage update</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Deliverable completion</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Risk assessment</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  phase-gate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Formal review</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Acceptance testing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Sign-off process</span></span></code></pre></figure>
+<h3 id="resource-sharing">Resource Sharing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resource-sharing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Request additional resources</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;request-support&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --from</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;WS-04&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;performance-optimization&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --urgency</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;high&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Share learnings</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> memory</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> store</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;locust/learnings/pattern/{name}&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --value</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{&quot;pattern&quot;: &quot;...&quot;, &quot;benefits&quot;: &quot;...&quot;, &quot;usage&quot;: &quot;...&quot;}'</span></span></code></pre></figure>
+<h2 id="risk-management">Risk Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="workstream-specific-risks">Workstream-Specific Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-specific-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Workstream</th><th>Risk</th><th>Mitigation</th></tr></thead><tbody><tr><td>WS-01</td><td>API instability</td><td>Extensive design review, prototyping</td></tr><tr><td>WS-02</td><td>Performance issues</td><td>Early benchmarking, profiling</td></tr><tr><td>WS-03</td><td>Widget compatibility</td><td>Incremental adapter development</td></tr><tr><td>WS-04</td><td>Hint conflicts</td><td>Advanced collision algorithms</td></tr><tr><td>WS-05</td><td>Input lag</td><td>Event debouncing, async rendering</td></tr><tr><td>WS-06</td><td>Command explosion</td><td>Categorization, smart filtering</td></tr><tr><td>WS-07</td><td>Tooltip overlap</td><td>Smart positioning algorithms</td></tr><tr><td>WS-08</td><td>Animation performance</td><td>GPU acceleration where available</td></tr><tr><td>WS-09</td><td>Config complexity</td><td>Schema validation, defaults</td></tr><tr><td>WS-10</td><td>Theme conflicts</td><td>Inheritance system, validation</td></tr><tr><td>WS-11</td><td>Keybinding chaos</td><td>Conflict detection, presets</td></tr><tr><td>WS-12</td><td>Integration difficulty</td><td>Step-by-step guides, support</td></tr><tr><td>WS-13</td><td>Example quality</td><td>Code review, user testing</td></tr><tr><td>WS-14</td><td>Documentation lag</td><td>Parallel writing, automation</td></tr><tr><td>WS-15</td><td>Test brittleness</td><td>Robust test design, mocking</td></tr></tbody></table></div>
+<h2 id="success-metrics">Success Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="per-workstream-kpis">Per-Workstream KPIs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#per-workstream-kpis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">metrics</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  completion</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;100% deliverables&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    measure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;completed / total&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  quality</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;> 90% review pass rate&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    measure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;passed / submitted&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  schedule</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;+/- 2 days variance&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    measure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;actual - planned&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dependencies</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Zero blocking delays&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    measure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;delay_days_caused&quot;</span></span></code></pre></figure>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The 15 workstreams of the Locust project are designed for maximum parallelization while maintaining architectural coherence. Through careful dependency management, clear communication protocols, and robust risk mitigation, the project can achieve its ambitious 12-week timeline while delivering a high-quality, production-ready plugin framework for the ratatui ecosystem.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-163" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#locust-workstream-plan" data-for="locust-workstream-plan">Locust Workstream Plan</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#workstream-dependency-graph" data-for="workstream-dependency-graph">Workstream Dependency Graph</a></li><li class="depth-1"><a href="#phase-1-core-framework-weeks-1-4" data-for="phase-1-core-framework-weeks-1-4">Phase 1: Core Framework (Weeks 1-4)</a></li><li class="depth-2"><a href="#ws-01-core-types--architecture" data-for="ws-01-core-types--architecture">WS-01: Core Types &amp; Architecture</a></li><li class="depth-2"><a href="#ws-02-navigation-system" data-for="ws-02-navigation-system">WS-02: Navigation System</a></li><li class="depth-2"><a href="#ws-03-ratatui-adapters" data-for="ws-03-ratatui-adapters">WS-03: Ratatui Adapters</a></li><li class="depth-2"><a href="#ws-04-hint-generation" data-for="ws-04-hint-generation">WS-04: Hint Generation</a></li><li class="depth-1"><a href="#phase-2-omnibar-weeks-3-6" data-for="phase-2-omnibar-weeks-3-6">Phase 2: Omnibar (Weeks 3-6)</a></li><li class="depth-2"><a href="#ws-05-omnibar-core" data-for="ws-05-omnibar-core">WS-05: Omnibar Core</a></li><li class="depth-2"><a href="#ws-06-command-system" data-for="ws-06-command-system">WS-06: Command System</a></li><li class="depth-1"><a href="#phase-3-overlay-ecosystem-weeks-5-8" data-for="phase-3-overlay-ecosystem-weeks-5-8">Phase 3: Overlay Ecosystem (Weeks 5-8)</a></li><li class="depth-2"><a href="#ws-07-tooltip-plugin" data-for="ws-07-tooltip-plugin">WS-07: Tooltip Plugin</a></li><li class="depth-2"><a href="#ws-08-highlight-plugin" data-for="ws-08-highlight-plugin">WS-08: Highlight Plugin</a></li><li class="depth-2"><a href="#ws-09-configuration-layer" data-for="ws-09-configuration-layer">WS-09: Configuration Layer</a></li><li class="depth-2"><a href="#ws-10-theme-system" data-for="ws-10-theme-system">WS-10: Theme System</a></li><li class="depth-2"><a href="#ws-11-keybinding-system" data-for="ws-11-keybinding-system">WS-11: Keybinding System</a></li><li class="depth-1"><a href="#phase-4-integration--documentation-weeks-7-12" data-for="phase-4-integration--documentation-weeks-7-12">Phase 4: Integration &amp; Documentation (Weeks 7-12)</a></li><li class="depth-2"><a href="#ws-12-integration-patterns" data-for="ws-12-integration-patterns">WS-12: Integration Patterns</a></li><li class="depth-2"><a href="#ws-13-example-applications" data-for="ws-13-example-applications">WS-13: Example Applications</a></li><li class="depth-2"><a href="#ws-14-documentation" data-for="ws-14-documentation">WS-14: Documentation</a></li><li class="depth-2"><a href="#ws-15-testing--cicd" data-for="ws-15-testing--cicd">WS-15: Testing &amp; CI/CD</a></li><li class="depth-1"><a href="#workstream-coordination" data-for="workstream-coordination">Workstream Coordination</a></li><li class="depth-2"><a href="#communication-protocol" data-for="communication-protocol">Communication Protocol</a></li><li class="depth-2"><a href="#progress-tracking" data-for="progress-tracking">Progress Tracking</a></li><li class="depth-2"><a href="#resource-sharing" data-for="resource-sharing">Resource Sharing</a></li><li class="depth-1"><a href="#risk-management" data-for="risk-management">Risk Management</a></li><li class="depth-2"><a href="#workstream-specific-risks" data-for="workstream-specific-risks">Workstream-Specific Risks</a></li><li class="depth-1"><a href="#success-metrics" data-for="success-metrics">Success Metrics</a></li><li class="depth-2"><a href="#per-workstream-kpis" data-for="per-workstream-kpis">Per-Workstream KPIs</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

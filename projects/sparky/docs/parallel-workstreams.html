@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>parallel-workstreams</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="parallel-workstreams"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="parallel-workstreams"/><meta name="twitter:description" content="Sparky Parallel Workstreams Version: 1.0 Date: 2025-11-12 Purpose: Organize development work into parallel execution streams Overview Sparky development is organized into 4 parallel workstreams that can be executed concurrently by different agents or team members."/><meta property="og:description" content="Sparky Parallel Workstreams Version: 1.0 Date: 2025-11-12 Purpose: Organize development work into parallel execution streams Overview Sparky development is organized into 4 parallel workstreams that can be executed concurrently by different agents or team members."/><meta property="og:image:alt" content="Sparky Parallel Workstreams Version: 1.0 Date: 2025-11-12 Purpose: Organize development work into parallel execution streams Overview Sparky development is organized into 4 parallel workstreams that can be executed concurrently by different agents or team members."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/parallel-workstreams"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/parallel-workstreams"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Sparky Parallel Workstreams Version: 1.0 Date: 2025-11-12 Purpose: Organize development work into parallel execution streams Overview Sparky development is organized into 4 parallel workstreams that can be executed concurrently by different agents or team members."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/sparky/docs/parallel-workstreams-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/sparky/docs/parallel-workstreams-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/sparky/docs/parallel-workstreams-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/sparky/docs/parallel-workstreams"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-528"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-528" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/sparky/">sparky</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/sparky/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>parallel workstreams</a></div></nav><h1 class="article-title">parallel-workstreams</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:16.134Z">Nov 16, 2025</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="sparky-parallel-workstreams">Sparky Parallel Workstreams<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sparky-parallel-workstreams" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Version:</strong> 1.0
+<strong>Date:</strong> 2025-11-12
+<strong>Purpose:</strong> Organize development work into parallel execution streams</p>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Sparky development is organized into <strong>4 parallel workstreams</strong> that can be executed concurrently by different agents or team members. Each workstream owns specific directories and has minimal dependencies on others.</p>
+<h2 id="workstream-organization">Workstream Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>Sequential Phase 0: Bootstrap
+    ↓
+Parallel Phase 1: Core Components (4 workstreams)
+    ├─→ Workstream 1: Orchestration &amp; Infrastructure
+    ├─→ Workstream 2: Data Collection System
+    ├─→ Workstream 3: Analysis Engine
+    └─→ Workstream 4: Content Generation Pipeline
+    ↓
+Sequential Phase 2: Integration &amp; Testing
+    ↓
+Sequential Phase 3: Deployment &amp; Documentation
+</code></pre>
+<hr/>
+<h2 id="phase-0-bootstrap-sequential">Phase 0: Bootstrap (Sequential)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-0-bootstrap-sequential" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Must complete before parallel work begins</strong></p>
+<h3 id="tasks">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> Research and architecture design</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Initialize repository structure</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up GitHub Actions workflows (basic)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure secrets and environment variables</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create agent coordination framework</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Establish coding standards and conventions</li>
+</ul>
+<h3 id="deliverables">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>sparky/
+├── .github/workflows/          # Basic workflow templates
+├── scripts/orchestration/      # Coordination scripts
+├── docs/                       # Architecture documentation
+├── .env.example                # Environment template
+└── README.md                   # Project overview
+</code></pre>
+<h3 id="duration-1-2-days">Duration: 1-2 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-1-2-days" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h3 id="dependencies-none">Dependencies: None<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-none" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h3 id="assigned-to-meta-orchestrator--project-lead">Assigned To: Meta-Orchestrator / Project Lead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#assigned-to-meta-orchestrator--project-lead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<hr/>
+<h2 id="phase-1-parallel-workstreams">Phase 1: Parallel Workstreams<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-parallel-workstreams" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="workstream-1-orchestration--infrastructure">Workstream 1: Orchestration &amp; Infrastructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-1-orchestration--infrastructure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Owner:</strong> DevOps / Infrastructure Engineer
+<strong>Focus:</strong> System coordination, scheduling, monitoring</p>
+<h4 id="responsibilities">Responsibilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#responsibilities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>
+<p><strong>GitHub Actions Workflows</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.github/workflows/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">├── sparky-daily-collection.yml</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">      # Daily data collection</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">├── sparky-weekly-summary.yml</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Weekly summary generation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">├── sparky-monthly-digest.yml</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Monthly review</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">├── sparky-orchestrator.yml</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # Main coordination workflow</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">└── sparky-health-check.yml</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # System health monitoring</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Orchestration Scripts</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">scripts/orchestration/</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn-collector-agents.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Launch data collectors</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn-analyzer-agents.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">         # Launch analyzers</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn-content-agents.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # Launch content generators</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> health-check.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                  # System health verification</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">├──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> check-readiness.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">               # Pre-execution checks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">└──</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-manager.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">               # Claude Flow session management</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Monitoring &amp; Dashboards</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">monitoring</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── dashboard.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Real-time progress dashboard</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── metrics.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Metrics collection</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── alerts.py                        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Alert system</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── health.py                        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Health checks</span></span></code></pre></figure>
+</li>
+</ol>
+<h4 id="file-ownership">File Ownership<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-ownership" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Owns:
+  - .github/workflows/sparky-*.yml
+  - scripts/orchestration/
+  - monitoring/
+  - infrastructure/
+</code></pre>
+<h4 id="dependencies">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>GitHub Actions access</li>
+<li>Claude Flow API</li>
+<li>GitHub Secrets configuration</li>
+</ul>
+<h4 id="deliverables-1">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>✅ All workflows functional</li>
+<li>✅ Health monitoring operational</li>
+<li>✅ Agent spawning tested</li>
+<li>✅ Dashboard displaying metrics</li>
+</ul>
+<h4 id="duration-3-5-days">Duration: 3-5 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-3-5-days" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<h4 id="estimated-effort-24-40-hours">Estimated Effort: 24-40 hours<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#estimated-effort-24-40-hours" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<hr/>
+<h3 id="workstream-2-data-collection-system">Workstream 2: Data Collection System<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-2-data-collection-system" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Owner:</strong> Backend Developer
+<strong>Focus:</strong> GitHub API integration, data extraction</p>
+<h4 id="responsibilities-1">Responsibilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#responsibilities-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>
+<p><strong>Collection Agents</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">collectors</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">__init__</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.py</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── base_collector.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Abstract base class</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── commit_collector.py              </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collect commits</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── pr_collector.py                  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collect pull requests</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── issue_collector.py               </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collect issues</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── release_collector.py             </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collect releases</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── contributor_collector.py         </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze contributors</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── multi_repo_collector.py          </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Coordinate multi-repo collection</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>GitHub API Integration</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">api</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── github_client.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Octokit wrapper</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── rate_limiter.py                  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Rate limit management</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── cache.py                         </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Response caching</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── graphql_queries.py               </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Optimized GraphQL queries</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Data Models</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">models</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── commit.py                        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Commit data model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── pull_request.py                  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># PR data model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── issue.py                         </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Issue data model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── release.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Release data model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── contributor.py                   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Contributor data model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── collection.py                    </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collection metadata</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Storage Layer</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">storage</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── json_store.py                    </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># JSON file storage</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── database.py                      </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Database integration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── cache_store.py                   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># In-memory/Redis cache</span></span></code></pre></figure>
+</li>
+</ol>
+<h4 id="file-ownership-1">File Ownership<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-ownership-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Owns:
+  - collectors/
+  - api/
+  - models/
+  - storage/
+  - tests/collectors/
+</code></pre>
+<h4 id="dependencies-1">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>GitHub API credentials</li>
+<li>Repository list from raibid-cli patterns</li>
+</ul>
+<h4 id="deliverables-2">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>✅ All collector agents implemented</li>
+<li>✅ GitHub API integration working</li>
+<li>✅ Rate limiting functional</li>
+<li>✅ Data models validated</li>
+<li>✅ Unit tests passing (90%+ coverage)</li>
+</ul>
+<h4 id="duration-4-6-days">Duration: 4-6 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-4-6-days" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<h4 id="estimated-effort-32-48-hours">Estimated Effort: 32-48 hours<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#estimated-effort-32-48-hours" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<hr/>
+<h3 id="workstream-3-analysis-engine">Workstream 3: Analysis Engine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-3-analysis-engine" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Owner:</strong> Data Scientist / AI Engineer
+<strong>Focus:</strong> Data analysis, insight extraction, pattern detection</p>
+<h4 id="responsibilities-2">Responsibilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#responsibilities-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>
+<p><strong>Analyzer Agents</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">analyzers</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">__init__</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.py</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── base_analyzer.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Abstract base class</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── activity_analyzer.py             </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Activity metrics (commits/day, PR velocity)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── trend_detector.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pattern and trend detection</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── impact_scorer.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Change impact scoring</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── contributor_profiler.py          </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Contributor analysis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── project_health.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Repository health metrics</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>AI Integration</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">ai</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── claude_client.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Anthropic Claude API</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── prompts.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analysis prompts</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── semantic_analyzer.py             </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Semantic commit analysis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── insight_generator.py             </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># AI-powered insights</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Analytics</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">analytics</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── metrics.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Metric calculations</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── time_series.py                   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Time-series analysis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── patterns.py                      </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pattern recognition</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── scoring.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Scoring algorithms</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Insights Generation</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">insights</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── generator.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Insight generation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── templates.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Insight templates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── prioritizer.py                   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Insight prioritization</span></span></code></pre></figure>
+</li>
+</ol>
+<h4 id="file-ownership-2">File Ownership<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-ownership-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Owns:
+  - analyzers/
+  - ai/
+  - analytics/
+  - insights/
+  - tests/analyzers/
+</code></pre>
+<h4 id="dependencies-2">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Data from collectors (Workstream 2)</li>
+<li>Claude API credentials</li>
+</ul>
+<h4 id="deliverables-3">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>✅ All analyzer agents implemented</li>
+<li>✅ Claude API integration working</li>
+<li>✅ Metrics calculation validated</li>
+<li>✅ Insight generation tested</li>
+<li>✅ Unit tests passing (85%+ coverage)</li>
+</ul>
+<h4 id="duration-4-6-days-1">Duration: 4-6 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-4-6-days-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<h4 id="estimated-effort-32-48-hours-1">Estimated Effort: 32-48 hours<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#estimated-effort-32-48-hours-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<hr/>
+<h3 id="workstream-4-content-generation-pipeline">Workstream 4: Content Generation Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-4-content-generation-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Owner:</strong> Content Engineer / NLP Specialist
+<strong>Focus:</strong> Content creation, formatting, publishing</p>
+<h4 id="responsibilities-3">Responsibilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#responsibilities-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li>
+<p><strong>Content Generator Agents</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">generators</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">__init__</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.py</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── base_generator.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Abstract base class</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── daily_digest.py                  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Daily summary (200-300 words)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── weekly_report.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Weekly overview (800-1200 words)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── monthly_review.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Monthly analysis (2000-3000 words)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── blog_post.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Blog content (1500-2500 words)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── social_media.py                  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Twitter/LinkedIn posts</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Templates &amp; Formatting</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">templates</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── daily.md.j2                      </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Daily digest template</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── weekly.md.j2                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Weekly report template</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── monthly.md.j2                    </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Monthly review template</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── blog.md.j2                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Blog post template</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── social.json.j2                   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Social media templates</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Publishing System</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">publishers</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">__init__</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.py</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── docs_publisher.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Publish to docs repo</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── github_publisher.py              </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post to GitHub issues/comments</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── blog_publisher.py                </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Publish to blog platforms</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── social_publisher.py              </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post to social media</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Content Management</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">content</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── manager.py                       </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Content orchestration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── formatter.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Format conversion (MD, HTML, JSON)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">├── validator.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Content validation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">└── scheduler.py                     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Publishing schedule</span></span></code></pre></figure>
+</li>
+</ol>
+<h4 id="file-ownership-3">File Ownership<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-ownership-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<pre><code>Owns:
+  - generators/
+  - templates/
+  - publishers/
+  - content/
+  - tests/generators/
+</code></pre>
+<h4 id="dependencies-3">Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Insights from analyzers (Workstream 3)</li>
+<li>Claude API credentials</li>
+<li>Publishing platform credentials</li>
+</ul>
+<h4 id="deliverables-4">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>✅ All content generators implemented</li>
+<li>✅ Templates created and tested</li>
+<li>✅ Publishing pipelines functional</li>
+<li>✅ Multi-format output validated</li>
+<li>✅ Unit tests passing (85%+ coverage)</li>
+</ul>
+<h4 id="duration-4-6-days-2">Duration: 4-6 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-4-6-days-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<h4 id="estimated-effort-32-48-hours-2">Estimated Effort: 32-48 hours<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#estimated-effort-32-48-hours-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<hr/>
+<h2 id="phase-2-integration--testing-sequential">Phase 2: Integration &amp; Testing (Sequential)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-integration--testing-sequential" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Must complete after all Phase 1 workstreams finish</strong></p>
+<h3 id="tasks-1">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> End-to-end pipeline testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Integration tests across workstreams</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance optimization</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Error handling validation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Security audit</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Load testing</li>
+</ul>
+<h3 id="deliverables-5">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>tests/integration/
+├── test_full_pipeline.py            # End-to-end tests
+├── test_collector_analyzer.py       # Workstream 2 → 3 integration
+├── test_analyzer_generator.py       # Workstream 3 → 4 integration
+└── test_orchestration.py            # Workstream 1 coordination
+</code></pre>
+<h3 id="duration-2-3-days">Duration: 2-3 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-2-3-days" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h3 id="dependencies-all-phase-1-workstreams-complete">Dependencies: All Phase 1 workstreams complete<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-all-phase-1-workstreams-complete" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<hr/>
+<h2 id="phase-3-deployment--documentation-sequential">Phase 3: Deployment &amp; Documentation (Sequential)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-deployment--documentation-sequential" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tasks-2">Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tasks-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Production deployment</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Monitoring setup</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation finalization</li>
+<li class="task-list-item"><input type="checkbox" disabled/> User guides</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Runbooks</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Training materials</li>
+</ul>
+<h3 id="deliverables-6">Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>docs/
+├── user-guide.md                    # End-user documentation
+├── operator-guide.md                # Ops/maintenance guide
+├── troubleshooting.md               # Common issues and fixes
+└── runbooks/
+    ├── daily-pipeline.md
+    ├── weekly-summary.md
+    └── emergency-procedures.md
+</code></pre>
+<h3 id="duration-1-2-days-1">Duration: 1-2 days<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duration-1-2-days-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h3 id="dependencies-phase-2-complete">Dependencies: Phase 2 complete<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies-phase-2-complete" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<hr/>
+<h2 id="coordination-mechanism">Coordination Mechanism<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#coordination-mechanism" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="file-ownership-prevents-conflicts">File Ownership (Prevents Conflicts)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-ownership-prevents-conflicts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Workstream 1:</strong> <code>.github/workflows/</code>, <code>scripts/orchestration/</code>, <code>monitoring/</code>
+<strong>Workstream 2:</strong> <code>collectors/</code>, <code>api/</code>, <code>models/</code>, <code>storage/</code>
+<strong>Workstream 3:</strong> <code>analyzers/</code>, <code>ai/</code>, <code>analytics/</code>, <code>insights/</code>
+<strong>Workstream 4:</strong> <code>generators/</code>, <code>templates/</code>, <code>publishers/</code>, <code>content/</code></p>
+<p><strong>Shared:</strong> <code>docs/</code>, <code>tests/</code>, <code>README.md</code> (coordinated edits)</p>
+<h3 id="communication-protocol">Communication Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Daily Standup (Async via GitHub):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Workstream 1 Update - 2025-11-12</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ✅ Completed: GitHub Actions workflow templates</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> 🔄 In Progress: Health monitoring dashboard</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ⏳ Blocked: Need Claude Flow API access</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> 📋 Next: Implement session management</span></span></code></pre></figure>
+<p><strong>Integration Points:</strong></p>
+<ul>
+<li>Workstream 2 → 3: JSON schema for collected data</li>
+<li>Workstream 3 → 4: Insights JSON schema</li>
+<li>Workstream 1 coordinates all via orchestration scripts</li>
+</ul>
+<h3 id="claude-flow-coordination">Claude Flow Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#claude-flow-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Each workstream uses hooks:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Workstream 2 (Collector)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Workstream 2: Data Collection Implementation&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-restore</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;sparky-workstream-2&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># On completion</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --task-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;workstream-2&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-end</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export-metrics</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span></code></pre></figure>
+<hr/>
+<h2 id="agent-assignment">Agent Assignment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-assignment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="using-meta-orchestrator-pattern">Using Meta-Orchestrator Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#using-meta-orchestrator-pattern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Launch all 4 workstreams in parallel:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Spawn 4 agents concurrently</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Implement Sparky Orchestration &amp; Infrastructure (Workstream 1)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Goals:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Create all GitHub Actions workflows</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Implement orchestration scripts</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Build monitoring dashboard</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Set up health checks</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  File Ownership:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - .github/workflows/sparky-*.yml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - scripts/orchestration/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - monitoring/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - infrastructure/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Coordination:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Pre-task hook for session start</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-task hook on completion</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Deliverable: Fully functional orchestration system</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Estimated: 32-40 hours</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Backend Developer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Implement Sparky Data Collection System (Workstream 2)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Goals:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Build all collector agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Integrate GitHub API (Octokit)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Implement rate limiting</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Create data models and storage</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  File Ownership:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - collectors/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - api/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - models/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - storage/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Coordination:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Pre-task hook for session start</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-task hook on completion</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Deliverable: Complete data collection pipeline</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Estimated: 32-48 hours</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;backend-architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;AI Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Implement Sparky Analysis Engine (Workstream 3)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Goals:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Build all analyzer agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Integrate Claude API</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Implement metrics calculation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Generate AI-powered insights</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  File Ownership:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - analyzers/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - ai/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - analytics/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - insights/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Coordination:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Pre-task hook for session start</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-task hook on completion</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Deliverable: Intelligent analysis system</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Estimated: 32-48 hours</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ai-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Content Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Implement Sparky Content Generation Pipeline (Workstream 4)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Goals:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Build all content generator agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Create templates for all formats</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Implement publishing system</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Validate multi-format output</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  File Ownership:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - generators/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - templates/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - publishers/</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - content/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Coordination:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Pre-task hook for session start</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  - Post-task hook on completion</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Deliverable: Full content generation pipeline</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  Estimated: 32-48 hours</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;frontend-developer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// All 4 agents run concurrently</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// File ownership prevents conflicts</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Claude Flow hooks coordinate state</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Phase 2 integration begins when all complete</span></span></code></pre></figure>
+<hr/>
+<h2 id="timeline-projection">Timeline Projection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#timeline-projection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="optimistic-all-parallel-no-blockers">Optimistic (All Parallel, No Blockers)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimistic-all-parallel-no-blockers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Day 1: Bootstrap complete
+Day 2-6: Phase 1 parallel execution (all workstreams simultaneously)
+Day 7-9: Phase 2 integration &amp; testing
+Day 10-11: Phase 3 deployment &amp; docs
+Total: 11 days
+</code></pre>
+<h3 id="realistic-some-sequential-minor-blockers">Realistic (Some Sequential, Minor Blockers)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#realistic-some-sequential-minor-blockers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Day 1-2: Bootstrap complete
+Day 3-9: Phase 1 parallel execution (some delays)
+Day 10-13: Phase 2 integration &amp; testing
+Day 14-15: Phase 3 deployment &amp; docs
+Total: 15 days (3 weeks)
+</code></pre>
+<h3 id="conservative-more-sequential-significant-issues">Conservative (More Sequential, Significant Issues)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conservative-more-sequential-significant-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Day 1-3: Bootstrap complete
+Day 4-12: Phase 1 parallel execution (coordination overhead)
+Day 13-17: Phase 2 integration &amp; testing (bugs found)
+Day 18-21: Phase 3 deployment &amp; docs
+Total: 21 days (4 weeks)
+</code></pre>
+<hr/>
+<h2 id="success-criteria">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-complete-when">Phase 1 Complete When:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-complete-when" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ All 4 workstreams have passing unit tests</li>
+<li>✅ File ownership boundaries respected (no conflicts)</li>
+<li>✅ Integration points clearly defined</li>
+<li>✅ Each workstream demos standalone functionality</li>
+</ul>
+<h3 id="phase-2-complete-when">Phase 2 Complete When:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-complete-when" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ End-to-end pipeline executes successfully</li>
+<li>✅ Integration tests passing (95%+)</li>
+<li>✅ Performance targets met (&lt;30 min total pipeline)</li>
+<li>✅ Error handling validated</li>
+</ul>
+<h3 id="phase-3-complete-when">Phase 3 Complete When:<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-complete-when" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ Production deployment successful</li>
+<li>✅ Monitoring and alerts operational</li>
+<li>✅ Documentation complete</li>
+<li>✅ First daily/weekly/monthly report generated</li>
+</ul>
+<hr/>
+<h2 id="risk-mitigation">Risk Mitigation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-mitigation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="risk-workstreams-out-of-sync">Risk: Workstreams out of sync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-workstreams-out-of-sync" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mitigation:</strong> Daily async updates, clear integration contracts</p>
+<h3 id="risk-integration-issues-in-phase-2">Risk: Integration issues in Phase 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-integration-issues-in-phase-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mitigation:</strong> Define JSON schemas early, validate with sample data</p>
+<h3 id="risk-agent-coordination-overhead">Risk: Agent coordination overhead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-agent-coordination-overhead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mitigation:</strong> Use proven Claude Flow patterns, clear file ownership</p>
+<h3 id="risk-claude-api-costs-exceed-budget">Risk: Claude API costs exceed budget<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-claude-api-costs-exceed-budget" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mitigation:</strong> Use Haiku for development, cache aggressively, monitor spending</p>
+<hr/>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Architecture: <a href="../../../architecture" class="internal alias" data-slug="architecture">architecture.md</a></li>
+<li>Component specs: <a href="../../../components" class="internal alias" data-slug="components">components.md</a></li>
+<li>raibid-labs patterns: <a href="../../../integration" class="internal alias" data-slug="integration">integration.md</a></li>
+</ul>
+<hr/>
+<p><strong>Next:</strong> Execute Phase 0 (Bootstrap), then launch parallel Phase 1 workstreams</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-313" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#sparky-parallel-workstreams" data-for="sparky-parallel-workstreams">Sparky Parallel Workstreams</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#workstream-organization" data-for="workstream-organization">Workstream Organization</a></li><li class="depth-1"><a href="#phase-0-bootstrap-sequential" data-for="phase-0-bootstrap-sequential">Phase 0: Bootstrap (Sequential)</a></li><li class="depth-2"><a href="#tasks" data-for="tasks">Tasks</a></li><li class="depth-2"><a href="#deliverables" data-for="deliverables">Deliverables</a></li><li class="depth-2"><a href="#duration-1-2-days" data-for="duration-1-2-days">Duration: 1-2 days</a></li><li class="depth-2"><a href="#dependencies-none" data-for="dependencies-none">Dependencies: None</a></li><li class="depth-2"><a href="#assigned-to-meta-orchestrator--project-lead" data-for="assigned-to-meta-orchestrator--project-lead">Assigned To: Meta-Orchestrator / Project Lead</a></li><li class="depth-1"><a href="#phase-1-parallel-workstreams" data-for="phase-1-parallel-workstreams">Phase 1: Parallel Workstreams</a></li><li class="depth-2"><a href="#workstream-1-orchestration--infrastructure" data-for="workstream-1-orchestration--infrastructure">Workstream 1: Orchestration &amp; Infrastructure</a></li><li class="depth-2"><a href="#workstream-2-data-collection-system" data-for="workstream-2-data-collection-system">Workstream 2: Data Collection System</a></li><li class="depth-2"><a href="#workstream-3-analysis-engine" data-for="workstream-3-analysis-engine">Workstream 3: Analysis Engine</a></li><li class="depth-2"><a href="#workstream-4-content-generation-pipeline" data-for="workstream-4-content-generation-pipeline">Workstream 4: Content Generation Pipeline</a></li><li class="depth-1"><a href="#phase-2-integration--testing-sequential" data-for="phase-2-integration--testing-sequential">Phase 2: Integration &amp; Testing (Sequential)</a></li><li class="depth-2"><a href="#tasks-1" data-for="tasks-1">Tasks</a></li><li class="depth-2"><a href="#deliverables-1" data-for="deliverables-1">Deliverables</a></li><li class="depth-2"><a href="#duration-2-3-days" data-for="duration-2-3-days">Duration: 2-3 days</a></li><li class="depth-2"><a href="#dependencies-all-phase-1-workstreams-complete" data-for="dependencies-all-phase-1-workstreams-complete">Dependencies: All Phase 1 workstreams complete</a></li><li class="depth-1"><a href="#phase-3-deployment--documentation-sequential" data-for="phase-3-deployment--documentation-sequential">Phase 3: Deployment &amp; Documentation (Sequential)</a></li><li class="depth-2"><a href="#tasks-2" data-for="tasks-2">Tasks</a></li><li class="depth-2"><a href="#deliverables-2" data-for="deliverables-2">Deliverables</a></li><li class="depth-2"><a href="#duration-1-2-days-1" data-for="duration-1-2-days-1">Duration: 1-2 days</a></li><li class="depth-2"><a href="#dependencies-phase-2-complete" data-for="dependencies-phase-2-complete">Dependencies: Phase 2 complete</a></li><li class="depth-1"><a href="#coordination-mechanism" data-for="coordination-mechanism">Coordination Mechanism</a></li><li class="depth-2"><a href="#file-ownership-prevents-conflicts" data-for="file-ownership-prevents-conflicts">File Ownership (Prevents Conflicts)</a></li><li class="depth-2"><a href="#communication-protocol" data-for="communication-protocol">Communication Protocol</a></li><li class="depth-2"><a href="#claude-flow-coordination" data-for="claude-flow-coordination">Claude Flow Coordination</a></li><li class="depth-1"><a href="#agent-assignment" data-for="agent-assignment">Agent Assignment</a></li><li class="depth-2"><a href="#using-meta-orchestrator-pattern" data-for="using-meta-orchestrator-pattern">Using Meta-Orchestrator Pattern</a></li><li class="depth-1"><a href="#timeline-projection" data-for="timeline-projection">Timeline Projection</a></li><li class="depth-2"><a href="#optimistic-all-parallel-no-blockers" data-for="optimistic-all-parallel-no-blockers">Optimistic (All Parallel, No Blockers)</a></li><li class="depth-2"><a href="#realistic-some-sequential-minor-blockers" data-for="realistic-some-sequential-minor-blockers">Realistic (Some Sequential, Minor Blockers)</a></li><li class="depth-2"><a href="#conservative-more-sequential-significant-issues" data-for="conservative-more-sequential-significant-issues">Conservative (More Sequential, Significant Issues)</a></li><li class="depth-1"><a href="#success-criteria" data-for="success-criteria">Success Criteria</a></li><li class="depth-2"><a href="#phase-1-complete-when" data-for="phase-1-complete-when">Phase 1 Complete When:</a></li><li class="depth-2"><a href="#phase-2-complete-when" data-for="phase-2-complete-when">Phase 2 Complete When:</a></li><li class="depth-2"><a href="#phase-3-complete-when" data-for="phase-3-complete-when">Phase 3 Complete When:</a></li><li class="depth-1"><a href="#risk-mitigation" data-for="risk-mitigation">Risk Mitigation</a></li><li class="depth-2"><a href="#risk-workstreams-out-of-sync" data-for="risk-workstreams-out-of-sync">Risk: Workstreams out of sync</a></li><li class="depth-2"><a href="#risk-integration-issues-in-phase-2" data-for="risk-integration-issues-in-phase-2">Risk: Integration issues in Phase 2</a></li><li class="depth-2"><a href="#risk-agent-coordination-overhead" data-for="risk-agent-coordination-overhead">Risk: Agent coordination overhead</a></li><li class="depth-2"><a href="#risk-claude-api-costs-exceed-budget" data-for="risk-claude-api-costs-exceed-budget">Risk: Claude API costs exceed budget</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

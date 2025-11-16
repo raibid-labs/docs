@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>README</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="README"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="README"/><meta name="twitter:description" content="DGX-Pixels: AI Pixel Art Generation Stack An open-source AI-powered pixel art generation system optimized for the NVIDIA DGX-Spark, designed to accelerate game asset creation with seamless integration into the Bevy game engine."/><meta property="og:description" content="DGX-Pixels: AI Pixel Art Generation Stack An open-source AI-powered pixel art generation system optimized for the NVIDIA DGX-Spark, designed to accelerate game asset creation with seamless integration into the Bevy game engine."/><meta property="og:image:alt" content="DGX-Pixels: AI Pixel Art Generation Stack An open-source AI-powered pixel art generation system optimized for the NVIDIA DGX-Spark, designed to accelerate game asset creation with seamless integration into the Bevy game engine."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/README"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/README"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="DGX-Pixels: AI Pixel Art Generation Stack An open-source AI-powered pixel art generation system optimized for the NVIDIA DGX-Spark, designed to accelerate game asset creation with seamless integration into the Bevy game engine."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/README-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/README-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/README-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-pixels/README"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-132"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-132" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/dgx-pixels/">dgx pixels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>README</a></div></nav><h1 class="article-title">README</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:06.768Z">Nov 16, 2025</time><span>8 min read</span></p></div></div><article class="popover-hint"><h1 id="dgx-pixels-ai-pixel-art-generation-stack">DGX-Pixels: AI Pixel Art Generation Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-pixels-ai-pixel-art-generation-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>An open-source AI-powered pixel art generation system optimized for the NVIDIA DGX-Spark, designed to accelerate game asset creation with seamless integration into the Bevy game engine.</p>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DGX-Pixels leverages state-of-the-art diffusion models (Stable Diffusion XL) with custom LoRA fine-tuning to generate high-quality pixel art sprites for game development. The system is designed to run on <strong>NVIDIA DGX-Spark (GB10 Grace Blackwell Superchip)</strong>, utilizing its single powerful GPU with 128GB unified memory architecture for fast inference and efficient model training.</p>
+<p><strong>Hardware Note</strong>: This system targets the DGX-Spark GB10 (single GPU, unified memory) rather than multi-GPU datacenter systems. This architecture provides unique advantages for interactive pixel art generation, including zero-copy image transfers and simplified deployment. See <a href="../../docs/hardware" class="internal alias" data-slug="docs/hardware">Hardware Specification</a> and <a href="../../docs/adr/0001-dgx-spark-not-b200" class="internal alias" data-slug="docs/adr/0001-dgx-spark-not-b200">ADR 0001</a> for details.</p>
+<h3 id="key-features">Key Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-features" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>AI-Powered Generation</strong>: Stable Diffusion XL with pixel art-specialized LoRA models</li>
+<li><strong>Hardware Optimized</strong>: Maximizes NVIDIA DGX-Spark’s 1000 TOPS compute and FP4 precision support</li>
+<li><strong>Bevy Integration</strong>: Direct integration via Model Context Protocol (MCP) for automated asset deployment</li>
+<li><strong>Custom Training</strong>: LoRA fine-tuning pipeline for consistent, game-specific art styles</li>
+<li><strong>Production Ready</strong>: Multiple architecture proposals from rapid prototyping to enterprise scale</li>
+<li><strong>100% Open Source</strong>: All components use open-source tools and models</li>
+</ul>
+<h3 id="use-cases">Use Cases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#use-cases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Character sprite generation (idle, walk, attack animations)</li>
+<li>Environment tiles and props</li>
+<li>Item and weapon sprites</li>
+<li>UI icons and effects</li>
+<li>Rapid prototyping and iteration</li>
+<li>Style-consistent asset expansion</li>
+</ul>
+<h2 id="quick-start">Quick Start<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-start" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="prerequisites">Prerequisites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prerequisites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>NVIDIA DGX-Spark (GB10 Grace Blackwell Superchip) with Ubuntu/Linux</li>
+<li>Python 3.10+ (ARM64-compatible packages)</li>
+<li>CUDA 13.0+ (verified: 13.0.88)</li>
+<li>Driver 580.95.05+</li>
+<li>500GB+ storage</li>
+<li>Bevy game engine (for integration)</li>
+</ul>
+<h3 id="installation-rapid-path">Installation (Rapid Path)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#installation-rapid-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Clone repository</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/YOUR_ORG/dgx-pixels.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dgx-pixels</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install Automatic1111 WebUI</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> stable-diffusion-webui</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./webui.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --api</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --listen</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Download pixel art models (see docs/06-implementation-plan.md)</span></span></code></pre></figure>
+<p>See <a href="../../docs/06-implementation-plan" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan</a> for detailed setup instructions.</p>
+<h2 id="architecture">Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DGX-Pixels offers multiple architecture proposals:</p>
+<ol>
+<li><strong>Rapid Prototyping</strong> (1-2 weeks): Simple CLI + Automatic1111 for quick validation</li>
+<li><strong>Balanced Production</strong> (4-6 weeks): ComfyUI + FastAPI + MCP integration</li>
+<li><strong>🆕 Rust TUI + Python</strong> (5-6 weeks): Fast TUI with side-by-side model comparison <strong>(NEW RECOMMENDED)</strong></li>
+<li><strong>Advanced Enterprise</strong> (8-12 weeks): Full microservices with Kubernetes, MLOps, and web UI</li>
+</ol>
+<p>See <a href="../../docs/02-architecture-proposals" class="internal alias" data-slug="docs/02-architecture-proposals">Architecture Proposals</a> for detailed comparisons.</p>
+<h3 id="new-rust-tui--python-backend-recommended">NEW: Rust TUI + Python Backend (Recommended)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#new-rust-tui--python-backend-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Hybrid architecture combining Rust’s performance with Python’s AI ecosystem:</strong></p>
+<pre><code>┌──────────────────────────────────────┐
+│       NVIDIA DGX-Spark                │
+│  ┌───────────────────┐                │
+│  │  Rust TUI         │ 60 FPS, 12MB   │
+│  │  - ratatui        │ Sixel preview  │
+│  │  - Live updates   │ Comparison UI  │
+│  └────────┬──────────┘                │
+│           │ ZeroMQ &lt;1ms                │
+│  ┌────────▼──────────┐                │
+│  │  Python Worker    │ Job queue      │
+│  │  - ZMQ server     │ Progress pub   │
+│  └────────┬──────────┘                │
+│           │ HTTP/WS                    │
+│  ┌────────▼──────────┐                │
+│  │  ComfyUI          │ SDXL + LoRAs   │
+│  │  - Multiple models│ Workflows      │
+│  └───────────────────┘                │
+└──────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li><strong>Side-by-side model comparison</strong>: Test pre-trained vs custom LoRAs simultaneously</li>
+<li><strong>60+ FPS TUI</strong>: Fast, responsive terminal interface</li>
+<li><strong>&lt;1ms IPC</strong>: ZeroMQ for near-instant communication</li>
+<li><strong>Leverages playbooks</strong>: Uses dgx-spark-playbooks ComfyUI setup</li>
+</ul>
+<p>See <a href="../../docs/07-rust-python-architecture" class="internal alias" data-slug="docs/07-rust-python-architecture">Rust-Python Architecture</a> and <a href="../../docs/08-tui-design" class="internal alias" data-slug="docs/08-tui-design">TUI Design</a>.</p>
+<h3 id="alternative-balanced-production-stack">Alternative: Balanced Production Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#alternative-balanced-production-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────┐
+│       NVIDIA DGX-Spark              │
+│  ┌──────────────────────────────┐  │
+│  │  ComfyUI Inference Engine    │  │
+│  │  + Custom LoRA Models         │  │
+│  └──────────────┬───────────────┘  │
+│                 │                    │
+│  ┌──────────────▼───────────────┐  │
+│  │  FastAPI Orchestration       │  │
+│  │  + MCP Server                 │  │
+│  └──────────────┬───────────────┘  │
+└─────────────────┼───────────────────┘
+                  │
+                  │ MCP Protocol
+                  │
+          ┌───────▼────────┐
+          │  bevy_brp_mcp  │
+          └───────┬────────┘
+                  │
+                  ▼
+          ┌───────────────┐
+          │  Bevy Project │
+          │  assets/      │
+          └───────────────┘
+</code></pre>
+<h2 id="documentation">Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="core-documentation">Core Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong><a href="../../docs/01-research-findings" class="internal alias" data-slug="docs/01-research-findings">Research Findings</a></strong> - Comprehensive research on AI pixel art generation, DGX-Spark capabilities, and integration technologies</li>
+<li><strong><a href="../../docs/02-architecture-proposals" class="internal alias" data-slug="docs/02-architecture-proposals">Architecture Proposals</a></strong> - Four detailed architecture proposals with pros/cons/timelines</li>
+<li><strong><a href="../../docs/03-technology-deep-dive" class="internal alias" data-slug="docs/03-technology-deep-dive">Technology Deep Dive</a></strong> - In-depth technical documentation on SDXL, LoRA, ComfyUI, and optimizations</li>
+<li><strong><a href="../../docs/04-bevy-integration" class="internal alias" data-slug="docs/04-bevy-integration">Bevy Integration</a></strong> - Complete guide for integrating with Bevy game engine</li>
+<li><strong><a href="../../docs/05-training-roadmap" class="internal alias" data-slug="docs/05-training-roadmap">Training Roadmap</a></strong> - Strategy for training custom models and maintaining quality</li>
+<li><strong><a href="../../docs/06-implementation-plan" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan</a></strong> - Step-by-step implementation guide for all architecture paths</li>
+</ol>
+<h3 id="new-rust--python-stack">NEW: Rust + Python Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#new-rust--python-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol start="7">
+<li><strong><a href="../../docs/07-rust-python-architecture" class="internal alias" data-slug="docs/07-rust-python-architecture">Rust-Python Architecture</a></strong> - Hybrid Rust TUI + Python backend design with ZeroMQ IPC</li>
+<li><strong><a href="../../docs/08-tui-design" class="internal alias" data-slug="docs/08-tui-design">TUI Design</a></strong> - Complete TUI mockups, workflows, and side-by-side model comparison</li>
+<li><strong><a href="../../docs/11-playbook-contribution" class="internal alias" data-slug="docs/11-playbook-contribution">Playbook Contribution</a></strong> - Contributing to dgx-spark-playbooks repository</li>
+</ol>
+<h3 id="new-project-management--operations">NEW: Project Management &amp; Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#new-project-management--operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol start="10">
+<li><strong><a href="../../docs/hardware" class="internal alias" data-slug="docs/hardware">Hardware Specification</a></strong> - Verified DGX-Spark GB10 specifications and topology</li>
+<li><strong><a href="../../docs/metrics" class="internal alias" data-slug="docs/metrics">Metrics Framework</a></strong> - Performance, quality, and observability metrics</li>
+<li><strong><a href="../../docs/ROADMAP" class="internal alias" data-slug="docs/ROADMAP">Roadmap</a></strong> - Milestone-based development roadmap (M0-M5)</li>
+<li><strong><a href="../../docs/rfds/gpt5-dgx-pixels" class="internal alias" data-slug="docs/rfds/gpt5-dgx-pixels">RFD: GPT-5 Feedback</a></strong> - External review and recommendations</li>
+<li><strong><a href="../../docs/adr/0001-dgx-spark-not-b200" class="internal alias" data-slug="docs/adr/0001-dgx-spark-not-b200">ADR 0001</a></strong> - Hardware clarification: DGX-Spark vs DGX B200</li>
+</ol>
+<h3 id="quick-links">Quick Links<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-links" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Topic</th><th>Documentation</th></tr></thead><tbody><tr><td>Getting Started</td><td><a href="../../docs/06-implementation-plan#pre-implementation-checklist" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan § Quick Start</a></td></tr><tr><td>Architecture Selection</td><td><a href="../../docs/02-architecture-proposals#comparison-matrix" class="internal alias" data-slug="docs/02-architecture-proposals">Architecture Proposals § Comparison</a></td></tr><tr><td>Bevy Setup</td><td><a href="../../docs/04-bevy-integration#bevy-asset-system-basics" class="internal alias" data-slug="docs/04-bevy-integration">Bevy Integration § Setup</a></td></tr><tr><td>Model Training</td><td><a href="../../docs/05-training-roadmap#phase-2-style-training-week-3-4" class="internal alias" data-slug="docs/05-training-roadmap">Training Roadmap § Phase 2</a></td></tr><tr><td>API Reference</td><td><a href="../../docs/03-technology-deep-dive#fastapi-and-mcp" class="internal alias" data-slug="docs/03-technology-deep-dive">Technology Deep Dive § FastAPI</a></td></tr><tr><td>Troubleshooting</td><td><a href="../../docs/06-implementation-plan#troubleshooting" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan § Troubleshooting</a></td></tr></tbody></table></div>
+<h2 id="technology-stack">Technology Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technology-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="core-technologies">Core Technologies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-technologies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead><tbody><tr><td><strong>Base Model</strong></td><td>Stable Diffusion XL 1.0</td><td>Image generation foundation</td></tr><tr><td><strong>Fine-tuning</strong></td><td>LoRA (Low-Rank Adaptation)</td><td>Custom style training</td></tr><tr><td><strong>Inference</strong></td><td>ComfyUI</td><td>Fast, flexible generation workflows</td></tr><tr><td><strong>Training</strong></td><td>Kohya_ss / Diffusers</td><td>LoRA training pipeline</td></tr><tr><td><strong>API</strong></td><td>FastAPI</td><td>REST API and orchestration</td></tr><tr><td><strong>Integration</strong></td><td>Model Context Protocol (MCP)</td><td>Bevy communication</td></tr><tr><td><strong>Game Engine</strong></td><td>Bevy 0.13+</td><td>Target integration platform</td></tr></tbody></table></div>
+<h3 id="hardware-optimization">Hardware Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hardware-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>NVIDIA GB10 (Grace Blackwell)</strong>: Single superchip with unified memory architecture</li>
+<li><strong>1000 TOPS Compute</strong>: Ultra-fast inference (2-4s per sprite)</li>
+<li><strong>128GB Unified Memory</strong>: Zero-copy CPU↔GPU transfers, multiple concurrent models</li>
+<li><strong>ARM Grace CPU</strong>: 20 cores (Cortex-X925 + A725) for energy-efficient preprocessing</li>
+<li><strong>Compute Capability 12.1</strong>: Latest Tensor Core features</li>
+</ul>
+<p>See <a href="../../docs/03-technology-deep-dive" class="internal alias" data-slug="docs/03-technology-deep-dive">Technology Deep Dive</a> for comprehensive technical details.</p>
+<h2 id="training-custom-models">Training Custom Models<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#training-custom-models" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Custom LoRA training dramatically improves generation quality:</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>80%+ reduction in post-processing time</li>
+<li>Consistent art style across all assets</li>
+<li>Character identity preservation</li>
+<li>Game-specific prompt understanding</li>
+</ul>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>50-100 reference images</li>
+<li>2-4 hours training time (on DGX-Spark)</li>
+<li>~$5-10 in compute costs</li>
+</ul>
+<p><strong>Timeline:</strong></p>
+<ul>
+<li>Week 1-2: Test pre-trained models, collect references</li>
+<li>Week 3-4: Train general style LoRA</li>
+<li>Week 5-8: Train specialized models (characters, environments, items)</li>
+<li>Week 9-10: Character-specific models for consistency</li>
+<li>Week 11-12: Refinement based on production feedback</li>
+</ul>
+<p>See <a href="../../docs/05-training-roadmap" class="internal alias" data-slug="docs/05-training-roadmap">Training Roadmap</a> for detailed training strategy.</p>
+<h2 id="bevy-integration">Bevy Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bevy-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="manual-workflow">Manual Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#manual-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate sprite</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> character</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;medieval knight&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Copy to Bevy assets</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cp</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> output/knight.png</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/my_game/assets/sprites/characters/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Use in Bevy</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">commands.spawn(SpriteBundle</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    texture:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> asset_server.load</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">&quot;sprites/characters/knight.png&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    ..default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">});</span></span></code></pre></figure>
+<h3 id="automated-mcp-workflow">Automated MCP Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automated-mcp-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Bevy: Enable MCP</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bevy_brp_mcp</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">BrpMcpPlugin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">App</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">add_plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">BrpMcpPlugin</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">())</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span></code></pre></figure>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># DGX-Pixels: MCP tool</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">@mcp</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">async</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> generate_and_deploy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">prompt</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">bevy_project</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Generate and auto-deploy to Bevy project.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Generates sprite and places in bevy_project/assets/</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pass</span></span></code></pre></figure>
+<p>See <a href="../../docs/04-bevy-integration" class="internal alias" data-slug="docs/04-bevy-integration">Bevy Integration Guide</a> for complete details.</p>
+<h2 id="performance-benchmarks">Performance Benchmarks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-benchmarks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>On NVIDIA DGX-Spark GB10 (verified hardware):</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Operation</th><th>Expected Time</th><th>Details</th></tr></thead><tbody><tr><td><strong>Inference (SDXL + LoRA)</strong></td><td>2-4s</td><td>1024x1024 image @ FP16</td></tr><tr><td><strong>Batch Generation</strong></td><td>15-25/min</td><td>Multiple sprites (batch=8)</td></tr><tr><td><strong>LoRA Training</strong></td><td>2-4 hours</td><td>50 images, 3000 steps @ FP16</td></tr><tr><td><strong>Model Loading</strong></td><td>&lt;10s</td><td>SDXL base + LoRA in unified memory</td></tr><tr><td><strong>Zero-Copy Transfers</strong></td><td>&lt;1μs</td><td>CPU↔GPU (unified memory advantage)</td></tr></tbody></table></div>
+<p><strong>Unified Memory Benefits:</strong></p>
+<ul>
+<li>No CPU→GPU memory copies for image data</li>
+<li>Lower latency for preprocessing and preview</li>
+<li>Larger batch sizes (128GB shared pool)</li>
+<li>Simplified memory management</li>
+</ul>
+<p><strong>Comparison to Manual Creation:</strong></p>
+<ul>
+<li>Traditional pixel art: 30-120 minutes per sprite</li>
+<li>AI generation + touch-up: 5-15 minutes per sprite</li>
+<li><strong>Time savings</strong>: 70-90%</li>
+</ul>
+<p>See <a href="../../docs/metrics" class="internal alias" data-slug="docs/metrics">Metrics Framework</a> for detailed performance targets.</p>
+<h2 id="project-structure">Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>dgx-pixels/
+├── README.md                 # This file
+├── docs/                     # Comprehensive documentation
+│   ├── 01-research-findings.md
+│   ├── 02-architecture-proposals.md
+│   ├── 03-technology-deep-dive.md
+│   ├── 04-bevy-integration.md
+│   ├── 05-training-roadmap.md
+│   └── 06-implementation-plan.md
+├── src/                      # Source code (to be implemented)
+│   ├── api/                  # FastAPI application
+│   ├── cli/                  # CLI tools
+│   ├── training/             # Training scripts
+│   └── processing/           # Post-processing pipeline
+├── workflows/                # ComfyUI workflow templates
+├── models/                   # Model storage
+│   ├── checkpoints/          # Base models
+│   ├── loras/                # Trained LoRAs
+│   └── configs/              # Model configurations
+└── examples/                 # Example Bevy integrations
+</code></pre>
+<h2 id="roadmap">Roadmap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#roadmap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>See <a href="../../docs/ROADMAP" class="internal alias" data-slug="docs/ROADMAP">ROADMAP.md</a> for the complete milestone-based development plan.</p>
+<h3 id="current-milestones">Current Milestones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#current-milestones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Milestone</th><th>Status</th><th>Goal</th></tr></thead><tbody><tr><td><strong>M0 — Foundation</strong></td><td>🟢 In Progress</td><td>Hardware verification, reproducibility, baselines</td></tr><tr><td><strong>M1 — Core Inference</strong></td><td>⚪ Planned</td><td>Single-GPU SDXL optimization</td></tr><tr><td><strong>M2 — Interactive TUI</strong></td><td>⚪ Planned</td><td>Rust TUI with ZeroMQ + Sixel preview</td></tr><tr><td><strong>M3 — LoRA Training</strong></td><td>⚪ Planned</td><td>Custom model fine-tuning pipeline</td></tr><tr><td><strong>M4 — Bevy Integration</strong></td><td>⚪ Planned</td><td>MCP-based game engine integration</td></tr><tr><td><strong>M5 — Production</strong></td><td>⚪ Planned</td><td>Observability, metrics, deployment</td></tr></tbody></table></div>
+<h3 id="recent-updates">Recent Updates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#recent-updates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>✅ Hardware verification complete: DGX-Spark GB10 confirmed</li>
+<li>✅ Documentation aligned with single-GPU unified memory architecture</li>
+<li>✅ Metrics framework adapted for single-GPU benchmarking</li>
+<li>✅ ADR 0001: Hardware clarification documented</li>
+<li>🟢 M0 in progress: Establishing reproducibility baseline</li>
+</ul>
+<h2 id="use-cases-and-examples">Use Cases and Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#use-cases-and-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="character-sprites">Character Sprites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#character-sprites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate idle animation frames</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> generate-animation</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --prompt</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;fantasy knight character&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --frames</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 4</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --type</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> idle</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ./assets/characters/knight/</span></span></code></pre></figure>
+<h3 id="environment-tiles">Environment Tiles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#environment-tiles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate seamless dungeon tiles</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> generate-tileset</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --prompt</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;stone dungeon floor&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --size</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 32</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --seamless</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --variations</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 8</span></span></code></pre></figure>
+<h3 id="item-icons">Item Icons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#item-icons" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Batch generate item sprites</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> batch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> items.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --style</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 16bit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --size</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 64</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ./assets/items/</span></span></code></pre></figure>
+<p>See <a href="../../docs/06-implementation-plan" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan § Examples</a> for more use cases.</p>
+<h2 id="contributing">Contributing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#contributing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>We welcome contributions! Please see CONTRIBUTING.md (coming soon) for guidelines.</p>
+<p>Areas where we need help:</p>
+<ul>
+<li>Custom ComfyUI nodes for sprite-specific operations</li>
+<li>Bevy plugin development</li>
+<li>Training dataset curation</li>
+<li>Performance optimization</li>
+<li>Documentation improvements</li>
+</ul>
+<h2 id="license">License<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#license" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This project is released under the MIT License. See LICENSE for details.</p>
+<h3 id="component-licenses">Component Licenses<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#component-licenses" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Stable Diffusion XL: CreativeML Open RAIL++-M License</li>
+<li>ComfyUI: GPL-3.0</li>
+<li>Diffusers: Apache 2.0</li>
+<li>Bevy: MIT/Apache 2.0</li>
+<li>FastAPI: MIT</li>
+</ul>
+<p>All dependencies are open-source and permissively licensed.</p>
+<h2 id="acknowledgments">Acknowledgments<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#acknowledgments" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Stability AI</strong> for Stable Diffusion XL</li>
+<li><strong>ComfyUI community</strong> for the excellent inference tool</li>
+<li><strong>Bevy community</strong> for the game engine</li>
+<li><strong>Civitai</strong> for pixel art model hosting</li>
+<li><strong>Hugging Face</strong> for model hosting and Diffusers library</li>
+<li><strong>NVIDIA</strong> for DGX-Spark hardware</li>
+</ul>
+<h2 id="resources">Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="documentation-1">Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://github.com/Stability-AI/stablediffusion" class="external">Stable Diffusion<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/comfyanonymous/ComfyUI" class="external">ComfyUI<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://bevyengine.org/" class="external">Bevy Engine<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://huggingface.co/docs/diffusers" class="external">Diffusers<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://crates.io/crates/bevy_brp_mcp" class="external">bevy_brp_mcp<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h3 id="communities">Communities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://discord.gg/comfyui" class="external">ComfyUI Discord<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://discord.gg/bevy" class="external">Bevy Discord<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://reddit.com/r/stablediffusion" class="external">r/StableDiffusion<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://civitai.com/" class="external">Civitai<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h3 id="research">Research<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#research" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>“Generating Pixel Art Character Sprites using GANs” (2022)</li>
+<li>LoRA: Low-Rank Adaptation of Large Language Models</li>
+<li>Stable Diffusion XL Paper</li>
+</ul>
+<h2 id="support">Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>For questions and support:</p>
+<ul>
+<li><strong>Documentation</strong>: See <a href="../../docs/" class="internal" data-slug="docs/index">docs</a> directory</li>
+<li><strong>Issues</strong>: GitHub Issues (coming soon)</li>
+<li><strong>Discussions</strong>: GitHub Discussions (coming soon)</li>
+</ul>
+<h2 id="status">Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Project Status</strong>: Documentation Phase ✅</p>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Select architecture proposal</li>
+<li>Set up DGX-Spark environment</li>
+<li>Begin implementation following <a href="../../docs/06-implementation-plan" class="internal alias" data-slug="docs/06-implementation-plan">Implementation Plan</a></li>
+<li>Train initial custom models</li>
+</ol>
+<hr/>
+<p><strong>Built with ❤️ for game developers who want to focus on creating games, not drawing every pixel.</strong></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-40" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-pixels-ai-pixel-art-generation-stack" data-for="dgx-pixels-ai-pixel-art-generation-stack">DGX-Pixels: AI Pixel Art Generation Stack</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-2"><a href="#key-features" data-for="key-features">Key Features</a></li><li class="depth-2"><a href="#use-cases" data-for="use-cases">Use Cases</a></li><li class="depth-1"><a href="#quick-start" data-for="quick-start">Quick Start</a></li><li class="depth-2"><a href="#prerequisites" data-for="prerequisites">Prerequisites</a></li><li class="depth-2"><a href="#installation-rapid-path" data-for="installation-rapid-path">Installation (Rapid Path)</a></li><li class="depth-1"><a href="#architecture" data-for="architecture">Architecture</a></li><li class="depth-2"><a href="#new-rust-tui--python-backend-recommended" data-for="new-rust-tui--python-backend-recommended">NEW: Rust TUI + Python Backend (Recommended)</a></li><li class="depth-2"><a href="#alternative-balanced-production-stack" data-for="alternative-balanced-production-stack">Alternative: Balanced Production Stack</a></li><li class="depth-1"><a href="#documentation" data-for="documentation">Documentation</a></li><li class="depth-2"><a href="#core-documentation" data-for="core-documentation">Core Documentation</a></li><li class="depth-2"><a href="#new-rust--python-stack" data-for="new-rust--python-stack">NEW: Rust + Python Stack</a></li><li class="depth-2"><a href="#new-project-management--operations" data-for="new-project-management--operations">NEW: Project Management &amp; Operations</a></li><li class="depth-2"><a href="#quick-links" data-for="quick-links">Quick Links</a></li><li class="depth-1"><a href="#technology-stack" data-for="technology-stack">Technology Stack</a></li><li class="depth-2"><a href="#core-technologies" data-for="core-technologies">Core Technologies</a></li><li class="depth-2"><a href="#hardware-optimization" data-for="hardware-optimization">Hardware Optimization</a></li><li class="depth-1"><a href="#training-custom-models" data-for="training-custom-models">Training Custom Models</a></li><li class="depth-1"><a href="#bevy-integration" data-for="bevy-integration">Bevy Integration</a></li><li class="depth-2"><a href="#manual-workflow" data-for="manual-workflow">Manual Workflow</a></li><li class="depth-2"><a href="#automated-mcp-workflow" data-for="automated-mcp-workflow">Automated MCP Workflow</a></li><li class="depth-1"><a href="#performance-benchmarks" data-for="performance-benchmarks">Performance Benchmarks</a></li><li class="depth-1"><a href="#project-structure" data-for="project-structure">Project Structure</a></li><li class="depth-1"><a href="#roadmap" data-for="roadmap">Roadmap</a></li><li class="depth-2"><a href="#current-milestones" data-for="current-milestones">Current Milestones</a></li><li class="depth-2"><a href="#recent-updates" data-for="recent-updates">Recent Updates</a></li><li class="depth-1"><a href="#use-cases-and-examples" data-for="use-cases-and-examples">Use Cases and Examples</a></li><li class="depth-2"><a href="#character-sprites" data-for="character-sprites">Character Sprites</a></li><li class="depth-2"><a href="#environment-tiles" data-for="environment-tiles">Environment Tiles</a></li><li class="depth-2"><a href="#item-icons" data-for="item-icons">Item Icons</a></li><li class="depth-1"><a href="#contributing" data-for="contributing">Contributing</a></li><li class="depth-1"><a href="#license" data-for="license">License</a></li><li class="depth-2"><a href="#component-licenses" data-for="component-licenses">Component Licenses</a></li><li class="depth-1"><a href="#acknowledgments" data-for="acknowledgments">Acknowledgments</a></li><li class="depth-1"><a href="#resources" data-for="resources">Resources</a></li><li class="depth-2"><a href="#documentation-1" data-for="documentation-1">Documentation</a></li><li class="depth-2"><a href="#communities" data-for="communities">Communities</a></li><li class="depth-2"><a href="#research" data-for="research">Research</a></li><li class="depth-1"><a href="#support" data-for="support">Support</a></li><li class="depth-1"><a href="#status" data-for="status">Status</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

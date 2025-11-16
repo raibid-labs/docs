@@ -1,0 +1,34 @@
+---
+# Kustomization for KEDA resources
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: keda
+
+resources:
+  # Core namespace
+  - namespace.yaml
+
+  # Helm repository (in flux-system namespace)
+  - helmrepository.yaml
+
+  # HelmRelease for KEDA operator
+  - helmrelease.yaml
+
+# KEDA values ConfigMap
+configMapGenerator:
+  - name: keda-values
+    namespace: keda
+    files:
+      - values.yaml
+
+# Common labels for all resources
+commonLabels:
+  app.kubernetes.io/part-of: raibid-ci
+  app.kubernetes.io/managed-by: kustomize
+
+# Namespace-specific resources
+# These are applied to raibid-ci namespace separately
+# - triggerauth.yaml (raibid-ci namespace)
+# - scaledjob.yaml (raibid-ci namespace)
+

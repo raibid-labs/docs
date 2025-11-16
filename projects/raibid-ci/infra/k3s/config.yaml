@@ -1,0 +1,100 @@
+# k3s Cluster Configuration
+# Standard mode configuration for DGX Spark
+
+# Kubeconfig permissions (allow non-root read)
+write-kubeconfig-mode: "0644"
+write-kubeconfig: "/home/raibid/.kube/config"
+
+# TLS Subject Alternative Names
+tls-san:
+  - "dgx-spark.local"
+  - "localhost"
+  - "127.0.0.1"
+
+# Node configuration
+node-name: "dgx-spark-node"
+node-label:
+  - "raibid-ci=true"
+  - "node-type=dgx-spark"
+  - "arch=arm64"
+
+# Networking
+cluster-cidr: "10.42.0.0/16"
+service-cidr: "10.43.0.0/16"
+cluster-dns: "10.43.0.10"
+
+# Storage
+default-local-storage-path: "/var/lib/rancher/k3s/storage"
+
+# Disable Traefik (using custom ingress strategy)
+disable:
+  - traefik
+
+# Flannel backend (vxlan for overlay networking)
+flannel-backend: "vxlan"
+
+# Security
+protect-kernel-defaults: false  # Set true for production
+secrets-encryption: true
+
+# Snapshotter (use overlayfs for better performance on ARM64)
+snapshotter: "overlayfs"
+
+# Kubelet configuration - DGX Spark optimizations
+kubelet-arg:
+  # Pod limits
+  - "max-pods=110"
+
+  # Memory eviction thresholds
+  - "eviction-hard=memory.available<2Gi"
+  - "eviction-soft=memory.available<4Gi"
+  - "eviction-soft-grace-period=memory.available=1m30s"
+
+  # System reserved resources (DGX Spark: 20 cores, 128GB RAM)
+  # Reserve 4 cores and 16GB for system
+  - "system-reserved=cpu=4000m,memory=16Gi"
+
+  # Kubernetes reserved resources
+  # Reserve 2 cores and 8GB for k3s itself
+  - "kube-reserved=cpu=2000m,memory=8Gi"
+
+  # Image garbage collection
+  - "image-gc-high-threshold=85"
+  - "image-gc-low-threshold=80"
+
+  # Container log management
+  - "container-log-max-size=10Mi"
+  - "container-log-max-files=5"
+
+# Kube-apiserver configuration
+kube-apiserver-arg:
+  # Request timeout
+  - "default-watch-cache-size=200"
+  - "max-requests-inflight=400"
+  - "max-mutating-requests-inflight=200"
+
+# Kube-controller-manager configuration
+kube-controller-manager-arg:
+  # Node monitoring
+  - "node-monitor-period=5s"
+  - "node-monitor-grace-period=40s"
+  - "pod-eviction-timeout=5m"
+
+  # Concurrent syncs
+  - "concurrent-deployment-syncs=10"
+  - "concurrent-replicaset-syncs=10"
+
+# Kube-scheduler configuration
+kube-scheduler-arg:
+  # Enable profiling for debugging (disable in production)
+  - "profiling=false"
+
+# Disable components we don't need for CI workload
+# - servicelb: Not using load balancers (NodePort is sufficient)
+# disable:
+#   - servicelb
+
+# Embedded etcd configuration
+# (k3s uses embedded etcd by default for single-node)
+# etcd-arg:
+#   - "quota-backend-bytes=8589934592"  # 8GB

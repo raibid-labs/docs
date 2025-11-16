@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>02-architecture-proposals</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="02-architecture-proposals"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="02-architecture-proposals"/><meta name="twitter:description" content="Architecture Proposals: DGX-Pixels Stack Overview This document presents three architecture proposals for the DGX-Pixels AI pixel art generation stack, each targeting different maturity levels and use cases."/><meta property="og:description" content="Architecture Proposals: DGX-Pixels Stack Overview This document presents three architecture proposals for the DGX-Pixels AI pixel art generation stack, each targeting different maturity levels and use cases."/><meta property="og:image:alt" content="Architecture Proposals: DGX-Pixels Stack Overview This document presents three architecture proposals for the DGX-Pixels AI pixel art generation stack, each targeting different maturity levels and use cases."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/02-architecture-proposals"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/02-architecture-proposals"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Architecture Proposals: DGX-Pixels Stack Overview This document presents three architecture proposals for the DGX-Pixels AI pixel art generation stack, each targeting different maturity levels and use cases."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/02-architecture-proposals-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/02-architecture-proposals-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/02-architecture-proposals-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-pixels/docs/02-architecture-proposals"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-138"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-138" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/">dgx pixels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>02 architecture proposals</a></div></nav><h1 class="article-title">02-architecture-proposals</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:06.768Z">Nov 16, 2025</time><span>20 min read</span></p></div></div><article class="popover-hint"><h1 id="architecture-proposals-dgx-pixels-stack">Architecture Proposals: DGX-Pixels Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-proposals-dgx-pixels-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document presents three architecture proposals for the DGX-Pixels AI pixel art generation stack, each targeting different maturity levels and use cases. All proposals leverage the NVIDIA DGX-Spark hardware and integrate with the Bevy game engine.</p>
+<h2 id="comparison-matrix">Comparison Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comparison-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Proposal 1: Rapid</th><th>Proposal 2: Balanced</th><th>Proposal 3: Advanced</th></tr></thead><tbody><tr><td><strong>Time to MVP</strong></td><td>1-2 weeks</td><td>4-6 weeks</td><td>8-12 weeks</td></tr><tr><td><strong>Custom Training</strong></td><td>No</td><td>LoRA fine-tuning</td><td>Full training pipeline</td></tr><tr><td><strong>UI Complexity</strong></td><td>Simple web UI</td><td>Node-based workflow</td><td>Custom integrated UI</td></tr><tr><td><strong>Bevy Integration</strong></td><td>Manual export</td><td>MCP semi-automatic</td><td>Full MCP automation</td></tr><tr><td><strong>Scalability</strong></td><td>Single user</td><td>Small team</td><td>Production-ready</td></tr><tr><td><strong>Model Switching</strong></td><td>Manual</td><td>Config-based</td><td>Dynamic</td></tr><tr><td><strong>Batch Processing</strong></td><td>Basic</td><td>Advanced</td><td>Fully automated</td></tr><tr><td><strong>Customization</strong></td><td>Low</td><td>Medium</td><td>High</td></tr><tr><td><strong>Maintenance</strong></td><td>Low</td><td>Medium</td><td>High</td></tr><tr><td><strong>Recommended For</strong></td><td>Prototyping</td><td>Small studios</td><td>Commercial products</td></tr></tbody></table></div>
+<hr/>
+<h1 id="proposal-1-rapid-prototyping-stack">Proposal 1: Rapid Prototyping Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#proposal-1-rapid-prototyping-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="philosophy">Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#philosophy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Get pixel art generation working quickly using existing tools with minimal custom development. Focus on proving the concept and gathering requirements before investing in custom infrastructure.</p>
+<h2 id="architecture-diagram">Architecture Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-diagram" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────────────────────────────────────────────────────────┐
+│                    NVIDIA DGX-Spark                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌────────────────────────────────────────────┐            │
+│  │  Automatic1111 WebUI + Extensions           │            │
+│  │  - Pre-trained Pixel Art models             │            │
+│  │  - Built-in FastAPI REST API                │            │
+│  │  - Basic batch processing                   │            │
+│  └──────────────┬─────────────────────────────┘            │
+│                 │                                            │
+│                 │ HTTP/REST API                             │
+│                 │                                            │
+│  ┌──────────────▼─────────────────────────────┐            │
+│  │  Simple Python CLI Tool                     │            │
+│  │  - Prompt management                        │            │
+│  │  - Output organization                      │            │
+│  │  - Sprite sheet assembly                    │            │
+│  └──────────────┬─────────────────────────────┘            │
+│                 │                                            │
+│                 │ File system                                │
+│                 │                                            │
+└─────────────────┼────────────────────────────────────────────┘
+                  │
+                  ▼
+          ┌───────────────┐
+          │  Bevy Project │
+          │  assets/      │
+          │  directory    │
+          └───────────────┘
+</code></pre>
+<h2 id="components">Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-model-inference-automatic1111-webui">1. Model Inference: Automatic1111 WebUI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-model-inference-automatic1111-webui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Why A1111:</strong></p>
+<ul>
+<li>Quick setup with pre-built installers</li>
+<li>Extensive extension ecosystem</li>
+<li>Built-in REST API</li>
+<li>Well-documented</li>
+<li>Active community support</li>
+</ul>
+<p><strong>Installation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Clone and setup</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/AUTOMATIC1111/stable-diffusion-webui.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> stable-diffusion-webui</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./webui.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --api</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --listen</span></span></code></pre></figure>
+<p><strong>Configuration:</strong></p>
+<ul>
+<li>Enable API mode</li>
+<li>Install pixel art models from Civitai</li>
+<li>Configure default parameters</li>
+</ul>
+<h3 id="2-pre-trained-models">2. Pre-trained Models<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-pre-trained-models" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Primary Model:</strong></p>
+<ul>
+<li>Pixel Art Diffusion XL (Sprite Shaper)</li>
+<li>Download from Civitai</li>
+<li>No training required</li>
+</ul>
+<p><strong>Fallback Models:</strong></p>
+<ul>
+<li>Pixel Art Sprite Diffusion (SD 1.5 based)</li>
+<li>All-In-One-Pixel-Model</li>
+</ul>
+<h3 id="3-python-cli-tool">3. Python CLI Tool<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-python-cli-tool" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Simple command-line interface</li>
+<li>Prompt templates for common sprite types</li>
+<li>API calls to A1111</li>
+<li>Basic sprite sheet assembly</li>
+<li>Output organization by category</li>
+</ul>
+<p><strong>Example Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate character sprite</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> character</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;medieval knight&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --poses</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> walk,idle,attack</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate item sprites</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> generate</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> item</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;health potion, magic sword&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --style</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 16bit</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Batch generate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dgx-pixels</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> batch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prompts.txt</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> assets/sprites/</span></span></code></pre></figure>
+<p><strong>Implementation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Simple structure</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">src</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  cli.py           </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Click-based CLI</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  api_client.py    </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># A1111 API wrapper</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  prompt_builder.py </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Prompt templates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  sprite_utils.py  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Basic sprite processing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  config.py        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Configuration management</span></span></code></pre></figure>
+<h3 id="4-manual-bevy-integration">4. Manual Bevy Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-manual-bevy-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Workflow:</strong></p>
+<ol>
+<li>Generate sprites using CLI</li>
+<li>Review and curate in file explorer</li>
+<li>Manually copy to Bevy <code>assets/sprites/</code></li>
+<li>Reference in Bevy code</li>
+</ol>
+<p><strong>Directory Structure:</strong></p>
+<pre><code>output/
+  characters/
+    knight_01.png
+    knight_02.png
+  items/
+    potion_01.png
+  environments/
+    tiles_01.png
+</code></pre>
+<h2 id="implementation-steps">Implementation Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-setup-week-1">Phase 1: Setup (Week 1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-setup-week-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Install Automatic1111 WebUI on DGX-Spark</li>
+<li>Download and configure pixel art models</li>
+<li>Test basic generation through web UI</li>
+<li>Verify GPU utilization and performance</li>
+</ol>
+<h3 id="phase-2-cli-development-week-1-2">Phase 2: CLI Development (Week 1-2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-cli-development-week-1-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create Python CLI project structure</li>
+<li>Implement A1111 API client</li>
+<li>Build prompt templates</li>
+<li>Add basic output organization</li>
+<li>Test end-to-end workflow</li>
+</ol>
+<h3 id="phase-3-documentation-week-2">Phase 3: Documentation (Week 2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-documentation-week-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Write user guide</li>
+<li>Create prompt template library</li>
+<li>Document Bevy integration workflow</li>
+<li>Create troubleshooting guide</li>
+</ol>
+<h2 id="pros">Pros<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pros" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Fast to implement</strong>: 1-2 weeks to working system</li>
+<li><strong>Low complexity</strong>: Minimal custom code</li>
+<li><strong>Proven tools</strong>: Battle-tested components</li>
+<li><strong>Easy to learn</strong>: Simple CLI interface</li>
+<li><strong>Quick iteration</strong>: Immediate feedback</li>
+<li><strong>Low maintenance</strong>: Mostly existing tools</li>
+</ul>
+<h2 id="cons">Cons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cons" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Manual steps</strong>: Requires human intervention for Bevy integration</li>
+<li><strong>Limited automation</strong>: No batch workflows</li>
+<li><strong>No custom training</strong>: Stuck with pre-trained models</li>
+<li><strong>Scalability</strong>: Not suitable for large teams</li>
+<li><strong>Model switching</strong>: Manual process</li>
+<li><strong>Workflow inflexibility</strong>: Hard to customize</li>
+</ul>
+<h2 id="when-to-use">When to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-use" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li>Prototyping and proof-of-concept</li>
+<li>Solo developers or tiny teams</li>
+<li>Budget/time constrained projects</li>
+<li>Learning and experimentation</li>
+<li>Validating requirements before larger investment</li>
+</ul>
+<h2 id="migration-path">Migration Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migration-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This stack can evolve into Proposal 2 by:</p>
+<ol>
+<li>Adding LoRA training pipeline</li>
+<li>Replacing A1111 with ComfyUI</li>
+<li>Implementing MCP integration</li>
+<li>Expanding CLI into full orchestrator</li>
+</ol>
+<hr/>
+<h1 id="proposal-2-balanced-production-stack">Proposal 2: Balanced Production Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#proposal-2-balanced-production-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="philosophy-1">Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#philosophy-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Build a production-ready system with custom training capabilities and semi-automated Bevy integration. Balance between development effort and feature richness. This is the <strong>recommended</strong> approach for most game studios.</p>
+<h2 id="architecture-diagram-1">Architecture Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-diagram-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌──────────────────────────────────────────────────────────────────┐
+│                       NVIDIA DGX-Spark                            │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                    │
+│  ┌────────────────────────────────────────────────────┐          │
+│  │  Model Storage                                      │          │
+│  │  - Base SDXL model                                  │          │
+│  │  - Custom LoRA adaptors                             │          │
+│  │  - Embeddings &amp; configs                             │          │
+│  └──────────────┬─────────────────────────────────────┘          │
+│                 │                                                  │
+│  ┌──────────────▼─────────────────────────────────────┐          │
+│  │  ComfyUI Inference Engine                           │          │
+│  │  - Node-based workflows                             │          │
+│  │  - Custom nodes for sprites                         │          │
+│  │  - REST API server                                  │          │
+│  │  - Batch processing                                 │          │
+│  └──────────────┬─────────────────────────────────────┘          │
+│                 │                                                  │
+│  ┌──────────────▼─────────────────────────────────────┐          │
+│  │  Training Pipeline (Optional)                       │          │
+│  │  - Kohya_ss for LoRA training                       │          │
+│  │  - Dataset preparation tools                        │          │
+│  │  - Training monitoring                              │          │
+│  └────────────────────────────────────────────────────┘          │
+│                                                                    │
+│  ┌──────────────────────────────────────────────────┐            │
+│  │  FastAPI Orchestration Layer                      │            │
+│  │  - Workflow management                             │            │
+│  │  - Job queueing                                    │            │
+│  │  - Asset post-processing                           │            │
+│  │  - MCP server integration                          │            │
+│  └──────────────┬─────────────────────────────────────┘          │
+│                 │                                                  │
+└─────────────────┼──────────────────────────────────────────────────┘
+                  │
+                  │ MCP Protocol
+                  │
+          ┌───────▼────────┐
+          │  bevy_brp_mcp  │
+          │  MCP Server    │
+          └───────┬────────┘
+                  │
+                  ▼
+          ┌───────────────┐
+          │  Bevy Project │
+          │  - Auto asset │
+          │    placement  │
+          │  - Live reload│
+          └───────────────┘
+</code></pre>
+<h2 id="components-1">Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#components-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-comfyui-inference-engine">1. ComfyUI Inference Engine<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-comfyui-inference-engine" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Why ComfyUI:</strong></p>
+<ul>
+<li>2x faster than A1111 in benchmarks</li>
+<li>Node-based workflows enable complex pipelines</li>
+<li>Better for automation and scripting</li>
+<li>Custom nodes for sprite-specific processing</li>
+<li>Active development</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/comfyanonymous/ComfyUI.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ComfyUI</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> venv</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> venv</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">source</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> venv/bin/activate</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">pip</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> torch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> torchvision</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --index-url</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://download.pytorch.org/whl/cu121</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">pip</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> requirements.txt</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main.py</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --listen</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --port</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 8188</span></span></code></pre></figure>
+<p><strong>Custom Nodes:</strong></p>
+<ul>
+<li>Sprite sheet assembler node</li>
+<li>Pixel perfect scaling node</li>
+<li>Palette optimization node</li>
+<li>Batch character pose generator</li>
+</ul>
+<h3 id="2-model-management">2. Model Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-model-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Base Models:</strong></p>
+<ul>
+<li>SDXL 1.0 base model</li>
+<li>Pixel Art Diffusion XL checkpoint</li>
+</ul>
+<p><strong>LoRA Library:</strong></p>
+<pre><code>models/
+  lora/
+    style_16bit.safetensors
+    style_32bit.safetensors
+    character_fantasy.safetensors
+    environment_dungeon.safetensors
+    items_weapons.safetensors
+</code></pre>
+<p><strong>Version Control:</strong></p>
+<ul>
+<li>Git LFS for model files</li>
+<li>Metadata tracking (training params, source datasets)</li>
+<li>Performance benchmarks per model</li>
+</ul>
+<h3 id="3-lora-training-pipeline">3. LoRA Training Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-lora-training-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Kohya_ss Integration:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/bmaltais/kohya_ss.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> kohya_ss</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup.sh</span></span></code></pre></figure>
+<p><strong>Training Workflow:</strong></p>
+<ol>
+<li>
+<p>Dataset preparation</p>
+<ul>
+<li>Image collection/curation</li>
+<li>Auto-captioning (BLIP, CLIP interrogator)</li>
+<li>Quality filtering</li>
+<li>Resolution standardization</li>
+</ul>
+</li>
+<li>
+<p>Training configuration</p>
+<ul>
+<li>Learning rate: 1e-4 to 1e-5</li>
+<li>Batch size: 4-8 (depending on VRAM)</li>
+<li>Steps: 2000-5000</li>
+<li>LoRA rank: 32-128</li>
+</ul>
+</li>
+<li>
+<p>Training execution</p>
+<ul>
+<li>Monitor loss curves</li>
+<li>Generate samples every N steps</li>
+<li>Early stopping on quality plateau</li>
+</ul>
+</li>
+<li>
+<p>Model validation</p>
+<ul>
+<li>Test prompts suite</li>
+<li>Visual quality assessment</li>
+<li>Integration testing</li>
+</ul>
+</li>
+</ol>
+<h3 id="4-fastapi-orchestration-layer">4. FastAPI Orchestration Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-fastapi-orchestration-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Core Services:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># API structure</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">app</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  main.py                 </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># FastAPI app</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  models</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    schemas.py            </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pydantic models</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  services</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    comfyui_client.py     </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ComfyUI API client</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    job_manager.py        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Job queue and status</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    sprite_processor.py   </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-processing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    asset_manager.py      </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># File organization</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  mcp</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    server.py             </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># MCP server implementation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    bevy_client.py        </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Bevy integration client</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  workflows</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    templates</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            # ComfyUI workflow JSON templates</span></span></code></pre></figure>
+<p><strong>Key Features:</strong></p>
+<ul>
+<li>RESTful API for job submission</li>
+<li>WebSocket for progress updates</li>
+<li>Job queue with priorities</li>
+<li>Batch processing</li>
+<li>Retry logic and error handling</li>
+<li>Asset versioning</li>
+</ul>
+<p><strong>Example Endpoints:</strong></p>
+<pre><code>POST   /api/v1/generate/sprite
+POST   /api/v1/generate/batch
+GET    /api/v1/jobs/{job_id}
+GET    /api/v1/jobs/{job_id}/result
+POST   /api/v1/models/lora/train
+GET    /api/v1/models/list
+POST   /api/v1/bevy/deploy
+</code></pre>
+<h3 id="5-mcp-integration-layer">5. MCP Integration Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-mcp-integration-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>bevy_brp_mcp Setup:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># In Bevy project Cargo.toml</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dependencies</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bevy_brp_mcp</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1&quot;</span></span></code></pre></figure>
+<p><strong>DGX-Pixels MCP Server:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> fastapi </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> FastAPI</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">from</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> fastmcp </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> FastMCP</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">app </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;"> FastAPI</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">mcp </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;"> FastMCP</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(app)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">@mcp</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">async</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> generate_sprite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    prompt</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    style</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;16bit&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: tuple[</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Generate a pixel art sprite and return asset path.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Implementation</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pass</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">@mcp</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">async</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> deploy_to_bevy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    asset_path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    bevy_project_path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">    category</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">str</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;sprites&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Deploy generated asset to Bevy project.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Implementation</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pass</span></span></code></pre></figure>
+<p><strong>Integration Benefits:</strong></p>
+<ul>
+<li>AI assistants can trigger generation</li>
+<li>Automatic asset deployment</li>
+<li>Bevy can query available assets</li>
+<li>Bidirectional communication</li>
+</ul>
+<h3 id="6-post-processing-pipeline">6. Post-Processing Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-post-processing-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Automated Steps:</strong></p>
+<ol>
+<li><strong>Color Quantization</strong>: Reduce to optimal palette</li>
+<li><strong>Upscaling</strong>: Pixel-perfect integer scaling</li>
+<li><strong>Format Conversion</strong>: PNG optimization</li>
+<li><strong>Metadata Embedding</strong>: Generation params, licensing</li>
+<li><strong>Sprite Sheet Assembly</strong>: Multiple frames → atlas</li>
+<li><strong>Variant Generation</strong>: Color swaps, mirroring</li>
+</ol>
+<p><strong>Python Implementation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">from</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> PIL</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Image</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> numpy </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">as</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> np</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> quantize_colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Image, </span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">num_colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">int</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 16</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Reduce to optimal palette.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> image.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">quantize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">colors</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">num_colors)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> pixel_perfect_scale</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Image, </span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">scale</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Scale without blur.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> image.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">resize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        (image.width </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> scale, image.height </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> scale),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        Image.</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">NEAREST</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    )</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> assemble_sprite_sheet</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">images</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: list[Image], </span><span style="--shiki-light:#24292E;--shiki-light-font-style:inherit;--shiki-dark:#D19A66;--shiki-dark-font-style:italic;">cols</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">int</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">):</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;&quot;&quot;Combine into texture atlas.&quot;&quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Implementation</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pass</span></span></code></pre></figure>
+<h2 id="implementation-steps-1">Implementation Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-steps-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-core-infrastructure-weeks-1-2">Phase 1: Core Infrastructure (Weeks 1-2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-core-infrastructure-weeks-1-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Install ComfyUI on DGX-Spark</li>
+<li>Set up base models and initial LoRAs</li>
+<li>Create ComfyUI workflows for common sprite types</li>
+<li>Test and benchmark performance</li>
+</ol>
+<h3 id="phase-2-api-layer-weeks-2-3">Phase 2: API Layer (Weeks 2-3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-api-layer-weeks-2-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Build FastAPI application structure</li>
+<li>Implement ComfyUI client</li>
+<li>Create job queue system</li>
+<li>Add post-processing pipeline</li>
+<li>Write comprehensive tests</li>
+</ol>
+<h3 id="phase-3-training-pipeline-week-3-4">Phase 3: Training Pipeline (Week 3-4)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-training-pipeline-week-3-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Set up Kohya_ss</li>
+<li>Create dataset preparation scripts</li>
+<li>Implement training automation</li>
+<li>Build validation workflow</li>
+<li>Train initial custom LoRAs</li>
+</ol>
+<h3 id="phase-4-bevy-integration-week-4-5">Phase 4: Bevy Integration (Week 4-5)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-bevy-integration-week-4-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Set up bevy_brp_mcp in test project</li>
+<li>Implement MCP server in DGX-Pixels</li>
+<li>Create asset deployment automation</li>
+<li>Test end-to-end workflow</li>
+<li>Build example Bevy game integration</li>
+</ol>
+<h3 id="phase-5-polish-and-docs-week-5-6">Phase 5: Polish and Docs (Week 5-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-polish-and-docs-week-5-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create web UI dashboard (optional)</li>
+<li>Write comprehensive documentation</li>
+<li>Create tutorial videos</li>
+<li>Build prompt library</li>
+<li>Performance optimization</li>
+</ol>
+<h2 id="pros-1">Pros<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pros-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Custom training</strong>: LoRA fine-tuning for game-specific styles</li>
+<li><strong>Production ready</strong>: Can handle team workflows</li>
+<li><strong>Automated Bevy integration</strong>: MCP reduces manual steps</li>
+<li><strong>Scalable</strong>: Job queue handles concurrent requests</li>
+<li><strong>Flexible</strong>: ComfyUI workflows are highly customizable</li>
+<li><strong>Fast inference</strong>: 2x speed improvement over A1111</li>
+<li><strong>Maintainable</strong>: Clean architecture, well-documented</li>
+</ul>
+<h2 id="cons-1">Cons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cons-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Higher complexity</strong>: More components to manage</li>
+<li><strong>Longer development</strong>: 4-6 weeks to full deployment</li>
+<li><strong>Learning curve</strong>: ComfyUI and MCP require understanding</li>
+<li><strong>More maintenance</strong>: Custom code needs updates</li>
+</ul>
+<h2 id="when-to-use-1">When to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-use-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Small to medium game studios</strong></li>
+<li><strong>Projects requiring consistent art style</strong></li>
+<li><strong>Teams of 2-10 developers</strong></li>
+<li><strong>Games with significant sprite needs</strong></li>
+<li><strong>When quality > speed-to-market</strong></li>
+<li><strong>Projects with 6+ month timeline</strong></li>
+</ul>
+<h2 id="performance-expectations">Performance Expectations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-expectations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>On NVIDIA DGX-Spark:</strong></p>
+<ul>
+<li><strong>Inference</strong>: 3-5 seconds per 1024x1024 image (SDXL + LoRA)</li>
+<li><strong>Batch generation</strong>: 20-30 sprites per minute</li>
+<li><strong>LoRA training</strong>: 2-4 hours for 50 images, 3000 steps</li>
+<li><strong>Concurrent jobs</strong>: 4-6 simultaneous generations (with queuing)</li>
+</ul>
+<hr/>
+<h1 id="proposal-3-advanced-enterprise-stack">Proposal 3: Advanced Enterprise Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#proposal-3-advanced-enterprise-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="philosophy-2">Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#philosophy-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Build a fully-featured, production-grade system with advanced training capabilities, custom UI, full automation, and enterprise features. Suitable for large studios with dedicated infrastructure teams.</p>
+<h2 id="architecture-diagram-2">Architecture Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-diagram-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│                          NVIDIA DGX-Spark Cluster                    │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌────────────────────────────────────────────────────┐             │
+│  │  Model Registry &amp; MLOps                             │             │
+│  │  - Model versioning (DVC/MLflow)                    │             │
+│  │  - Experiment tracking                              │             │
+│  │  - A/B testing framework                            │             │
+│  │  - Performance monitoring                           │             │
+│  └──────────────┬─────────────────────────────────────┘             │
+│                 │                                                     │
+│  ┌──────────────▼─────────────────────────────────────┐             │
+│  │  Multi-Model Inference Cluster                      │             │
+│  │  - Model serving (TorchServe/Triton)                │             │
+│  │  - Load balancing                                   │             │
+│  │  - Dynamic model loading                            │             │
+│  │  - GPU scheduling                                   │             │
+│  └──────────────┬─────────────────────────────────────┘             │
+│                 │                                                     │
+│  ┌──────────────▼─────────────────────────────────────┐             │
+│  │  Advanced Training Pipeline                         │             │
+│  │  - Distributed training support                     │             │
+│  │  - Hyperparameter optimization                      │             │
+│  │  - Synthetic data generation                        │             │
+│  │  - Active learning loop                             │             │
+│  └────────────────────────────────────────────────────┘             │
+│                                                                       │
+└───────────────────────────┬─────────────────────────────────────────┘
+                            │
+                            │ gRPC/REST
+                            │
+┌───────────────────────────▼─────────────────────────────────────────┐
+│                     Application Layer (Kubernetes)                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────┐            │
+│  │  API Gateway (Kong/Traefik)                          │            │
+│  │  - Rate limiting, auth, routing                      │            │
+│  └──────────────┬──────────────────────────────────────┘            │
+│                 │                                                     │
+│        ┌────────┴────────┬──────────────┬─────────────┐             │
+│        │                 │              │             │             │
+│  ┌─────▼─────┐   ┌──────▼─────┐  ┌─────▼────┐  ┌────▼─────┐       │
+│  │ FastAPI   │   │ WebSocket  │  │ Job      │  │ Asset    │       │
+│  │ REST API  │   │ Server     │  │ Queue    │  │ Storage  │       │
+│  │ Service   │   │ (progress) │  │ (Celery) │  │ (MinIO)  │       │
+│  └─────┬─────┘   └──────┬─────┘  └─────┬────┘  └────┬─────┘       │
+│        │                │              │             │             │
+│  ┌─────▼────────────────▼──────────────▼─────────────▼─────┐       │
+│  │           Central Event Bus (Redis/RabbitMQ)             │       │
+│  └──────────────────────────────────────────────────────────┘       │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────┐            │
+│  │  Processing Services                                 │            │
+│  │  - Post-processing workers                           │            │
+│  │  - Quality validation                                │            │
+│  │  - Format conversion                                 │            │
+│  │  - Sprite sheet assembly                             │            │
+│  └──────────────────────────────────────────────────────┘            │
+│                                                                       │
+│  ┌─────────────────────────────────────────────────────┐            │
+│  │  Custom Web UI (React/Vue)                           │            │
+│  │  - Project management                                │            │
+│  │  - Prompt library                                    │            │
+│  │  - Asset browser                                     │            │
+│  │  - Training dashboard                                │            │
+│  │  - Analytics &amp; reporting                             │            │
+│  └──────────────────────────────────────────────────────┘            │
+│                                                                       │
+└───────────────────────────┬─────────────────────────────────────────┘
+                            │
+                            │ MCP Protocol
+                            │
+                    ┌───────▼────────┐
+                    │  MCP Gateway   │
+                    │  - Multi-tenant │
+                    │  - Permissions  │
+                    └───────┬────────┘
+                            │
+                ┌───────────┴───────────┐
+                │                       │
+        ┌───────▼────────┐      ┌──────▼──────┐
+        │ bevy_brp_mcp   │      │ Unity/Godot │
+        │ (Bevy)         │      │ MCP Clients │
+        └────────────────┘      └─────────────┘
+</code></pre>
+<h2 id="components-2">Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#components-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-model-registry--mlops">1. Model Registry &amp; MLOps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-model-registry--mlops" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>DVC (Data Version Control):</strong></p>
+<ul>
+<li>Track model versions with Git</li>
+<li>Large file storage</li>
+<li>Experiment lineage</li>
+</ul>
+<p><strong>MLflow:</strong></p>
+<ul>
+<li>Experiment tracking</li>
+<li>Model registry</li>
+<li>Deployment management</li>
+<li>A/B testing support</li>
+</ul>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Automated model evaluation</li>
+<li>Champion/challenger comparison</li>
+<li>Gradual rollout</li>
+<li>Rollback capabilities</li>
+</ul>
+<h3 id="2-multi-model-inference-cluster">2. Multi-Model Inference Cluster<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-multi-model-inference-cluster" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>NVIDIA Triton Inference Server:</strong></p>
+<ul>
+<li>Optimized for NVIDIA GPUs</li>
+<li>Multi-model serving</li>
+<li>Dynamic batching</li>
+<li>Model ensemble support</li>
+</ul>
+<p><strong>Alternatively: TorchServe</strong></p>
+<ul>
+<li>PyTorch-native serving</li>
+<li>Model archiving</li>
+<li>Metrics and logging</li>
+</ul>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Load multiple models concurrently</li>
+<li>Automatic scaling</li>
+<li>FP4 optimization support</li>
+<li>High throughput</li>
+</ul>
+<h3 id="3-advanced-training-pipeline">3. Advanced Training Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-advanced-training-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Features:</strong></p>
+<ol>
+<li><strong>Distributed Training</strong>: Multi-GPU LoRA training</li>
+<li><strong>Hyperparameter Optimization</strong>: Optuna integration</li>
+<li><strong>Synthetic Data Generation</strong>: Use existing models to generate training data</li>
+<li><strong>Active Learning</strong>: User feedback → retraining loop</li>
+<li><strong>Dataset Management</strong>: Version control, quality metrics</li>
+<li><strong>Training Monitoring</strong>: Real-time loss curves, sample generation</li>
+</ol>
+<p><strong>Tech Stack:</strong></p>
+<ul>
+<li>PyTorch Lightning for training</li>
+<li>Optuna for hyperparameter search</li>
+<li>Weights &amp; Biases for monitoring</li>
+<li>Ray for distributed computing</li>
+</ul>
+<h3 id="4-application-layer">4. Application Layer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-application-layer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Microservices Architecture:</strong></p>
+<ul>
+<li>API Gateway for routing and auth</li>
+<li>Multiple FastAPI services</li>
+<li>Celery for async job processing</li>
+<li>Redis for caching and pub/sub</li>
+<li>MinIO for object storage</li>
+<li>PostgreSQL for metadata</li>
+</ul>
+<p><strong>Services:</strong></p>
+<ul>
+<li><strong>auth-service</strong>: User authentication, API keys</li>
+<li><strong>job-service</strong>: Job submission, queue management</li>
+<li><strong>inference-service</strong>: Model inference coordination</li>
+<li><strong>training-service</strong>: Training job orchestration</li>
+<li><strong>asset-service</strong>: Asset storage and retrieval</li>
+<li><strong>mcp-service</strong>: MCP server implementation</li>
+<li><strong>notification-service</strong>: Webhooks, notifications</li>
+</ul>
+<h3 id="5-custom-web-ui">5. Custom Web UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-custom-web-ui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Features:</strong></p>
+<ul>
+<li><strong>Project Management</strong>: Organize by game/project</li>
+<li><strong>Prompt Library</strong>: Reusable prompt templates</li>
+<li><strong>Asset Browser</strong>: Search, filter, tag assets</li>
+<li><strong>Training Dashboard</strong>: Monitor training jobs</li>
+<li><strong>Analytics</strong>: Usage metrics, cost tracking</li>
+<li><strong>Team Collaboration</strong>: Share assets, reviews</li>
+<li><strong>API Key Management</strong>: For CI/CD integration</li>
+</ul>
+<p><strong>Tech Stack:</strong></p>
+<ul>
+<li>React + TypeScript</li>
+<li>Material UI or Tailwind CSS</li>
+<li>React Query for API calls</li>
+<li>WebSocket for real-time updates</li>
+</ul>
+<h3 id="6-quality-assurance">6. Quality Assurance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-quality-assurance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Automated Validation:</strong></p>
+<ul>
+<li>Resolution check</li>
+<li>Artifact detection</li>
+<li>Style consistency scoring</li>
+<li>Color palette validation</li>
+<li>Animation frame verification</li>
+</ul>
+<p><strong>Human Review Workflow:</strong></p>
+<ul>
+<li>Approval queue</li>
+<li>Batch approval</li>
+<li>Rejection with feedback</li>
+<li>Retraining triggers</li>
+</ul>
+<h3 id="7-cicd-integration">7. CI/CD Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-cicd-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GitHub Actions / GitLab CI:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># .github/workflows/generate-assets.yml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Generate Game Assets</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  push</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    paths</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'asset-requests/**'</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  generate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Generate sprites</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          curl -X POST https://dgx-pixels.studio/api/v1/generate/batch \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            -H &quot;Authorization: Bearer ${{ secrets.DGX_PIXELS_API_KEY }}&quot; \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            -d @asset-requests/batch.json</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Download results</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Commit to repo</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ...</span></span></code></pre></figure>
+<h3 id="8-multi-engine-support">8. Multi-Engine Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-multi-engine-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bevy Integration</strong> (primary)
+<strong>Unity Support</strong> (via MCP)
+<strong>Godot Support</strong> (via MCP)
+<strong>Unreal Support</strong> (custom plugin)</p>
+<p>Each engine gets:</p>
+<ul>
+<li>MCP client library</li>
+<li>Asset importer plugin</li>
+<li>Live reload support</li>
+<li>Metadata handling</li>
+</ul>
+<h2 id="implementation-steps-2">Implementation Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-steps-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-infrastructure-weeks-1-3">Phase 1: Infrastructure (Weeks 1-3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-infrastructure-weeks-1-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Set up Kubernetes cluster</li>
+<li>Deploy model serving (Triton)</li>
+<li>Configure MLflow and DVC</li>
+<li>Set up monitoring (Prometheus, Grafana)</li>
+<li>Deploy message queue and cache</li>
+</ol>
+<h3 id="phase-2-core-services-weeks-3-6">Phase 2: Core Services (Weeks 3-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-core-services-weeks-3-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Build microservices</li>
+<li>Implement API gateway</li>
+<li>Create job queue system</li>
+<li>Build asset storage service</li>
+<li>Implement authentication</li>
+</ol>
+<h3 id="phase-3-advanced-training-weeks-6-8">Phase 3: Advanced Training (Weeks 6-8)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-advanced-training-weeks-6-8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Distributed training setup</li>
+<li>Hyperparameter optimization</li>
+<li>Active learning pipeline</li>
+<li>Dataset management tools</li>
+<li>Training automation</li>
+</ol>
+<h3 id="phase-4-web-ui-weeks-8-10">Phase 4: Web UI (Weeks 8-10)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-web-ui-weeks-8-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Design system and mockups</li>
+<li>Build React application</li>
+<li>Implement all features</li>
+<li>User testing and refinement</li>
+</ol>
+<h3 id="phase-5-game-engine-integration-weeks-10-11">Phase 5: Game Engine Integration (Weeks 10-11)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-game-engine-integration-weeks-10-11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Bevy MCP integration</li>
+<li>Unity plugin development</li>
+<li>Godot plugin development</li>
+<li>Testing and documentation</li>
+</ol>
+<h3 id="phase-6-polish--launch-week-12">Phase 6: Polish &amp; Launch (Week 12)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-6-polish--launch-week-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Performance optimization</li>
+<li>Security audit</li>
+<li>Documentation</li>
+<li>Training materials</li>
+<li>Deployment automation</li>
+</ol>
+<h2 id="pros-2">Pros<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pros-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Enterprise-grade</strong>: Scalable, reliable, maintainable</li>
+<li><strong>Full automation</strong>: Minimal manual intervention</li>
+<li><strong>Multi-tenant</strong>: Support multiple teams/projects</li>
+<li><strong>Advanced training</strong>: Custom models with optimal parameters</li>
+<li><strong>Multi-engine</strong>: Not locked to Bevy</li>
+<li><strong>Analytics</strong>: Deep insights into usage and costs</li>
+<li><strong>CI/CD integration</strong>: Assets generated in pipeline</li>
+<li><strong>High performance</strong>: Optimized for throughput</li>
+<li><strong>Quality control</strong>: Automated and human review</li>
+</ul>
+<h2 id="cons-2">Cons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cons-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>High complexity</strong>: Many moving parts</li>
+<li><strong>Long development time</strong>: 8-12 weeks minimum</li>
+<li><strong>High maintenance</strong>: Requires dedicated team</li>
+<li><strong>Infrastructure costs</strong>: Beyond just hardware</li>
+<li><strong>Steep learning curve</strong>: For both developers and users</li>
+<li><strong>Over-engineered</strong>: For small projects</li>
+</ul>
+<h2 id="when-to-use-2">When to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-use-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Large game studios</strong> (50+ developers)</li>
+<li><strong>Multiple concurrent projects</strong></li>
+<li><strong>High sprite volume</strong> (thousands per project)</li>
+<li><strong>Teams need self-service</strong></li>
+<li><strong>Budget for infrastructure</strong></li>
+<li><strong>Long-term investment</strong> (multi-year)</li>
+<li><strong>Compliance requirements</strong> (audit trails, security)</li>
+</ul>
+<h2 id="performance-expectations-1">Performance Expectations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-expectations-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>On NVIDIA DGX-Spark (single node):</strong></p>
+<ul>
+<li><strong>Inference</strong>: 1-2 seconds per image (Triton optimized)</li>
+<li><strong>Throughput</strong>: 100+ sprites per minute</li>
+<li><strong>Concurrent users</strong>: 20-30</li>
+<li><strong>Training</strong>: Distributed training across GPUs</li>
+<li><strong>Uptime</strong>: 99.9% SLA</li>
+</ul>
+<hr/>
+<h1 id="proposal-2b-rust-tui--python-backend-new-recommended">Proposal 2B: Rust TUI + Python Backend (NEW RECOMMENDED)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#proposal-2b-rust-tui--python-backend-new-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="philosophy-3">Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#philosophy-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Combine <strong>Rust’s performance and type safety</strong> for the user interface with <strong>Python’s ML ecosystem</strong> for AI workloads. This hybrid approach delivers a responsive, low-latency TUI while leveraging mature AI libraries. Supports side-by-side comparison of pre-trained and custom models.</p>
+<h2 id="architecture-diagram-3">Architecture Diagram<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-diagram-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌──────────────────────────────────────────────────────────────┐
+│                    NVIDIA DGX-Spark                          │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌─────────────────────┐                                     │
+│  │   Rust TUI App      │  12MB, 60+ FPS                      │
+│  │   - ratatui         │  Sixel image preview               │
+│  │   - ZMQ client      │  Keyboard-driven                    │
+│  │   - Live preview    │  Model comparison                  │
+│  └──────┬──────────────┘                                     │
+│         │ ZeroMQ (REQ-REP + PUB-SUB)                         │
+│         │ tcp://localhost:5555-5556                          │
+│         │ &lt;1ms latency                                       │
+│         │                                                     │
+│  ┌──────▼──────────────┐                                     │
+│  │  Python Worker      │  150MB baseline                     │
+│  │  - ZMQ server       │  Job queue mgmt                     │
+│  │  - ComfyUI client   │  Progress pub/sub                  │
+│  │  - Model registry   │  LoRA management                    │
+│  └──────┬──────────────┘                                     │
+│         │ HTTP/WebSocket                                     │
+│         │                                                     │
+│  ┌──────▼──────────────┐                                     │
+│  │   ComfyUI           │  8GB+ (with models)                 │
+│  │   - SDXL base       │  Multiple checkpoints               │
+│  │   - Custom LoRAs    │  Workflow templates                │
+│  │   - Pre-trained     │  Side-by-side gen                  │
+│  └─────────────────────┘                                     │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+         │ MCP Protocol (optional)
+         ▼
+  ┌───────────────┐
+  │  bevy_brp_mcp │
+  │  Bevy Project │
+  └───────────────┘
+</code></pre>
+<h2 id="key-innovation-side-by-side-models">Key Innovation: Side-by-Side Models<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-innovation-side-by-side-models" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Pre-trained AND Custom Models Coexist</strong>:</p>
+<ul>
+<li>Load multiple models simultaneously</li>
+<li>Compare outputs in real-time</li>
+<li>Vote/rate preferred results</li>
+<li>Track which model wins for different prompts</li>
+<li>Build model preference history</li>
+</ul>
+<p><strong>Example Workflow</strong>:</p>
+<pre><code>1. User enters prompt: &quot;knight character sprite&quot;
+2. Presses [C] for Compare Mode
+3. Selects 3 models:
+   - SDXL Base (pre-trained)
+   - SDXL + 16bit_rpg (custom LoRA)
+   - SDXL + fantasy_char (custom LoRA)
+4. TUI generates with all 3 in parallel
+5. Results displayed side-by-side
+6. User selects best → tracked for analytics
+</code></pre>
+<p>See <code>docs/08-tui-design.md</code> for complete TUI mockups.</p>
+<h2 id="components-3">Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#components-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-rust-tui-ratatui">1. Rust TUI (ratatui)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-rust-tui-ratatui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>60+ FPS rendering</li>
+<li>&lt;50ms input latency</li>
+<li>Sixel/halfblock image preview</li>
+<li>Real-time progress bars</li>
+<li>Model comparison interface</li>
+<li>GPU metrics dashboard</li>
+<li>Gallery browser</li>
+</ul>
+<p><strong>Dependencies</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dependencies</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ratatui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.29&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">crossterm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.28&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">zmq</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.10&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">rmp-serde</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.3&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # MsgPack serialization</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tokio</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;full&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.25&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ratatui-image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2.0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">serde</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.0&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;derive&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span></code></pre></figure>
+<p><strong>Memory Usage</strong>: ~12MB (vs 50-100MB for Python TUI)</p>
+<h3 id="2-python-worker-zeromq-server">2. Python Worker (ZeroMQ Server)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-python-worker-zeromq-server" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Responsibilities</strong>:</p>
+<ul>
+<li>Receive generation requests</li>
+<li>Queue management</li>
+<li>ComfyUI orchestration</li>
+<li>Progress publishing</li>
+<li>Model registry</li>
+<li>Result delivery</li>
+</ul>
+<p><strong>Communication</strong>:</p>
+<ul>
+<li><strong>REQ-REP</strong>: Commands (generate, status, list models)</li>
+<li><strong>PUB-SUB</strong>: Real-time updates (progress, previews, metrics)</li>
+<li><strong>Serialization</strong>: MsgPack (faster than JSON)</li>
+</ul>
+<p>See <code>docs/07-rust-python-architecture.md</code> for detailed communication patterns.</p>
+<h3 id="3-comfyui--model-library">3. ComfyUI + Model Library<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-comfyui--model-library" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Base Models</strong>:</p>
+<ul>
+<li>SDXL 1.0 base (~8GB)</li>
+<li>Pre-trained pixel art checkpoints (~2GB each)</li>
+</ul>
+<p><strong>LoRA Collection</strong>:</p>
+<ul>
+<li>Custom trained LoRAs (400MB each)</li>
+<li>Organized by style (16bit, 32bit, 8bit)</li>
+<li>Version controlled with metadata</li>
+</ul>
+<p><strong>Workflow Templates</strong>:</p>
+<ul>
+<li>Single sprite generation</li>
+<li>Animation frame batch</li>
+<li>Tileset generation (seamless)</li>
+<li>Side-by-side comparison</li>
+</ul>
+<h3 id="4-optional-pyo3-native-extensions">4. Optional: PyO3 Native Extensions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-optional-pyo3-native-extensions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For performance-critical paths:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Rust implementation of color quantization</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[pyfunction]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> quantize_colors_fast</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">u8</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">], </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">colors</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> PyResult</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">u8</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // 10-100x faster than PIL</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p>Built with maturin, deployed as Python module.</p>
+<h2 id="implementation-steps-3">Implementation Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-steps-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-core-weeks-1-2">Phase 1: Core (Weeks 1-2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-core-weeks-1-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Install ComfyUI using dgx-spark-playbooks</li>
+<li>Download SDXL + pixel art models</li>
+<li>Implement Python ZeroMQ worker</li>
+<li>Test generation via Python CLI</li>
+</ol>
+<h3 id="phase-2-rust-tui-weeks-2-3">Phase 2: Rust TUI (Weeks 2-3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-rust-tui-weeks-2-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create Rust project structure</li>
+<li>Implement ZeroMQ client</li>
+<li>Build basic TUI screens:
+<ul>
+<li>Generation</li>
+<li>Queue</li>
+<li>Models</li>
+</ul>
+</li>
+<li>Add image preview (ratatui-image)</li>
+</ol>
+<h3 id="phase-3-model-management-week-3-4">Phase 3: Model Management (Week 3-4)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-model-management-week-3-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>LoRA loading/unloading</li>
+<li>Model comparison workflow</li>
+<li>Comparison result tracking</li>
+<li>Model performance analytics</li>
+</ol>
+<h3 id="phase-4-training-integration-week-4-5">Phase 4: Training Integration (Week 4-5)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-training-integration-week-4-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Set up Kohya_ss</li>
+<li>Train first custom LoRA</li>
+<li>A/B test vs pre-trained</li>
+<li>Document training workflow</li>
+</ol>
+<h3 id="phase-5-polish--deploy-week-5-6">Phase 5: Polish &amp; Deploy (Week 5-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-polish--deploy-week-5-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>MCP integration for Bevy</li>
+<li>Gallery and asset management</li>
+<li>Configuration system</li>
+<li>Documentation and examples</li>
+</ol>
+<h2 id="pros-3">Pros<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pros-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li>TUI: 60+ FPS, &lt;10MB memory</li>
+<li>Communication: &lt;1ms latency (ZeroMQ)</li>
+<li>No Python GIL bottlenecks in UI</li>
+</ul>
+<p><strong>Developer Experience</strong>:</p>
+<ul>
+<li>Type-safe Rust for UI logic</li>
+<li>Python flexibility for AI</li>
+<li>Best tool for each job</li>
+<li>Clean separation of concerns</li>
+</ul>
+<p><strong>User Experience</strong>:</p>
+<ul>
+<li>Fast, responsive interface</li>
+<li>Real-time previews</li>
+<li>Side-by-side model comparison</li>
+<li>Keyboard-driven workflow</li>
+</ul>
+<p><strong>Flexibility</strong>:</p>
+<ul>
+<li>Pre-trained models for quick start</li>
+<li>Custom training for production quality</li>
+<li>Compare models objectively</li>
+<li>Track model performance</li>
+</ul>
+<p><strong>Integration</strong>:</p>
+<ul>
+<li>Leverages dgx-spark-playbooks (ComfyUI)</li>
+<li>Can contribute back as new playbook</li>
+<li>Reuses community workflows</li>
+</ul>
+<h2 id="cons-3">Cons<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cons-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Two languages</strong>: Rust + Python to maintain</li>
+<li><strong>Learning curve</strong>: Rust for contributors</li>
+<li><strong>Build complexity</strong>: Cargo + maturin setup</li>
+<li><strong>Debugging</strong>: Cross-language can be tricky</li>
+</ul>
+<h2 id="when-to-use-3">When to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-use-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Perfect for</strong>:</p>
+<ul>
+<li>Solo developers or small teams (2-5)</li>
+<li>Need fast, responsive interface</li>
+<li>Want to compare models scientifically</li>
+<li>Comfortable with terminal UIs</li>
+<li>Value performance and efficiency</li>
+</ul>
+<p><strong>Not ideal if</strong>:</p>
+<ul>
+<li>Team requires web UI</li>
+<li>Need multi-tenant support</li>
+<li>Have Python-only developers</li>
+<li>Need Windows support (Rust TUI limited)</li>
+</ul>
+<h2 id="performance-expectations-2">Performance Expectations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-expectations-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>On NVIDIA DGX-Spark</strong>:</p>
+<ul>
+<li><strong>TUI Startup</strong>: &lt;300ms (vs 2-3s Python)</li>
+<li><strong>Generation</strong>: 12-15s per sprite (SDXL + LoRA)</li>
+<li><strong>Model Comparison</strong>: 36-45s for 3 models</li>
+<li><strong>Memory</strong>: ~20GB total (8GB models + 12GB overhead)</li>
+<li><strong>Concurrent</strong>: 1 active + 5 queued jobs</li>
+</ul>
+<p><strong>Side-by-Side Comparison</strong>:</p>
+<ul>
+<li>Generate 2-4 models in sequence</li>
+<li>Each takes 12-15s</li>
+<li>Total: 24-60s for full comparison</li>
+<li>Results cached for instant re-comparison</li>
+</ul>
+<h2 id="migration-path-1">Migration Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migration-path-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>From Proposal 1</strong>:</p>
+<ul>
+<li>Keep A1111/ComfyUI backend</li>
+<li>Replace Python CLI with Rust TUI</li>
+<li>Add model comparison features</li>
+</ul>
+<p><strong>To Proposal 3</strong>:</p>
+<ul>
+<li>Rust TUI remains as client</li>
+<li>Backend scales to microservices</li>
+<li>Add web UI for team members</li>
+</ul>
+<hr/>
+<h1 id="recommendation">Recommendation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#recommendation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="new-default-proposal-2b-rust-tui--python">NEW Default: <strong>Proposal 2B (Rust TUI + Python)</strong><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#new-default-proposal-2b-rust-tui--python" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li><strong>Best performance</strong>: 60 FPS TUI, &lt;1ms IPC</li>
+<li><strong>Side-by-side models</strong>: Compare pre-trained vs custom scientifically</li>
+<li><strong>Developer friendly</strong>: Leverages existing playbooks</li>
+<li><strong>Production ready</strong>: 5-6 weeks to MVP</li>
+<li><strong>Scales well</strong>: Can add services later</li>
+<li><strong>Modern stack</strong>: Rust + Python + ZeroMQ is proven</li>
+</ul>
+<p><strong>Feature Comparison</strong>:</p>
+<ul>
+<li>✅ Custom training (LoRA)</li>
+<li>✅ Model comparison (unique!)</li>
+<li>✅ Fast, responsive UI</li>
+<li>✅ Low resource overhead</li>
+<li>✅ MCP integration</li>
+<li>✅ Open source everything</li>
+</ul>
+<p><strong>Start with Proposal 1 if:</strong></p>
+<ul>
+<li>Need to validate concept in &lt;1 week</li>
+<li>Python-only team</li>
+<li>Just want to test pre-trained models</li>
+</ul>
+<p><strong>Use Proposal 2 (Original) if:</strong></p>
+<ul>
+<li>Prefer web UI over TUI</li>
+<li>Don’t need model comparison</li>
+<li>Team unfamiliar with Rust</li>
+</ul>
+<p><strong>Choose Proposal 3 if:</strong></p>
+<ul>
+<li>Large studio with dedicated infra team (50+ devs)</li>
+<li>Multiple concurrent projects</li>
+<li>High volume asset generation (thousands/week)</li>
+<li>Budget for 8-12 week development</li>
+<li>Need enterprise features (multi-tenancy, audit trails, etc.)</li>
+</ul>
+<h2 id="updated-comparison-matrix-with-proposal-2b">Updated Comparison Matrix (with Proposal 2B)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#updated-comparison-matrix-with-proposal-2b" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>Proposal 1</th><th>Proposal 2</th><th><strong>Proposal 2B</strong></th><th>Proposal 3</th></tr></thead><tbody><tr><td><strong>Time to MVP</strong></td><td>1-2 weeks</td><td>4-6 weeks</td><td><strong>5-6 weeks</strong></td><td>8-12 weeks</td></tr><tr><td><strong>UI Type</strong></td><td>Python CLI</td><td>Web/ComfyUI</td><td><strong>Rust TUI</strong></td><td>Web + TUI</td></tr><tr><td><strong>Performance</strong></td><td>Medium</td><td>Medium</td><td><strong>High (60 FPS)</strong></td><td>High</td></tr><tr><td><strong>Model Comparison</strong></td><td>No</td><td>Manual</td><td><strong>Built-in</strong></td><td>Advanced</td></tr><tr><td><strong>Memory (UI)</strong></td><td>50MB</td><td>100MB+</td><td><strong>12MB</strong></td><td>Varies</td></tr><tr><td><strong>Training</strong></td><td>No</td><td>LoRA</td><td><strong>LoRA + Comparison</strong></td><td>Full pipeline</td></tr><tr><td><strong>Bevy Integration</strong></td><td>Manual</td><td>MCP</td><td><strong>MCP</strong></td><td>Full automation</td></tr><tr><td><strong>For Teams</strong></td><td>Solo</td><td>2-10</td><td><strong>2-5</strong></td><td>50+</td></tr></tbody></table></div>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>Review proposals</strong> and new Proposal 2B</li>
+<li><strong>Consider team skills</strong> (Rust vs Python preference)</li>
+<li><strong>Evaluate TUI vs web UI</strong> requirements</li>
+<li><strong>Select architecture proposal</strong></li>
+<li><strong>Follow implementation plan</strong>:
+<ul>
+<li>Proposal 1: <code>docs/06-implementation-plan.md</code> § Path A</li>
+<li>Proposal 2B: <code>docs/07-rust-python-architecture.md</code> + <code>docs/08-tui-design.md</code></li>
+<li>Proposal 3: <code>docs/06-implementation-plan.md</code> § Path C</li>
+</ul>
+</li>
+</ol>
+<p>See <code>docs/11-playbook-contribution.md</code> for contributing to dgx-spark-playbooks.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-42" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#architecture-proposals-dgx-pixels-stack" data-for="architecture-proposals-dgx-pixels-stack">Architecture Proposals: DGX-Pixels Stack</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#comparison-matrix" data-for="comparison-matrix">Comparison Matrix</a></li><li class="depth-0"><a href="#proposal-1-rapid-prototyping-stack" data-for="proposal-1-rapid-prototyping-stack">Proposal 1: Rapid Prototyping Stack</a></li><li class="depth-1"><a href="#philosophy" data-for="philosophy">Philosophy</a></li><li class="depth-1"><a href="#architecture-diagram" data-for="architecture-diagram">Architecture Diagram</a></li><li class="depth-1"><a href="#components" data-for="components">Components</a></li><li class="depth-2"><a href="#1-model-inference-automatic1111-webui" data-for="1-model-inference-automatic1111-webui">1. Model Inference: Automatic1111 WebUI</a></li><li class="depth-2"><a href="#2-pre-trained-models" data-for="2-pre-trained-models">2. Pre-trained Models</a></li><li class="depth-2"><a href="#3-python-cli-tool" data-for="3-python-cli-tool">3. Python CLI Tool</a></li><li class="depth-2"><a href="#4-manual-bevy-integration" data-for="4-manual-bevy-integration">4. Manual Bevy Integration</a></li><li class="depth-1"><a href="#implementation-steps" data-for="implementation-steps">Implementation Steps</a></li><li class="depth-2"><a href="#phase-1-setup-week-1" data-for="phase-1-setup-week-1">Phase 1: Setup (Week 1)</a></li><li class="depth-2"><a href="#phase-2-cli-development-week-1-2" data-for="phase-2-cli-development-week-1-2">Phase 2: CLI Development (Week 1-2)</a></li><li class="depth-2"><a href="#phase-3-documentation-week-2" data-for="phase-3-documentation-week-2">Phase 3: Documentation (Week 2)</a></li><li class="depth-1"><a href="#pros" data-for="pros">Pros</a></li><li class="depth-1"><a href="#cons" data-for="cons">Cons</a></li><li class="depth-1"><a href="#when-to-use" data-for="when-to-use">When to Use</a></li><li class="depth-1"><a href="#migration-path" data-for="migration-path">Migration Path</a></li><li class="depth-0"><a href="#proposal-2-balanced-production-stack" data-for="proposal-2-balanced-production-stack">Proposal 2: Balanced Production Stack</a></li><li class="depth-1"><a href="#philosophy-1" data-for="philosophy-1">Philosophy</a></li><li class="depth-1"><a href="#architecture-diagram-1" data-for="architecture-diagram-1">Architecture Diagram</a></li><li class="depth-1"><a href="#components-1" data-for="components-1">Components</a></li><li class="depth-2"><a href="#1-comfyui-inference-engine" data-for="1-comfyui-inference-engine">1. ComfyUI Inference Engine</a></li><li class="depth-2"><a href="#2-model-management" data-for="2-model-management">2. Model Management</a></li><li class="depth-2"><a href="#3-lora-training-pipeline" data-for="3-lora-training-pipeline">3. LoRA Training Pipeline</a></li><li class="depth-2"><a href="#4-fastapi-orchestration-layer" data-for="4-fastapi-orchestration-layer">4. FastAPI Orchestration Layer</a></li><li class="depth-2"><a href="#5-mcp-integration-layer" data-for="5-mcp-integration-layer">5. MCP Integration Layer</a></li><li class="depth-2"><a href="#6-post-processing-pipeline" data-for="6-post-processing-pipeline">6. Post-Processing Pipeline</a></li><li class="depth-1"><a href="#implementation-steps-1" data-for="implementation-steps-1">Implementation Steps</a></li><li class="depth-2"><a href="#phase-1-core-infrastructure-weeks-1-2" data-for="phase-1-core-infrastructure-weeks-1-2">Phase 1: Core Infrastructure (Weeks 1-2)</a></li><li class="depth-2"><a href="#phase-2-api-layer-weeks-2-3" data-for="phase-2-api-layer-weeks-2-3">Phase 2: API Layer (Weeks 2-3)</a></li><li class="depth-2"><a href="#phase-3-training-pipeline-week-3-4" data-for="phase-3-training-pipeline-week-3-4">Phase 3: Training Pipeline (Week 3-4)</a></li><li class="depth-2"><a href="#phase-4-bevy-integration-week-4-5" data-for="phase-4-bevy-integration-week-4-5">Phase 4: Bevy Integration (Week 4-5)</a></li><li class="depth-2"><a href="#phase-5-polish-and-docs-week-5-6" data-for="phase-5-polish-and-docs-week-5-6">Phase 5: Polish and Docs (Week 5-6)</a></li><li class="depth-1"><a href="#pros-1" data-for="pros-1">Pros</a></li><li class="depth-1"><a href="#cons-1" data-for="cons-1">Cons</a></li><li class="depth-1"><a href="#when-to-use-1" data-for="when-to-use-1">When to Use</a></li><li class="depth-1"><a href="#performance-expectations" data-for="performance-expectations">Performance Expectations</a></li><li class="depth-0"><a href="#proposal-3-advanced-enterprise-stack" data-for="proposal-3-advanced-enterprise-stack">Proposal 3: Advanced Enterprise Stack</a></li><li class="depth-1"><a href="#philosophy-2" data-for="philosophy-2">Philosophy</a></li><li class="depth-1"><a href="#architecture-diagram-2" data-for="architecture-diagram-2">Architecture Diagram</a></li><li class="depth-1"><a href="#components-2" data-for="components-2">Components</a></li><li class="depth-2"><a href="#1-model-registry--mlops" data-for="1-model-registry--mlops">1. Model Registry &amp; MLOps</a></li><li class="depth-2"><a href="#2-multi-model-inference-cluster" data-for="2-multi-model-inference-cluster">2. Multi-Model Inference Cluster</a></li><li class="depth-2"><a href="#3-advanced-training-pipeline" data-for="3-advanced-training-pipeline">3. Advanced Training Pipeline</a></li><li class="depth-2"><a href="#4-application-layer" data-for="4-application-layer">4. Application Layer</a></li><li class="depth-2"><a href="#5-custom-web-ui" data-for="5-custom-web-ui">5. Custom Web UI</a></li><li class="depth-2"><a href="#6-quality-assurance" data-for="6-quality-assurance">6. Quality Assurance</a></li><li class="depth-2"><a href="#7-cicd-integration" data-for="7-cicd-integration">7. CI/CD Integration</a></li><li class="depth-2"><a href="#8-multi-engine-support" data-for="8-multi-engine-support">8. Multi-Engine Support</a></li><li class="depth-1"><a href="#implementation-steps-2" data-for="implementation-steps-2">Implementation Steps</a></li><li class="depth-2"><a href="#phase-1-infrastructure-weeks-1-3" data-for="phase-1-infrastructure-weeks-1-3">Phase 1: Infrastructure (Weeks 1-3)</a></li><li class="depth-2"><a href="#phase-2-core-services-weeks-3-6" data-for="phase-2-core-services-weeks-3-6">Phase 2: Core Services (Weeks 3-6)</a></li><li class="depth-2"><a href="#phase-3-advanced-training-weeks-6-8" data-for="phase-3-advanced-training-weeks-6-8">Phase 3: Advanced Training (Weeks 6-8)</a></li><li class="depth-2"><a href="#phase-4-web-ui-weeks-8-10" data-for="phase-4-web-ui-weeks-8-10">Phase 4: Web UI (Weeks 8-10)</a></li><li class="depth-2"><a href="#phase-5-game-engine-integration-weeks-10-11" data-for="phase-5-game-engine-integration-weeks-10-11">Phase 5: Game Engine Integration (Weeks 10-11)</a></li><li class="depth-2"><a href="#phase-6-polish--launch-week-12" data-for="phase-6-polish--launch-week-12">Phase 6: Polish &amp; Launch (Week 12)</a></li><li class="depth-1"><a href="#pros-2" data-for="pros-2">Pros</a></li><li class="depth-1"><a href="#cons-2" data-for="cons-2">Cons</a></li><li class="depth-1"><a href="#when-to-use-2" data-for="when-to-use-2">When to Use</a></li><li class="depth-1"><a href="#performance-expectations-1" data-for="performance-expectations-1">Performance Expectations</a></li><li class="depth-0"><a href="#proposal-2b-rust-tui--python-backend-new-recommended" data-for="proposal-2b-rust-tui--python-backend-new-recommended">Proposal 2B: Rust TUI + Python Backend (NEW RECOMMENDED)</a></li><li class="depth-1"><a href="#philosophy-3" data-for="philosophy-3">Philosophy</a></li><li class="depth-1"><a href="#architecture-diagram-3" data-for="architecture-diagram-3">Architecture Diagram</a></li><li class="depth-1"><a href="#key-innovation-side-by-side-models" data-for="key-innovation-side-by-side-models">Key Innovation: Side-by-Side Models</a></li><li class="depth-1"><a href="#components-3" data-for="components-3">Components</a></li><li class="depth-2"><a href="#1-rust-tui-ratatui" data-for="1-rust-tui-ratatui">1. Rust TUI (ratatui)</a></li><li class="depth-2"><a href="#2-python-worker-zeromq-server" data-for="2-python-worker-zeromq-server">2. Python Worker (ZeroMQ Server)</a></li><li class="depth-2"><a href="#3-comfyui--model-library" data-for="3-comfyui--model-library">3. ComfyUI + Model Library</a></li><li class="depth-2"><a href="#4-optional-pyo3-native-extensions" data-for="4-optional-pyo3-native-extensions">4. Optional: PyO3 Native Extensions</a></li><li class="depth-1"><a href="#implementation-steps-3" data-for="implementation-steps-3">Implementation Steps</a></li><li class="depth-2"><a href="#phase-1-core-weeks-1-2" data-for="phase-1-core-weeks-1-2">Phase 1: Core (Weeks 1-2)</a></li><li class="depth-2"><a href="#phase-2-rust-tui-weeks-2-3" data-for="phase-2-rust-tui-weeks-2-3">Phase 2: Rust TUI (Weeks 2-3)</a></li><li class="depth-2"><a href="#phase-3-model-management-week-3-4" data-for="phase-3-model-management-week-3-4">Phase 3: Model Management (Week 3-4)</a></li><li class="depth-2"><a href="#phase-4-training-integration-week-4-5" data-for="phase-4-training-integration-week-4-5">Phase 4: Training Integration (Week 4-5)</a></li><li class="depth-2"><a href="#phase-5-polish--deploy-week-5-6" data-for="phase-5-polish--deploy-week-5-6">Phase 5: Polish &amp; Deploy (Week 5-6)</a></li><li class="depth-1"><a href="#pros-3" data-for="pros-3">Pros</a></li><li class="depth-1"><a href="#cons-3" data-for="cons-3">Cons</a></li><li class="depth-1"><a href="#when-to-use-3" data-for="when-to-use-3">When to Use</a></li><li class="depth-1"><a href="#performance-expectations-2" data-for="performance-expectations-2">Performance Expectations</a></li><li class="depth-1"><a href="#migration-path-1" data-for="migration-path-1">Migration Path</a></li><li class="depth-0"><a href="#recommendation" data-for="recommendation">Recommendation</a></li><li class="depth-1"><a href="#new-default-proposal-2b-rust-tui--python" data-for="new-default-proposal-2b-rust-tui--python">NEW Default: Proposal 2B (Rust TUI + Python)</a></li><li class="depth-1"><a href="#updated-comparison-matrix-with-proposal-2b" data-for="updated-comparison-matrix-with-proposal-2b">Updated Comparison Matrix (with Proposal 2B)</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

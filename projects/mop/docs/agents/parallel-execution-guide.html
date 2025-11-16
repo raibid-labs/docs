@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>parallel-execution-guide</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="parallel-execution-guide"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="parallel-execution-guide"/><meta name="twitter:description" content="Parallel Execution Guide This guide provides detailed instructions for executing multiple agents in parallel to achieve 2.8-4.4x speed improvements in the MOP project."/><meta property="og:description" content="Parallel Execution Guide This guide provides detailed instructions for executing multiple agents in parallel to achieve 2.8-4.4x speed improvements in the MOP project."/><meta property="og:image:alt" content="Parallel Execution Guide This guide provides detailed instructions for executing multiple agents in parallel to achieve 2.8-4.4x speed improvements in the MOP project."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/parallel-execution-guide"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/parallel-execution-guide"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Parallel Execution Guide This guide provides detailed instructions for executing multiple agents in parallel to achieve 2.8-4.4x speed improvements in the MOP project."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/parallel-execution-guide-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/parallel-execution-guide-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/parallel-execution-guide-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/docs/agents/parallel-execution-guide"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-378"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-378" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/agents/">agents</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>parallel execution guide</a></div></nav><h1 class="article-title">parallel-execution-guide</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.445Z">Nov 16, 2025</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="parallel-execution-guide">Parallel Execution Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-execution-guide" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This guide provides detailed instructions for executing multiple agents in parallel to achieve 2.8-4.4x speed improvements in the MOP project.</p>
+<hr/>
+<h2 id="core-principle-the-golden-rule">Core Principle: The Golden Rule<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-principle-the-golden-rule" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<blockquote>
+<p><strong>“1 MESSAGE = ALL RELATED OPERATIONS”</strong></p>
+</blockquote>
+<p>This is the most important principle for parallel execution. Spawning agents, batching operations, and coordinating work must ALL happen in a single message to achieve maximum parallelism.</p>
+<hr/>
+<h2 id="prerequisites">Prerequisites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prerequisites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-directory-structure">1. Directory Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-directory-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Ensure clean directory ownership to prevent conflicts:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create all necessary directories upfront</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/{environments,charts,lib,scripts,tests,docs}</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/environments/{dev,staging,prod}/{kubernetes,observability,infrastructure}</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/lib/{tanka,alloy}</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /Users/beengud/raibid-labs/mop/charts/{obi-operator,obi-experiments}</span></span></code></pre></figure>
+<h3 id="2-directory-ownership-matrix">2. Directory Ownership Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-directory-ownership-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Define clear ownership BEFORE launching agents:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Directory</th><th>Owner Agent(s)</th><th>Access Pattern</th></tr></thead><tbody><tr><td><code>environments/dev/kubernetes/</code></td><td>platform-engineer-dev</td><td>Exclusive</td></tr><tr><td><code>environments/staging/kubernetes/</code></td><td>platform-engineer-staging</td><td>Exclusive</td></tr><tr><td><code>environments/prod/kubernetes/</code></td><td>platform-engineer-prod</td><td>Exclusive</td></tr><tr><td><code>environments/*/observability/obi-*</code></td><td>obi-specialist</td><td>Exclusive</td></tr><tr><td><code>environments/*/observability/tempo/</code></td><td>grafana-specialist-1</td><td>Exclusive</td></tr><tr><td><code>environments/*/observability/mimir/</code></td><td>grafana-specialist-1</td><td>Exclusive</td></tr><tr><td><code>environments/*/observability/loki/</code></td><td>grafana-specialist-2</td><td>Exclusive</td></tr><tr><td><code>environments/*/observability/grafana/</code></td><td>grafana-specialist-2</td><td>Exclusive</td></tr><tr><td><code>lib/alloy/</code></td><td>alloy-specialist</td><td>Exclusive</td></tr><tr><td><code>lib/tanka/</code></td><td>platform-engineer</td><td>Shared (read-mostly)</td></tr><tr><td><code>charts/obi-*</code></td><td>obi-specialist</td><td>Exclusive</td></tr><tr><td><code>Tiltfile</code></td><td>devops-automation</td><td>Exclusive</td></tr><tr><td><code>justfile</code></td><td>devops-automation</td><td>Exclusive</td></tr><tr><td><code>.github/workflows/</code></td><td>cicd-engineer</td><td>Exclusive</td></tr><tr><td><code>tests/</code></td><td>tester</td><td>Exclusive</td></tr><tr><td><code>docs/</code></td><td>All agents</td><td>Shared (coordination required)</td></tr></tbody></table></div>
+<h3 id="3-dependency-graph">3. Dependency Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-dependency-graph" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Map dependencies BEFORE launching to determine execution waves:</p>
+<pre><code>Wave 1 (Independent):
+├── Platform Team → environments/*/kubernetes/
+├── DevOps Team → Tiltfile, justfile, .github/workflows/
+└── Documentation → docs/ (can start anytime)
+
+Wave 2 (Depends on Wave 1 Platform):
+├── Observability Team → environments/*/observability/
+└── (Waits for: swarm/platform/namespace-ready)
+
+Wave 3 (Depends on Wave 2):
+├── Integration Testing → tests/integration/
+└── (Waits for: swarm/observability/deployed)
+</code></pre>
+<hr/>
+<h2 id="execution-patterns">Execution Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#execution-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pattern-1-pure-parallel-no-dependencies">Pattern 1: Pure Parallel (No Dependencies)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-1-pure-parallel-no-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Use Case:</strong> Independent workstreams with no shared files or dependencies</p>
+<p><strong>Example:</strong> Platform engineers working on different environments</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// ✅ CORRECT: All agents launched in ONE message</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Single</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Message</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Dev&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Implement dev environment Kubernetes configuration:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: npx claude-flow@alpha hooks pre-task --description &quot;Configure dev k8s&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create namespace: observability-dev</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure RBAC with developer permissions</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Set resource quotas: 50 CPU, 128Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Deploy network policies for pod isolation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    6. Post-edit hook after each file creation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    7. Post-task hook: npx claude-flow@alpha hooks post-task --task-id &quot;dev-k8s-config&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    8. Store completion: swarm/platform/dev-ready</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Files to create:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/dev/kubernetes/namespace.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/dev/kubernetes/rbac.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/dev/kubernetes/resourcequota.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/dev/kubernetes/networkpolicy.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Staging&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Implement staging environment Kubernetes configuration:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: npx claude-flow@alpha hooks pre-task --description &quot;Configure staging k8s&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create namespace: observability-staging</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure RBAC with stricter permissions than dev</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Set resource quotas: 75 CPU, 192Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Deploy network policies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    6. Post-edit hook after each file creation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    7. Post-task hook: npx claude-flow@alpha hooks post-task --task-id &quot;staging-k8s-config&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    8. Store completion: swarm/platform/staging-ready</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Files to create:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/staging/kubernetes/namespace.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/staging/kubernetes/rbac.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/staging/kubernetes/resourcequota.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/staging/kubernetes/networkpolicy.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Implement production environment Kubernetes configuration:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: npx claude-flow@alpha hooks pre-task --description &quot;Configure prod k8s&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create namespace: observability-prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure RBAC with strict production permissions</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Set resource quotas: 100 CPU, 256Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Deploy comprehensive network policies with zero-trust model</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    6. Enable audit logging</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    7. Post-edit hook after each file creation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    8. Post-task hook: npx claude-flow@alpha hooks post-task --task-id &quot;prod-k8s-config&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    9. Store completion: swarm/platform/prod-ready</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Files to create:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/prod/kubernetes/namespace.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/prod/kubernetes/rbac.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/prod/kubernetes/resourcequota.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/prod/kubernetes/networkpolicy.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    - environments/prod/kubernetes/auditpolicy.yaml</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Batch ALL todos in ONE call</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure staging environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring staging environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure prod environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring prod environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;4&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Review all configurations&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;pending&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Reviewing configurations&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;5&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy to clusters&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;pending&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploying to clusters&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ]}</span></span></code></pre></figure>
+<p><strong>Result:</strong> 3 agents complete in ~45 minutes (vs ~2 hours sequential)</p>
+<hr/>
+<h3 id="pattern-2-sequential-waves-with-dependencies">Pattern 2: Sequential Waves (With Dependencies)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-2-sequential-waves-with-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Use Case:</strong> Workstreams with clear dependencies</p>
+<p><strong>Example:</strong> Platform → Observability → Testing</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// ✅ CORRECT: Launch Wave 1 in one message, Wave 2 in another (after Wave 1 completes)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Wave</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Platform</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Foundation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Dev&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure dev k8s...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Staging&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure staging k8s...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure prod k8s...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Terraform Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Provision cloud resources...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;terraform-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Wave</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> todos</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Wait for Wave 1 completion, then launch Wave 2</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Wave</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Observability</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Stack</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Deploy OBI experiment framework:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: Check memory for swarm/platform/prod-ready (MUST exist)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. If not ready, wait and check again</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Design OBI experiment framework...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Deploy Tempo and Mimir:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: Check memory for swarm/platform/prod-ready (MUST exist)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. If not ready, wait and check again</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure Tempo with S3 backend...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Deploy Loki and Grafana:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: Check memory for swarm/platform/prod-ready (MUST exist)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. If not ready, wait and check again</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure Loki with S3 backend...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Wave</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> todos</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span></code></pre></figure>
+<p><strong>Result:</strong> Wave 1 + Wave 2 complete in ~1.5 hours (vs ~4 hours sequential)</p>
+<hr/>
+<h3 id="pattern-3-partial-dependencies-smart-parallelism">Pattern 3: Partial Dependencies (Smart Parallelism)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-3-partial-dependencies-smart-parallelism" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Use Case:</strong> Some work can start before full completion of dependencies</p>
+<p><strong>Example:</strong> Observability can start once namespace exists, doesn’t need full platform completion</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// ✅ CORRECT: Launch all agents together, use granular dependency checks</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Single</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Message</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Smart</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Parallel</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Launch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Platform agents start immediately</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Create namespace FIRST (highest priority)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Store completion immediately: swarm/platform/namespace-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Then continue with RBAC, quotas, etc.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Observability agents check for PARTIAL completion</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: Loop until swarm/platform/namespace-ready exists</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Once namespace ready, start OBI deployment (don't wait for full platform)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Continue with experiment design...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: Loop until swarm/platform/namespace-ready exists</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Once namespace ready, start Grafana deployment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Continue with Tempo/Mimir/Loki...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // DevOps can run fully parallel (no dependencies)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task hook: No dependencies, start immediately</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create Tiltfile with all services...</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<p><strong>Result:</strong> Maximum parallelism, complete in ~1 hour (vs ~4 hours sequential)</p>
+<p><strong>Key Insight:</strong> Don’t over-serialize! Use granular memory keys for partial completion.</p>
+<hr/>
+<h2 id="memory-based-coordination">Memory-Based Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-based-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="memory-key-conventions">Memory Key Conventions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-key-conventions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Use structured keys for coordination:</p>
+<pre><code>swarm/
+├── platform/
+│   ├── dev-ready              # Dev environment complete
+│   ├── staging-ready          # Staging environment complete
+│   ├── prod-ready             # Prod environment complete
+│   ├── namespace-ready        # Namespace created (partial completion)
+│   ├── terraform-outputs      # Cloud resource info
+│   └── cluster-info           # Cluster connection details
+├── observability/
+│   ├── obi-deployed           # OBI experiments deployed
+│   ├── grafana-deployed       # Grafana stack deployed
+│   ├── tempo-endpoint         # Tempo URL
+│   ├── mimir-endpoint         # Mimir URL
+│   ├── loki-endpoint          # Loki URL
+│   ├── grafana-url            # Grafana dashboard URL
+│   └── alloy-config           # Alloy pipeline status
+├── devops/
+│   ├── ci-ready               # CI/CD pipelines ready
+│   ├── dev-env-ready          # Local dev environment ready
+│   └── tests-passing          # Test suite status
+└── shared/
+    ├── dependencies           # Cross-team dependencies
+    └── decisions              # Shared architectural decisions
+</code></pre>
+<h3 id="storing-information">Storing Information<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storing-information" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Agent stores completion status</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__memory_usage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  action</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;store&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  key</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;swarm/platform/dev-ready&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;coordination&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  value</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">JSON</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">stringify</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">({</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;complete&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    agent</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer-dev-001&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    timestamp</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#E5C07B;">Date</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">now</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;observability-dev&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    resourceQuota</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">cpu</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;50&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">memory</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;128Gi&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    files</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">      &quot;environments/dev/kubernetes/namespace.yaml&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">      &quot;environments/dev/kubernetes/rbac.yaml&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  })</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="retrieving-information">Retrieving Information<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#retrieving-information" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Dependent agent checks for readiness</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__memory_usage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  action</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;retrieve&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  key</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;swarm/platform/dev-ready&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  namespace</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;coordination&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// In agent task instructions:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;1. Pre-task: Check memory for swarm/platform/dev-ready&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;2. If not exists, wait 30 seconds and check again (max 10 attempts)&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// &quot;3. If exists, proceed with deployment&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="hook-execution-protocol">Hook Execution Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hook-execution-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pre-task-hook">Pre-Task Hook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pre-task-hook" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Execute BEFORE starting any work:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Deploy OBI experiments to production&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-specialist-001&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm-mop-platform&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --requires</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-infrastructure-ready&quot;</span></span></code></pre></figure>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Validates agent is ready</li>
+<li>Checks dependencies in memory</li>
+<li>Locks resources if needed</li>
+<li>Restores previous session context</li>
+<li>Returns: proceed or wait</li>
+</ul>
+<h3 id="post-edit-hook">Post-Edit Hook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#post-edit-hook" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Execute AFTER each significant file change:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/observability/obi-config.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/obi/prod-config&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-specialist-001&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-config-updated&quot;</span></span></code></pre></figure>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Stores file change in memory</li>
+<li>Notifies dependent agents</li>
+<li>Trains neural patterns on the edit</li>
+<li>Updates dashboards</li>
+<li>Triggers dependent tasks if configured</li>
+</ul>
+<h3 id="post-task-hook">Post-Task Hook<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#post-task-hook" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Execute AFTER completing entire task:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;deploy-obi-experiments&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --status</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;complete&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-specialist-001&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --output-files</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/observability/experiments/latency-test.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --summary</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Deployed 3 OBI experiments: latency, errors, throughput&quot;</span></span></code></pre></figure>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Marks task as complete</li>
+<li>Releases locked resources</li>
+<li>Updates metrics and analytics</li>
+<li>Generates task summary</li>
+<li>Notifies coordinator</li>
+</ul>
+<hr/>
+<h2 id="conflict-resolution">Conflict Resolution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conflict-resolution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="prevention-strategies">Prevention Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prevention-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Clear Ownership</strong>: Each file owned by exactly one agent</li>
+<li><strong>Directory Isolation</strong>: Agents work in separate directories</li>
+<li><strong>Memory Locks</strong>: Lock shared files before editing</li>
+<li><strong>Granular Updates</strong>: Small, atomic changes</li>
+</ol>
+<h3 id="detecting-conflicts">Detecting Conflicts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#detecting-conflicts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Agent checks for file locks before editing</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> check-lock</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/values.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-engineer-001&quot;</span></span></code></pre></figure>
+<h3 id="resolving-conflicts">Resolving Conflicts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resolving-conflicts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># If conflict detected, request resolution</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> resolve-conflict</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/values.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agents</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-engineer-001,obi-specialist-002&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --strategy</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;merge&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --priority</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-engineer&quot;</span></span></code></pre></figure>
+<p><strong>Resolution Strategies:</strong></p>
+<ul>
+<li><code>merge</code>: Merge both changes (if possible)</li>
+<li><code>priority</code>: Use changes from higher-priority agent</li>
+<li><code>latest</code>: Use most recent changes</li>
+<li><code>manual</code>: Flag for human resolution</li>
+</ul>
+<hr/>
+<h2 id="real-world-example-complete-platform-deployment">Real-World Example: Complete Platform Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#real-world-example-complete-platform-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="scenario">Scenario<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scenario" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Deploy complete MOP platform with:</p>
+<ul>
+<li>3 environments (dev, staging, prod)</li>
+<li>OBI experiments</li>
+<li>Grafana stack</li>
+<li>Alloy pipelines</li>
+<li>CI/CD</li>
+<li>Tests</li>
+</ul>
+<h3 id="step-1-preparation-sequential">Step 1: Preparation (Sequential)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-1-preparation-sequential" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Preparation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Create directory structure</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  Bash</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;mkdir -p /Users/beengud/raibid-labs/mop/environments/{dev,staging,prod}/{kubernetes,observability,infrastructure}&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  Bash</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;mkdir -p /Users/beengud/raibid-labs/mop/{charts,lib,scripts,tests,docs}/...&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Initialize coordination</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__swarm_init</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">topology</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">maxAgents</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span></code></pre></figure>
+<h3 id="step-2-launch-all-agents-parallel---one-message">Step 2: Launch All Agents (Parallel - ONE MESSAGE)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-2-launch-all-agents-parallel---one-message" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Full</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Parallel</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> Launch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Coordinator</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Hierarchical Coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Coordinate full platform deployment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Monitor all team progress</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Resolve dependencies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Handle conflicts</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Report status every 30 minutes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Coordinate final integration</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical-coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Platform Team (6 agents - parallel)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Kubernetes Architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Lead platform team:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Design cluster architecture</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Define standards and conventions</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Review all platform changes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Mentor platform engineers</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store architecture in memory: swarm/platform/architecture</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;kubernetes-architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Dev&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Configure dev environment (full instructions from Pattern 1)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Store completion: swarm/platform/dev-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Staging&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Configure staging environment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Store completion: swarm/platform/staging-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer - Prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Configure prod environment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Store completion: swarm/platform/prod-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Terraform Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Provision cloud infrastructure:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Create Terraform modules for K8s clusters</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Configure networking and security groups</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Apply: dev → staging → prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Store outputs: swarm/platform/terraform-outputs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;terraform-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Production Validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Validate all environments:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Wait for all environments ready in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Check security: RBAC, network policies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Validate resources: quotas, limits</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Check HA: replicas, PDBs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Approve or flag issues</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;production-validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Observability Team (5 agents - parallel, depends on platform namespace)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Lead observability team and deploy OBI:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task: Wait for swarm/platform/namespace-ready (any env)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Design experiment framework</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Create OBI operator deployment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Deploy experiments: latency, errors, throughput</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store completion: swarm/observability/obi-deployed</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Deploy Tempo and Mimir:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task: Wait for swarm/platform/namespace-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Deploy Tempo with S3 backend</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Deploy Mimir with S3 backend</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Store endpoints: swarm/observability/tempo-endpoint, swarm/observability/mimir-endpoint</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Deploy Loki and Grafana:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task: Wait for swarm/platform/namespace-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Deploy Loki with S3 backend</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Deploy Grafana with data sources</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Create dashboards: OBI Overview, System Health</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store URL: swarm/observability/grafana-url</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alloy Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Configure Alloy pipelines:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Pre-task: Wait for swarm/observability/obi-deployed</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Configure OTLP receiver</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Set up pipelines: metrics, traces, logs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Deploy to all environments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store status: swarm/observability/alloy-config</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;alloy-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Experiment Designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Design observability experiments:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Design experiment methodology</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Define metrics and KPIs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Create experiment specs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Document analysis plans</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store designs: swarm/observability/experiment-specs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;experiment-designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // DevOps Team (4 agents - fully parallel, no dependencies)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Setup local development:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Create Tiltfile with all services</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create Justfile with common tasks</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure hot reload</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Set up port forwards</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store config: swarm/devops/dev-env-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;CI/CD Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Build CI/CD pipelines:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Create GitHub Actions for PR validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Create deployment workflows</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Configure auto-deploy to dev</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Add manual approval for prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store status: swarm/devops/ci-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;cicd-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Create test suite:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Unit tests for config validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Integration tests for full stack</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Load tests for experiments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Achieve 80%+ coverage</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Store results: swarm/devops/tests-passing</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Troubleshooter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    Monitor and debug:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    1. Set up monitoring for all agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    2. Watch for errors and conflicts</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    3. Debug issues as they arise</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    4. Provide support to other agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    5. Log all issues and resolutions</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  `</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-troubleshooter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // Batch ALL todos in ONE call</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Platform todos (6)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Design platform architecture&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Designing platform architecture&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure staging environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring staging environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;4&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure prod environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring prod environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;5&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Provision cloud infrastructure&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Provisioning cloud infrastructure&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;6&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Validate production readiness&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;pending&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Validating production readiness&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Observability todos (5)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;7&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy OBI experiments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploying OBI experiments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;8&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy Tempo and Mimir&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploying Tempo and Mimir&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;9&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy Loki and Grafana&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploying Loki and Grafana&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;10&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure Alloy pipelines&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;pending&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configuring Alloy pipelines&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;11&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Design experiments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Designing experiments&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // DevOps todos (4)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;12&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Setup local dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Setting up local dev environment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;13&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Build CI/CD pipelines&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Building CI/CD pipelines&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;14&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Create test suite&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Creating test suite&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;medium&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;15&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">content</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monitor and debug&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">activeForm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monitoring and debugging&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">priority</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;low&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ]}</span></span></code></pre></figure>
+<h3 id="step-3-results">Step 3: Results<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#step-3-results" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline:</strong></p>
+<ul>
+<li><strong>Minute 0</strong>: All 15 agents launch simultaneously</li>
+<li><strong>Minute 15</strong>: Platform namespaces created, observability agents start deploying</li>
+<li><strong>Minute 45</strong>: Platform complete, observability in progress, DevOps ~80% done</li>
+<li><strong>Minute 90</strong>: Observability complete, starting integration tests</li>
+<li><strong>Minute 120</strong>: Full platform deployed, tested, validated</li>
+</ul>
+<p><strong>Total Time: 2 hours</strong> (vs 8-12 hours sequential)</p>
+<p><strong>Speed Improvement: 4-6x</strong></p>
+<hr/>
+<h2 id="common-pitfalls">Common Pitfalls<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-pitfalls" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="-wrong-sequential-agent-spawning">❌ WRONG: Sequential Agent Spawning<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-wrong-sequential-agent-spawning" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DON'T DO THIS - Multiple messages</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 3</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// This breaks parallel coordination!</span></span></code></pre></figure>
+<h3 id="-wrong-incomplete-dependency-checks">❌ WRONG: Incomplete Dependency Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-wrong-incomplete-dependency-checks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  1. Deploy OBI immediately  // Missing dependency check!</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  2. Hope platform is ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// This will fail if platform not ready!</span></span></code></pre></figure>
+<h3 id="-wrong-shared-file-ownership">❌ WRONG: Shared File Ownership<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-wrong-shared-file-ownership" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Edit environments/prod/values.yaml&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Edit environments/prod/values.yaml&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// This creates conflicts!</span></span></code></pre></figure>
+<h3 id="-wrong-missing-hook-execution">❌ WRONG: Missing Hook Execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-wrong-missing-hook-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  1. Create file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  2. Deploy</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  // Missing all hooks!</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// No coordination = chaos</span></span></code></pre></figure>
+<hr/>
+<h2 id="performance-optimization">Performance Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-minimize-cross-team-dependencies">1. Minimize Cross-Team Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-minimize-cross-team-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bad:</strong></p>
+<pre><code>Platform → Observability → Testing → Validation
+(Fully sequential)
+</code></pre>
+<p><strong>Good:</strong></p>
+<pre><code>Platform → Observability
+    ↓
+  DevOps (parallel)
+    ↓
+  Testing (parallel)
+</code></pre>
+<h3 id="2-use-granular-memory-keys">2. Use Granular Memory Keys<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-use-granular-memory-keys" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bad:</strong></p>
+<pre><code>swarm/platform/complete  // All or nothing
+</code></pre>
+<p><strong>Good:</strong></p>
+<pre><code>swarm/platform/namespace-ready  // Partial completion
+swarm/platform/rbac-ready
+swarm/platform/network-ready
+swarm/platform/complete
+</code></pre>
+<h3 id="3-batch-all-operations">3. Batch All Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-batch-all-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bad:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">todo1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">todo2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 3</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<p><strong>Good:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Message</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  TodoWrite</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">todos</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">todo1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">todo2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">todo15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Agent 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // ... all tasks</span></span></code></pre></figure>
+<h3 id="4-right-size-teams">4. Right-Size Teams<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-right-size-teams" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Team Size</th><th>Coordination Overhead</th><th>Optimal Use Case</th></tr></thead><tbody><tr><td>2-3 agents</td><td>~5%</td><td>Simple tasks</td></tr><tr><td>4-6 agents</td><td>~10%</td><td>Standard workstreams</td></tr><tr><td>7-10 agents</td><td>~15%</td><td>Complex projects</td></tr><tr><td>11-15 agents</td><td>~20%</td><td>Full platform</td></tr><tr><td>16+ agents</td><td>~30%+</td><td>Avoid if possible</td></tr></tbody></table></div>
+<hr/>
+<h2 id="monitoring-progress">Monitoring Progress<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitoring-progress" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dashboard-view">Dashboard View<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dashboard-view" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check overall swarm status</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> swarm-status</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm-mop-platform&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --detailed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span></code></pre></figure>
+<p><strong>Output:</strong></p>
+<pre><code>Swarm Status: ACTIVE
+Agents: 15 total, 12 active, 3 complete
+Progress: 67%
+
+Platform Team (6 agents):
+  ✅ platform-engineer-dev-001: COMPLETE
+  ✅ platform-engineer-staging-001: COMPLETE
+  🔄 platform-engineer-prod-001: ACTIVE (85%)
+  🔄 terraform-specialist-001: ACTIVE (60%)
+  ⏳ production-validator-001: PENDING
+  📋 kubernetes-architect-001: REVIEWING
+
+Observability Team (5 agents):
+  🔄 obi-specialist-001: ACTIVE (40%)
+  🔄 grafana-specialist-001: ACTIVE (55%)
+  🔄 grafana-specialist-002: ACTIVE (45%)
+  ⏳ alloy-specialist-001: PENDING (waiting: obi-deployed)
+  🔄 experiment-designer-001: ACTIVE (70%)
+
+DevOps Team (4 agents):
+  ✅ devops-automation-001: COMPLETE
+  🔄 cicd-engineer-001: ACTIVE (80%)
+  🔄 tester-001: ACTIVE (60%)
+  🔄 devops-troubleshooter-001: ACTIVE (monitoring)
+</code></pre>
+<h3 id="individual-agent-status">Individual Agent Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#individual-agent-status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check specific agent</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent-status</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --agent-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-specialist-001&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="troubleshooting">Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#troubleshooting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-agent-blocked-on-dependency">Issue: Agent Blocked on Dependency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-agent-blocked-on-dependency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Agent status: PENDING</li>
+<li>No progress for >10 minutes</li>
+</ul>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> task-status</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --task-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;deploy-obi&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --show-dependencies</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span></code></pre></figure>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Check if dependency task completed</li>
+<li>Verify memory key exists</li>
+<li>Check for errors in dependency task</li>
+<li>Consider manual unblock if dependency failed but not critical</li>
+</ol>
+<h3 id="issue-file-conflict">Issue: File Conflict<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-file-conflict" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Multiple agents trying to edit same file</li>
+<li>Git merge conflicts</li>
+</ul>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list-locks</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/values.yaml&quot;</span></span></code></pre></figure>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Identify conflicting agents</li>
+<li>Determine priority (platform > observability > devops)</li>
+<li>Coordinate merge strategy</li>
+<li>Use conflict resolution hook</li>
+</ol>
+<h3 id="issue-slow-progress">Issue: Slow Progress<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-slow-progress" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Agents taking longer than expected</li>
+<li>Overall progress &lt; 50% after 1 hour</li>
+</ul>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> swarm-metrics</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm-mop-platform&quot;</span></span></code></pre></figure>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Check for bottlenecks (one agent blocking many others)</li>
+<li>Consider breaking up large tasks</li>
+<li>Add more agents to slow workstreams</li>
+<li>Optimize dependencies (make more parallel)</li>
+</ol>
+<hr/>
+<h2 id="best-practices-summary">Best Practices Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="-do">✅ DO<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-do" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Launch all agents in ONE message</strong> (Golden Rule)</li>
+<li><strong>Define clear directory ownership</strong> before launching</li>
+<li><strong>Map dependencies</strong> and use memory for coordination</li>
+<li><strong>Execute hooks consistently</strong> (pre-task, post-edit, post-task)</li>
+<li><strong>Use granular memory keys</strong> for partial completion</li>
+<li><strong>Batch all operations</strong> (todos, file ops, bash commands)</li>
+<li><strong>Monitor progress</strong> with dashboard</li>
+<li><strong>Right-size teams</strong> (4-8 agents optimal)</li>
+</ol>
+<h3 id="-dont">❌ DON’T<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#-dont" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Don’t spawn agents in multiple messages</strong> (breaks parallelism)</li>
+<li><strong>Don’t share file ownership</strong> without coordination</li>
+<li><strong>Don’t skip dependency checks</strong> (will cause failures)</li>
+<li><strong>Don’t skip hooks</strong> (breaks coordination)</li>
+<li><strong>Don’t over-serialize</strong> (use partial dependencies)</li>
+<li><strong>Don’t ignore conflicts</strong> (resolve immediately)</li>
+<li><strong>Don’t create teams >15 agents</strong> (coordination overhead too high)</li>
+</ol>
+<hr/>
+<h2 id="expected-results">Expected Results<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#expected-results" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Following this guide, you should achieve:</p>
+<ul>
+<li>✅ <strong>2.8-4.4x speed improvement</strong> vs sequential execution</li>
+<li>✅ <strong>80%+ parallel execution</strong> (vs 0-20% ad-hoc)</li>
+<li>✅ <strong>Zero file conflicts</strong> (clear ownership)</li>
+<li>✅ <strong>Smooth coordination</strong> (memory + hooks)</li>
+<li>✅ <strong>Predictable timelines</strong> (dependency-aware)</li>
+<li>✅ <strong>High quality output</strong> (parallel doesn’t mean rushed)</li>
+</ul>
+<p><strong>Example Timeline:</strong></p>
+<ul>
+<li>Small task (4 agents): 30-45 min (vs 2 hours)</li>
+<li>Medium task (8 agents): 1-1.5 hours (vs 4 hours)</li>
+<li>Large task (15 agents): 2-3 hours (vs 8-12 hours)</li>
+</ul>
+<hr/>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>Review <code>team-compositions.md</code> for standard team patterns</li>
+<li>Study <code>agent-definitions.md</code> for agent capabilities</li>
+<li>Check <code>coordination.md</code> for coordination protocols</li>
+<li>Try a small parallel deployment (4 agents) first</li>
+<li>Scale up to larger teams once comfortable</li>
+<li>Monitor metrics and optimize</li>
+</ol>
+<p><strong>Remember:</strong> Parallel execution is powerful, but requires discipline. Follow the Golden Rule: “1 MESSAGE = ALL RELATED OPERATIONS” and you’ll achieve dramatic speed improvements.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-168" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#parallel-execution-guide" data-for="parallel-execution-guide">Parallel Execution Guide</a></li><li class="depth-1"><a href="#core-principle-the-golden-rule" data-for="core-principle-the-golden-rule">Core Principle: The Golden Rule</a></li><li class="depth-1"><a href="#prerequisites" data-for="prerequisites">Prerequisites</a></li><li class="depth-2"><a href="#1-directory-structure" data-for="1-directory-structure">1. Directory Structure</a></li><li class="depth-2"><a href="#2-directory-ownership-matrix" data-for="2-directory-ownership-matrix">2. Directory Ownership Matrix</a></li><li class="depth-2"><a href="#3-dependency-graph" data-for="3-dependency-graph">3. Dependency Graph</a></li><li class="depth-1"><a href="#execution-patterns" data-for="execution-patterns">Execution Patterns</a></li><li class="depth-2"><a href="#pattern-1-pure-parallel-no-dependencies" data-for="pattern-1-pure-parallel-no-dependencies">Pattern 1: Pure Parallel (No Dependencies)</a></li><li class="depth-2"><a href="#pattern-2-sequential-waves-with-dependencies" data-for="pattern-2-sequential-waves-with-dependencies">Pattern 2: Sequential Waves (With Dependencies)</a></li><li class="depth-2"><a href="#pattern-3-partial-dependencies-smart-parallelism" data-for="pattern-3-partial-dependencies-smart-parallelism">Pattern 3: Partial Dependencies (Smart Parallelism)</a></li><li class="depth-1"><a href="#memory-based-coordination" data-for="memory-based-coordination">Memory-Based Coordination</a></li><li class="depth-2"><a href="#memory-key-conventions" data-for="memory-key-conventions">Memory Key Conventions</a></li><li class="depth-2"><a href="#storing-information" data-for="storing-information">Storing Information</a></li><li class="depth-2"><a href="#retrieving-information" data-for="retrieving-information">Retrieving Information</a></li><li class="depth-1"><a href="#hook-execution-protocol" data-for="hook-execution-protocol">Hook Execution Protocol</a></li><li class="depth-2"><a href="#pre-task-hook" data-for="pre-task-hook">Pre-Task Hook</a></li><li class="depth-2"><a href="#post-edit-hook" data-for="post-edit-hook">Post-Edit Hook</a></li><li class="depth-2"><a href="#post-task-hook" data-for="post-task-hook">Post-Task Hook</a></li><li class="depth-1"><a href="#conflict-resolution" data-for="conflict-resolution">Conflict Resolution</a></li><li class="depth-2"><a href="#prevention-strategies" data-for="prevention-strategies">Prevention Strategies</a></li><li class="depth-2"><a href="#detecting-conflicts" data-for="detecting-conflicts">Detecting Conflicts</a></li><li class="depth-2"><a href="#resolving-conflicts" data-for="resolving-conflicts">Resolving Conflicts</a></li><li class="depth-1"><a href="#real-world-example-complete-platform-deployment" data-for="real-world-example-complete-platform-deployment">Real-World Example: Complete Platform Deployment</a></li><li class="depth-2"><a href="#scenario" data-for="scenario">Scenario</a></li><li class="depth-2"><a href="#step-1-preparation-sequential" data-for="step-1-preparation-sequential">Step 1: Preparation (Sequential)</a></li><li class="depth-2"><a href="#step-2-launch-all-agents-parallel---one-message" data-for="step-2-launch-all-agents-parallel---one-message">Step 2: Launch All Agents (Parallel - ONE MESSAGE)</a></li><li class="depth-2"><a href="#step-3-results" data-for="step-3-results">Step 3: Results</a></li><li class="depth-1"><a href="#common-pitfalls" data-for="common-pitfalls">Common Pitfalls</a></li><li class="depth-2"><a href="#-wrong-sequential-agent-spawning" data-for="-wrong-sequential-agent-spawning">❌ WRONG: Sequential Agent Spawning</a></li><li class="depth-2"><a href="#-wrong-incomplete-dependency-checks" data-for="-wrong-incomplete-dependency-checks">❌ WRONG: Incomplete Dependency Checks</a></li><li class="depth-2"><a href="#-wrong-shared-file-ownership" data-for="-wrong-shared-file-ownership">❌ WRONG: Shared File Ownership</a></li><li class="depth-2"><a href="#-wrong-missing-hook-execution" data-for="-wrong-missing-hook-execution">❌ WRONG: Missing Hook Execution</a></li><li class="depth-1"><a href="#performance-optimization" data-for="performance-optimization">Performance Optimization</a></li><li class="depth-2"><a href="#1-minimize-cross-team-dependencies" data-for="1-minimize-cross-team-dependencies">1. Minimize Cross-Team Dependencies</a></li><li class="depth-2"><a href="#2-use-granular-memory-keys" data-for="2-use-granular-memory-keys">2. Use Granular Memory Keys</a></li><li class="depth-2"><a href="#3-batch-all-operations" data-for="3-batch-all-operations">3. Batch All Operations</a></li><li class="depth-2"><a href="#4-right-size-teams" data-for="4-right-size-teams">4. Right-Size Teams</a></li><li class="depth-1"><a href="#monitoring-progress" data-for="monitoring-progress">Monitoring Progress</a></li><li class="depth-2"><a href="#dashboard-view" data-for="dashboard-view">Dashboard View</a></li><li class="depth-2"><a href="#individual-agent-status" data-for="individual-agent-status">Individual Agent Status</a></li><li class="depth-1"><a href="#troubleshooting" data-for="troubleshooting">Troubleshooting</a></li><li class="depth-2"><a href="#issue-agent-blocked-on-dependency" data-for="issue-agent-blocked-on-dependency">Issue: Agent Blocked on Dependency</a></li><li class="depth-2"><a href="#issue-file-conflict" data-for="issue-file-conflict">Issue: File Conflict</a></li><li class="depth-2"><a href="#issue-slow-progress" data-for="issue-slow-progress">Issue: Slow Progress</a></li><li class="depth-1"><a href="#best-practices-summary" data-for="best-practices-summary">Best Practices Summary</a></li><li class="depth-2"><a href="#-do" data-for="-do">✅ DO</a></li><li class="depth-2"><a href="#-dont" data-for="-dont">❌ DON’T</a></li><li class="depth-1"><a href="#expected-results" data-for="expected-results">Expected Results</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

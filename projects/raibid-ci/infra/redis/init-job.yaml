@@ -1,0 +1,28 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: redis-init
+  namespace: raibid-redis
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: redis-init
+          image: bitnami/redis:7.2.3
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: raibid-redis
+                  key: redis-password
+          command:
+            - /bin/bash
+            - -c
+            - |
+              redis-cli -h raibid-redis-master -a "$REDIS_PASSWORD" \
+                XGROUP CREATE raibid:jobs raibid-workers $ MKSTREAM || true
+              redis-cli -h raibid-redis-master -a "$REDIS_PASSWORD" \
+                XADD raibid:jobs MAXLEN ~ 10000 \* \
+                job_id "init" status "initialized"

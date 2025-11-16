@@ -1,0 +1,121 @@
+# KEDA Helm Chart Values
+# Production configuration for raibid-ci
+
+## Image configuration
+image:
+  keda:
+    repository: ghcr.io/kedacore/keda
+    tag: "2.12.0"
+  metricsApiServer:
+    repository: ghcr.io/kedacore/keda-metrics-apiserver
+    tag: "2.12.0"
+  webhooks:
+    repository: ghcr.io/kedacore/keda-admission-webhooks
+    tag: "2.12.0"
+
+## RBAC
+rbac:
+  create: true
+
+## Service Account
+serviceAccount:
+  create: true
+  name: keda-operator
+
+## Operator configuration
+operator:
+  name: keda-operator
+  replicaCount: 1
+
+## Logging
+logging:
+  operator:
+    level: info
+    format: json
+  metricServer:
+    level: info
+
+## Metrics Server
+metricsServer:
+  enabled: true
+  replicaCount: 1
+
+## Admission Webhooks
+webhooks:
+  enabled: true
+  replicaCount: 1
+
+## Resource limits
+resources:
+  operator:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  metricServer:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  webhooks:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+## Security
+securityContext:
+  operator:
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  metricServer:
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+  webhooks:
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+
+## Probes
+livenessProbe:
+  operator:
+    initialDelaySeconds: 25
+    periodSeconds: 10
+  metricServer:
+    initialDelaySeconds: 25
+    periodSeconds: 10
+  webhooks:
+    initialDelaySeconds: 25
+    periodSeconds: 10
+
+readinessProbe:
+  operator:
+    initialDelaySeconds: 20
+    periodSeconds: 10
+  metricServer:
+    initialDelaySeconds: 20
+    periodSeconds: 10
+  webhooks:
+    initialDelaySeconds: 20
+    periodSeconds: 10
+
+## Labels
+commonLabels:
+  app.kubernetes.io/name: keda
+  app.kubernetes.io/component: autoscaler
+  app.kubernetes.io/part-of: raibid-ci
+  app.kubernetes.io/managed-by: helm

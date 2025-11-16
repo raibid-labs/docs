@@ -1,0 +1,245 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for Infrastructure as Code (Kubernetes focus)",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "iac-kubernetes",
+    "description": "Kubernetes infrastructure as code with Jsonnet/Starlark",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "jsonnet",
+    "secondary": ["starlark", "nushell", "yaml", "python"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "validate": "just validate",
+    "lint": "just lint",
+    "format": "just fmt",
+    "apply": "just apply",
+    "diff": "just diff",
+    "test": "just test"
+  },
+
+  "contextFiles": [
+    "tanka.yaml",
+    "jsonnetfile.json",
+    "jsonnetfile.lock.json",
+    "Justfile",
+    "README.md",
+    "environments/**/*.jsonnet",
+    "lib/**/*.libsonnet"
+  ],
+
+  "fileStructure": {
+    "environments/": "Environment-specific configurations (dev, staging, prod)",
+    "lib/": "Reusable Jsonnet libraries",
+    "vendor/": "External Jsonnet dependencies (gitignored, use jb)",
+    "manifests/": "Generated YAML manifests (gitignored)",
+    "scripts/": "Nushell automation scripts",
+    "tests/": "Validation and integration tests",
+    "docs/": "Architecture and deployment documentation"
+  },
+
+  "tools": {
+    "jsonnet": {
+      "version": ">=0.20.0",
+      "bundler": "jsonnet-bundler (jb)",
+      "formatter": "jsonnetfmt"
+    },
+    "tanka": {
+      "version": ">=0.25.0",
+      "description": "Jsonnet to Kubernetes deployment"
+    },
+    "kubectl": {
+      "version": ">=1.28",
+      "description": "Kubernetes CLI"
+    },
+    "kubeval": {
+      "version": "latest",
+      "description": "Validate Kubernetes manifests"
+    },
+    "kustomize": {
+      "version": ">=5.0",
+      "description": "Optional overlay management"
+    },
+    "helm": {
+      "version": ">=3.0",
+      "description": "Package manager for Kubernetes"
+    }
+  },
+
+  "rules": {
+    "jsonnet": [
+      "Use local for reusable values",
+      "Function parameters should have defaults where sensible",
+      "Document complex transformations",
+      "Keep files modular and focused",
+      "Use importstr for embedding files",
+      "Validate with kubeval before applying",
+      "Format with jsonnetfmt before committing"
+    ],
+    "kubernetes": [
+      "Use namespaces for environment isolation",
+      "Set resource requests and limits",
+      "Use ConfigMaps for configuration",
+      "Use Secrets for sensitive data",
+      "Implement health checks (liveness, readiness)",
+      "Use labels consistently for selectors",
+      "Version all resources appropriately",
+      "Use NetworkPolicies for security"
+    ],
+    "security": [
+      "Never commit secrets or credentials",
+      "Use RBAC for access control",
+      "Run containers as non-root",
+      "Use Pod Security Standards",
+      "Scan images for vulnerabilities",
+      "Rotate secrets regularly",
+      "Implement network policies"
+    ],
+    "gitops": [
+      "All changes go through pull requests",
+      "Generated manifests should not be committed",
+      "Use Git as single source of truth",
+      "Tag releases semantically",
+      "Document rollback procedures"
+    ]
+  },
+
+  "environments": {
+    "development": {
+      "cluster": "dev-cluster",
+      "namespace": "dev",
+      "replicas": 1,
+      "resources": "minimal"
+    },
+    "staging": {
+      "cluster": "staging-cluster",
+      "namespace": "staging",
+      "replicas": 2,
+      "resources": "moderate"
+    },
+    "production": {
+      "cluster": "prod-cluster",
+      "namespace": "prod",
+      "replicas": 3,
+      "resources": "production-grade",
+      "backup": "enabled",
+      "monitoring": "full"
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "jb install",
+      "just setup"
+    ],
+    "development": [
+      "just build - Generate Kubernetes manifests",
+      "just validate - Validate manifests with kubeval",
+      "just diff - Show differences between desired and current state",
+      "just apply - Apply changes to cluster",
+      "just lint - Check Jsonnet syntax"
+    ],
+    "deployment": [
+      "just deploy-dev - Deploy to development",
+      "just deploy-staging - Deploy to staging",
+      "just deploy-prod - Deploy to production (requires approval)"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "jsonnetfmt --test",
+      "jsonnet eval (syntax check)",
+      "kubeval validation",
+      "Tanka diff (dry-run)",
+      "YAML linting",
+      "Security scanning"
+    ],
+    "deployment": {
+      "dev": "Auto-deploy on merge to main",
+      "staging": "Auto-deploy on release tag",
+      "production": "Manual approval required"
+    },
+    "gitops": {
+      "tools": ["ArgoCD", "FluxCD"],
+      "sync": "Automatic or manual based on environment"
+    }
+  },
+
+  "validation": {
+    "preCommit": [
+      "jsonnetfmt --in-place",
+      "jsonnet syntax validation",
+      "Basic kubeval check"
+    ],
+    "preApply": [
+      "Full kubeval validation",
+      "tanka diff review",
+      "Resource limit verification",
+      "Namespace existence check"
+    ]
+  },
+
+  "monitoring": {
+    "prometheus": "Metrics collection",
+    "grafana": "Visualization",
+    "alertmanager": "Alerting",
+    "loki": "Log aggregation",
+    "tempo": "Distributed tracing"
+  },
+
+  "documentation": {
+    "readme": "Include cluster setup, deployment process, troubleshooting",
+    "architecture": "Document infrastructure design decisions",
+    "runbooks": "Operational procedures and incident response",
+    "adr": "Architecture Decision Records for major changes"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for IaC K8s projects",
+    "tasks": {
+      "default": "list",
+      "setup": "jb install",
+      "build": "tk show environments/dev",
+      "validate": "tk show environments/dev | kubeval --strict",
+      "lint": "find . -name '*.jsonnet' -o -name '*.libsonnet' | xargs jsonnetfmt --test",
+      "fmt": "find . -name '*.jsonnet' -o -name '*.libsonnet' | xargs jsonnetfmt --in-place",
+      "diff": "tk diff environments/dev",
+      "apply": "tk apply environments/dev",
+      "deploy-dev": "just validate && tk apply environments/dev",
+      "deploy-staging": "just validate && tk apply environments/staging",
+      "deploy-prod": "just validate && tk apply environments/prod",
+      "test": "pytest tests/",
+      "clean": "rm -rf manifests/ vendor/",
+      "kubeconfig": "export KUBECONFIG=~/.kube/config"
+    }
+  },
+
+  "bestPractices": {
+    "jsonnet": [
+      "Use libraries for common patterns",
+      "Parameterize environment-specific values",
+      "Keep functions pure and testable",
+      "Use meaningful variable names",
+      "Comment complex logic"
+    ],
+    "kubernetes": [
+      "Use Deployments over ReplicaSets",
+      "Implement proper health checks",
+      "Set resource quotas per namespace",
+      "Use HPA for auto-scaling",
+      "Implement PodDisruptionBudgets",
+      "Use init containers for setup",
+      "Version your APIs"
+    ]
+  }
+}

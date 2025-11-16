@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>agent-definitions</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="agent-definitions"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="agent-definitions"/><meta name="twitter:description" content="Agent Definitions This document defines specialized agents for the MOP (Multi-cluster Observability Platform) project, following raibid-labs patterns."/><meta property="og:description" content="Agent Definitions This document defines specialized agents for the MOP (Multi-cluster Observability Platform) project, following raibid-labs patterns."/><meta property="og:image:alt" content="Agent Definitions This document defines specialized agents for the MOP (Multi-cluster Observability Platform) project, following raibid-labs patterns."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/agent-definitions"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/agent-definitions"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Agent Definitions This document defines specialized agents for the MOP (Multi-cluster Observability Platform) project, following raibid-labs patterns."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/agent-definitions-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/agent-definitions-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/agent-definitions-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/docs/agents/agent-definitions"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-375"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-375" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/agents/">agents</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>agent definitions</a></div></nav><h1 class="article-title">agent-definitions</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.445Z">Nov 16, 2025</time><span>12 min read</span></p></div></div><article class="popover-hint"><h1 id="agent-definitions">Agent Definitions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-definitions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This document defines specialized agents for the MOP (Multi-cluster Observability Platform) project, following raibid-labs patterns.</p>
+<hr/>
+<h2 id="platform--infrastructure-agents">Platform &amp; Infrastructure Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform--infrastructure-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="platform-engineer">platform-engineer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#platform-engineer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">platform-engineer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Kubernetes cluster configuration, infrastructure as code, resource management</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, helm, tanka</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Core infrastructure implementation and Kubernetes resource management.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configure Kubernetes namespaces, RBAC, network policies</li>
+<li>Implement Tanka/Jsonnet configurations</li>
+<li>Manage resource quotas and limit ranges</li>
+<li>Deploy and configure service meshes</li>
+<li>Maintain cluster-level resources</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Implementing Kubernetes manifests</li>
+<li>Configuring cluster-wide resources</li>
+<li>Managing Tanka libraries</li>
+<li>Deploying infrastructure components</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>environments/*/kubernetes/</code></li>
+<li><code>lib/tanka/</code></li>
+<li><code>charts/*/templates/</code> (Kubernetes resources)</li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pre-task: Validate cluster access</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Configure Kubernetes namespace&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --validate-cluster</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During: Store resource info</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/kubernetes/namespace.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/platform/namespace-prod&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-task: Mark infrastructure ready</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --status</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;complete&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-infrastructure-ready&quot;</span></span></code></pre></figure>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Configure Kubernetes infrastructure for production environment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Create namespace: observability-prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure RBAC with least-privilege</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set resource quotas: 100 CPU, 256Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Deploy network policies for pod isolation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Store namespace status in memory: swarm/platform/prod-namespace-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Execute coordination hooks at each step</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="kubernetes-architect">kubernetes-architect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kubernetes-architect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubernetes-architect</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">High-level cluster architecture, design patterns, multi-cluster strategy</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, helm, tanka, terraform</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opus</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Strategic Kubernetes architecture and design leadership.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design cluster topology and architecture</li>
+<li>Define naming conventions and standards</li>
+<li>Plan multi-cluster strategies</li>
+<li>Review and approve infrastructure changes</li>
+<li>Mentor platform engineers</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Starting new infrastructure projects</li>
+<li>Designing cluster architecture</li>
+<li>Solving complex infrastructure problems</li>
+<li>Leading platform team coordination</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>docs/architecture/</code></li>
+<li><code>lib/tanka/</code> (architecture decisions)</li>
+<li>High-level review of all platform files</li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Lead coordination</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> session-start</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --session-id</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-team&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --leader</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;kubernetes-architect-001&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Review and approve</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> review</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/kubernetes/deployment.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --reviewer</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;kubernetes-architect-001&quot;</span></span></code></pre></figure>
+<hr/>
+<h3 id="cloud-architect">cloud-architect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cloud-architect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cloud-architect</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Cloud provider strategy, cost optimization, multi-cloud design</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">terraform, aws-cli, gcloud, azure-cli</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opus</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Cloud infrastructure strategy and optimization.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design cloud provider integration</li>
+<li>Cost optimization strategies</li>
+<li>Multi-cloud deployment patterns</li>
+<li>Security and compliance architecture</li>
+<li>Disaster recovery planning</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Cloud provider decisions</li>
+<li>Cost optimization initiatives</li>
+<li>Multi-cloud strategies</li>
+<li>Compliance requirements</li>
+</ul>
+<hr/>
+<h3 id="terraform-specialist">terraform-specialist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#terraform-specialist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">terraform-specialist</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Infrastructure as code using Terraform, state management</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">terraform, terragrunt</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Terraform-based infrastructure provisioning.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Write Terraform modules</li>
+<li>Manage Terraform state</li>
+<li>Implement infrastructure changes</li>
+<li>Document Terraform patterns</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>infrastructure/terraform/</code></li>
+<li><code>*.tf</code> files</li>
+</ul>
+<hr/>
+<h2 id="observability-agents">Observability Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#observability-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="obi-specialist">obi-specialist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#obi-specialist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">obi-specialist</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">OBI (Observability Backend Interface) configuration, eBPF experiments, metrics collection</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, helm, obi-cli</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> OBI experiment design and implementation, eBPF probe configuration.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design and implement OBI experiments</li>
+<li>Configure eBPF probes for metrics collection</li>
+<li>Set up experiment scheduling and lifecycle</li>
+<li>Tune performance and resource usage</li>
+<li>Integrate with Grafana stack</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Designing new observability experiments</li>
+<li>Configuring eBPF probes</li>
+<li>Troubleshooting metrics collection</li>
+<li>Performance tuning OBI</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>charts/obi-*/</code></li>
+<li><code>environments/*/observability/obi-*.yaml</code></li>
+<li><code>experiments/</code></li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pre-task: Check platform readiness</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --requires</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;platform-infrastructure-ready&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --wait-for-dependency</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During: Store experiment config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;experiments/latency-analysis.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/obi/latency-experiment&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-task: Notify Grafana team</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --status</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;complete&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-experiment-deployed&quot;</span></span></code></pre></figure>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Design and deploy latency analysis experiment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task hook: Verify namespace and CRDs exist</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Design experiment with eBPF probes for HTTP latency</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Create experiment YAML with sampling rate: 1%</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Configure metric labels: service, endpoint, status_code</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Set experiment schedule: continuous</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Post-edit hook: Store config in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Test experiment in dev environment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Deploy to staging and prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">9. Post-task hook: Mark complete with metrics endpoint</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">10. Update documentation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="grafana-specialist">grafana-specialist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grafana-specialist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">grafana-specialist</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Grafana stack (Tempo, Mimir, Loki, Grafana), dashboards, data sources</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, helm, grafana-cli</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Grafana observability stack configuration and dashboard creation.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configure Tempo for trace storage</li>
+<li>Set up Mimir for metrics storage</li>
+<li>Deploy Loki for log aggregation</li>
+<li>Create and maintain Grafana dashboards</li>
+<li>Configure data sources and alerts</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Setting up Grafana stack components</li>
+<li>Creating dashboards</li>
+<li>Configuring data sources</li>
+<li>Troubleshooting visualization</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>environments/*/observability/tempo/</code></li>
+<li><code>environments/*/observability/mimir/</code></li>
+<li><code>environments/*/observability/loki/</code></li>
+<li><code>environments/*/observability/grafana/</code></li>
+<li><code>dashboards/</code></li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pre-task: Wait for OBI</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --requires</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-experiment-deployed&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During: Store endpoints</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;environments/prod/observability/grafana/values.yaml&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/grafana/endpoints&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-task: Dashboard ready</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;grafana-dashboard-ready&quot;</span></span></code></pre></figure>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Deploy Grafana stack for production:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task hook: Check cluster and storage readiness</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Deploy Tempo with S3 backend for traces</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Deploy Mimir with long-term storage for metrics</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Deploy Loki with S3 backend for logs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Configure Grafana with all data sources</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Create dashboard: &quot;OBI Latency Analysis&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Set up alerting rules for P95 latency > 500ms</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Post-edit hooks for each component</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">9. Store endpoint URLs in memory: swarm/grafana/endpoints</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">10. Post-task hook: Mark Grafana stack ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="alloy-specialist">alloy-specialist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#alloy-specialist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">alloy-specialist</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Grafana Alloy pipeline configuration, OTLP receivers, data transformation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, alloy-cli</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Grafana Alloy data pipeline configuration and optimization.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Configure Alloy receivers (OTLP, Prometheus, etc.)</li>
+<li>Design data transformation pipelines</li>
+<li>Set up export targets</li>
+<li>Optimize pipeline performance</li>
+<li>Troubleshoot data flow</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Configuring data ingestion</li>
+<li>Setting up pipeline transformations</li>
+<li>Optimizing data flow</li>
+<li>Debugging telemetry issues</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>lib/alloy/</code></li>
+<li><code>environments/*/observability/alloy-config.river</code></li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pre-task: Wait for OBI and Grafana</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --requires</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;obi-experiment-deployed,grafana-dashboard-ready&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During: Store pipeline config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;lib/alloy/pipeline-latency.river&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/alloy/latency-pipeline&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-task: Pipeline active</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;alloy-pipeline-active&quot;</span></span></code></pre></figure>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alloy Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Configure Alloy pipeline for OBI experiments:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task hook: Verify OBI and Grafana endpoints</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure OTLP receiver on port 4317</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set up metrics transformation for OBI data</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Add labels: cluster, namespace, experiment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Configure Prometheus remote write to Mimir</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Set up trace export to Tempo</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Add sampling: keep 10% of traces</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Post-edit hook for pipeline config</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">9. Test pipeline with sample data</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">10. Deploy to all environments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">11. Post-task hook: Mark pipeline active</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;alloy-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="experiment-designer">experiment-designer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#experiment-designer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">experiment-designer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Design observability experiments, metrics analysis, performance testing</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">obi-cli, kubectl, python</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Design and analyze observability experiments.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design experiment methodology</li>
+<li>Define metrics and KPIs</li>
+<li>Analyze experiment results</li>
+<li>Create performance benchmarks</li>
+<li>Document findings</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Designing new experiments</li>
+<li>Analyzing performance data</li>
+<li>Creating benchmarks</li>
+<li>Investigating performance issues</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>experiments/</code></li>
+<li><code>docs/experiments/</code></li>
+<li><code>analysis/</code></li>
+</ul>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Experiment Designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Design HTTP latency experiment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Define hypothesis: P95 latency &lt; 500ms for 95% of requests</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Design experiment with eBPF probes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Select metrics: latency_ms, request_count, error_rate</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Define labels: service, endpoint, method, status_code</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Set sampling strategy: 1% uniform sampling</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Create experiment YAML specification</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Document expected results and analysis plan</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Store experiment design in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;experiment-designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="observability-engineer">observability-engineer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#observability-engineer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">observability-engineer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">General observability setup, metrics, traces, logs integration</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, helm, prometheus, grafana</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Broad observability implementation and integration.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Set up observability stack</li>
+<li>Configure metrics collection</li>
+<li>Integrate tracing systems</li>
+<li>Set up log aggregation</li>
+<li>Create monitoring alerts</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>General observability setup</li>
+<li>Cross-cutting observability concerns</li>
+<li>Integration tasks</li>
+<li>Monitoring configuration</li>
+</ul>
+<hr/>
+<h2 id="devops--automation-agents">DevOps &amp; Automation Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#devops--automation-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="devops-automation">devops-automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#devops-automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">devops-automation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">CI/CD pipelines, build automation, Tiltfile, justfile</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">tilt, just, docker, github-actions</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Development workflow automation and CI/CD.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Maintain Tiltfile for local development</li>
+<li>Create Justfile task definitions</li>
+<li>Configure GitHub Actions workflows</li>
+<li>Set up build automation</li>
+<li>Manage container images</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Local development setup</li>
+<li>CI/CD pipeline changes</li>
+<li>Build automation</li>
+<li>Task orchestration</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>Tiltfile</code></li>
+<li><code>justfile</code></li>
+<li><code>.github/workflows/</code></li>
+<li><code>scripts/automation/</code></li>
+</ul>
+<p><strong>Coordination Protocol:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Pre-task: Check dependencies</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --description</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Update Tiltfile for new service&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># During: Store build config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-edit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Tiltfile&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --memory-key</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;swarm/devops/build-config&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post-task: CI ready</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hooks</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> post-task</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --notify</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ci-pipeline-updated&quot;</span></span></code></pre></figure>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Automation Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Set up local development environment with Tilt:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task hook: Verify Docker and Tilt installed</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Update Tiltfile with OBI service</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Configure hot reload for configuration files</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Add Grafana stack to Tilt resources</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Set up port forwards: Grafana (3000), Tempo (3200)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Create Justfile targets: dev-up, dev-down, dev-logs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Add GitHub Actions workflow for PR validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">9. Test full dev environment startup</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">10. Update documentation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">11. Post-task hook: Mark dev environment ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="cicd-engineer">cicd-engineer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cicd-engineer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cicd-engineer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">CI/CD infrastructure, pipeline optimization, deployment automation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">github-actions, gitlab-ci, jenkins, argocd</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> CI/CD infrastructure and deployment automation.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design CI/CD pipelines</li>
+<li>Optimize build and deploy times</li>
+<li>Set up deployment automation</li>
+<li>Configure testing in pipelines</li>
+<li>Manage secrets and credentials</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>CI/CD architecture decisions</li>
+<li>Pipeline performance issues</li>
+<li>Deployment automation</li>
+<li>Testing infrastructure</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>.github/workflows/</code></li>
+<li><code>.gitlab-ci.yml</code></li>
+<li><code>Jenkinsfile</code></li>
+<li><code>argocd/</code></li>
+</ul>
+<hr/>
+<h3 id="devops-troubleshooter">devops-troubleshooter<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#devops-troubleshooter" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">devops-troubleshooter</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Debug production issues, incident response, system diagnostics</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, stern, prometheus, grafana</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Production troubleshooting and incident response.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Debug production issues</li>
+<li>Analyze logs and metrics</li>
+<li>Root cause analysis</li>
+<li>Create incident reports</li>
+<li>Implement fixes</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Production incidents</li>
+<li>Performance degradation</li>
+<li>System failures</li>
+<li>Post-mortem analysis</li>
+</ul>
+<hr/>
+<h2 id="testing--quality-agents">Testing &amp; Quality Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing--quality-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="tester">tester<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tester" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">tester</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Test creation, validation, quality assurance</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">pytest, jest, k6, postman</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Comprehensive testing and quality assurance.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Create unit tests</li>
+<li>Write integration tests</li>
+<li>Design load tests</li>
+<li>Validate configurations</li>
+<li>Report quality metrics</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Writing tests for new code</li>
+<li>Validating configurations</li>
+<li>Load testing</li>
+<li>Quality assurance</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>tests/</code></li>
+<li><code>*.test.js</code>, <code>*_test.py</code></li>
+</ul>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Create test suite for OBI experiment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Write unit tests for experiment YAML validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Create integration test: deploy experiment to test cluster</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Write load test: generate 1000 req/s, verify metrics</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Validate experiment lifecycle: create → active → complete</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Test error scenarios: invalid config, resource limits</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Verify Grafana dashboard displays metrics correctly</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Document test coverage</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Store test results in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="production-validator">production-validator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#production-validator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">production-validator</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Production readiness checks, compliance validation, security audits</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, conftest, opa, trivy</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Production readiness and compliance validation.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Validate production readiness</li>
+<li>Check security compliance</li>
+<li>Audit configurations</li>
+<li>Verify best practices</li>
+<li>Approve production changes</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Pre-production validation</li>
+<li>Security audits</li>
+<li>Compliance checks</li>
+<li>Production approvals</li>
+</ul>
+<hr/>
+<h2 id="analysis--architecture-agents">Analysis &amp; Architecture Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#analysis--architecture-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="performance-engineer">performance-engineer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-engineer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">performance-engineer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Performance analysis, optimization, benchmarking</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, prometheus, grafana, k6</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Performance analysis and optimization.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Analyze system performance</li>
+<li>Identify bottlenecks</li>
+<li>Design benchmarks</li>
+<li>Implement optimizations</li>
+<li>Monitor performance metrics</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Performance issues</li>
+<li>Capacity planning</li>
+<li>Optimization initiatives</li>
+<li>Benchmarking</li>
+</ul>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Performance Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Analyze OBI experiment performance:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Review resource usage: CPU, memory, network</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Identify bottlenecks in eBPF probe processing</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Analyze metrics collection overhead</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Benchmark different sampling rates: 0.1%, 1%, 10%</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Recommend optimal configuration</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Create performance dashboard</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Document findings and recommendations</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;performance-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="system-architect">system-architect<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#system-architect" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">system-architect</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">System design, architecture decisions, technical leadership</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">diagram-tools, architecture-docs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opus</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> High-level system architecture and design.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Design system architecture</li>
+<li>Make technology decisions</li>
+<li>Define patterns and standards</li>
+<li>Review architectural changes</li>
+<li>Lead technical discussions</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>New system design</li>
+<li>Architecture decisions</li>
+<li>Technology evaluations</li>
+<li>Technical leadership</li>
+</ul>
+<p><strong>File Ownership:</strong></p>
+<ul>
+<li><code>docs/architecture/</code></li>
+<li>High-level design documents</li>
+</ul>
+<hr/>
+<h3 id="code-analyzer">code-analyzer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-analyzer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">code-analyzer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Code review, static analysis, best practices validation</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">eslint, pylint, sonarqube, shellcheck</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Code quality analysis and review.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Perform code reviews</li>
+<li>Run static analysis</li>
+<li>Validate best practices</li>
+<li>Suggest improvements</li>
+<li>Enforce standards</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Code review process</li>
+<li>Quality audits</li>
+<li>Standard enforcement</li>
+<li>Refactoring initiatives</li>
+</ul>
+<hr/>
+<h2 id="coordination-agents">Coordination Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#coordination-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="hierarchical-coordinator">hierarchical-coordinator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hierarchical-coordinator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">hierarchical-coordinator</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Hierarchical team coordination, task delegation, progress tracking</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">claude-flow</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opus</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Top-down coordination of agent teams.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Coordinate agent teams</li>
+<li>Delegate tasks hierarchically</li>
+<li>Track progress across teams</li>
+<li>Resolve inter-team conflicts</li>
+<li>Report status to humans</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Large multi-team projects</li>
+<li>Complex coordination needs</li>
+<li>Hierarchical organization</li>
+<li>Executive oversight</li>
+</ul>
+<p><strong>Example Task:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Hierarchical Coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Coordinate platform deployment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Initialize swarm with hierarchical topology</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Assign team leads: Platform Architect, OBI Lead, DevOps Lead</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Delegate tasks to teams</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Monitor progress across all teams</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Resolve conflicts and dependencies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Report status to stakeholders</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Ensure all teams follow coordination protocols</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical-coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<hr/>
+<h3 id="mesh-coordinator">mesh-coordinator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mesh-coordinator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">mesh-coordinator</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Peer-to-peer coordination, distributed decision making</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">claude-flow</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Distributed coordination without hierarchy.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Facilitate peer collaboration</li>
+<li>Coordinate distributed decisions</li>
+<li>Enable direct agent communication</li>
+<li>Monitor mesh health</li>
+<li>Handle decentralized workflows</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Flat team structures</li>
+<li>Distributed teams</li>
+<li>Peer collaboration</li>
+<li>Agile workflows</li>
+</ul>
+<hr/>
+<h3 id="swarm-memory-manager">swarm-memory-manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#swarm-memory-manager" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">swarm-memory-manager</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Manage shared memory, context coordination, state persistence</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">claude-flow</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Shared memory and state management.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Manage memory namespaces</li>
+<li>Coordinate context sharing</li>
+<li>Persist important state</li>
+<li>Clean up stale data</li>
+<li>Optimize memory usage</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Complex state management</li>
+<li>Cross-session persistence</li>
+<li>Memory optimization</li>
+<li>Context coordination</li>
+</ul>
+<hr/>
+<h2 id="specialized-agents">Specialized Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#specialized-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="migration-planner">migration-planner<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migration-planner" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">migration-planner</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Plan migrations, version upgrades, data migrations</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">kubectl, database-tools</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opus</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> Migration strategy and execution planning.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Plan migration strategies</li>
+<li>Design upgrade paths</li>
+<li>Minimize downtime</li>
+<li>Validate migrations</li>
+<li>Create rollback plans</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Version upgrades</li>
+<li>Platform migrations</li>
+<li>Data migrations</li>
+<li>Breaking changes</li>
+</ul>
+<hr/>
+<h3 id="api-docs">api-docs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#api-docs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">api-docs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">API documentation, OpenAPI specs, usage examples</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">swagger, openapi-generator</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> API documentation and specification.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Write API documentation</li>
+<li>Create OpenAPI specifications</li>
+<li>Provide usage examples</li>
+<li>Maintain API changelog</li>
+<li>Document best practices</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>API development</li>
+<li>Documentation tasks</li>
+<li>SDK generation</li>
+<li>API versioning</li>
+</ul>
+<hr/>
+<h3 id="reviewer">reviewer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reviewer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">reviewer</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">description</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">General code and configuration review, quality checks</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">tools</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">git, diff-tools</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">sonnet</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">---</span></span></code></pre></figure>
+<p><strong>Role:</strong> General review and quality assurance.</p>
+<p><strong>Responsibilities:</strong></p>
+<ul>
+<li>Review code changes</li>
+<li>Validate configurations</li>
+<li>Check best practices</li>
+<li>Provide feedback</li>
+<li>Approve changes</li>
+</ul>
+<p><strong>When to Use:</strong></p>
+<ul>
+<li>Pull request review</li>
+<li>Configuration validation</li>
+<li>Quality checks</li>
+<li>Approval workflows</li>
+</ul>
+<hr/>
+<h2 id="usage-guidelines">Usage Guidelines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#usage-guidelines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="model-selection">Model Selection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#model-selection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Opus</strong>: Use for strategic decisions, architecture, leadership</li>
+<li><strong>Sonnet</strong>: Use for implementation, analysis, most tasks</li>
+<li><strong>Haiku</strong>: Use for simple tasks, quick analysis (not commonly used in MOP)</li>
+</ul>
+<h3 id="agent-coordination">Agent Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>All agents should:</p>
+<ol>
+<li>Execute pre-task hooks before starting</li>
+<li>Use post-edit hooks after file changes</li>
+<li>Execute post-task hooks when complete</li>
+<li>Store relevant information in memory</li>
+<li>Check memory for dependencies</li>
+</ol>
+<h3 id="parallel-execution">Parallel Execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Agents can work in parallel when:</p>
+<ul>
+<li>Tasks are independent</li>
+<li>File ownership is clear</li>
+<li>Dependencies are managed</li>
+<li>Memory coordination is used</li>
+</ul>
+<h3 id="team-composition">Team Composition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#team-composition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Compose teams based on:</p>
+<ul>
+<li>Task complexity</li>
+<li>Required expertise</li>
+<li>Parallelization opportunities</li>
+<li>Dependency relationships</li>
+</ul>
+<p>See <code>team-compositions.md</code> for standard team patterns.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-165" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#agent-definitions" data-for="agent-definitions">Agent Definitions</a></li><li class="depth-1"><a href="#platform--infrastructure-agents" data-for="platform--infrastructure-agents">Platform &amp; Infrastructure Agents</a></li><li class="depth-2"><a href="#platform-engineer" data-for="platform-engineer">platform-engineer</a></li><li class="depth-2"><a href="#kubernetes-architect" data-for="kubernetes-architect">kubernetes-architect</a></li><li class="depth-2"><a href="#cloud-architect" data-for="cloud-architect">cloud-architect</a></li><li class="depth-2"><a href="#terraform-specialist" data-for="terraform-specialist">terraform-specialist</a></li><li class="depth-1"><a href="#observability-agents" data-for="observability-agents">Observability Agents</a></li><li class="depth-2"><a href="#obi-specialist" data-for="obi-specialist">obi-specialist</a></li><li class="depth-2"><a href="#grafana-specialist" data-for="grafana-specialist">grafana-specialist</a></li><li class="depth-2"><a href="#alloy-specialist" data-for="alloy-specialist">alloy-specialist</a></li><li class="depth-2"><a href="#experiment-designer" data-for="experiment-designer">experiment-designer</a></li><li class="depth-2"><a href="#observability-engineer" data-for="observability-engineer">observability-engineer</a></li><li class="depth-1"><a href="#devops--automation-agents" data-for="devops--automation-agents">DevOps &amp; Automation Agents</a></li><li class="depth-2"><a href="#devops-automation" data-for="devops-automation">devops-automation</a></li><li class="depth-2"><a href="#cicd-engineer" data-for="cicd-engineer">cicd-engineer</a></li><li class="depth-2"><a href="#devops-troubleshooter" data-for="devops-troubleshooter">devops-troubleshooter</a></li><li class="depth-1"><a href="#testing--quality-agents" data-for="testing--quality-agents">Testing &amp; Quality Agents</a></li><li class="depth-2"><a href="#tester" data-for="tester">tester</a></li><li class="depth-2"><a href="#production-validator" data-for="production-validator">production-validator</a></li><li class="depth-1"><a href="#analysis--architecture-agents" data-for="analysis--architecture-agents">Analysis &amp; Architecture Agents</a></li><li class="depth-2"><a href="#performance-engineer" data-for="performance-engineer">performance-engineer</a></li><li class="depth-2"><a href="#system-architect" data-for="system-architect">system-architect</a></li><li class="depth-2"><a href="#code-analyzer" data-for="code-analyzer">code-analyzer</a></li><li class="depth-1"><a href="#coordination-agents" data-for="coordination-agents">Coordination Agents</a></li><li class="depth-2"><a href="#hierarchical-coordinator" data-for="hierarchical-coordinator">hierarchical-coordinator</a></li><li class="depth-2"><a href="#mesh-coordinator" data-for="mesh-coordinator">mesh-coordinator</a></li><li class="depth-2"><a href="#swarm-memory-manager" data-for="swarm-memory-manager">swarm-memory-manager</a></li><li class="depth-1"><a href="#specialized-agents" data-for="specialized-agents">Specialized Agents</a></li><li class="depth-2"><a href="#migration-planner" data-for="migration-planner">migration-planner</a></li><li class="depth-2"><a href="#api-docs" data-for="api-docs">api-docs</a></li><li class="depth-2"><a href="#reviewer" data-for="reviewer">reviewer</a></li><li class="depth-1"><a href="#usage-guidelines" data-for="usage-guidelines">Usage Guidelines</a></li><li class="depth-2"><a href="#model-selection" data-for="model-selection">Model Selection</a></li><li class="depth-2"><a href="#agent-coordination" data-for="agent-coordination">Agent Coordination</a></li><li class="depth-2"><a href="#parallel-execution" data-for="parallel-execution">Parallel Execution</a></li><li class="depth-2"><a href="#team-composition" data-for="team-composition">Team Composition</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

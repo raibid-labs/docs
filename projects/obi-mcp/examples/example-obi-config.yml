@@ -1,0 +1,35 @@
+# Example OBI Configuration
+# This is a sample configuration for OpenTelemetry eBPF Instrumentation
+
+# Network monitoring settings
+network:
+  enable: true
+
+  # Specify which attributes to collect
+  allowed_attributes:
+    - k8s.src.owner.name
+    - k8s.src.owner.type
+    - k8s.src.namespace
+    - k8s.dst.owner.name
+    - k8s.dst.owner.type
+    - k8s.dst.namespace
+
+  # Define network CIDRs for classification
+  cidrs:
+    - cidr: 10.0.0.0/8
+      name: 'cluster-internal'
+    - cidr: 192.168.0.0/16
+      name: 'private-network'
+    - cidr: 172.16.0.0/12
+      name: 'docker-network'
+
+# Kubernetes metadata collection
+attributes:
+  kubernetes:
+    enable: true
+
+# Export configuration (optional)
+export:
+  otlp:
+    endpoint: 'http://localhost:4317'
+    protocol: 'grpc'

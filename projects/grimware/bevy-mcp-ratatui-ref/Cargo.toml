@@ -1,0 +1,76 @@
+[package]
+name = "bevy-mcp-ratatui-ref"
+version = "0.1.0"
+edition = "2021"
+authors = ["Raibid Labs"]
+description = "AI-controlled 3D game development in terminal - Reference implementation"
+license = "MIT"
+repository = "https://github.com/raibid-labs/bevy-mcp-ratatui-ref"
+
+[dependencies]
+bevy = { version = "0.16", default-features = false, features = [
+    "bevy_asset",
+    "bevy_scene",
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_pbr",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_text",
+    "bevy_ui",
+    "multi_threaded",
+    "png",
+    "hdr",
+    "x11",
+    "bevy_gltf",
+    "tonemapping_luts",
+    "default_font",
+    "webgl2",
+    "bevy_log",
+] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# BRP (Bevy Remote Protocol) dependencies
+bevy_brp_extras = { version = "0.2", optional = true }
+
+# TUI rendering dependencies
+bevy_ratatui = { version = "0.9.3", optional = true }
+bevy_ratatui_camera = { version = "0.15.0", optional = true }
+ratatui = { version = "0.29", optional = true }
+crossterm = { version = "0.28", optional = true }
+
+[dev-dependencies]
+bevy = { version = "0.16", features = ["dynamic_linking"] }
+
+[features]
+default = []
+# Enable Bevy Remote Protocol for MCP integration
+brp = ["bevy/bevy_remote", "bevy_brp_extras"]
+# Enable Terminal UI rendering
+tui = ["bevy_ratatui_camera", "bevy_ratatui", "ratatui", "crossterm"]
+# Enable both BRP and TUI for full integration
+full = ["brp", "tui"]
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[[example]]
+name = "tui_basic"
+path = "examples/tui_basic.rs"
+required-features = ["tui"]
+
+[[example]]
+name = "tui_brp"
+path = "examples/tui_brp.rs"
+required-features = ["full"]
+
+[[example]]
+name = "windowed_tui"
+path = "examples/windowed_tui.rs"
+required-features = ["full"]

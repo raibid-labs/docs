@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>DGX Spark Troubleshooting Guide</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="DGX Spark Troubleshooting Guide"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="DGX Spark Troubleshooting Guide"/><meta name="twitter:description" content="Common issues and solutions for Apache Spark on NVIDIA DGX systems"/><meta property="og:description" content="Common issues and solutions for Apache Spark on NVIDIA DGX systems"/><meta property="og:image:alt" content="Common issues and solutions for Apache Spark on NVIDIA DGX systems"/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-spark-mcp/docs/spark/troubleshooting"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-spark-mcp/docs/spark/troubleshooting"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Common issues and solutions for Apache Spark on NVIDIA DGX systems"/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-spark-mcp/docs/spark/troubleshooting-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-spark-mcp/docs/spark/troubleshooting-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-spark-mcp/docs/spark/troubleshooting-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-spark-mcp/docs/spark/troubleshooting"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-278"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-278" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-spark-mcp/">dgx spark mcp</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-spark-mcp/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-spark-mcp/docs/spark/">spark</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>DGX Spark Troubleshooting Guide</a></div></nav><h1 class="article-title">DGX Spark Troubleshooting Guide</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:07.718Z">Nov 16, 2025</time><span>7 min read</span></p><ul class="tags"><li><a href="../../../../tags/spark" class="internal tag-link">spark</a></li><li><a href="../../../../tags/troubleshooting" class="internal tag-link">troubleshooting</a></li><li><a href="../../../../tags/debugging" class="internal tag-link">debugging</a></li><li><a href="../../../../tags/errors" class="internal tag-link">errors</a></li><li><a href="../../../../tags/dgx" class="internal tag-link">dgx</a></li><li><a href="../../../../tags/rapids" class="internal tag-link">rapids</a></li></ul></div></div><article class="popover-hint"><h1 id="dgx-spark-troubleshooting-guide">DGX Spark Troubleshooting Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-spark-troubleshooting-guide" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This guide covers common issues, errors, and their solutions when running Apache Spark on NVIDIA DGX systems with GPU acceleration.</p>
+<h2 id="gpu-issues">GPU Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gpu-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-gpus-not-detected">Issue: GPUs Not Detected<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-gpus-not-detected" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>WARN ResourceProfile: GPU resources couldn't be discovered
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check NVIDIA driver</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nvidia-smi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check CUDA</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nvcc</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --version</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check GPU discovery script</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">/opt/spark/getGpusResources.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Spark config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --conf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark.executor.resource.gpu.amount=</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --dry-run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> your-app.jar</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Install/Update NVIDIA Driver</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apt</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> nvidia-driver-535</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> reboot</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Fix Discovery Script</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /opt/spark/getGpusResources.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;"> 'EOF'</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">nvidia-smi --query-gpu=index --format=csv,noheader | \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  awk '{print &quot;{\&quot;name\&quot;: \&quot;gpu\&quot;, \&quot;addresses\&quot;: [\&quot;&quot;$1&quot;\&quot;]}&quot;}'</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;">EOF</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">chmod</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +x</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /opt/spark/getGpusResources.sh</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Set Discovery Script Path</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">spark.executor.resource.gpu.discoveryScript</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">/opt/spark/getGpusResources.sh</span></span></code></pre></figure>
+<h3 id="issue-gpu-out-of-memory-oom">Issue: GPU Out of Memory (OOM)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-gpu-out-of-memory-oom" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>CUDA error: out of memory
+Task failed with GpuOutOfMemoryError
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Monitor GPU memory during job</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">watch</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0.5</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> nvidia-smi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Spark logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;GpuOutOfMemory&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/executor.log</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Reduce Concurrent GPU Tasks</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.concurrentGpuTasks             1</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Reduce Batch Size</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.batchSizeBytes                 1073741824  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1GB</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Enable CPU Fallback</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.enableCpuFallback              true</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Reduce Task GPU Amount</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Allow more tasks per GPU</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.task.resource.gpu.amount                  0.0625  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 16 tasks per GPU</span></span></code></pre></figure>
+<ol start="5">
+<li><strong>Increase Pinned Memory</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.memory.pinnedPool.size             16g</span></span></code></pre></figure>
+<h3 id="issue-rapids-plugin-not-loading">Issue: RAPIDS Plugin Not Loading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-rapids-plugin-not-loading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Plugin com.nvidia.spark.SQLPlugin failed to load
+ClassNotFoundException: com.nvidia.spark.SQLPlugin
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check JAR files</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ls</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -la</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_HOME</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/jars/rapids-4-spark</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.jar</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ls</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -la</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_HOME</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/jars/cudf</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.jar</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check classpath</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_CLASSPATH</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Download RAPIDS JARs</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_HOME</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/jars</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">wget</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://repo1.maven.org/maven2/com/nvidia/rapids-4-spark_2.12/24.08.0/rapids-4-spark_2.12-24.08.0.jar</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">wget</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://repo1.maven.org/maven2/ai/rapids/cudf/24.08.0/cudf-24.08.0-cuda12.jar</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Verify Configuration</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.plugins                                   com.nvidia.spark.SQLPlugin</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.enabled                        true</span></span></code></pre></figure>
+<h3 id="issue-cuda-version-mismatch">Issue: CUDA Version Mismatch<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-cuda-version-mismatch" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>CUDA driver version is insufficient for CUDA runtime version
+cudf requires CUDA 12.0 but found 11.8
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check CUDA driver version</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nvidia-smi</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;CUDA Version&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check CUDA runtime version</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nvcc</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --version</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Update NVIDIA Driver</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apt</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> nvidia-driver-535</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Supports CUDA 12.0+</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> reboot</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Use Matching cuDF JAR</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># For CUDA 11.x</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">wget</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://repo1.maven.org/maven2/ai/rapids/cudf/24.08.0/cudf-24.08.0-cuda11.jar</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># For CUDA 12.x</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">wget</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://repo1.maven.org/maven2/ai/rapids/cudf/24.08.0/cudf-24.08.0-cuda12.jar</span></span></code></pre></figure>
+<h2 id="memory-issues">Memory Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-executor-out-of-memory">Issue: Executor Out of Memory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-executor-out-of-memory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>java.lang.OutOfMemoryError: Java heap space
+Container killed by YARN for exceeding memory limits
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check executor memory usage in Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># http://driver:4040/executors/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;OutOfMemoryError&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/executor.log</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Increase Executor Memory</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executor.memory                           128g</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executor.memoryOverhead                   32g</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Tune Memory Fractions</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.memory.fraction                           0.6</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.memory.storageFaction                     0.5</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Reduce Partition Size</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.files.maxPartitionBytes               67108864  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 64MB</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Unpersist Unused DataFrames</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">df.unpersist()</span></span></code></pre></figure>
+<ol start="5">
+<li><strong>Enable Spilling</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.memory.offHeap.enabled                    true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.memory.offHeap.size                       32g</span></span></code></pre></figure>
+<h3 id="issue-driver-out-of-memory">Issue: Driver Out of Memory<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-driver-out-of-memory" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Driver OutOfMemoryError
+Exception in thread &quot;main&quot; java.lang.OutOfMemoryError
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check broadcast size</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;broadcast&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/driver.log</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check collected data size</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;collect&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/driver.log</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Increase Driver Memory</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.driver.memory                             64g</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.driver.maxResultSize                      8g</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Reduce Broadcast Threshold</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.autoBroadcastJoinThreshold            50m</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Avoid collect() on Large DataFrames</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Bad</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> data</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> hugeDf.collect()  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// OOM</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Good</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">hugeDf.write.parquet(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;output&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Use take() Instead of collect()</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Limit results</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> sample</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> df.take(</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1000</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<h3 id="issue-garbage-collection-overhead">Issue: Garbage Collection Overhead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-garbage-collection-overhead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>java.lang.OutOfMemoryError: GC overhead limit exceeded
+Tasks spending >90% time in GC
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check GC time in Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># http://driver:4040/executors/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Enable GC logging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --conf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark.executor.extraJavaOptions=&quot;-verbose:gc -XX:+PrintGCDetails&quot;</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Use G1GC</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">spark.executor.extraJavaOptions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">-XX:+UseG1GC -XX:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">G1HeapRegionSize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">32m -XX:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">InitiatingHeapOccupancyPercent</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">35</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Increase Executor Memory</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executor.memory                           192g</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Reduce Memory Pressure</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Unpersist unused caches</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">df.unpersist()</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Use MEMORY_AND_DISK instead of MEMORY_ONLY</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">df.persist(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">StorageLevel</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">MEMORY_AND_DISK_SER</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Serialize Cached Data</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.serializer                                org.apache.spark.serializer.KryoSerializer</span></span></code></pre></figure>
+<h2 id="performance-issues">Performance Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-slow-jobs">Issue: Slow Jobs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-slow-jobs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Stage timeline</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Task distribution</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Shuffle read/write</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># http://driver:4040/stages/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check for stragglers</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Look for tasks taking 10x median time</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Enable AQE</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.enabled                      true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.coalescePartitions.enabled   true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.skewJoin.enabled             true</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Optimize Partition Count</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Too many partitions (>10k)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.shuffle.partitions                    2000</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Too few partitions (&lt;100)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.shuffle.partitions                    800</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Use GPU Acceleration</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.enabled                        true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.sql.explain                        ALL  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check what's on GPU</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Fix Data Skew</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Add salt to skewed keys</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;"> org</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">apache</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">spark</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">sql</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">functions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">_</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> salted</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> df.withColumn(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;salted_key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, concat($</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, lit(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;_&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">), (rand() </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">*</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">).cast(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;int&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)))</span></span></code></pre></figure>
+<h3 id="issue-data-skew">Issue: Data Skew<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-data-skew" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Few tasks taking much longer than others
+Shuffle read size highly uneven across tasks
+Some executors idle while others busy
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check task metrics in Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Look for tasks with disproportionate shuffle reads</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check skew in data</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark.sql(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">&quot;SELECT key, count(*) FROM table GROUP BY key ORDER BY count(*) DESC&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">.show</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Enable Skew Join Optimization</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.skewJoin.enabled             true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.skewJoin.skewedPartitionFactor   5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.adaptive.skewJoin.skewedPartitionThresholdInBytes  256m</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Salting Technique</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// For joins on skewed keys</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> saltedLeft</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> left.withColumn(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;salt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, (rand() </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">*</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 10</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">).cast(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;int&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  .withColumn(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;join_key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, concat($</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, lit(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;_&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">), $</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;salt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> saltedRight</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> right.withColumn(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;salt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, explode(array((</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> until </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">).map(lit)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> _*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)))</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  .withColumn(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;join_key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, concat($</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, lit(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;_&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">), $</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;salt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">saltedLeft.join(saltedRight, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;join_key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Broadcast Small Skewed Keys</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Separate skewed keys and broadcast join them</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> skewedKeys</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Seq</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> skewed</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> df.filter($</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.isin(</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">skewedKeys</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">_*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> normal</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> df.filter(</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.isin(</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">skewedKeys</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">_*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> result</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> normal.join(other, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  .union(skewed.join(broadcast(other), </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span></code></pre></figure>
+<h3 id="issue-shuffle-spill">Issue: Shuffle Spill<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-shuffle-spill" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Large shuffle spill to disk
+Spill (memory) and Spill (disk) metrics high
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># http://driver:4040/stages/</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Look at &quot;Shuffle Spill (Memory)&quot; and &quot;Shuffle Spill (Disk)&quot;</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Increase Executor Memory</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executor.memory                           192g</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.memory.fraction                           0.7</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Reduce Partition Count</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Larger partitions, less overhead</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.shuffle.partitions                    400</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Use External Shuffle Service</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.shuffle.service.enabled                   true</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Enable Compression</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.shuffle.compress                          true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.shuffle.spill.compress                    true</span></span></code></pre></figure>
+<h2 id="network-issues">Network Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-connection-timeouts">Issue: Connection Timeouts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-connection-timeouts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Timeout waiting for connection from pool
+Lost connection to executor
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check network connectivity</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ping</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> worker-node</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check ports</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">telnet</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> worker-node</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 7077</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Increase Timeouts</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.network.timeout                           800s</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executor.heartbeatInterval                60s</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rpc.askTimeout                            600s</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Check Firewall</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Allow Spark ports</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ufw</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> allow</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 7077</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ufw</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> allow</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 4040</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ufw</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> allow</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 6066</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ufw</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> allow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 8080-8081</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Increase Retries</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rpc.numRetries                            5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rpc.retry.wait                            5s</span></span></code></pre></figure>
+<h3 id="issue-infinibandrdma-not-working">Issue: InfiniBand/RDMA Not Working<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-infinibandrdma-not-working" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>UCX  ERROR No matching memory domain
+Failed to initialize UCX
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check InfiniBand status</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ibstat</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check UCX</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ucx_info</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Install UCX</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apt</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ucx</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Configure UCX</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executorEnv.UCX_TLS                       rc,cuda_copy,cuda_ipc</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executorEnv.UCX_NET_DEVICES               mlx5_0:1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.executorEnv.LD_LIBRARY_PATH               /usr/lib/x86_64-linux-gnu/ucx</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Fallback to TCP</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># If InfiniBand not available</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.rapids.shuffle.mode                       MULTITHREADED</span></span></code></pre></figure>
+<h2 id="application-issues">Application Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#application-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-job-stuckhanging">Issue: Job Stuck/Hanging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-job-stuckhanging" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>Job not progressing
+Tasks stuck in &quot;RUNNING&quot; state
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Spark UI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Active stages</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Running tasks</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># http://driver:4040</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check executor logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tail</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/executor.log</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Thread dump</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">jstack</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">executor-pi</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Check for Deadlock</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Get thread dump</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">jstack</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">pi</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -A</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 20</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;deadlock&quot;</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Increase Parallelism</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.default.parallelism                       512</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.sql.shuffle.partitions                    512</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Check Data Source</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Ensure data is accessible</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">hdfs</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dfs</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -ls</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /data/path</span></span></code></pre></figure>
+<ol start="4">
+<li><strong>Restart Executors</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Kill hanging executors</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">kill</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -9</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">executor-pi</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">d</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span></span></code></pre></figure>
+<h3 id="issue-serialization-errors">Issue: Serialization Errors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-serialization-errors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>NotSerializableException
+Task not serializable
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Check what's being serialized</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;"> org</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">apache</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">spark</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#ABB2BF;">util</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Utils</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Utils</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.serialize(yourObject)</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Use Kryo Serializer</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.serializer                                org.apache.spark.serializer.KryoSerializer</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.kryo.registrationRequired                 false</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Mark Variables as Transient</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">class</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> MyClass</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> extends</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Serializable</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">  @</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">transient </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">lazy</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> nonSerializable</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> new</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> NonSerializableClass</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Broadcast Large Objects</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="scala" data-theme="github-light one-dark-pro"><code data-language="scala" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">val</span><span style="--shiki-light:#E36209;--shiki-dark:#E06C75;"> broadcastVar</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> spark.sparkContext.broadcast(largeObject)</span></span></code></pre></figure>
+<h3 id="issue-classnotfoundexception">Issue: ClassNotFoundException<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-classnotfoundexception" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Symptoms:</strong></p>
+<pre><code>java.lang.ClassNotFoundException: com.your.Class
+</code></pre>
+<p><strong>Diagnosis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check JAR files</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ls</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -la</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_HOME</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/jars/</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check classpath</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $SPARK_CLASSPATH</span></span></code></pre></figure>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Include JARs</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --jars</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> your-dependency.jar</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> your-app.jar</span></span></code></pre></figure>
+<ol start="2">
+<li><strong>Set Classpath</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> SPARK_CLASSPATH</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">to</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">jars</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">*</span></span></code></pre></figure>
+<ol start="3">
+<li><strong>Use —packages</strong></li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --packages</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> com.company:artifact:version</span></span></code></pre></figure>
+<h2 id="debugging-tools">Debugging Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#debugging-tools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="enable-debug-logging">Enable Debug Logging<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enable-debug-logging" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Log4j configuration</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">log4j.logger.org.apache.spark</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">DEBUG</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">log4j.logger.com.nvidia.spark.rapids</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">DEBUG</span></span></code></pre></figure>
+<h3 id="spark-ui">Spark UI<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spark-ui" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>http://driver-node:4040
+</code></pre>
+<p>Key sections:</p>
+<ul>
+<li>Jobs: Overall job progress</li>
+<li>Stages: Stage-level metrics</li>
+<li>Storage: Cached RDDs/DataFrames</li>
+<li>Environment: Configuration</li>
+<li>Executors: Resource usage</li>
+<li>SQL: Query plans</li>
+</ul>
+<h3 id="event-logs">Event Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-logs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="properties" data-theme="github-light one-dark-pro"><code data-language="properties" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.eventLog.enabled                          true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">spark.eventLog.dir                              /var/log/spark/events</span></span></code></pre></figure>
+<p>View with History Server:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$SPARK_HOME</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/sbin/start-history-server.sh</span></span></code></pre></figure>
+<h3 id="gpu-profiling">GPU Profiling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gpu-profiling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># NVIDIA Nsight Systems</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nsys</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> profile</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-profile</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-submit</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> your-app.jar</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># RAPIDS profiling</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --conf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark.rapids.sql.metrics.level=DEBUG</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  your-app.jar</span></span></code></pre></figure>
+<h2 id="common-error-messages">Common Error Messages<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-error-messages" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Error</th><th>Cause</th><th>Solution</th></tr></thead><tbody><tr><td><code>CUDA out of memory</code></td><td>GPU OOM</td><td>Reduce batch size or concurrent tasks</td></tr><tr><td><code>Container killed by YARN</code></td><td>Exceeded memory limits</td><td>Increase executor memory</td></tr><tr><td><code>Shuffle fetch failed</code></td><td>Network/disk issues</td><td>Increase timeouts, check storage</td></tr><tr><td><code>Task not serializable</code></td><td>Non-serializable closure</td><td>Use broadcast or transient</td></tr><tr><td><code>File not found</code></td><td>Missing data files</td><td>Check file paths</td></tr><tr><td><code>Permission denied</code></td><td>Insufficient permissions</td><td>Fix file/directory permissions</td></tr></tbody></table></div>
+<h2 id="getting-help">Getting Help<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#getting-help" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="log-collection">Log Collection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#log-collection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Collect all relevant logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cp</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /var/log/spark/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug/</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">nvidia-smi</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug/gpu-info.txt</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spark-submit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --version</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug/spark-version.txt</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tar</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -czf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug.tar.gz</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spark-debug/</span></span></code></pre></figure>
+<h3 id="community-resources">Community Resources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#community-resources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://spark.apache.org/community.html" class="external">Apache Spark User Mailing List<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://rapids.ai/community.html" class="external">RAPIDS Community<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://forums.developer.nvidia.com/" class="external">NVIDIA Developer Forums<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://stackoverflow.com/questions/tagged/apache-spark" class="external">Stack Overflow: apache-spark<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../../projects/dgx-spark-mcp/docs/spark/configuration" class="internal alias" data-slug="projects/dgx-spark-mcp/docs/spark/configuration">Configuration Guide</a> - Proper configuration</li>
+<li><a href="../../../../projects/dgx-spark-mcp/docs/spark/tuning" class="internal alias" data-slug="projects/dgx-spark-mcp/docs/spark/tuning">Tuning Guide</a> - Performance optimization</li>
+<li><a href="../../../../projects/dgx-spark-mcp/docs/spark/best-practices" class="internal alias" data-slug="projects/dgx-spark-mcp/docs/spark/best-practices">Best Practices</a> - Avoid common issues</li>
+</ul>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://spark.apache.org/docs/latest/tuning.html#troubleshooting" class="external">Spark Troubleshooting<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://nvidia.github.io/spark-rapids/docs/troubleshooting.html" class="external">RAPIDS Troubleshooting<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.nvidia.com/dgx/support/" class="external">DGX Support<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-91" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-spark-troubleshooting-guide" data-for="dgx-spark-troubleshooting-guide">DGX Spark Troubleshooting Guide</a></li><li class="depth-1"><a href="#gpu-issues" data-for="gpu-issues">GPU Issues</a></li><li class="depth-2"><a href="#issue-gpus-not-detected" data-for="issue-gpus-not-detected">Issue: GPUs Not Detected</a></li><li class="depth-2"><a href="#issue-gpu-out-of-memory-oom" data-for="issue-gpu-out-of-memory-oom">Issue: GPU Out of Memory (OOM)</a></li><li class="depth-2"><a href="#issue-rapids-plugin-not-loading" data-for="issue-rapids-plugin-not-loading">Issue: RAPIDS Plugin Not Loading</a></li><li class="depth-2"><a href="#issue-cuda-version-mismatch" data-for="issue-cuda-version-mismatch">Issue: CUDA Version Mismatch</a></li><li class="depth-1"><a href="#memory-issues" data-for="memory-issues">Memory Issues</a></li><li class="depth-2"><a href="#issue-executor-out-of-memory" data-for="issue-executor-out-of-memory">Issue: Executor Out of Memory</a></li><li class="depth-2"><a href="#issue-driver-out-of-memory" data-for="issue-driver-out-of-memory">Issue: Driver Out of Memory</a></li><li class="depth-2"><a href="#issue-garbage-collection-overhead" data-for="issue-garbage-collection-overhead">Issue: Garbage Collection Overhead</a></li><li class="depth-1"><a href="#performance-issues" data-for="performance-issues">Performance Issues</a></li><li class="depth-2"><a href="#issue-slow-jobs" data-for="issue-slow-jobs">Issue: Slow Jobs</a></li><li class="depth-2"><a href="#issue-data-skew" data-for="issue-data-skew">Issue: Data Skew</a></li><li class="depth-2"><a href="#issue-shuffle-spill" data-for="issue-shuffle-spill">Issue: Shuffle Spill</a></li><li class="depth-1"><a href="#network-issues" data-for="network-issues">Network Issues</a></li><li class="depth-2"><a href="#issue-connection-timeouts" data-for="issue-connection-timeouts">Issue: Connection Timeouts</a></li><li class="depth-2"><a href="#issue-infinibandrdma-not-working" data-for="issue-infinibandrdma-not-working">Issue: InfiniBand/RDMA Not Working</a></li><li class="depth-1"><a href="#application-issues" data-for="application-issues">Application Issues</a></li><li class="depth-2"><a href="#issue-job-stuckhanging" data-for="issue-job-stuckhanging">Issue: Job Stuck/Hanging</a></li><li class="depth-2"><a href="#issue-serialization-errors" data-for="issue-serialization-errors">Issue: Serialization Errors</a></li><li class="depth-2"><a href="#issue-classnotfoundexception" data-for="issue-classnotfoundexception">Issue: ClassNotFoundException</a></li><li class="depth-1"><a href="#debugging-tools" data-for="debugging-tools">Debugging Tools</a></li><li class="depth-2"><a href="#enable-debug-logging" data-for="enable-debug-logging">Enable Debug Logging</a></li><li class="depth-2"><a href="#spark-ui" data-for="spark-ui">Spark UI</a></li><li class="depth-2"><a href="#event-logs" data-for="event-logs">Event Logs</a></li><li class="depth-2"><a href="#gpu-profiling" data-for="gpu-profiling">GPU Profiling</a></li><li class="depth-1"><a href="#common-error-messages" data-for="common-error-messages">Common Error Messages</a></li><li class="depth-1"><a href="#getting-help" data-for="getting-help">Getting Help</a></li><li class="depth-2"><a href="#log-collection" data-for="log-collection">Log Collection</a></li><li class="depth-2"><a href="#community-resources" data-for="community-resources">Community Resources</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../../../projects/dgx-spark-mcp/docs/spark/README" class="internal">DGX Spark Documentation</a></li><li><a href="../../../../projects/dgx-spark-mcp/docs/spark/best-practices" class="internal">DGX Spark Best Practices</a></li><li><a href="../../../../projects/dgx-spark-mcp/docs/spark/configuration" class="internal">DGX Spark Configuration Guide</a></li><li><a href="../../../../projects/dgx-spark-mcp/docs/spark/tuning" class="internal">DGX Spark Performance Tuning Guide</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>event-driven-orchestration</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="event-driven-orchestration"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="event-driven-orchestration"/><meta name="twitter:description" content="Event-Driven Orchestration Design Overview This document describes the transformation of the raibid-ci orchestrator from a polling-based system to an event-driven architecture using GitHub webhooks and GitHub Actions."/><meta property="og:description" content="Event-Driven Orchestration Design Overview This document describes the transformation of the raibid-ci orchestrator from a polling-based system to an event-driven architecture using GitHub webhooks and GitHub Actions."/><meta property="og:image:alt" content="Event-Driven Orchestration Design Overview This document describes the transformation of the raibid-ci orchestrator from a polling-based system to an event-driven architecture using GitHub webhooks and GitHub Actions."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/architecture/event-driven-orchestration"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/architecture/event-driven-orchestration"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Event-Driven Orchestration Design Overview This document describes the transformation of the raibid-ci orchestrator from a polling-based system to an event-driven architecture using GitHub webhooks and GitHub Actions."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/architecture/event-driven-orchestration-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/architecture/event-driven-orchestration-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/architecture/event-driven-orchestration-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/raibid-ci/docs/architecture/event-driven-orchestration"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-432"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-432" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/">raibid ci</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/architecture/">architecture</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>event driven orchestration</a></div></nav><h1 class="article-title">event-driven-orchestration</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:14.283Z">Nov 16, 2025</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="event-driven-orchestration-design">Event-Driven Orchestration Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-driven-orchestration-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document describes the transformation of the raibid-ci orchestrator from a polling-based system to an event-driven architecture using GitHub webhooks and GitHub Actions. The new system responds immediately to GitHub events, eliminating the 5-minute polling delay and reducing orchestrator overhead.</p>
+<h2 id="current-state-analysis">Current State Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#current-state-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="polling-based-system-current">Polling-Based System (Current)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#polling-based-system-current" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The current orchestrator runs a monitoring loop every 5 minutes:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Current approach from orchestrator_monitor.sh</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">while</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --state</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> open</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --json</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> number,title,body,comments</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Check for answers to clarifying questions</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Spawn agents if questions are answered</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  sleep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 300</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Wait 5 minutes</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span></code></pre></figure>
+<p><strong>Problems:</strong></p>
+<ul>
+<li><strong>Latency</strong>: 5-minute average delay before detecting events (up to 10 minutes worst case)</li>
+<li><strong>API Rate Limits</strong>: Constant polling consumes GitHub API quota</li>
+<li><strong>Resource Waste</strong>: Orchestrator runs continuously even when idle</li>
+<li><strong>Scalability</strong>: Doesn’t scale with multiple repositories or organizations</li>
+<li><strong>Missed Events</strong>: Race conditions between polls</li>
+</ul>
+<h2 id="event-sources">Event Sources<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-sources" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="github-webhook-events">GitHub Webhook Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-webhook-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The system will respond to these webhook events:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Event</th><th>Action</th><th>Trigger Condition</th></tr></thead><tbody><tr><td><code>issues</code></td><td><code>opened</code></td><td>New issue created</td></tr><tr><td><code>issues</code></td><td><code>edited</code></td><td>Issue description updated (may include answers)</td></tr><tr><td><code>issues</code></td><td><code>labeled</code></td><td>Label added (e.g., “ready”, “blocked”)</td></tr><tr><td><code>issues</code></td><td><code>unlabeled</code></td><td>Label removed (e.g., unblocking work)</td></tr><tr><td><code>issue_comment</code></td><td><code>created</code></td><td>Comment added (may contain answers)</td></tr><tr><td><code>issue_comment</code></td><td><code>edited</code></td><td>Comment edited (answer clarification)</td></tr><tr><td><code>pull_request</code></td><td><code>opened</code></td><td>PR created by agent</td></tr><tr><td><code>pull_request</code></td><td><code>closed</code></td><td>PR merged (work completed)</td></tr><tr><td><code>pull_request</code></td><td><code>synchronize</code></td><td>PR updated (CI results)</td></tr></tbody></table></div>
+<h3 id="github-actions-trigger-events">GitHub Actions Trigger Events<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-actions-trigger-events" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>GitHub Actions provides these event triggers:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issues</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opened</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">edited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">labeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">unlabeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issue_comment</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">created</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">edited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  pull_request</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opened</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">closed</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">synchronize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span></code></pre></figure>
+<p><strong>Key Constraint</strong>: Workflows must exist on the default branch to trigger.</p>
+<h2 id="architecture-options">Architecture Options<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-options" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="option-a-github-actions--claude-code-recommended">Option A: GitHub Actions + Claude Code (RECOMMENDED)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-github-actions--claude-code-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Architecture:</strong></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    GH[GitHub Event] -->|Webhook| GHA[GitHub Actions Workflow]\n    GHA -->|Check Issue Status| SCRIPT[Analysis Script]\n    SCRIPT -->|Parse Questions| QA[Question Detector]\n    QA -->|All Answered?| DECISION{Ready?}\n    DECISION -->|Yes| SPAWN[Spawn Agent Comment]\n    DECISION -->|No| WAIT[Add Waiting Label]\n    SPAWN -->|Trigger| CLAUDE[Claude Code Session]\n    CLAUDE -->|Read Issue| WORK[Development Agent]\n    WORK -->|Create PR| PR[Pull Request]\n    PR -->|Merge Event| NEXT[Trigger Next Issue]&quot;">graph TB
+    GH[GitHub Event] -->|Webhook| GHA[GitHub Actions Workflow]
+    GHA -->|Check Issue Status| SCRIPT[Analysis Script]
+    SCRIPT -->|Parse Questions| QA[Question Detector]
+    QA -->|All Answered?| DECISION{Ready?}
+    DECISION -->|Yes| SPAWN[Spawn Agent Comment]
+    DECISION -->|No| WAIT[Add Waiting Label]
+    SPAWN -->|Trigger| CLAUDE[Claude Code Session]
+    CLAUDE -->|Read Issue| WORK[Development Agent]
+    WORK -->|Create PR| PR[Pull Request]
+    PR -->|Merge Event| NEXT[Trigger Next Issue]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Workflow Flow:</strong></p>
+<ol>
+<li><strong>Event Trigger</strong>: GitHub webhook fires on issue/comment event</li>
+<li><strong>Workflow Execution</strong>: GitHub Actions workflow runs on the event</li>
+<li><strong>Issue Analysis</strong>: Script checks issue for clarifying questions</li>
+<li><strong>Question Detection</strong>: Parse issue body and comments for Q&amp;A</li>
+<li><strong>Decision Point</strong>:
+<ul>
+<li>If questions unanswered → Add <code>waiting:answers</code> label, post paused comment</li>
+<li>If questions answered → Add <code>ready:work</code> label, post spawn comment</li>
+</ul>
+</li>
+<li><strong>Agent Spawn</strong>: Workflow posts special comment that triggers orchestrator</li>
+<li><strong>Orchestrator</strong>: Reads spawn comment, spawns development agent via Claude Code Task tool</li>
+<li><strong>Development</strong>: Agent completes work following TDD workflow</li>
+<li><strong>Completion</strong>: PR merged triggers workflow to assign next issue</li>
+</ol>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>✅ Native GitHub integration (no external infrastructure)</li>
+<li>✅ Zero polling (instant event response)</li>
+<li>✅ Free for public repos (generous limits for private)</li>
+<li>✅ Built-in secret management (GitHub Actions secrets)</li>
+<li>✅ Audit trail (workflow runs logged)</li>
+<li>✅ Easy testing (manual workflow dispatch)</li>
+<li>✅ Scales automatically with repository events</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>⚠️ Requires workflow files on default branch</li>
+<li>⚠️ Cold start time (workflow boot ~10-30 seconds)</li>
+<li>⚠️ Limited to 20 concurrent jobs (free tier)</li>
+<li>⚠️ No persistent state (need external storage for complex orchestration)</li>
+</ul>
+<p><strong>Implementation Complexity</strong>: Low-Medium</p>
+<hr/>
+<h3 id="option-b-webhook-server--queue">Option B: Webhook Server + Queue<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b-webhook-server--queue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Architecture:</strong></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    GH[GitHub Event] -->|Webhook POST| WH[Webhook Server]\n    WH -->|Validate Signature| VALID{Valid?}\n    VALID -->|Yes| PARSE[Parse Payload]\n    VALID -->|No| REJECT[Reject 403]\n    PARSE -->|Enqueue| REDIS[Redis Queue]\n    ORCH[Orchestrator Worker] -->|Poll| REDIS\n    ORCH -->|Process Event| LOGIC[Event Handler]\n    LOGIC -->|Check Status| DECISION{Ready?}\n    DECISION -->|Yes| SPAWN[Spawn Agent]\n    DECISION -->|No| WAIT[Update Label]\n    SPAWN -->|Task Tool| AGENT[Development Agent]&quot;">graph TB
+    GH[GitHub Event] -->|Webhook POST| WH[Webhook Server]
+    WH -->|Validate Signature| VALID{Valid?}
+    VALID -->|Yes| PARSE[Parse Payload]
+    VALID -->|No| REJECT[Reject 403]
+    PARSE -->|Enqueue| REDIS[Redis Queue]
+    ORCH[Orchestrator Worker] -->|Poll| REDIS
+    ORCH -->|Process Event| LOGIC[Event Handler]
+    LOGIC -->|Check Status| DECISION{Ready?}
+    DECISION -->|Yes| SPAWN[Spawn Agent]
+    DECISION -->|No| WAIT[Update Label]
+    SPAWN -->|Task Tool| AGENT[Development Agent]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Components:</strong></p>
+<ol>
+<li>
+<p><strong>Webhook Server</strong>: Lightweight HTTP server (Rust/Python)</p>
+<ul>
+<li>Receives GitHub webhook POSTs</li>
+<li>Validates HMAC signatures</li>
+<li>Enqueues events to Redis</li>
+</ul>
+</li>
+<li>
+<p><strong>Redis Queue</strong>: Event queue and state store</p>
+<ul>
+<li>Events stored as Redis Streams</li>
+<li>State tracking for active agents</li>
+<li>Deduplication of events</li>
+</ul>
+</li>
+<li>
+<p><strong>Orchestrator Worker</strong>: Background processor</p>
+<ul>
+<li>Consumes events from Redis queue</li>
+<li>Analyzes issue status</li>
+<li>Spawns agents via Claude Code Task tool</li>
+<li>Updates GitHub issue labels/comments</li>
+</ul>
+</li>
+</ol>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>✅ Full control over event processing logic</li>
+<li>✅ Persistent state management</li>
+<li>✅ Event deduplication and ordering</li>
+<li>✅ Can handle complex orchestration logic</li>
+<li>✅ Works with any repository (not limited to default branch)</li>
+<li>✅ Can batch process events efficiently</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>❌ Requires hosting webhook server (infrastructure cost)</li>
+<li>❌ More complex deployment (server + queue + orchestrator)</li>
+<li>❌ Need to manage secrets and credentials</li>
+<li>❌ Requires public endpoint or tunneling (ngrok for dev)</li>
+<li>❌ More attack surface (webhook validation critical)</li>
+<li>❌ Higher maintenance burden</li>
+</ul>
+<p><strong>Implementation Complexity</strong>: High</p>
+<hr/>
+<h3 id="option-c-claude-github-app-integration">Option C: Claude GitHub App Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-c-claude-github-app-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Architecture:</strong></p>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TB\n    GH[GitHub Event] -->|App Webhook| CLAUDE[Claude GitHub App]\n    CLAUDE -->|Process| ANALYZE[Repository Analysis]\n    ANALYZE -->|Detect Questions| QA[Q&amp;A Parser]\n    QA -->|Generate Response| AGENT[AI Agent Spawn]\n    AGENT -->|Direct Action| WORK[Feature Implementation]\n    WORK -->|Auto PR| PR[Pull Request]\n    PR -->|Auto Merge| MERGE[Completion]&quot;">graph TB
+    GH[GitHub Event] -->|App Webhook| CLAUDE[Claude GitHub App]
+    CLAUDE -->|Process| ANALYZE[Repository Analysis]
+    ANALYZE -->|Detect Questions| QA[Q&amp;A Parser]
+    QA -->|Generate Response| AGENT[AI Agent Spawn]
+    AGENT -->|Direct Action| WORK[Feature Implementation]
+    WORK -->|Auto PR| PR[Pull Request]
+    PR -->|Auto Merge| MERGE[Completion]
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<p><strong>Based on Research:</strong></p>
+<p>From web search results, the Claude GitHub App (claude-hub) provides:</p>
+<ul>
+<li>Webhook service connecting Claude Code to GitHub</li>
+<li>AI-powered code assistance through PR and issue mentions</li>
+<li>Automated code review and feature implementation</li>
+<li>Repository analysis capabilities</li>
+<li>PR lifecycle management</li>
+<li>CI/CD monitoring</li>
+</ul>
+<p><strong>Implementation Approach:</strong></p>
+<ol>
+<li><strong>Install Claude GitHub App</strong>: Available via <code>/install-github-app</code> in Claude Code CLI</li>
+<li><strong>Configure Webhooks</strong>: App receives all configured GitHub events</li>
+<li><strong>Event Routing</strong>: App routes events to Claude Code sessions</li>
+<li><strong>Agent Orchestration</strong>: App can spawn agents directly for issues</li>
+<li><strong>Automated Workflow</strong>: From issue creation → analysis → implementation → PR → merge</li>
+</ol>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>✅ Official Anthropic integration (well-supported)</li>
+<li>✅ No infrastructure management required</li>
+<li>✅ Deep integration with Claude Code</li>
+<li>✅ Handles full PR lifecycle automatically</li>
+<li>✅ Built-in security and secret management</li>
+<li>✅ Can use @mentions for manual intervention</li>
+</ul>
+<p><strong>Disadvantages:</strong></p>
+<ul>
+<li>⚠️ Less control over orchestration logic (black box)</li>
+<li>⚠️ May not support custom Q&amp;A workflow exactly</li>
+<li>⚠️ Requires GitHub App installation permissions</li>
+<li>⚠️ Pricing/limits unclear for this use case</li>
+<li>⚠️ May auto-merge PRs without human review (configurable?)</li>
+</ul>
+<p><strong>Implementation Complexity</strong>: Low (if it supports the use case)</p>
+<p><strong>Status</strong>: Requires further investigation to confirm Q&amp;A workflow compatibility.</p>
+<hr/>
+<h2 id="recommendation-option-a-github-actions--claude-code">Recommendation: Option A (GitHub Actions + Claude Code)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#recommendation-option-a-github-actions--claude-code" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="why-option-a">Why Option A?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-option-a" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Best Fit</strong>: Balances simplicity, control, and native integration</li>
+<li><strong>Zero Infrastructure</strong>: No servers to host or maintain</li>
+<li><strong>Proven Pattern</strong>: GitHub Actions widely used for automation</li>
+<li><strong>Flexibility</strong>: Full control over orchestration logic</li>
+<li><strong>Developer Friendly</strong>: Easy to debug and iterate</li>
+<li><strong>Cost</strong>: Free for public repos, generous limits for private</li>
+<li><strong>Scalability</strong>: Handles multiple repos/orgs without changes</li>
+</ol>
+<h3 id="when-to-consider-alternatives">When to Consider Alternatives<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-consider-alternatives" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Option B</strong>: If you need complex state management, event deduplication, or want to process events in batches</li>
+<li><strong>Option C</strong>: If the Claude GitHub App supports the custom Q&amp;A workflow and you prefer minimal setup</li>
+</ul>
+<h2 id="option-a-detailed-design">Option A: Detailed Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-detailed-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="component-overview">Component Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#component-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>.github/
+└── workflows/
+    ├── orchestrator-issue-events.yml      # Issue open/edit/label events
+    ├── orchestrator-comment-events.yml    # Comment events
+    ├── orchestrator-pr-events.yml         # PR merge events
+    └── scripts/
+        ├── check-issue-readiness.sh       # Analyze issue status
+        ├── parse-questions.sh             # Extract Q&amp;A from issue
+        ├── spawn-agent-comment.sh         # Post spawn trigger comment
+        └── assign-next-issue.sh           # Find and assign next work
+</code></pre>
+<h3 id="event-handlers">Event Handlers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#event-handlers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-issue-events-handler">1. Issue Events Handler<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-issue-events-handler" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Workflow</strong>: <code>.github/workflows/orchestrator-issue-events.yml</code></p>
+<p><strong>Triggers:</strong></p>
+<ul>
+<li><code>issues.opened</code>: New issue created</li>
+<li><code>issues.edited</code>: Issue description updated</li>
+<li><code>issues.labeled</code>: Label added/removed</li>
+</ul>
+<p><strong>Logic:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Orchestrator - Issue Events</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issues</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opened</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">edited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">labeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">unlabeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  check-readiness</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Checkout Repository</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v4</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Check Issue Readiness</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        env</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          ISSUE_NUMBER</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ github.event.issue.number }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          ISSUE_BODY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ github.event.issue.body }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          GITHUB_TOKEN</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ secrets.GITHUB_TOKEN }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/check-issue-readiness.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Update Issue Labels</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.check.outputs.ready == 'true'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          gh issue edit ${{ github.event.issue.number }} \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            --add-label &quot;ready:work&quot; \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            --remove-label &quot;waiting:answers&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Spawn Agent</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.check.outputs.ready == 'true'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/spawn-agent-comment.sh ${{ github.event.issue.number }}</span></span></code></pre></figure>
+<p><strong>Script</strong>: <code>.github/scripts/check-issue-readiness.sh</code></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check if issue is ready for agent to start work</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">set</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -e</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_NUM</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_NUMBER</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_JSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> view</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --json</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> title,body,comments,labels</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract clarifying questions section</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">QUESTIONS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.body'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/## Clarifying Questions/,/^##/p'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -E</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '^[0-9]+\.'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ||</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTIONS</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ]; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ready=true&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> >></span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $GITHUB_OUTPUT</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;No clarifying questions found - ready to start&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  exit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Parse questions and check for answers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">UNANSWERED</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">while</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> IFS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> read</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> question</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  QUESTION_NUM</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$question</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 's/^\([0-9]*\)\..*/\1/'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Check comments for answers to this question</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  ANSWER</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.comments[].body'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -E</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;^(A</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTION_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:|Answer </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTION_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:|Q</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTION_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:.*A:)&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ||</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ANSWER</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ]; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">    echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Question </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTION_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> unanswered&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    UNANSWERED</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$((</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">UNANSWERED</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  fi</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTIONS</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$UNANSWERED</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> -eq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ]; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ready=true&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> >></span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $GITHUB_OUTPUT</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;All questions answered - ready to start&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">else</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ready=false&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> >></span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $GITHUB_OUTPUT</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">  echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$UNANSWERED</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> questions still unanswered&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fi</span></span></code></pre></figure>
+<h4 id="2-comment-events-handler">2. Comment Events Handler<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-comment-events-handler" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Workflow</strong>: <code>.github/workflows/orchestrator-comment-events.yml</code></p>
+<p><strong>Triggers:</strong></p>
+<ul>
+<li><code>issue_comment.created</code>: New comment added</li>
+<li><code>issue_comment.edited</code>: Comment edited</li>
+</ul>
+<p><strong>Purpose</strong>: Detect when maintainer answers clarifying questions in comments.</p>
+<p><strong>Logic:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Orchestrator - Comment Events</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issue_comment</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">created</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">edited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  check-for-answers</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Only run for maintainer/owner comments</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">github.event.comment.author_association == 'OWNER' || github.event.comment.author_association == 'MEMBER'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Checkout Repository</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v4</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Check if Answers Provided</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">check</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        env</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          ISSUE_NUMBER</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ github.event.issue.number }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          COMMENT_BODY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ github.event.comment.body }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">          GITHUB_TOKEN</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ secrets.GITHUB_TOKEN }}</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          # Check if comment contains answer patterns</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          if echo &quot;$COMMENT_BODY&quot; | grep -qE '^(A[0-9]+:|Answer [0-9]+:|Decision:)'; then</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            echo &quot;has_answers=true&quot; >> $GITHUB_OUTPUT</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          else</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            echo &quot;has_answers=false&quot; >> $GITHUB_OUTPUT</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          fi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Re-check Issue Readiness</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.check.outputs.has_answers == 'true'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/check-issue-readiness.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Resume Paused Agent</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.check.outputs.ready == 'true'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          gh issue comment ${{ github.event.issue.number }} --body \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            &quot;🚀 **Questions Answered - Resuming Work**</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            All clarifying questions have been answered. Spawning development agent.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            **Agent Type**: rust-pro</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            **Workflow**: TDD</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            **Status**: ⏸️ PAUSED → ▶️ IN PROGRESS&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Trigger Agent Spawn</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.check.outputs.ready == 'true'</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/spawn-agent-comment.sh ${{ github.event.issue.number }}</span></span></code></pre></figure>
+<h4 id="3-pull-request-events-handler">3. Pull Request Events Handler<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-pull-request-events-handler" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Workflow</strong>: <code>.github/workflows/orchestrator-pr-events.yml</code></p>
+<p><strong>Triggers:</strong></p>
+<ul>
+<li><code>pull_request.closed</code>: PR merged (work completed)</li>
+</ul>
+<p><strong>Purpose</strong>: Detect when agent completes work and assign next issue.</p>
+<p><strong>Logic:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Orchestrator - PR Events</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  pull_request</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">closed</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  handle-completion</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">github.event.pull_request.merged == true</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Checkout Repository</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">actions/checkout@v4</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Extract Issue Number</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">issue</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          # Extract issue number from PR body or branch name</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ISSUE_NUM=$(echo &quot;${{ github.event.pull_request.body }}&quot; | grep -oP 'Closes #\K\d+' || \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">                      echo &quot;${{ github.event.pull_request.head.ref }}&quot; | grep -oP '[0-9]+')</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          echo &quot;number=$ISSUE_NUM&quot; >> $GITHUB_OUTPUT</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Comment on Completed Issue</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.issue.outputs.number != ''</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          gh issue comment ${{ steps.issue.outputs.number }} --body \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            &quot;✅ **Work Completed**</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            PR #${{ github.event.pull_request.number }} has been merged.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            **Status**: ▶️ IN PROGRESS → ✅ COMPLETE</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            **Duration**: $(( (${{ github.event.pull_request.merged_at }} - ${{ github.event.pull_request.created_at }}) / 3600 )) hours&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Find Next Issue</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">next</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/assign-next-issue.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Spawn Agent for Next Issue</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">steps.next.outputs.issue_number != ''</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          ./.github/scripts/spawn-agent-comment.sh ${{ steps.next.outputs.issue_number }}</span></span></code></pre></figure>
+<h3 id="agent-spawning-mechanism">Agent Spawning Mechanism<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-spawning-mechanism" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="spawn-trigger-comment">Spawn Trigger Comment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#spawn-trigger-comment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>When an issue is ready, the workflow posts a specially formatted comment:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">🤖 </span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**ORCHESTRATOR-SPAWN-AGENT**</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Issue**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: #123</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Type**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: rust-pro</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Status**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: ready</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Timestamp**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: 2025-10-29T10:30:00Z</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">---</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-style:italic;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;">*This comment triggers agent spawning. Do not delete.*</span></span></code></pre></figure>
+<h4 id="orchestrator-detection">Orchestrator Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#orchestrator-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>The orchestrator (running in Claude Code session) monitors for these comments:</p>
+<p><strong>Two approaches:</strong></p>
+<p><strong>A. Polling Orchestrator (Minimal Change)</strong></p>
+<ul>
+<li>Orchestrator polls every 30 seconds for spawn trigger comments (vs 5 minutes for issues)</li>
+<li>Faster response time (30s vs 5min average)</li>
+<li>Easier migration from current system</li>
+</ul>
+<p><strong>B. Manual Orchestrator Invocation</strong></p>
+<ul>
+<li>GitHub Actions workflow calls Claude Code CLI directly</li>
+<li>Requires Claude Code CLI accessible in workflow</li>
+<li>Instant agent spawning (no polling)</li>
+<li>More complex setup</li>
+</ul>
+<p><strong>Recommended</strong>: Start with Approach A (polling for spawn comments), migrate to B later.</p>
+<h3 id="state-management">State Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#state-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-labels">Issue Labels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-labels" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Use labels to track issue lifecycle:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Label</th><th>Meaning</th><th>Applied By</th></tr></thead><tbody><tr><td><code>status:new</code></td><td>Issue just created</td><td>GitHub Actions (on issue opened)</td></tr><tr><td><code>waiting:answers</code></td><td>Has unanswered questions</td><td>GitHub Actions (after analysis)</td></tr><tr><td><code>ready:work</code></td><td>Ready for agent to start</td><td>GitHub Actions (all questions answered)</td></tr><tr><td><code>status:in-progress</code></td><td>Agent working on issue</td><td>Orchestrator (agent spawned)</td></tr><tr><td><code>status:pr-open</code></td><td>PR submitted</td><td>Agent (PR created)</td></tr><tr><td><code>status:completed</code></td><td>PR merged</td><td>GitHub Actions (PR merged)</td></tr><tr><td><code>blocked</code></td><td>Blocked by dependency</td><td>Manual or orchestrator</td></tr></tbody></table></div>
+<h4 id="comment-based-state">Comment-Based State<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comment-based-state" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Use comments for detailed state tracking:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">&lt;!-- ORCHESTRATOR-STATE</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">{</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  &quot;issue&quot;: 123,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  &quot;status&quot;: &quot;in_progress&quot;,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  &quot;agent_id&quot;: &quot;rust-pro-agent-001&quot;,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  &quot;started_at&quot;: &quot;2025-10-29T10:30:00Z&quot;,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  &quot;questions&quot;: {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    &quot;total&quot;: 4,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    &quot;answered&quot;: 4</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  }</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">}</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">--></span></span></code></pre></figure>
+<p>Hidden HTML comments store JSON state without cluttering issue UI.</p>
+<h3 id="question-detection-algorithm">Question Detection Algorithm<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#question-detection-algorithm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="pattern-matching">Pattern Matching<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-matching" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Question Format</strong> (from issue template):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Clarifying Questions</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Project naming**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Use </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">raibid-api</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> or </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">raibid_api</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Configuration format**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: YAML or TOML?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Module structure**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Separate crates or single crate?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Async runtime**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Tokio or async-std?</span></span></code></pre></figure>
+<p><strong>Answer Patterns</strong> (in comments):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">A1: Use </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">raibid-api</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (kebab-case)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">A2: TOML for configuration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">A3: Single crate with modules</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">A4: Tokio runtime</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">---</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Alternative format:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Answers:**</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Use </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">raibid-api</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> TOML</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Single crate</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Tokio</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#ABB2BF;--shiki-dark-font-weight:inherit;">---</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Decision format:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Decision**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Use kebab-case naming (raibid-api)</span></span></code></pre></figure>
+<p><strong>Detection Script</strong> (<code>.github/scripts/parse-questions.sh</code>):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract and match questions with answers</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">set</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -e</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_JSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">$1</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract questions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">QUESTIONS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.body'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/## Clarifying Questions/,/^##/p'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract all comments</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">COMMENTS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> jq</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.comments[].body'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># For each question, check if answered</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$QUESTIONS</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -E</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '^[0-9]+\.'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> while</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> read</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> line</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">  Q_NUM</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$line</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 's/^\([0-9]*\)\..*/\1/'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Check for answer in comments</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  if</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$COMMENTS</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -qE</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;^A</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$Q_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:|Answer </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$Q_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">    echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Q</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$Q_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">: ANSWERED&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  else</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">    echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Q</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$Q_NUM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">: UNANSWERED&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  fi</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span></code></pre></figure>
+<h3 id="security-considerations">Security Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#security-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="github-token-permissions">GitHub Token Permissions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-token-permissions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Required Permissions</strong> for <code>GITHUB_TOKEN</code>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">permissions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issues</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">write</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Update labels, post comments</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  pull-requests</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">read</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Read PR status</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  contents</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">read</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">       # Read repository files</span></span></code></pre></figure>
+<p><strong>No sensitive secrets needed</strong> - GitHub Actions provides <code>GITHUB_TOKEN</code> automatically.</p>
+<h4 id="workflow-security">Workflow Security<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow-security" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Best Practices:</strong></p>
+<ol>
+<li><strong>Validate Input</strong>: Sanitize issue numbers, comment bodies</li>
+<li><strong>Limit Triggers</strong>: Only run on maintainer/owner comments for sensitive actions</li>
+<li><strong>No Secrets Exposure</strong>: Don’t echo sensitive data in logs</li>
+<li><strong>Branch Protection</strong>: Require workflows to pass before merge</li>
+<li><strong>Code Review</strong>: Require approval for workflow changes</li>
+</ol>
+<h3 id="scalability">Scalability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scalability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="multiple-repositories">Multiple Repositories<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multiple-repositories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Each repository has its own workflows - no central orchestrator needed.</p>
+<p><strong>Shared Scripts</strong>: Use a shared GitHub Action or reusable workflow:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># .github/workflows/orchestrator-issue-events.yml</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Orchestrator - Issue Events</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  issues</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    types</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opened</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">edited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">labeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">unlabeled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  orchestrate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    uses</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">raibid-labs/orchestrator-actions/.github/workflows/issue-handler.yml@main</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    with</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">      issue_number</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">${{ github.event.issue.number }}</span></span></code></pre></figure>
+<h4 id="multiple-organizations">Multiple Organizations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#multiple-organizations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Deploy workflows to each org’s repositories.</p>
+<p><strong>Management</strong>: Use GitHub CLI to bulk-deploy workflows:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy to all repos in org</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> raibid-labs</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --json</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> name</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --jq</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '.[].name'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> while</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> read</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workflow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sync</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> raibid-labs/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .github/workflows/orchestrator-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.yml</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span></code></pre></figure>
+<h3 id="performance-metrics">Performance Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Polling (Current)</th><th>Event-Driven (Proposed)</th><th>Improvement</th></tr></thead><tbody><tr><td><strong>Detection Latency</strong></td><td>5 min avg (10 min max)</td><td>10-30 seconds</td><td>10-30x faster</td></tr><tr><td><strong>API Calls</strong></td><td>1 per 5 min = 288/day</td><td>1 per event (~10-50/day)</td><td>5-28x fewer</td></tr><tr><td><strong>Orchestrator CPU</strong></td><td>Continuous</td><td>Event-triggered</td><td>95% reduction</td></tr><tr><td><strong>Response Time</strong></td><td>5-10 minutes</td><td>30-60 seconds</td><td>5-10x faster</td></tr></tbody></table></div>
+<h3 id="migration-strategy">Migration Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migration-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="phase-1-parallel-operation">Phase 1: Parallel Operation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-parallel-operation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li><strong>Deploy GitHub Actions workflows</strong> to repository</li>
+<li><strong>Keep existing polling orchestrator</strong> running</li>
+<li><strong>Monitor both systems</strong> for consistency</li>
+<li><strong>Validate event handling</strong> matches polling behavior</li>
+</ol>
+<h4 id="phase-2-transition">Phase 2: Transition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-transition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li><strong>Increase polling interval</strong> to 15 minutes (reduce overlap)</li>
+<li><strong>Add logging</strong> to compare response times</li>
+<li><strong>Fix any event handling bugs</strong> discovered</li>
+</ol>
+<h4 id="phase-3-cutover">Phase 3: Cutover<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-cutover" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li><strong>Disable polling orchestrator</strong></li>
+<li><strong>Rely entirely on event-driven system</strong></li>
+<li><strong>Monitor for missed events</strong> (should be zero)</li>
+</ol>
+<h4 id="phase-4-optimization">Phase 4: Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ol>
+<li><strong>Remove polling code</strong> from orchestrator</li>
+<li><strong>Convert orchestrator to pure agent spawner</strong> (waits for spawn trigger comments)</li>
+<li><strong>Optimize workflow scripts</strong> based on performance data</li>
+</ol>
+<h2 id="implementation-plan">Implementation Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="week-1-foundation">Week 1: Foundation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-1-foundation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Days 1-2: Workflow Setup</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create <code>.github/workflows/</code> directory structure</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>orchestrator-issue-events.yml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>orchestrator-comment-events.yml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>orchestrator-pr-events.yml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test workflow triggers with manual events</li>
+</ul>
+<p><strong>Days 3-5: Analysis Scripts</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>check-issue-readiness.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>parse-questions.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>spawn-agent-comment.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement <code>assign-next-issue.sh</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test scripts locally with sample data</li>
+</ul>
+<p><strong>Days 6-7: Integration Testing</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create test issue with clarifying questions</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify workflow detects issue, adds labels</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Answer questions in comment</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify workflow detects answers, posts spawn comment</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate full flow: issue → questions → answers → spawn</li>
+</ul>
+<h3 id="week-2-orchestrator-integration">Week 2: Orchestrator Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-2-orchestrator-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Days 8-10: Spawn Comment Detection</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Update orchestrator to poll for spawn trigger comments</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement spawn comment parser</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Connect to existing agent spawning logic</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test with live issue</li>
+</ul>
+<p><strong>Days 11-12: State Management</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement label-based state tracking</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add state comment generation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update workflows to maintain state</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test state transitions</li>
+</ul>
+<p><strong>Days 13-14: PR Completion Flow</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Test PR merge detection</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify next issue assignment</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate end-to-end workflow</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance testing</li>
+</ul>
+<h3 id="week-3-documentation--validation">Week 3: Documentation &amp; Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-3-documentation--validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Days 15-17: Documentation</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Update <code>ORCHESTRATOR_AGENT.md</code> with event-driven model</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create workflow documentation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create testing guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create troubleshooting guide</li>
+</ul>
+<p><strong>Days 18-19: Validation</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Run parallel operation with polling system</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Compare response times</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate zero missed events</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fix any discovered issues</li>
+</ul>
+<p><strong>Day 20-21: Migration</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Disable polling orchestrator</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Switch to event-driven only</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Monitor for 48 hours</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Celebrate success!</li>
+</ul>
+<h2 id="testing-plan">Testing Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#testing-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="unit-tests">Unit Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#unit-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test Issue Readiness Detection:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Test: Issue with no questions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_JSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'{&quot;body&quot;: &quot;## Description\nSimple issue&quot;, &quot;comments&quot;: []}'</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./check-issue-readiness.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Expected: ready=true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Test: Issue with unanswered questions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_JSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'{&quot;body&quot;: &quot;## Clarifying Questions\n1. Question?&quot;, &quot;comments&quot;: []}'</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./check-issue-readiness.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Expected: ready=false</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Test: Issue with answered questions</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ISSUE_JSON</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'{&quot;body&quot;: &quot;## Clarifying Questions\n1. Question?&quot;, &quot;comments&quot;: [{&quot;body&quot;: &quot;A1: Answer&quot;}]}'</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./check-issue-readiness.sh</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$ISSUE_JSON</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Expected: ready=true</span></span></code></pre></figure>
+<h3 id="integration-tests">Integration Tests<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#integration-tests" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test Workflow Triggers:</strong></p>
+<ol>
+<li>
+<p><strong>Create Test Issue</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> create</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --title</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Test: Issue Events&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --body</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Test issue with questions&quot;</span></span></code></pre></figure>
+<ul>
+<li>Verify: Workflow runs, adds <code>waiting:answers</code> label</li>
+</ul>
+</li>
+<li>
+<p><strong>Answer Questions</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> comment</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 123</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --body</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;A1: Test answer&quot;</span></span></code></pre></figure>
+<ul>
+<li>Verify: Workflow runs, adds <code>ready:work</code> label, posts spawn comment</li>
+</ul>
+</li>
+<li>
+<p><strong>Merge PR</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 456</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --squash</span></span></code></pre></figure>
+<ul>
+<li>Verify: Workflow runs, marks issue complete, spawns next agent</li>
+</ul>
+</li>
+</ol>
+<h3 id="load-testing">Load Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#load-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Simulate Multiple Events:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create 10 issues simultaneously</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> i</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">1..10}</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> create</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --title</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Load Test </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$i</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --body</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Test issue&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">wait</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify: All workflows complete without errors</span></span></code></pre></figure>
+<h3 id="edge-cases">Edge Cases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#edge-cases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Test Error Scenarios:</strong></p>
+<ol>
+<li><strong>Malformed Issue Body</strong>: Issue without question section</li>
+<li><strong>Ambiguous Answers</strong>: Comment with partial answers</li>
+<li><strong>Rapid Updates</strong>: Multiple edits in quick succession</li>
+<li><strong>Concurrent PRs</strong>: Multiple PRs merged simultaneously</li>
+<li><strong>Closed Issues</strong>: Issue closed before agent spawned</li>
+</ol>
+<h2 id="monitoring--observability">Monitoring &amp; Observability<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monitoring--observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="workflow-run-logs">Workflow Run Logs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow-run-logs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>View Recent Runs:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># List workflow runs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --workflow=orchestrator-issue-events.yml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># View specific run logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> view</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 123456</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --log</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Watch for failures</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> run</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> watch</span></span></code></pre></figure>
+<h3 id="metrics-to-track">Metrics to Track<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#metrics-to-track" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Source</th><th>Target</th></tr></thead><tbody><tr><td>Workflow Run Time</td><td>GitHub Actions</td><td>&lt;30 seconds</td></tr><tr><td>Issue Detection Latency</td><td>GitHub Actions + Issue timestamp</td><td>&lt;60 seconds</td></tr><tr><td>Question Answer Rate</td><td>Issue comments</td><td>100% detection</td></tr><tr><td>Agent Spawn Success Rate</td><td>Orchestrator logs</td><td>>95%</td></tr><tr><td>Missed Events</td><td>Manual audit</td><td>0</td></tr></tbody></table></div>
+<h3 id="alerting">Alerting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#alerting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GitHub Actions Failure Notifications:</strong></p>
+<p>Configure GitHub repository settings:</p>
+<ul>
+<li>Settings → Notifications → Actions</li>
+<li>Enable email notifications for workflow failures</li>
+</ul>
+<p><strong>Custom Alerts:</strong></p>
+<p>Create workflow to detect orchestrator issues:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Orchestrator Health Check</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  schedule</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">cron</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'0 * * * *'</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Hourly</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  health-check</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    runs-on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ubuntu-latest</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    steps</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Check for Stuck Issues</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">        run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          # Find issues labeled ready:work but no agent spawned (>1 hour old)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          STUCK=$(gh issue list --label &quot;ready:work&quot; --json number,createdAt | \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            jq '[.[] | select((.createdAt | fromdateiso8601) &lt; (now - 3600))] | length')</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          if [ &quot;$STUCK&quot; -gt 0 ]; then</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            echo &quot;⚠️ $STUCK issues stuck in ready:work state&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">            exit 1</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          fi</span></span></code></pre></figure>
+<h2 id="rollback-plan">Rollback Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>If event-driven system fails:</p>
+<h3 id="immediate-rollback-5-minutes">Immediate Rollback (5 minutes)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#immediate-rollback-5-minutes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Re-enable polling orchestrator</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Resume cron job or systemd service</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> start</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator-monitor.service</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Disable GitHub Actions workflows</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Rename workflows to disable</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">for</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> file</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .github/workflows/orchestrator-*.yml</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">do</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mv</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">file</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}.disabled&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">done</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> commit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Disable event-driven orchestration&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span></span></code></pre></figure>
+</li>
+</ol>
+<h3 id="root-cause-analysis">Root Cause Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#root-cause-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Check GitHub Actions run logs for errors</li>
+<li>Review issue/comment events for missed detections</li>
+<li>Validate script logic with failing test case</li>
+<li>Fix and re-deploy</li>
+</ol>
+<h2 id="future-enhancements">Future Enhancements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-enhancements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-2-advanced-features">Phase 2: Advanced Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-advanced-features" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Agent Priority Queue</strong>: Spawn higher-priority issues first</li>
+<li><strong>Multi-Agent Orchestration</strong>: Spawn multiple agents for parallel work</li>
+<li><strong>Smart Agent Selection</strong>: Choose agent type based on issue labels/content</li>
+<li><strong>Auto-Review</strong>: Lightweight agent reviews PRs before merging</li>
+<li><strong>Dependency Detection</strong>: Parse issue dependencies, block until resolved</li>
+<li><strong>Performance Analytics</strong>: Track agent success rates, build times, etc.</li>
+</ol>
+<h3 id="phase-3-claude-app-integration">Phase 3: Claude App Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-claude-app-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>If Claude GitHub App proves mature:</p>
+<ol>
+<li>Evaluate Claude App for full workflow automation</li>
+<li>Compare performance: Actions vs App</li>
+<li>Migrate if Claude App provides better DX</li>
+<li>Keep GitHub Actions as fallback</li>
+</ol>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Recommendation</strong>: Implement <strong>Option A (GitHub Actions + Claude Code)</strong> for event-driven orchestration.</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>10-30x faster response time (30s vs 5min)</li>
+<li>95% reduction in orchestrator CPU usage</li>
+<li>5-28x fewer GitHub API calls</li>
+<li>Native integration, zero infrastructure</li>
+<li>Easy to test, debug, and maintain</li>
+</ul>
+<p><strong>Next Steps:</strong></p>
+<ol>
+<li>Implement workflows (Week 1)</li>
+<li>Integrate with orchestrator (Week 2)</li>
+<li>Validate and migrate (Week 3)</li>
+</ol>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>✅ Zero polling required</li>
+<li>✅ &lt;60s issue → agent spawn latency</li>
+<li>✅ 100% event detection accuracy</li>
+<li>✅ Complete documentation and tests</li>
+</ul>
+<hr/>
+<p><strong>Document Version:</strong> 1.0
+<strong>Created:</strong> 2025-10-29
+<strong>Author:</strong> Claude Code + raibid-ci team
+<strong>Status:</strong> Design Complete - Ready for Implementation</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-220" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#event-driven-orchestration-design" data-for="event-driven-orchestration-design">Event-Driven Orchestration Design</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#current-state-analysis" data-for="current-state-analysis">Current State Analysis</a></li><li class="depth-2"><a href="#polling-based-system-current" data-for="polling-based-system-current">Polling-Based System (Current)</a></li><li class="depth-1"><a href="#event-sources" data-for="event-sources">Event Sources</a></li><li class="depth-2"><a href="#github-webhook-events" data-for="github-webhook-events">GitHub Webhook Events</a></li><li class="depth-2"><a href="#github-actions-trigger-events" data-for="github-actions-trigger-events">GitHub Actions Trigger Events</a></li><li class="depth-1"><a href="#architecture-options" data-for="architecture-options">Architecture Options</a></li><li class="depth-2"><a href="#option-a-github-actions--claude-code-recommended" data-for="option-a-github-actions--claude-code-recommended">Option A: GitHub Actions + Claude Code (RECOMMENDED)</a></li><li class="depth-2"><a href="#option-b-webhook-server--queue" data-for="option-b-webhook-server--queue">Option B: Webhook Server + Queue</a></li><li class="depth-2"><a href="#option-c-claude-github-app-integration" data-for="option-c-claude-github-app-integration">Option C: Claude GitHub App Integration</a></li><li class="depth-1"><a href="#recommendation-option-a-github-actions--claude-code" data-for="recommendation-option-a-github-actions--claude-code">Recommendation: Option A (GitHub Actions + Claude Code)</a></li><li class="depth-2"><a href="#why-option-a" data-for="why-option-a">Why Option A?</a></li><li class="depth-2"><a href="#when-to-consider-alternatives" data-for="when-to-consider-alternatives">When to Consider Alternatives</a></li><li class="depth-1"><a href="#option-a-detailed-design" data-for="option-a-detailed-design">Option A: Detailed Design</a></li><li class="depth-2"><a href="#component-overview" data-for="component-overview">Component Overview</a></li><li class="depth-2"><a href="#event-handlers" data-for="event-handlers">Event Handlers</a></li><li class="depth-2"><a href="#agent-spawning-mechanism" data-for="agent-spawning-mechanism">Agent Spawning Mechanism</a></li><li class="depth-2"><a href="#state-management" data-for="state-management">State Management</a></li><li class="depth-2"><a href="#question-detection-algorithm" data-for="question-detection-algorithm">Question Detection Algorithm</a></li><li class="depth-2"><a href="#security-considerations" data-for="security-considerations">Security Considerations</a></li><li class="depth-2"><a href="#scalability" data-for="scalability">Scalability</a></li><li class="depth-2"><a href="#performance-metrics" data-for="performance-metrics">Performance Metrics</a></li><li class="depth-2"><a href="#migration-strategy" data-for="migration-strategy">Migration Strategy</a></li><li class="depth-1"><a href="#implementation-plan" data-for="implementation-plan">Implementation Plan</a></li><li class="depth-2"><a href="#week-1-foundation" data-for="week-1-foundation">Week 1: Foundation</a></li><li class="depth-2"><a href="#week-2-orchestrator-integration" data-for="week-2-orchestrator-integration">Week 2: Orchestrator Integration</a></li><li class="depth-2"><a href="#week-3-documentation--validation" data-for="week-3-documentation--validation">Week 3: Documentation &amp; Validation</a></li><li class="depth-1"><a href="#testing-plan" data-for="testing-plan">Testing Plan</a></li><li class="depth-2"><a href="#unit-tests" data-for="unit-tests">Unit Tests</a></li><li class="depth-2"><a href="#integration-tests" data-for="integration-tests">Integration Tests</a></li><li class="depth-2"><a href="#load-testing" data-for="load-testing">Load Testing</a></li><li class="depth-2"><a href="#edge-cases" data-for="edge-cases">Edge Cases</a></li><li class="depth-1"><a href="#monitoring--observability" data-for="monitoring--observability">Monitoring &amp; Observability</a></li><li class="depth-2"><a href="#workflow-run-logs" data-for="workflow-run-logs">Workflow Run Logs</a></li><li class="depth-2"><a href="#metrics-to-track" data-for="metrics-to-track">Metrics to Track</a></li><li class="depth-2"><a href="#alerting" data-for="alerting">Alerting</a></li><li class="depth-1"><a href="#rollback-plan" data-for="rollback-plan">Rollback Plan</a></li><li class="depth-2"><a href="#immediate-rollback-5-minutes" data-for="immediate-rollback-5-minutes">Immediate Rollback (5 minutes)</a></li><li class="depth-2"><a href="#root-cause-analysis" data-for="root-cause-analysis">Root Cause Analysis</a></li><li class="depth-1"><a href="#future-enhancements" data-for="future-enhancements">Future Enhancements</a></li><li class="depth-2"><a href="#phase-2-advanced-features" data-for="phase-2-advanced-features">Phase 2: Advanced Features</a></li><li class="depth-2"><a href="#phase-3-claude-app-integration" data-for="phase-3-claude-app-integration">Phase 3: Claude App Integration</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

@@ -1,0 +1,37 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-values
+  namespace: raibid-redis
+  labels:
+    app.kubernetes.io/name: redis
+data:
+  values.yaml: |
+    image:
+      repository: bitnami/redis
+      tag: "7.2.3"
+    architecture: standalone
+    auth:
+      enabled: true
+    master:
+      persistence:
+        enabled: true
+        size: 8Gi
+        storageClass: "local-path"
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    commonConfiguration: |-
+      appendonly yes
+      appendfsync everysec
+      save 900 1
+      maxmemory 450mb
+      maxmemory-policy allkeys-lru
+      stream-node-max-entries 100
+    metrics:
+      enabled: true

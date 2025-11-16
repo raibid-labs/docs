@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>architecture-decision-guide</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="architecture-decision-guide"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="architecture-decision-guide"/><meta name="twitter:description" content="Tanka Architecture &amp; Decision Guide for MOP Project Executive Summary This document provides architectural patterns, decision frameworks, and implementation strategies for the MOP (Monitoring Operations Platform) project using Tanka, Jsonnet, and Helm."/><meta property="og:description" content="Tanka Architecture &amp; Decision Guide for MOP Project Executive Summary This document provides architectural patterns, decision frameworks, and implementation strategies for the MOP (Monitoring Operations Platform) project using Tanka, Jsonnet, and Helm."/><meta property="og:image:alt" content="Tanka Architecture &amp; Decision Guide for MOP Project Executive Summary This document provides architectural patterns, decision frameworks, and implementation strategies for the MOP (Monitoring Operations Platform) project using Tanka, Jsonnet, and Helm."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/research/architecture-decision-guide"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/research/architecture-decision-guide"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Tanka Architecture &amp; Decision Guide for MOP Project Executive Summary This document provides architectural patterns, decision frameworks, and implementation strategies for the MOP (Monitoring Operations Platform) project using Tanka, Jsonnet, and Helm."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/research/architecture-decision-guide-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/research/architecture-decision-guide-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/research/architecture-decision-guide-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/docs/research/architecture-decision-guide"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-386"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-386" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/research/">research</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>architecture decision guide</a></div></nav><h1 class="article-title">architecture-decision-guide</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.446Z">Nov 16, 2025</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="tanka-architecture--decision-guide-for-mop-project">Tanka Architecture &amp; Decision Guide for MOP Project<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tanka-architecture--decision-guide-for-mop-project" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="executive-summary">Executive Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#executive-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document provides architectural patterns, decision frameworks, and implementation strategies for the MOP (Monitoring Operations Platform) project using Tanka, Jsonnet, and Helm.</p>
+<hr/>
+<h2 id="1-architecture-decision-records-adr">1. Architecture Decision Records (ADR)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-architecture-decision-records-adr" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="adr-001-use-tanka-for-kubernetes-configuration-management">ADR-001: Use Tanka for Kubernetes Configuration Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adr-001-use-tanka-for-kubernetes-configuration-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status</strong>: Recommended</p>
+<p><strong>Context</strong>:</p>
+<ul>
+<li>Need to deploy complex Grafana observability stack</li>
+<li>Require environment-specific configurations (dev, staging, production)</li>
+<li>Want to leverage existing Helm charts without their limitations</li>
+<li>Need programmatic configuration with type safety</li>
+</ul>
+<p><strong>Decision</strong>:
+Use Grafana Tanka with Jsonnet as the primary configuration management tool, consuming Helm charts where appropriate.</p>
+<p><strong>Consequences</strong>:</p>
+<ul>
+<li>✅ Deep merging capabilities for customization beyond Helm values</li>
+<li>✅ Type-safe, programmatic configuration</li>
+<li>✅ Reusable libraries and abstractions</li>
+<li>✅ Better suited for complex, interdependent services</li>
+<li>✅ Native Grafana Labs support for their stack</li>
+<li>⚠️ Learning curve for Jsonnet syntax</li>
+<li>⚠️ Smaller community compared to Helm alone</li>
+<li>⚠️ Need to maintain both Jsonnet and Helm chart versions</li>
+</ul>
+<h3 id="adr-002-vendor-helm-charts-locally">ADR-002: Vendor Helm Charts Locally<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adr-002-vendor-helm-charts-locally" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status</strong>: Adopted</p>
+<p><strong>Context</strong>:</p>
+<ul>
+<li>Need hermetic, reproducible builds</li>
+<li>Want to ensure exact versions across environments</li>
+<li>Require offline capability for air-gapped deployments</li>
+</ul>
+<p><strong>Decision</strong>:
+Use <code>tk tool charts</code> to vendor all Helm charts into the repository under <code>charts/</code> directory.</p>
+<p><strong>Consequences</strong>:</p>
+<ul>
+<li>✅ Reproducible builds across all environments</li>
+<li>✅ No dependency on external chart repositories at runtime</li>
+<li>✅ Version control of exact chart contents</li>
+<li>✅ Faster CI/CD pipelines (no chart download step)</li>
+<li>⚠️ Larger repository size</li>
+<li>⚠️ Need process for chart updates</li>
+<li>⚠️ Must track chart versions in chartfile.yaml</li>
+</ul>
+<h3 id="adr-003-use-wrapped-library-pattern-for-components">ADR-003: Use Wrapped Library Pattern for Components<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adr-003-use-wrapped-library-pattern-for-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status</strong>: Recommended</p>
+<p><strong>Context</strong>:</p>
+<ul>
+<li>Multiple environments with similar but different configurations</li>
+<li>Want to hide Helm complexity from end users</li>
+<li>Need consistent patterns across components</li>
+</ul>
+<p><strong>Decision</strong>:
+Create wrapper libraries in <code>lib/</code> for each major component (Loki, Mimir, Tempo, Grafana) that expose simple interfaces.</p>
+<p><strong>Consequences</strong>:</p>
+<ul>
+<li>✅ Consistent API across all components</li>
+<li>✅ Easier for teams to consume</li>
+<li>✅ Centralized defaults and best practices</li>
+<li>✅ Simpler environment configurations</li>
+<li>⚠️ Additional abstraction layer to maintain</li>
+<li>⚠️ May need to expose advanced options as needed</li>
+</ul>
+<h3 id="adr-004-environment-configuration-strategy">ADR-004: Environment Configuration Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adr-004-environment-configuration-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status</strong>: Adopted</p>
+<p><strong>Context</strong>:</p>
+<ul>
+<li>Need to support dev, staging, and production environments</li>
+<li>Each environment has different resource requirements</li>
+<li>Want to minimize duplication while allowing flexibility</li>
+</ul>
+<p><strong>Decision</strong>:
+Use a centralized <code>lib/config.libsonnet</code> with environment-specific defaults, overridden in individual environment <code>main.jsonnet</code> files.</p>
+<p><strong>Consequences</strong>:</p>
+<ul>
+<li>✅ Single source of truth for environment differences</li>
+<li>✅ Easy to compare environments</li>
+<li>✅ Reduced duplication</li>
+<li>✅ Type-safe environment selection</li>
+<li>⚠️ All environments defined in one place (could be large)</li>
+<li>⚠️ Need discipline to avoid environment-specific hacks</li>
+</ul>
+<h3 id="adr-005-storage-backend-strategy">ADR-005: Storage Backend Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adr-005-storage-backend-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status</strong>: Recommended</p>
+<p><strong>Context</strong>:</p>
+<ul>
+<li>Loki, Mimir, and Tempo all support object storage</li>
+<li>Need cost-effective long-term storage</li>
+<li>Want to separate compute from storage</li>
+</ul>
+<p><strong>Decision</strong>:
+Use S3-compatible object storage for all components (Loki chunks/indexes, Mimir blocks, Tempo traces).</p>
+<p><strong>Consequences</strong>:</p>
+<ul>
+<li>✅ Cost-effective for large data volumes</li>
+<li>✅ Scales independently of compute</li>
+<li>✅ Works across cloud providers (S3, GCS, MinIO)</li>
+<li>✅ Durability and availability of cloud storage</li>
+<li>⚠️ Requires S3 credentials management</li>
+<li>⚠️ Network latency considerations</li>
+<li>⚠️ Need proper bucket lifecycle policies</li>
+</ul>
+<hr/>
+<h2 id="2-directory-structure-decision-matrix">2. Directory Structure Decision Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-directory-structure-decision-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="option-a-monolithic-structure-recommended-for-mop">Option A: Monolithic Structure (Recommended for MOP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-a-monolithic-structure-recommended-for-mop" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>mop/
+├── environments/
+│   ├── dev/
+│   ├── staging/
+│   └── production/
+├── lib/
+│   ├── config.libsonnet
+│   ├── loki.libsonnet
+│   ├── mimir.libsonnet
+│   ├── tempo.libsonnet
+│   └── grafana.libsonnet
+├── charts/
+└── vendor/
+</code></pre>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Simple to understand</li>
+<li>All code in one repository</li>
+<li>Easy to ensure consistency</li>
+<li>Single deployment pipeline</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Can become large over time</li>
+<li>All components version together</li>
+</ul>
+<p><strong>Best for</strong>: Single team, tightly coupled stack</p>
+<h3 id="option-b-component-based-structure">Option B: Component-Based Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-b-component-based-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>mop/
+├── environments/
+├── components/
+│   ├── loki/
+│   │   ├── lib/
+│   │   └── charts/
+│   ├── mimir/
+│   │   ├── lib/
+│   │   └── charts/
+│   ├── tempo/
+│   │   ├── lib/
+│   │   └── charts/
+│   └── grafana/
+│       ├── lib/
+│       └── charts/
+├── lib/
+│   └── common.libsonnet
+└── vendor/
+</code></pre>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Clear component boundaries</li>
+<li>Can version components independently</li>
+<li>Easier for multiple teams</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>More complex structure</li>
+<li>Potential for duplication</li>
+<li>Harder to ensure consistency</li>
+</ul>
+<p><strong>Best for</strong>: Multiple teams, independent component releases</p>
+<h3 id="option-c-multi-repository">Option C: Multi-Repository<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-c-multi-repository" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>mop-core/          (shared libraries)
+mop-loki/          (Loki deployment)
+mop-mimir/         (Mimir deployment)
+mop-tempo/         (Tempo deployment)
+mop-grafana/       (Grafana deployment)
+mop-environments/  (environment configurations)
+</code></pre>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Maximum separation of concerns</li>
+<li>Independent versioning and deployment</li>
+<li>Clear ownership boundaries</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Coordination overhead</li>
+<li>Dependency management complexity</li>
+<li>Cross-repository changes difficult</li>
+</ul>
+<p><strong>Best for</strong>: Large organizations, separate teams per component</p>
+<p><strong>Recommendation for MOP</strong>: Start with Option A (Monolithic), migrate to Option B if team/scaling requires it.</p>
+<hr/>
+<h2 id="3-component-integration-patterns">3. Component Integration Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-component-integration-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pattern-1-tightly-coupled-recommended-for-grafana-stack">Pattern 1: Tightly Coupled (Recommended for Grafana Stack)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-1-tightly-coupled-recommended-for-grafana-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// All components deployed together</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  loki:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  mimir:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> mimir.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  tempo:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> tempo.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  grafana:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> grafana.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">withDatasource</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'Loki'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'loki'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'http://loki:3100'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">withDatasource</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'Mimir'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'prometheus'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'http://mimir:8080'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">withDatasource</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'Tempo'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'tempo'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'http://tempo:3200'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use when</strong>:</p>
+<ul>
+<li>Components are interdependent</li>
+<li>Deploy as a unit</li>
+<li>Shared configuration</li>
+</ul>
+<h3 id="pattern-2-loosely-coupled">Pattern 2: Loosely Coupled<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-2-loosely-coupled" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Components reference each other via service discovery</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  loki:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  mimir:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> mimir.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  tempo:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> tempo.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config + {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    mimirUrl: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'http://mimir.monitoring.svc:8080'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }),</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  grafana:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> grafana.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config + {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    datasourceDiscovery: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use when</strong>:</p>
+<ul>
+<li>Independent deployment schedules</li>
+<li>Optional components</li>
+<li>Multi-cluster setups</li>
+</ul>
+<h3 id="pattern-3-service-mesh-integration">Pattern 3: Service Mesh Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-3-service-mesh-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  loki:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    deployment+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      spec+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">template+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">metadata+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">        annotations+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">          'sidecar.istio.io/inject'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'true'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">      }}},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  // ... similar for other components</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use when</strong>:</p>
+<ul>
+<li>Need mTLS between components</li>
+<li>Advanced traffic management</li>
+<li>Already using service mesh</li>
+</ul>
+<hr/>
+<h2 id="4-configuration-management-strategies">4. Configuration Management Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-configuration-management-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="strategy-a-centralized-configuration-recommended">Strategy A: Centralized Configuration (Recommended)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-a-centralized-configuration-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/config.libsonnet - single source of truth</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(env)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    environment:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> env,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    namespace:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'monitoring'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // All configuration here</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    loki:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* config */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    mimir:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* config */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    tempo:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* config */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    grafana:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* config */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Easy to see all environment differences</li>
+<li>Consistent patterns</li>
+<li>Type-safe</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Can become large</li>
+<li>All components see all config</li>
+</ul>
+<h3 id="strategy-b-distributed-configuration">Strategy B: Distributed Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-b-distributed-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/loki/config.libsonnet</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/mimir/config.libsonnet</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/tempo/config.libsonnet</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Each component manages its own config</span></span></code></pre></figure>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Component isolation</li>
+<li>Smaller files</li>
+<li>Clearer ownership</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>Harder to ensure consistency</li>
+<li>Potential duplication</li>
+<li>More files to maintain</li>
+</ul>
+<h3 id="strategy-c-layered-configuration">Strategy C: Layered Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-c-layered-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/config/base.libsonnet - common to all</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/config/observability.libsonnet - observability stack</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/config/environments.libsonnet - env overrides</span></span></code></pre></figure>
+<p><strong>Pros</strong>:</p>
+<ul>
+<li>Good separation of concerns</li>
+<li>Composable</li>
+<li>Flexible</li>
+</ul>
+<p><strong>Cons</strong>:</p>
+<ul>
+<li>More complex</li>
+<li>Need clear guidelines</li>
+<li>Override precedence rules</li>
+</ul>
+<p><strong>Recommendation</strong>: Start with Strategy A, refactor to Strategy C if complexity grows.</p>
+<hr/>
+<h2 id="5-helm-chart-integration-approaches">5. Helm Chart Integration Approaches<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-helm-chart-integration-approaches" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="approach-1-direct-template-simple-components">Approach 1: Direct Template (Simple Components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#approach-1-direct-template-simple-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">local</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> helm </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> tanka.helm.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">std.thisFile</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  simple:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> helm.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">template</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'name'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'./charts/name'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    values: { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* basic overrides */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use for</strong>:</p>
+<ul>
+<li>Simple charts with good defaults</li>
+<li>Minimal customization needed</li>
+<li>Standard deployments</li>
+</ul>
+<h3 id="approach-2-template--deep-merge-complex-components">Approach 2: Template + Deep Merge (Complex Components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#approach-2-template--deep-merge-complex-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  complex:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> helm.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">template</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'name'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'./charts/name'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    values: { </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* values.yaml overrides */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Deep merge for fields not in values.yaml</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    deployment+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">spec+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">template+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">metadata+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      annotations+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'custom'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'value'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }}}},</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use for</strong>:</p>
+<ul>
+<li>Charts missing needed configuration</li>
+<li>Adding Kubernetes features not exposed</li>
+<li>Platform-specific requirements</li>
+</ul>
+<h3 id="approach-3-wrapper-library-reusable-components">Approach 3: Wrapper Library (Reusable Components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#approach-3-wrapper-library-reusable-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/component.libsonnet</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    _config::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> config,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    _helm:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> helm.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">template</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">/* ... */</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">),</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    deployment:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">._helm.deployment_name,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    service:</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">._helm.service_name,</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Helper methods</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    withAnnotation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(k, v)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> +</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      deployment+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">metadata+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">annotations+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { [k]</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> v } } },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Use for</strong>:</p>
+<ul>
+<li>Components used across environments</li>
+<li>Team-wide patterns</li>
+<li>Complex customization logic</li>
+</ul>
+<hr/>
+<h2 id="6-jsonnet-library-organization">6. Jsonnet Library Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-jsonnet-library-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="small-project-10-components">Small Project (&lt;10 components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#small-project-10-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>lib/
+├── k.libsonnet          (k8s helpers)
+├── config.libsonnet     (all config)
+└── helpers.libsonnet    (utility functions)
+</code></pre>
+<h3 id="medium-project-10-30-components">Medium Project (10-30 components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#medium-project-10-30-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>lib/
+├── k.libsonnet
+├── config/
+│   ├── base.libsonnet
+│   └── environments.libsonnet
+├── components/
+│   ├── loki.libsonnet
+│   ├── mimir.libsonnet
+│   └── ...
+└── utils/
+    ├── helpers.libsonnet
+    └── mixins.libsonnet
+</code></pre>
+<h3 id="large-project-30-components">Large Project (>30 components)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#large-project-30-components" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>lib/
+├── k.libsonnet
+├── config/
+│   ├── base.libsonnet
+│   ├── environments/
+│   │   ├── dev.libsonnet
+│   │   ├── staging.libsonnet
+│   │   └── production.libsonnet
+│   └── defaults/
+│       └── observability.libsonnet
+├── components/
+│   ├── observability/
+│   │   ├── loki/
+│   │   │   ├── config.libsonnet
+│   │   │   ├── deployment.libsonnet
+│   │   │   └── service.libsonnet
+│   │   ├── mimir/
+│   │   └── tempo/
+│   └── platform/
+└── utils/
+    ├── k8s.libsonnet
+    ├── helm.libsonnet
+    └── validation.libsonnet
+</code></pre>
+<hr/>
+<h2 id="7-testing-strategy">7. Testing Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-testing-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="level-1-syntax-validation">Level 1: Syntax Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#level-1-syntax-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Jsonnet syntax check</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">jsonnetfmt</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --test</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> lib/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">**</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.libsonnet</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Tanka evaluation test</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/dev</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/production</span></span></code></pre></figure>
+<h3 id="level-2-schema-validation">Level 2: Schema Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#level-2-schema-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Kubernetes schema validation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/dev</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /tmp/manifests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubeval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /tmp/manifests/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.yaml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or use kubeconform</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubeconform</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -summary</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /tmp/manifests/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.yaml</span></span></code></pre></figure>
+<h3 id="level-3-diff-testing">Level 3: Diff Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#level-3-diff-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Compare against running cluster</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> diff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/production</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Compare environments</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">diff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &lt;(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> show environments/dev)</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &lt;(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> show environments/staging)</span></span></code></pre></figure>
+<h3 id="level-4-integration-testing">Level 4: Integration Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#level-4-integration-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy to test cluster</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --force</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run smoke tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> wait</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --for=condition=ready</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -l</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> app=grafana</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> monitoring</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --timeout=300s</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://grafana.dev.local/api/health</span></span></code></pre></figure>
+<h3 id="level-5-canary-testing">Level 5: Canary Testing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#level-5-canary-testing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// environments/production-canary/main.jsonnet</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">local</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> production </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> import</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '../production/main.jsonnet'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">production </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">+</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  grafana+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    deployment+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      metadata+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">name:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'grafana-canary'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      spec+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">replicas:</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-deployment-strategies">8. Deployment Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-deployment-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="strategy-1-all-at-once-development">Strategy 1: All-at-Once (Development)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-1-all-at-once-development" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/dev</span></span></code></pre></figure>
+<p><strong>Pros</strong>: Fast, simple
+<strong>Cons</strong>: Higher risk, potential downtime</p>
+<h3 id="strategy-2-component-by-component-staging">Strategy 2: Component-by-Component (Staging)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-2-component-by-component-staging" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --target=loki</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --target=mimir</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --target=tempo</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Verify</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --target=grafana</span></span></code></pre></figure>
+<p><strong>Pros</strong>: Controlled, easier rollback
+<strong>Cons</strong>: Slower, more manual</p>
+<h3 id="strategy-3-blue-green-production">Strategy 3: Blue-Green (Production)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-3-blue-green-production" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Deploy new version alongside old</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'loki-blue'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'loki-green'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config + { version: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'new'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }),</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'loki-service'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Switch traffic via selector</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    spec+:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">selector:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">version:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'green'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> } },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Pros</strong>: Zero downtime, easy rollback
+<strong>Cons</strong>: Requires double resources temporarily</p>
+<h3 id="strategy-4-canary-production">Strategy 4: Canary (Production)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#strategy-4-canary-production" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'loki-stable'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config + { replicas: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">9</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'loki-canary'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> loki.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(config + {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    replicas: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    version: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'new'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }),</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Pros</strong>: Gradual rollout, real production testing
+<strong>Cons</strong>: Complex routing, monitoring required</p>
+<hr/>
+<h2 id="9-operational-patterns">9. Operational Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-operational-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pattern-configuration-drift-detection">Pattern: Configuration Drift Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-configuration-drift-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># check-drift.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Get current cluster state</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> all</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> monitoring</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yaml</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> current-state.yaml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Get desired state from Tanka</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> show</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/production</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> desired-state.yaml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Compare</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">diff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> current-state.yaml</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> desired-state.yaml</span></span></code></pre></figure>
+<h3 id="pattern-secret-management">Pattern: Secret Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-secret-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DO NOT commit secrets in jsonnet</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">local</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> secrets </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> import</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'secrets.jsonnet'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// git-ignored</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DO use external secret managers</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">  grafana:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    envFrom:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [{</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">      secretRef:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">name:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'grafana-secrets'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }],</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DO use sealed secrets or external secrets operator</span></span></code></pre></figure>
+<h3 id="pattern-disaster-recovery">Pattern: Disaster Recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-disaster-recovery" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Backup configuration</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tag</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -a</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;production-$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y%m%d)&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Production state&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --tags</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Backup state</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> all</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> monitoring</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yaml</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> backup-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y%m%d</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.yaml</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Restore</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> production-20240101</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apply</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/production</span></span></code></pre></figure>
+<h3 id="pattern-multi-cluster-management">Pattern: Multi-Cluster Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-multi-cluster-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>environments/
+├── us-west-2/
+│   ├── dev/
+│   ├── staging/
+│   └── production/
+├── eu-central-1/
+│   ├── dev/
+│   ├── staging/
+│   └── production/
+└── ap-southeast-1/
+    ├── dev/
+    ├── staging/
+    └── production/
+</code></pre>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// lib/clusters.libsonnet</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'us-west-2'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">region:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'us-west-2'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">s3Endpoint:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '...'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'eu-central-1'</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">region:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'eu-central-1'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">s3Endpoint:</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '...'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="10-performance-optimization">10. Performance Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-performance-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="optimization-1-parallel-evaluation">Optimization 1: Parallel Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-1-parallel-evaluation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Evaluate environments in parallel</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/dev</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/staging</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">tk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> eval</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> environments/production</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">wait</span></span></code></pre></figure>
+<h3 id="optimization-2-caching">Optimization 2: Caching<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-2-caching" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Cache expensive computations</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">local</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> cachedResult </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> std.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">native</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'cache'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  'expensive-key'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">  function</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">expensiveComputation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span></code></pre></figure>
+<h3 id="optimization-3-lazy-evaluation">Optimization 3: Lazy Evaluation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-3-lazy-evaluation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="jsonnet" data-theme="github-light one-dark-pro"><code data-language="jsonnet" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Don't evaluate unless needed</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">local</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> conditionalComponent </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">=</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> config.featureEnabled </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    import</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 'expensive.libsonnet'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">  else</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {};</span></span></code></pre></figure>
+<hr/>
+<h2 id="11-migration-path">11. Migration Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-migration-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-setup-week-1">Phase 1: Setup (Week 1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-setup-week-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Initialize Tanka project</li>
+<li>Setup basic directory structure</li>
+<li>Install jsonnet-bundler dependencies</li>
+<li>Configure dev environment</li>
+</ol>
+<h3 id="phase-2-single-component-week-2">Phase 2: Single Component (Week 2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-single-component-week-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Start with Grafana (simplest)</li>
+<li>Create wrapper library</li>
+<li>Deploy to dev</li>
+<li>Validate and iterate</li>
+</ol>
+<h3 id="phase-3-add-observability-stack-week-3-4">Phase 3: Add Observability Stack (Week 3-4)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-add-observability-stack-week-3-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Add Loki</li>
+<li>Add Mimir or Prometheus</li>
+<li>Add Tempo</li>
+<li>Configure datasources in Grafana</li>
+</ol>
+<h3 id="phase-4-multi-environment-week-5">Phase 4: Multi-Environment (Week 5)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-multi-environment-week-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create staging environment</li>
+<li>Refactor common configuration</li>
+<li>Test promotion flow</li>
+<li>Document differences</li>
+</ol>
+<h3 id="phase-5-production-week-6">Phase 5: Production (Week 6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-production-week-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Create production environment</li>
+<li>Add proper resource sizing</li>
+<li>Configure HA and persistence</li>
+<li>Setup monitoring and alerting</li>
+</ol>
+<h3 id="phase-6-optimization-ongoing">Phase 6: Optimization (Ongoing)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-6-optimization-ongoing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Refactor based on learnings</li>
+<li>Add CI/CD automation</li>
+<li>Implement advanced patterns</li>
+<li>Document and share knowledge</li>
+</ol>
+<hr/>
+<h2 id="12-decision-checklist">12. Decision Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-decision-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before implementing, answer these questions:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> What is the team’s Jsonnet experience level?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> How many environments need to be supported?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Are components deployed together or independently?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> What is the change frequency for each component?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Is there a service mesh in place?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> What are the secret management requirements?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Are there multi-cluster requirements?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> What is the rollback strategy?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> How will configuration drift be detected?</li>
+<li class="task-list-item"><input type="checkbox" disabled/> What are the disaster recovery requirements?</li>
+</ul>
+<hr/>
+<h2 id="13-recommended-stack-for-mop">13. Recommended Stack for MOP<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#13-recommended-stack-for-mop" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Based on research and best practices:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Foundation</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tanka 0.25+</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Jsonnet 0.20+</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Kubernetes 1.28+</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Helm 3.13+</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Core Components</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Grafana 10.2+</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Loki 2.9+ (microservices mode)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Mimir 2.10+ (distributed mode)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Tempo 2.3+</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Storage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">S3-compatible object storage</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Fast SSDs for write path</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Standard storage for general use</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Structure</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Monolithic repository (Option A)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Centralized configuration (Strategy A)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Wrapped libraries (Approach 3)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Component-by-component deployment</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">CI/CD</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">GitOps with ArgoCD</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Automated testing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Canary deployments to production</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Automated rollback on failure</span></span></code></pre></figure>
+<hr/>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The MOP project should:</p>
+<ol>
+<li><strong>Start simple</strong> with monolithic structure</li>
+<li><strong>Use wrapped libraries</strong> for reusability</li>
+<li><strong>Centralize configuration</strong> for consistency</li>
+<li><strong>Vendor Helm charts</strong> for reproducibility</li>
+<li><strong>Test thoroughly</strong> before production</li>
+<li><strong>Deploy incrementally</strong> to reduce risk</li>
+<li><strong>Monitor continuously</strong> for drift</li>
+<li><strong>Document extensively</strong> for team knowledge</li>
+</ol>
+<p>This approach balances flexibility, maintainability, and operational safety while leveraging the strengths of Tanka, Jsonnet, and Helm.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-176" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#tanka-architecture--decision-guide-for-mop-project" data-for="tanka-architecture--decision-guide-for-mop-project">Tanka Architecture &amp; Decision Guide for MOP Project</a></li><li class="depth-1"><a href="#executive-summary" data-for="executive-summary">Executive Summary</a></li><li class="depth-1"><a href="#1-architecture-decision-records-adr" data-for="1-architecture-decision-records-adr">1. Architecture Decision Records (ADR)</a></li><li class="depth-2"><a href="#adr-001-use-tanka-for-kubernetes-configuration-management" data-for="adr-001-use-tanka-for-kubernetes-configuration-management">ADR-001: Use Tanka for Kubernetes Configuration Management</a></li><li class="depth-2"><a href="#adr-002-vendor-helm-charts-locally" data-for="adr-002-vendor-helm-charts-locally">ADR-002: Vendor Helm Charts Locally</a></li><li class="depth-2"><a href="#adr-003-use-wrapped-library-pattern-for-components" data-for="adr-003-use-wrapped-library-pattern-for-components">ADR-003: Use Wrapped Library Pattern for Components</a></li><li class="depth-2"><a href="#adr-004-environment-configuration-strategy" data-for="adr-004-environment-configuration-strategy">ADR-004: Environment Configuration Strategy</a></li><li class="depth-2"><a href="#adr-005-storage-backend-strategy" data-for="adr-005-storage-backend-strategy">ADR-005: Storage Backend Strategy</a></li><li class="depth-1"><a href="#2-directory-structure-decision-matrix" data-for="2-directory-structure-decision-matrix">2. Directory Structure Decision Matrix</a></li><li class="depth-2"><a href="#option-a-monolithic-structure-recommended-for-mop" data-for="option-a-monolithic-structure-recommended-for-mop">Option A: Monolithic Structure (Recommended for MOP)</a></li><li class="depth-2"><a href="#option-b-component-based-structure" data-for="option-b-component-based-structure">Option B: Component-Based Structure</a></li><li class="depth-2"><a href="#option-c-multi-repository" data-for="option-c-multi-repository">Option C: Multi-Repository</a></li><li class="depth-1"><a href="#3-component-integration-patterns" data-for="3-component-integration-patterns">3. Component Integration Patterns</a></li><li class="depth-2"><a href="#pattern-1-tightly-coupled-recommended-for-grafana-stack" data-for="pattern-1-tightly-coupled-recommended-for-grafana-stack">Pattern 1: Tightly Coupled (Recommended for Grafana Stack)</a></li><li class="depth-2"><a href="#pattern-2-loosely-coupled" data-for="pattern-2-loosely-coupled">Pattern 2: Loosely Coupled</a></li><li class="depth-2"><a href="#pattern-3-service-mesh-integration" data-for="pattern-3-service-mesh-integration">Pattern 3: Service Mesh Integration</a></li><li class="depth-1"><a href="#4-configuration-management-strategies" data-for="4-configuration-management-strategies">4. Configuration Management Strategies</a></li><li class="depth-2"><a href="#strategy-a-centralized-configuration-recommended" data-for="strategy-a-centralized-configuration-recommended">Strategy A: Centralized Configuration (Recommended)</a></li><li class="depth-2"><a href="#strategy-b-distributed-configuration" data-for="strategy-b-distributed-configuration">Strategy B: Distributed Configuration</a></li><li class="depth-2"><a href="#strategy-c-layered-configuration" data-for="strategy-c-layered-configuration">Strategy C: Layered Configuration</a></li><li class="depth-1"><a href="#5-helm-chart-integration-approaches" data-for="5-helm-chart-integration-approaches">5. Helm Chart Integration Approaches</a></li><li class="depth-2"><a href="#approach-1-direct-template-simple-components" data-for="approach-1-direct-template-simple-components">Approach 1: Direct Template (Simple Components)</a></li><li class="depth-2"><a href="#approach-2-template--deep-merge-complex-components" data-for="approach-2-template--deep-merge-complex-components">Approach 2: Template + Deep Merge (Complex Components)</a></li><li class="depth-2"><a href="#approach-3-wrapper-library-reusable-components" data-for="approach-3-wrapper-library-reusable-components">Approach 3: Wrapper Library (Reusable Components)</a></li><li class="depth-1"><a href="#6-jsonnet-library-organization" data-for="6-jsonnet-library-organization">6. Jsonnet Library Organization</a></li><li class="depth-2"><a href="#small-project-10-components" data-for="small-project-10-components">Small Project (&lt;10 components)</a></li><li class="depth-2"><a href="#medium-project-10-30-components" data-for="medium-project-10-30-components">Medium Project (10-30 components)</a></li><li class="depth-2"><a href="#large-project-30-components" data-for="large-project-30-components">Large Project (>30 components)</a></li><li class="depth-1"><a href="#7-testing-strategy" data-for="7-testing-strategy">7. Testing Strategy</a></li><li class="depth-2"><a href="#level-1-syntax-validation" data-for="level-1-syntax-validation">Level 1: Syntax Validation</a></li><li class="depth-2"><a href="#level-2-schema-validation" data-for="level-2-schema-validation">Level 2: Schema Validation</a></li><li class="depth-2"><a href="#level-3-diff-testing" data-for="level-3-diff-testing">Level 3: Diff Testing</a></li><li class="depth-2"><a href="#level-4-integration-testing" data-for="level-4-integration-testing">Level 4: Integration Testing</a></li><li class="depth-2"><a href="#level-5-canary-testing" data-for="level-5-canary-testing">Level 5: Canary Testing</a></li><li class="depth-1"><a href="#8-deployment-strategies" data-for="8-deployment-strategies">8. Deployment Strategies</a></li><li class="depth-2"><a href="#strategy-1-all-at-once-development" data-for="strategy-1-all-at-once-development">Strategy 1: All-at-Once (Development)</a></li><li class="depth-2"><a href="#strategy-2-component-by-component-staging" data-for="strategy-2-component-by-component-staging">Strategy 2: Component-by-Component (Staging)</a></li><li class="depth-2"><a href="#strategy-3-blue-green-production" data-for="strategy-3-blue-green-production">Strategy 3: Blue-Green (Production)</a></li><li class="depth-2"><a href="#strategy-4-canary-production" data-for="strategy-4-canary-production">Strategy 4: Canary (Production)</a></li><li class="depth-1"><a href="#9-operational-patterns" data-for="9-operational-patterns">9. Operational Patterns</a></li><li class="depth-2"><a href="#pattern-configuration-drift-detection" data-for="pattern-configuration-drift-detection">Pattern: Configuration Drift Detection</a></li><li class="depth-2"><a href="#pattern-secret-management" data-for="pattern-secret-management">Pattern: Secret Management</a></li><li class="depth-2"><a href="#pattern-disaster-recovery" data-for="pattern-disaster-recovery">Pattern: Disaster Recovery</a></li><li class="depth-2"><a href="#pattern-multi-cluster-management" data-for="pattern-multi-cluster-management">Pattern: Multi-Cluster Management</a></li><li class="depth-1"><a href="#10-performance-optimization" data-for="10-performance-optimization">10. Performance Optimization</a></li><li class="depth-2"><a href="#optimization-1-parallel-evaluation" data-for="optimization-1-parallel-evaluation">Optimization 1: Parallel Evaluation</a></li><li class="depth-2"><a href="#optimization-2-caching" data-for="optimization-2-caching">Optimization 2: Caching</a></li><li class="depth-2"><a href="#optimization-3-lazy-evaluation" data-for="optimization-3-lazy-evaluation">Optimization 3: Lazy Evaluation</a></li><li class="depth-1"><a href="#11-migration-path" data-for="11-migration-path">11. Migration Path</a></li><li class="depth-2"><a href="#phase-1-setup-week-1" data-for="phase-1-setup-week-1">Phase 1: Setup (Week 1)</a></li><li class="depth-2"><a href="#phase-2-single-component-week-2" data-for="phase-2-single-component-week-2">Phase 2: Single Component (Week 2)</a></li><li class="depth-2"><a href="#phase-3-add-observability-stack-week-3-4" data-for="phase-3-add-observability-stack-week-3-4">Phase 3: Add Observability Stack (Week 3-4)</a></li><li class="depth-2"><a href="#phase-4-multi-environment-week-5" data-for="phase-4-multi-environment-week-5">Phase 4: Multi-Environment (Week 5)</a></li><li class="depth-2"><a href="#phase-5-production-week-6" data-for="phase-5-production-week-6">Phase 5: Production (Week 6)</a></li><li class="depth-2"><a href="#phase-6-optimization-ongoing" data-for="phase-6-optimization-ongoing">Phase 6: Optimization (Ongoing)</a></li><li class="depth-1"><a href="#12-decision-checklist" data-for="12-decision-checklist">12. Decision Checklist</a></li><li class="depth-1"><a href="#13-recommended-stack-for-mop" data-for="13-recommended-stack-for-mop">13. Recommended Stack for MOP</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../../../projects/mop/docs/research/README" class="internal">README</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

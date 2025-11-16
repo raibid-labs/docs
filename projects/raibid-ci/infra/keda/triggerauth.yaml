@@ -1,0 +1,35 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: raibid-redis-auth
+  namespace: raibid-ci
+  labels:
+    app.kubernetes.io/name: redis
+    app.kubernetes.io/component: authentication
+    app.kubernetes.io/part-of: raibid-ci
+type: Opaque
+stringData:
+  # Redis password (will be populated by raibid-cli)
+  password: ""
+  # Redis address
+  address: "raibid-redis-master.raibid-redis.svc.cluster.local:6379"
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: raibid-redis-trigger-auth
+  namespace: raibid-ci
+  labels:
+    app.kubernetes.io/name: keda
+    app.kubernetes.io/component: trigger-auth
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  secretTargetRef:
+  - parameter: password
+    name: raibid-redis-auth
+    key: password
+  - parameter: address
+    name: raibid-redis-auth
+    key: address

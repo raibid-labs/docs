@@ -1,0 +1,17 @@
+%% High-level architecture diagram for Locust
+
+flowchart TD
+
+    subgraph App["ratatui Application"]
+        EV[Input Events]
+        DRAW[App Draw Function]
+    end
+
+    EV --> |pre-handle| LOCUST[Locust Core]
+    LOCUST --> |outcome| App
+
+    DRAW --> |register targets| CTX[LocustContext]
+    CTX --> PLUGINS[Plugins]
+
+    PLUGINS --> |overlay widgets| OVERLAY[Overlay Pass]
+    OVERLAY --> FRAME[Final Frame]

@@ -1,0 +1,187 @@
+# raibid-cli Example Configuration
+# ===================================
+# This is a complete example configuration file for raibid-cli.
+# Copy this file to one of the following locations:
+#   - ./raibid.yaml (local/project config)
+#   - ~/.config/raibid/config.yaml (user config)
+#   - /etc/raibid/config.yaml (system config)
+#
+# All values shown here are examples. Adjust them for your environment.
+
+# Kubernetes Cluster Configuration
+cluster:
+  # Cluster name for identification
+  name: "dgx-spark-ci"
+
+  # Namespace where raibid components will be deployed
+  namespace: "raibid-ci"
+
+  # Path to kubeconfig file (supports shell expansion)
+  kubeconfig: "~/.kube/config"
+
+  # Context name (optional, uses current context if not specified)
+  # context: "dgx-spark"
+
+# API Server Configuration
+api:
+  # API server hostname or IP
+  host: "localhost"
+
+  # API server port
+  port: 8080
+
+  # Request timeout in seconds
+  timeout_seconds: 30
+
+  # TLS configuration (optional)
+  # tls:
+  #   enabled: true
+  #   cert_path: "/path/to/cert.pem"
+  #   key_path: "/path/to/key.pem"
+
+# Build Agent Configuration
+agents:
+  # Minimum number of agents (can scale to zero)
+  min_count: 0
+
+  # Maximum number of agents
+  max_count: 8
+
+  # Idle timeout before scaling down (minutes)
+  idle_timeout_minutes: 5
+
+  # Container image for build agents
+  image: "raibid/rust-builder:latest"
+
+  # Resource requests per agent
+  resources:
+    cpu: "2"
+    memory: "4Gi"
+
+  # Resource limits per agent
+  limits:
+    cpu: "4"
+    memory: "8Gi"
+
+# Gitea Configuration
+gitea:
+  # Gitea service URL (within cluster or external)
+  url: "http://gitea.raibid-ci.svc.cluster.local:3000"
+
+  # Admin username
+  admin_user: "admin"
+
+  # Admin password (IMPORTANT: Use environment variable instead!)
+  # admin_password: ""
+  # Recommended: export RAIBID_GITEA_ADMIN_PASSWORD="your-secure-password"
+
+  # Organization name for mirrored repositories
+  org_name: "mirrored"
+
+  # OCI registry configuration
+  registry:
+    enabled: true
+    url: "http://gitea.raibid-ci.svc.cluster.local:5000"
+
+# Redis Configuration
+redis:
+  # Redis connection URL
+  url: "redis://redis.raibid-ci.svc.cluster.local:6379"
+
+  # Redis password (if enabled)
+  # password: ""
+  # Recommended: export RAIBID_REDIS_PASSWORD="your-password"
+
+  # Job queue stream name
+  stream_name: "ci-jobs"
+
+  # Consumer group name
+  consumer_group: "ci-workers"
+
+  # Max job history to keep
+  max_stream_length: 10000
+
+# KEDA Autoscaler Configuration
+keda:
+  # Polling interval for queue depth (seconds)
+  polling_interval: 30
+
+  # Cooldown period after scaling (seconds)
+  cooldown_period: 300
+
+  # Jobs per agent threshold for scaling
+  jobs_per_agent: 2
+
+# Flux GitOps Configuration
+flux:
+  # Git repository URL for Flux
+  repository_url: "http://gitea.raibid-ci.svc.cluster.local:3000/admin/flux-config.git"
+
+  # Branch to track
+  branch: "main"
+
+  # Path within repository
+  path: "clusters/dgx-spark"
+
+  # Sync interval (minutes)
+  sync_interval_minutes: 1
+
+  # Git credentials (optional, use SSH key or token)
+  # username: ""
+  # password: ""
+  # Recommended: Use deploy keys or SSH
+
+# TUI Configuration
+tui:
+  # Refresh interval in milliseconds
+  refresh_interval_ms: 1000
+
+  # Panel proportions [main, header, footer]
+  # Values are percentages that should sum to 100
+  panel_proportions: [70, 15, 15]
+
+  # Color scheme (light or dark)
+  theme: "dark"
+
+  # Enable mouse support
+  mouse_enabled: true
+
+# Logging Configuration
+logging:
+  # Log level (trace, debug, info, warn, error)
+  level: "info"
+
+  # Log format (text or json)
+  format: "text"
+
+  # Log to file (optional)
+  # file: "/var/log/raibid-cli.log"
+
+# Repository Mirroring Configuration
+mirrors:
+  # Default sync interval for new mirrors (minutes)
+  default_sync_interval: 60
+
+  # Auto-sync on webhook (requires webhook setup)
+  auto_sync_enabled: true
+
+  # Webhook secret (for GitHub webhooks)
+  # webhook_secret: ""
+  # Recommended: export RAIBID_MIRRORS_WEBHOOK_SECRET="your-secret"
+
+# Build Cache Configuration
+cache:
+  # Enable build caching
+  enabled: true
+
+  # Cache storage backend (local, s3, gcs)
+  backend: "local"
+
+  # Local cache path
+  path: "/var/cache/raibid"
+
+  # Maximum cache size (GB)
+  max_size_gb: 100
+
+  # Cache retention (days)
+  retention_days: 30

@@ -1,0 +1,40 @@
+# k3s Private Registry Configuration
+# Configure k3s to use Gitea as an OCI registry
+# This file should be placed at /etc/rancher/k3s/registries.yaml
+
+mirrors:
+  # Docker Hub mirror (optional, for caching)
+  docker.io:
+    endpoint:
+      - "https://registry-1.docker.io"
+
+  # Gitea OCI registry (when Gitea is deployed)
+  gitea.raibid-infrastructure.svc.cluster.local:3000:
+    endpoint:
+      - "http://gitea.raibid-infrastructure.svc.cluster.local:3000"
+
+  # Local registry shorthand
+  gitea.local:
+    endpoint:
+      - "http://gitea.raibid-infrastructure.svc.cluster.local:3000"
+
+configs:
+  # Gitea registry authentication (credentials managed by raibid-cli)
+  "gitea.raibid-infrastructure.svc.cluster.local:3000":
+    auth:
+      # These will be configured during Gitea setup
+      # username: raibid-admin
+      # password: <generated-password>
+    tls:
+      insecure_skip_verify: true  # Using internal cluster DNS, no TLS
+
+  "gitea.local":
+    auth:
+      # Mirror the same credentials
+      # username: raibid-admin
+      # password: <generated-password>
+    tls:
+      insecure_skip_verify: true
+
+# Note: This file is a template. Actual credentials are injected
+# during deployment by raibid-cli setup gitea command.

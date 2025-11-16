@@ -1,0 +1,73 @@
+---
+title: Raibid-CI Build Workflow
+---
+flowchart TD
+    Start([Developer Push]) --> GitHub[Push to GitHub Repository]
+
+    GitHub --> Webhook{GitHub Webhook}
+    Webhook --> Mirror[Gitea Mirror Sync]
+
+    Mirror --> JobCreate[Create Build Job]
+    JobCreate --> RedisStream[Publish to Redis Stream]
+
+    RedisStream --> QueueState{Job in Queue}
+
+    QueueState --> KEDAMonitor[KEDA Monitors Queue Length]
+    KEDAMonitor --> ScaleDecision{Queue Length > 0?}
+
+    ScaleDecision -->|Yes| SpawnPod[Scale Up: Spawn CI Agent Pod]
+    ScaleDecision -->|No| WaitJobs[Wait for Jobs]
+
+    SpawnPod --> PodReady{Pod Ready?}
+    PodReady -->|Initializing| PodReady
+    PodReady -->|Ready| PopJob[Agent Pops Job from Stream]
+
+    PopJob --> CloneRepo[Clone Code from Gitea]
+    CloneRepo --> PullCache[Pull Cached Images from OCI Registry]
+
+    PullCache --> Execute[Execute Build Steps]
+    Execute --> BuildStep1[1. Dependencies Install]
+    BuildStep1 --> BuildStep2[2. Compilation/Build]
+    BuildStep2 --> BuildStep3[3. Run Tests]
+    BuildStep3 --> BuildStep4[4. Create Artifacts]
+
+    BuildStep4 --> BuildSuccess{Build Result?}
+
+    BuildSuccess -->|Success| PushArtifacts[Push Images to Gitea OCI Registry]
+    BuildSuccess -->|Failure| LogFailure[Log Failure Details]
+
+    PushArtifacts --> UpdateStatus[Update Job Status in Redis]
+    LogFailure --> UpdateStatus
+
+    UpdateStatus --> Notify[Notify via Redis Stream]
+    Notify --> Cleanup[Agent Pod Self-Terminates]
+
+    Cleanup --> ScaleDown[KEDA Scales Down]
+    ScaleDown --> End([Build Complete])
+
+    WaitJobs -.->|New Job| QueueState
+
+    %% Parallel monitoring
+    PopJob -.->|Job Started| MonitorTUI[TUI Client Monitors]
+    Execute -.->|Live Logs| MonitorTUI
+    UpdateStatus -.->|Status Update| MonitorTUI
+    MonitorTUI -.->|Query API| RustAPI[Rust API Server]
+
+    %% Styling
+    classDef github fill:#f0f0f0,stroke:#333,stroke-width:2px
+    classDef gitea fill:#609926,stroke:#406619,stroke-width:2px,color:#fff
+    classDef redis fill:#dc382d,stroke:#a02822,stroke-width:2px,color:#fff
+    classDef keda fill:#326ce5,stroke:#1a4d99,stroke-width:2px,color:#fff
+    classDef agent fill:#ffebcc,stroke:#ff9900,stroke-width:2px
+    classDef build fill:#e1f5e1,stroke:#4caf50,stroke-width:2px
+    classDef failure fill:#ffcccc,stroke:#cc0000,stroke-width:2px
+    classDef monitor fill:#f0ccff,stroke:#9900cc,stroke-width:2px
+
+    class GitHub,Webhook github
+    class Mirror,CloneRepo,PullCache,PushArtifacts gitea
+    class RedisStream,QueueState,PopJob,UpdateStatus,Notify redis
+    class KEDAMonitor,ScaleDecision,SpawnPod,ScaleDown keda
+    class PodReady,Cleanup agent
+    class Execute,BuildStep1,BuildStep2,BuildStep3,BuildStep4 build
+    class BuildSuccess,LogFailure failure
+    class MonitorTUI,RustAPI monitor

@@ -1,0 +1,130 @@
+---
+title: Raibid-CI Component Interactions
+---
+sequenceDiagram
+    actor Dev as Developer
+    participant GH as GitHub
+    participant TUI as Ratatui TUI
+    participant API as Rust API Server
+    participant Redis as Redis Streams
+    participant Gitea as Gitea (Git + OCI)
+    participant KEDA as KEDA Autoscaler
+    participant K8s as Kubernetes API
+    participant Agent as CI Agent Pod
+    participant Flux as Flux GitOps
+
+    %% Initial Setup
+    rect rgb(240, 240, 255)
+        Note over Flux,Gitea: GitOps Continuous Reconciliation
+        Flux->>Gitea: Poll for manifest changes
+        Flux->>K8s: Apply infrastructure manifests
+        K8s-->>Flux: Reconciliation status
+    end
+
+    %% Developer workflow
+    rect rgb(255, 250, 240)
+        Note over Dev,GH: Developer Workflow
+        Dev->>GH: git push (code changes)
+        GH->>Gitea: Webhook: Mirror repository
+        Gitea-->>GH: Mirror synchronized
+    end
+
+    %% TUI interaction
+    rect rgb(255, 240, 255)
+        Note over TUI,API: TUI Monitoring Session
+        TUI->>API: GET /api/v1/status
+        API->>Redis: XINFO STREAM jobs
+        Redis-->>API: Queue statistics
+        API->>K8s: GET pods (namespace=raibid-ci)
+        K8s-->>API: Pod list and status
+        API-->>TUI: Dashboard data (JSON)
+        TUI->>TUI: Render live dashboard
+    end
+
+    %% Job submission
+    rect rgb(240, 255, 240)
+        Note over API,Redis: Job Submission
+        API->>API: Create build job spec
+        API->>Redis: XADD jobs * {...job_data}
+        Redis-->>API: Job ID (stream entry)
+        API->>Redis: SET job:{id}:status pending
+        Redis-->>API: OK
+    end
+
+    %% KEDA scaling
+    rect rgb(255, 245, 230)
+        Note over KEDA,K8s: Auto-scaling Decision
+        KEDA->>Redis: XPENDING jobs ci-agents
+        Redis-->>KEDA: Pending job count: 1
+        KEDA->>KEDA: Calculate: target_replicas = pending / threshold
+        KEDA->>K8s: PATCH deployment/ci-agents (replicas=1)
+        K8s->>Agent: Schedule pod on node
+        Agent->>K8s: Pod ready (health check passed)
+        K8s-->>KEDA: Scale event completed
+    end
+
+    %% Agent execution
+    rect rgb(230, 255, 230)
+        Note over Agent,Gitea: Build Execution
+        Agent->>Redis: XREADGROUP GROUP ci-agents consumer-{id} STREAMS jobs >
+        Redis-->>Agent: Job data {repo, ref, commit}
+
+        Agent->>Redis: SET job:{id}:status running
+        Agent->>Gitea: git clone {repo_url}
+        Gitea-->>Agent: Repository contents
+
+        Agent->>Gitea: OCI: Pull base image (cache)
+        Gitea-->>Agent: Image layers (cached)
+
+        Agent->>Agent: Execute build pipeline<br/>(compile, test, package)
+
+        alt Build Success
+            Agent->>Gitea: OCI: Push built image
+            Gitea-->>Agent: Image pushed (digest)
+            Agent->>Redis: SET job:{id}:status success
+            Agent->>Redis: XADD events * {type:build_success, ...}
+        else Build Failure
+            Agent->>Redis: SET job:{id}:status failure
+            Agent->>Redis: XADD events * {type:build_failure, logs}
+        end
+
+        Agent->>Redis: XACK jobs ci-agents {job_id}
+        Redis-->>Agent: ACK confirmed
+
+        Agent->>Agent: Exit (pod terminates)
+    end
+
+    %% TUI live updates
+    rect rgb(255, 240, 255)
+        Note over TUI,API: Real-time Status Updates
+        loop Every 500ms
+            TUI->>API: GET /api/v1/jobs/{id}/status
+            API->>Redis: GET job:{id}:status
+            Redis-->>API: Status: running/success/failure
+            API->>Redis: XREVRANGE job:{id}:logs - + COUNT 50
+            Redis-->>API: Recent log entries
+            API-->>TUI: Job status + logs (JSON)
+            TUI->>TUI: Update UI components
+        end
+    end
+
+    %% Scale down
+    rect rgb(255, 245, 230)
+        Note over KEDA,K8s: Scale Down to Zero
+        KEDA->>Redis: XPENDING jobs ci-agents
+        Redis-->>KEDA: Pending job count: 0
+        KEDA->>KEDA: Idle timeout reached (30s)
+        KEDA->>K8s: PATCH deployment/ci-agents (replicas=0)
+        K8s->>Agent: Terminate remaining pods
+        K8s-->>KEDA: Scale down completed
+    end
+
+    %% Final status check
+    rect rgb(255, 250, 240)
+        Note over Dev,TUI: Build Complete
+        TUI->>API: GET /api/v1/jobs/{id}/artifacts
+        API->>Gitea: List OCI tags for {repo}
+        Gitea-->>API: Available tags/digests
+        API-->>TUI: Artifact URLs
+        TUI->>TUI: Display build summary
+    end

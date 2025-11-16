@@ -1,0 +1,261 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for documentation project repositories",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "documentation",
+    "description": "Comprehensive documentation for {{DOCUMENTATION_SUBJECT}}",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "markdown",
+    "secondary": ["yaml", "json"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "dev": "just dev",
+    "serve": "just serve",
+    "lint": "just lint",
+    "format": "just fmt",
+    "deploy": "just deploy",
+    "check-links": "just check-links"
+  },
+
+  "contextFiles": [
+    "README.md",
+    "docs/**/*.md",
+    "mkdocs.yml",
+    ".markdownlint.json"
+  ],
+
+  "fileStructure": {
+    "docs/": "Documentation content in Markdown",
+    "docs/getting-started/": "Getting started guides",
+    "docs/guides/": "How-to guides",
+    "docs/reference/": "API and reference documentation",
+    "docs/tutorials/": "Step-by-step tutorials",
+    "docs/architecture/": "Architecture Decision Records (ADRs)",
+    "docs/assets/": "Images, diagrams, and other assets",
+    "docs/examples/": "Code examples and snippets",
+    "overrides/": "Theme customizations (if applicable)",
+    "scripts/": "Build and deployment scripts"
+  },
+
+  "tools": {
+    "generator": {
+      "options": ["MkDocs", "Docusaurus", "VitePress", "Hugo", "Sphinx"],
+      "recommended": "MkDocs for Python, Docusaurus for general"
+    },
+    "linting": {
+      "markdown": "markdownlint",
+      "links": "markdown-link-check",
+      "spelling": "cspell or aspell"
+    },
+    "diagrams": {
+      "mermaid": "Diagrams in Markdown",
+      "plantuml": "UML diagrams",
+      "d2": "Modern diagram language"
+    }
+  },
+
+  "rules": {
+    "writing": [
+      "Use clear, concise language",
+      "Write in active voice",
+      "Use present tense",
+      "Be consistent with terminology",
+      "Define acronyms on first use",
+      "Use gender-neutral language",
+      "Keep sentences short and focused",
+      "Use examples liberally"
+    ],
+    "structure": [
+      "Organize content logically",
+      "Use descriptive headings",
+      "Include table of contents for long pages",
+      "Cross-reference related content",
+      "Maintain consistent navigation",
+      "Group related topics together",
+      "Use meaningful file names"
+    ],
+    "markdown": [
+      "Use ATX-style headers (#, ##, ###)",
+      "Include blank lines around headers",
+      "Use fenced code blocks with language tags",
+      "Alt text for all images",
+      "Relative links for internal pages",
+      "No trailing whitespace",
+      "One sentence per line (for better diffs)"
+    ],
+    "code": [
+      "Test all code examples",
+      "Include complete, runnable examples",
+      "Show expected output",
+      "Handle error cases",
+      "Keep examples simple but realistic",
+      "Comment complex code",
+      "Use syntax highlighting"
+    ]
+  },
+
+  "documentationTypes": {
+    "tutorial": {
+      "description": "Learning-oriented, step-by-step guides",
+      "audience": "Beginners",
+      "goal": "Successfully complete a task"
+    },
+    "howTo": {
+      "description": "Problem-oriented, goal-focused guides",
+      "audience": "Users with specific needs",
+      "goal": "Solve a specific problem"
+    },
+    "reference": {
+      "description": "Information-oriented, technical descriptions",
+      "audience": "Users needing precise information",
+      "goal": "Provide accurate, complete information"
+    },
+    "explanation": {
+      "description": "Understanding-oriented, background knowledge",
+      "audience": "Users wanting deeper understanding",
+      "goal": "Clarify and illuminate topics"
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "just setup - Install dependencies"
+    ],
+    "development": [
+      "just dev - Start live preview server",
+      "just build - Build static site",
+      "just serve - Serve built site locally",
+      "just lint - Check Markdown quality",
+      "just check-links - Verify all links work"
+    ],
+    "publishing": [
+      "just deploy - Deploy to hosting platform"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "Markdown linting (markdownlint)",
+      "Link checking (markdown-link-check)",
+      "Spell checking",
+      "Build verification",
+      "Dead link detection"
+    ],
+    "deployment": {
+      "trigger": "Push to main branch",
+      "platforms": ["GitHub Pages", "Netlify", "Vercel", "Read the Docs"],
+      "preview": "Deploy preview for pull requests"
+    }
+  },
+
+  "seo": {
+    "metadata": "Include title, description, keywords in frontmatter",
+    "sitemap": "Generate sitemap.xml",
+    "robots": "Configure robots.txt",
+    "canonical": "Set canonical URLs",
+    "openGraph": "Add Open Graph tags for social sharing",
+    "schema": "Use JSON-LD schema markup where appropriate"
+  },
+
+  "accessibility": [
+    "Use semantic HTML",
+    "Provide alt text for images",
+    "Use descriptive link text (not 'click here')",
+    "Ensure good color contrast",
+    "Support keyboard navigation",
+    "Test with screen readers",
+    "Use ARIA labels where needed",
+    "Provide text alternatives for non-text content"
+  ],
+
+  "styleguide": {
+    "headings": "Use ATX-style (#), capitalize first word only",
+    "lists": "Use - for unordered, 1. for ordered",
+    "emphasis": "Use *italic* and **bold** sparingly",
+    "code": "Use `inline code` for short snippets, ```lang for blocks",
+    "links": "[descriptive text](url) format",
+    "images": "![alt text](image.png) with descriptive alt text",
+    "tables": "Use for tabular data only, not layout"
+  },
+
+  "versioning": {
+    "strategy": "Version major documentation releases",
+    "directory": "docs/versions/",
+    "current": "Always available at /docs/",
+    "archive": "Previous versions at /docs/v1/, /docs/v2/, etc.",
+    "deprecation": "Mark deprecated content clearly"
+  },
+
+  "documentation": {
+    "readme": "Include overview, how to contribute, how to build locally",
+    "contributing": "Guidelines for contributing to documentation",
+    "styleguide": "Writing and formatting standards",
+    "templates": "Templates for different documentation types"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for docs projects",
+    "tasks": {
+      "default": "list",
+      "setup": "pip install -r requirements.txt (or equivalent)",
+      "dev": "mkdocs serve (or framework equivalent)",
+      "build": "mkdocs build",
+      "serve": "python -m http.server --directory site/",
+      "lint": "markdownlint docs/**/*.md",
+      "fmt": "markdownlint --fix docs/**/*.md",
+      "check-links": "markdown-link-check docs/**/*.md",
+      "spell-check": "cspell docs/**/*.md",
+      "deploy": "mkdocs gh-deploy",
+      "clean": "rm -rf site/",
+      "new-page": "Create new page from template"
+    }
+  },
+
+  "contentChecklist": {
+    "everyPage": [
+      "Clear title and purpose",
+      "Last updated date",
+      "Table of contents (for long pages)",
+      "Code examples tested",
+      "Links verified",
+      "Images have alt text",
+      "Proofread for clarity"
+    ],
+    "newFeature": [
+      "Getting started guide",
+      "API reference",
+      "Usage examples",
+      "Common pitfalls",
+      "Troubleshooting",
+      "Migration guide (if replacing old feature)"
+    ]
+  },
+
+  "bestPractices": [
+    "Write for your audience",
+    "Show, don't just tell",
+    "Use concrete examples",
+    "Test all code samples",
+    "Keep content up to date",
+    "Make navigation intuitive",
+    "Provide search functionality",
+    "Include diagrams for complex concepts",
+    "Link to related content",
+    "Collect and act on feedback",
+    "Version control documentation",
+    "Review and update regularly",
+    "Make content scannable",
+    "Use consistent formatting",
+    "Optimize for mobile devices"
+  ]
+}

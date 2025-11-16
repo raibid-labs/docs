@@ -1,0 +1,108 @@
+# raibid-cli configuration file
+# All settings shown with their default values
+
+# Cluster (k3s) configuration
+cluster:
+  # Cluster name
+  name: raibid-ci
+
+  # Kubernetes API server port
+  api_port: 6443
+
+  # Path to kubeconfig file (~ expands to home directory)
+  kubeconfig_path: ~/.kube/config
+
+  # Namespace for raibid resources
+  namespace: raibid-ci
+
+  # CPU cores reserved for system (out of 20 total on DGX Spark)
+  reserved_cores: 2
+
+  # Memory reserved for system in GB (out of 128 GB total on DGX Spark)
+  reserved_memory_gb: 8
+
+# API server configuration
+api:
+  # API server host
+  host: 127.0.0.1
+
+  # API server port
+  port: 8080
+
+  # Enable TLS (requires tls_cert_path and tls_key_path)
+  tls_enabled: false
+
+  # Path to TLS certificate (only if tls_enabled: true)
+  # tls_cert_path: /path/to/cert.pem
+
+  # Path to TLS private key (only if tls_enabled: true)
+  # tls_key_path: /path/to/key.pem
+
+# Agent configuration
+agents:
+  # Agent types to enable (currently only 'rust' is supported in MVP)
+  types:
+    - rust
+
+  # Minimum number of agents (0 = fully ephemeral)
+  min_agents: 0
+
+  # Maximum number of agents
+  max_agents: 10
+
+  # Agent idle timeout in seconds (agents terminate after this period of inactivity)
+  idle_timeout_seconds: 300
+
+  # Scale-down delay in seconds (wait period before removing idle agents)
+  scaledown_delay_seconds: 60
+
+  # Cache volume size in GB per agent
+  cache_size_gb: 50
+
+# Gitea configuration
+gitea:
+  # Gitea URL (cluster-internal by default)
+  url: http://gitea.raibid-ci.svc.cluster.local:3000
+
+  # Gitea admin username
+  admin_user: admin
+
+  # Gitea admin password (use environment variable: ${GITEA_ADMIN_PASSWORD})
+  # admin_password: ${GITEA_ADMIN_PASSWORD}
+
+  # Enable OCI registry
+  registry_enabled: true
+
+  # OCI registry port
+  registry_port: 5000
+
+# Redis configuration
+redis:
+  # Redis host (cluster-internal by default)
+  host: redis.raibid-ci.svc.cluster.local
+
+  # Redis port
+  port: 6379
+
+  # Redis password (use environment variable: ${REDIS_PASSWORD})
+  # password: ${REDIS_PASSWORD}
+
+  # Redis database number
+  database: 0
+
+  # Job queue stream name
+  job_stream: raibid:jobs
+
+# UI configuration
+ui:
+  # Enable TUI (terminal user interface)
+  tui_enabled: true
+
+  # TUI refresh rate in milliseconds
+  refresh_rate_ms: 250
+
+  # Color scheme: dark, light, or auto
+  color_scheme: dark
+
+  # Enable unicode characters in TUI
+  unicode_enabled: true

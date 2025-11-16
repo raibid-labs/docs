@@ -1,0 +1,53 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: raibid-ci-infrastructure
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/name: flux
+    app.kubernetes.io/component: kustomization
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  # Reconciliation interval
+  interval: 5m0s
+
+  # Retry configuration
+  retryInterval: 1m0s
+
+  # Source reference
+  sourceRef:
+    kind: GitRepository
+    name: raibid-infrastructure
+    namespace: flux-system
+
+  # Path within repository
+  path: ./infra/manifests
+
+  # Prune resources removed from Git
+  prune: true
+
+  # Wait for resources to be ready
+  wait: true
+
+  # Timeout for operations
+  timeout: 5m0s
+
+  # Health assessment
+  healthChecks:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: raibid-ci-agent
+    namespace: raibid-ci
+
+  # Force apply (use Server-Side Apply)
+  force: false
+
+  # Validation
+  validation: client
+
+  # Post-build substitutions
+  postBuild:
+    substitute:
+      cluster_name: "dgx-spark"
+      environment: "production"

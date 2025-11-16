@@ -1,0 +1,64 @@
+---
+# HelmRelease for KEDA via Flux
+# This enables GitOps deployment of KEDA
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: keda
+  namespace: keda
+  labels:
+    app.kubernetes.io/name: keda
+    app.kubernetes.io/component: autoscaler
+    app.kubernetes.io/part-of: raibid-ci
+    app.kubernetes.io/managed-by: flux
+spec:
+  interval: 10m
+  timeout: 5m
+
+  # Helm repository reference
+  chart:
+    spec:
+      chart: keda
+      version: "2.12.0"
+      sourceRef:
+        kind: HelmRepository
+        name: kedacore
+        namespace: flux-system
+      interval: 5m
+
+  # Helm values from values.yaml
+  valuesFrom:
+  - kind: ConfigMap
+    name: keda-values
+    optional: false
+
+  # Installation configuration
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+    timeout: 5m
+
+  # Upgrade configuration
+  upgrade:
+    remediation:
+      retries: 3
+      remediateLastFailure: true
+    cleanupOnFail: true
+    timeout: 5m
+
+  # Rollback configuration
+  rollback:
+    timeout: 5m
+    cleanupOnFail: true
+
+  # Post-installation tests
+  test:
+    enable: true
+    timeout: 2m
+
+  # Dependency management
+  dependsOn:
+  - name: redis
+    namespace: raibid-redis
+

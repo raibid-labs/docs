@@ -1,0 +1,98 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: raibid-ci-agent
+  namespace: raibid-ci
+  labels:
+    app.kubernetes.io/name: raibid-ci-agent
+    app.kubernetes.io/component: ci-agent
+    app.kubernetes.io/part-of: raibid-ci
+    app.kubernetes.io/managed-by: keda
+spec:
+  # Job template for CI agents
+  jobTargetRef:
+    template:
+      metadata:
+        labels:
+          app: raibid-ci-agent
+          component: ci-agent
+      spec:
+        restartPolicy: Never
+        containers:
+        - name: rust-agent
+          image: ghcr.io/raibid-labs/rust-agent:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: REDIS_ADDRESS
+            valueFrom:
+              secretKeyRef:
+                name: raibid-redis-auth
+                key: address
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: raibid-redis-auth
+                key: password
+          - name: REDIS_STREAM
+            value: "raibid:jobs"
+          - name: REDIS_CONSUMER_GROUP
+            value: "raibid-workers"
+          - name: JOB_TIMEOUT
+            value: "3600"
+          - name: RUST_LOG
+            value: "info"
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 2Gi
+            limits:
+              cpu: 4000m
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+
+  # Scaling configuration
+  pollingInterval: 10  # Check Redis every 10 seconds
+  maxReplicaCount: 10  # Maximum 10 concurrent agent jobs
+  successfulJobsHistoryLimit: 3  # Keep last 3 successful jobs for debugging
+  failedJobsHistoryLimit: 5  # Keep last 5 failed jobs for debugging
+
+  # Scaling strategy
+  scalingStrategy:
+    strategy: "default"  # Can be "default", "custom", "accurate", or "eager"
+    # default: 1 job per pending entry
+    # accurate: Most precise, slowest scaling
+    # eager: Fastest scaling, may overprovision
+
+  # Triggers
+  triggers:
+  - type: redis-streams
+    metadata:
+      # Redis connection (from TriggerAuthentication)
+      address: raibid-redis-master.raibid-redis.svc.cluster.local:6379
+      stream: raibid:jobs
+      consumerGroup: raibid-workers
+
+      # Scaling thresholds
+      pendingEntriesCount: "1"  # Scale when 1+ pending jobs
+      streamLength: "5"  # Also consider total stream length
+
+      # Performance tuning
+      lagCount: "5"  # Additional lag-based scaling threshold
+      activationLagCount: "0"  # Start scaling immediately
+
+    # Authentication reference
+    authenticationRef:
+      name: raibid-redis-trigger-auth
+
+  # Rollout configuration (optional - for advanced control)
+  rollout:
+    strategy: "gradual"
+    propagationPolicy: "foreground"
+

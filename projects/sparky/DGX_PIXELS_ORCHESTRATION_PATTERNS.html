@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>DGX_PIXELS_ORCHESTRATION_PATTERNS</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="DGX_PIXELS_ORCHESTRATION_PATTERNS"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="DGX_PIXELS_ORCHESTRATION_PATTERNS"/><meta name="twitter:description" content="DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis Executive Summary DGX-Pixels demonstrates a mature, enterprise-scale orchestration pattern combining: Multi-tier orchestration (Meta Orchestrator → Domain Orchestrators → Workstreams) Rust + Nushell + Justfile automation ..."/><meta property="og:description" content="DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis Executive Summary DGX-Pixels demonstrates a mature, enterprise-scale orchestration pattern combining: Multi-tier orchestration (Meta Orchestrator → Domain Orchestrators → Workstreams) Rust + Nushell + Justfile automation ..."/><meta property="og:image:alt" content="DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis Executive Summary DGX-Pixels demonstrates a mature, enterprise-scale orchestration pattern combining: Multi-tier orchestration (Meta Orchestrator → Domain Orchestrators → Workstreams) Rust + Nushell + Justfile automation ..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis Executive Summary DGX-Pixels demonstrates a mature, enterprise-scale orchestration pattern combining: Multi-tier orchestration (Meta Orchestrator → Domain Orchestrators → Workstreams) Rust + Nushell + Justfile automation ..."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/sparky/DGX_PIXELS_ORCHESTRATION_PATTERNS"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-513"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-513" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/sparky/">sparky</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>DGX_PIXELS_ORCHESTRATION_PATTERNS</a></div></nav><h1 class="article-title">DGX_PIXELS_ORCHESTRATION_PATTERNS</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:16.132Z">Nov 16, 2025</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="dgx-pixels-orchestration-and-parallelization-patterns---comprehensive-analysis">DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-pixels-orchestration-and-parallelization-patterns---comprehensive-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="executive-summary">Executive Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#executive-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DGX-Pixels demonstrates a mature, enterprise-scale orchestration pattern combining:</p>
+<ul>
+<li><strong>Multi-tier orchestration</strong> (Meta Orchestrator → Domain Orchestrators → Workstreams)</li>
+<li><strong>Rust + Nushell + Justfile</strong> automation stack</li>
+<li><strong>Parallel workstream coordination</strong> with dependency management</li>
+<li><strong>Docker Compose microservices</strong> with GPU integration</li>
+<li><strong>ZeroMQ IPC</strong> for inter-process communication</li>
+<li><strong>Agent-based development workflow</strong> with GitHub integration</li>
+</ul>
+<p>This document provides the complete blueprint for replicating these patterns in Sparky.</p>
+<hr/>
+<h2 id="1-orchestrator-architecture">1. ORCHESTRATOR ARCHITECTURE<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-orchestrator-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="11-multi-tier-orchestration-model">1.1 Multi-Tier Orchestration Model<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-multi-tier-orchestration-model" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>DGX-Pixels uses a hierarchical orchestration pattern:</p>
+<pre><code>┌─────────────────────────────────────────┐
+│      Meta Orchestrator (M0-M5)          │
+│  ─ Spawns domain orchestrators          │
+│  ─ Manages dependencies                 │
+│  ─ Handles phase gates                  │
+└──────┬──────────────────────────────────┘
+       │
+   ┌───┴───┬──────────┬─────────────────┐
+   │       │          │                 │
+   ▼       ▼          ▼                 ▼
+┌──────┐┌──────┐┌──────────┐┌──────────┐
+│Found-│Model  │Interface  │Integration
+│ation │Orch   │Orch       │Orch
+│Orch  │       │           │
+└──┬───┘└──┬───┘└────┬─────┘└────┬─────┘
+   │      │         │            │
+┌──┴─┬────┴┬────────┴─┬──────────┴────┐
+│WS-1│WS-2│WS-3    WS-4 WS-5...  WS-18│
+└────┴────┴─────────────────────────────┘
+</code></pre>
+<p><strong>Key Characteristics:</strong></p>
+<ol>
+<li>
+<p><strong>Foundation Orchestrator (M0)</strong></p>
+<ul>
+<li>Owns: WS-01, WS-02, WS-03</li>
+<li>Duration: Weeks 1-2</li>
+<li>Purpose: Hardware baselines, reproducibility, benchmarking</li>
+<li>Blocks: ALL other phases</li>
+<li>Pattern: Sequential execution (gates dependencies)</li>
+</ul>
+</li>
+<li>
+<p><strong>Model Orchestrator (M1, M3)</strong></p>
+<ul>
+<li>Owns: WS-04, WS-05, WS-06, WS-07</li>
+<li>Duration: Weeks 3-5</li>
+<li>Purpose: ComfyUI, SDXL optimization, LoRA training</li>
+<li>Blocks: Interface Orchestrator (needs ComfyUI working)</li>
+<li>Pattern: Parallel where possible</li>
+</ul>
+</li>
+<li>
+<p><strong>Interface Orchestrator (M2)</strong></p>
+<ul>
+<li>Owns: WS-08, WS-09, WS-10, WS-11, WS-12</li>
+<li>Duration: Weeks 3-6</li>
+<li>Purpose: Rust TUI, ZeroMQ backend, Sixel preview</li>
+<li>Blocks: Integration Orchestrator (needs TUI + backend)</li>
+<li>Pattern: Mixed sequential/parallel</li>
+</ul>
+</li>
+<li>
+<p><strong>Integration Orchestrator (M4, M5)</strong></p>
+<ul>
+<li>Owns: WS-13, WS-14, WS-15, WS-16, WS-17, WS-18</li>
+<li>Duration: Weeks 7-12</li>
+<li>Purpose: Bevy MCP, observability, deployment</li>
+<li>Blocks: Nothing (final phase)</li>
+<li>Pattern: Sequential then parallel</li>
+</ul>
+</li>
+</ol>
+<h3 id="12-orchestration-spawning-protocol">1.2 Orchestration Spawning Protocol<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#12-orchestration-spawning-protocol" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>docs/orchestration/meta-orchestrator.md</code></p>
+<p><strong>Phase Gates Control Progress:</strong></p>
+<pre><code>Gate 1: Foundation → Model/Interface (End of Week 2)
+✓ Hardware verification complete
+✓ Baseline measurements recorded
+✓ Reproducibility framework working
+✓ Benchmark suite running
+
+Gate 2: Model/Interface → Integration (End of Week 6)
+✓ ComfyUI generating images (M1)
+✓ Rust TUI functional with preview (M2)
+✓ Python backend operational (M2)
+✓ LoRA training pipeline working (M3)
+
+Gate 3: Integration → Production (End of Week 11)
+✓ Bevy MCP integration complete (M4)
+✓ Asset deployment pipeline working (M4)
+✓ Example game using generated sprites (M4)
+</code></pre>
+<p><strong>Spawning Commands Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Phase 1: Foundation Only (Week 1)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-flow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> foundation</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstreams</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01,WS-02,WS-03</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --phase</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sequential</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Phase 2: Models + Interface (Week 3, after Gate 1)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-flow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> models</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstreams</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-04,WS-05,WS-06,WS-07</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --phase</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> parallel</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --depends-on</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> foundation</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-flow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> interface</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstreams</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-08,WS-09,WS-10,WS-11,WS-12</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --phase</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> parallel</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --depends-on</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-04</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Phase 3: Integration (Week 7, after Gate 2)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">claude-flow</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> integration</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstreams</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-13,WS-14,WS-15,WS-16,WS-17,WS-18</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --phase</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> sequential-then-parallel</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --depends-on</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> interface,models</span></span></code></pre></figure>
+<hr/>
+<h2 id="2-parallel-workstream-coordination">2. PARALLEL WORKSTREAM COORDINATION<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-parallel-workstream-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="21-workstream-structure">2.1 Workstream Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#21-workstream-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each workstream follows a standardized format:</p>
+<p><strong>Location</strong>: <code>docs/orchestration/workstreams/</code></p>
+<p><strong>Structure:</strong></p>
+<pre><code>ws01-hardware-baselines/
+├── README.md                    # Workstream specification
+├── COMPLETION_SUMMARY.md        # Agent completion report
+└── (sub-directories for domain-specific docs)
+</code></pre>
+<p><strong>README.md Contains:</strong></p>
+<ul>
+<li>Objective and deliverables</li>
+<li>Acceptance criteria (must-haves)</li>
+<li>Technical requirements</li>
+<li>Dependencies (blocks/unblocks)</li>
+<li>Estimated LOC</li>
+<li>Related issues/references</li>
+</ul>
+<p><strong>Example: WS-01</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># WS-01: Hardware Baselines</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Owner: Foundation Orchestrator</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Agent Type: devops-automator</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Duration: 3-4 days</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Priority: P0 (critical path)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Objective: Document verified DGX-Spark GB10 hardware specs</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Deliverables:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> repro/hardware_verification.sh - Automated detection</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> bench/baselines/hardware_baseline.json - Recorded metrics</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Updated docs/hardware.md with measurements</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Topology diagrams</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Acceptance Criteria:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">✓ Script captures: GPU model, VRAM, CUDA, driver, CPU, RAM</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">✓ Baseline JSON recorded in bench/baselines/</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">✓ Docs match actual hardware (GB10, 128GB unified, ARM)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">✓ Verification script exits 0 on success</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Dependencies: None (blocks all other phases)</span></span></code></pre></figure>
+<h3 id="22-workstream-plan-matrix">2.2 Workstream Plan Matrix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#22-workstream-plan-matrix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Total Workstreams</strong>: 18 across 12 weeks</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Orch</th><th>Milestone</th><th>Duration</th><th>Dependencies</th></tr></thead><tbody><tr><td>WS-01</td><td>Hardware Baselines</td><td>Foundation</td><td>M0</td><td>3-4d</td><td>None</td></tr><tr><td>WS-02</td><td>Reproducibility</td><td>Foundation</td><td>M0</td><td>4-5d</td><td>WS-01</td></tr><tr><td>WS-03</td><td>Benchmark Suite</td><td>Foundation</td><td>M0</td><td>3-4d</td><td>WS-01</td></tr><tr><td>WS-04</td><td>ComfyUI Setup</td><td>Model</td><td>M1</td><td>4-5d</td><td>WS-01</td></tr><tr><td>WS-05</td><td>SDXL Optimization</td><td>Model</td><td>M1</td><td>5-7d</td><td>WS-04</td></tr><tr><td>WS-06</td><td>LoRA Training</td><td>Model</td><td>M3</td><td>7-10d</td><td>WS-05</td></tr><tr><td>WS-07</td><td>Dataset Tools</td><td>Model</td><td>M3</td><td>5-6d</td><td>WS-05</td></tr><tr><td>WS-08</td><td>Rust TUI Core</td><td>Interface</td><td>M2</td><td>6-8d</td><td>WS-01</td></tr><tr><td>WS-09</td><td>ZeroMQ IPC</td><td>Interface</td><td>M2</td><td>4-5d</td><td>WS-08</td></tr><tr><td>WS-10</td><td>Python Backend</td><td>Interface</td><td>M2</td><td>5-6d</td><td>WS-04, WS-09</td></tr><tr><td>WS-11</td><td>Sixel Preview</td><td>Interface</td><td>M2</td><td>3-4d</td><td>WS-08, WS-10</td></tr><tr><td>WS-12</td><td>Model Comparison</td><td>Interface</td><td>M2</td><td>4-5d</td><td>WS-10, WS-11</td></tr><tr><td>WS-13</td><td>FastMCP Server</td><td>Integration</td><td>M4</td><td>5-6d</td><td>WS-10</td></tr><tr><td>WS-14</td><td>Bevy Plugin</td><td>Integration</td><td>M4</td><td>6-7d</td><td>WS-13</td></tr><tr><td>WS-15</td><td>Asset Deployment</td><td>Integration</td><td>M4</td><td>4-5d</td><td>WS-13, WS-14</td></tr><tr><td>WS-16</td><td>DCGM Metrics</td><td>Integration</td><td>M5</td><td>5-6d</td><td>WS-05</td></tr><tr><td>WS-17</td><td>Docker Deployment</td><td>Integration</td><td>M5</td><td>4-5d</td><td>WS-10, WS-16</td></tr><tr><td>WS-18</td><td>CI/CD Pipeline</td><td>Integration</td><td>M5</td><td>6-8d</td><td>WS-17</td></tr></tbody></table></div>
+<p><strong>Timeline</strong>: 90-110 days sequential → 60-70 days with proper parallelization</p>
+<h3 id="23-dependency-management">2.3 Dependency Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#23-dependency-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Critical Dependencies:</strong></p>
+<pre><code>M0 (Foundation) BLOCKS ALL
+    └─→ [Gate 1] ─→ M1 (Models) ─→╮
+                  └─→ M2 (Interface) ┤
+                              └─→ [Gate 2] ─→ M4/M5 (Integration)
+                                          └─→ M3 (Training)
+</code></pre>
+<p><strong>Blocking Rules:</strong></p>
+<ul>
+<li>Foundation Orchestrator must complete before Model/Interface start</li>
+<li>ComfyUI (WS-04) must complete before TUI integration (WS-10, WS-12)</li>
+<li>Python backend (WS-10) must complete before Bevy integration (WS-13, WS-14)</li>
+<li>All predecessors must complete before dependent workstreams</li>
+</ul>
+<hr/>
+<h2 id="3-implementation-patterns">3. IMPLEMENTATION PATTERNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-implementation-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-justfile-command-organization">3.1 Justfile Command Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-justfile-command-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/dgx-pixels/justfile</code></p>
+<p><strong>Structure Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="justfile" data-theme="github-light one-dark-pro"><code data-language="justfile" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span># === Project Initialization ===</span></span>
+<span data-line><span>init:</span></span>
+<span data-line><span>    #!/usr/bin/env bash</span></span>
+<span data-line><span>    # Create directory structure</span></span>
+<span data-line><span>    mkdir -p rust/src/{ui,zmq_client}</span></span>
+<span data-line><span>    mkdir -p python/workers</span></span>
+<span data-line><span>    mkdir -p workflows</span></span>
+<span data-line><span>    mkdir -p models/{checkpoints,loras,configs}</span></span>
+<span data-line><span>    # Initialize virtual environments, etc.</span></span>
+<span data-line> </span>
+<span data-line><span># === Build Commands ===</span></span>
+<span data-line><span>build:</span></span>
+<span data-line><span>    cargo build --workspace</span></span>
+<span data-line> </span>
+<span data-line><span># === Development Commands ===</span></span>
+<span data-line><span>tui:</span></span>
+<span data-line><span>    cargo run --package dgx-pixels-tui</span></span>
+<span data-line> </span>
+<span data-line><span>backend PORT=&quot;5555&quot;:</span></span>
+<span data-line><span>    source venv/bin/activate</span></span>
+<span data-line><span>    python python/workers/generation_worker.py --port {{PORT}}</span></span>
+<span data-line> </span>
+<span data-line><span># === Testing ===</span></span>
+<span data-line><span>test:</span></span>
+<span data-line><span>    cargo test --workspace</span></span>
+<span data-line><span>    pytest python/tests/ -v</span></span>
+<span data-line> </span>
+<span data-line><span># === Code Quality ===</span></span>
+<span data-line><span>fmt:</span></span>
+<span data-line><span>    cargo fmt --all</span></span>
+<span data-line> </span>
+<span data-line><span>lint:</span></span>
+<span data-line><span>    cargo clippy --workspace -- -D warnings</span></span>
+<span data-line> </span>
+<span data-line><span>ci: fmt lint test</span></span>
+<span data-line><span>    @echo &quot;✅ All CI checks passed!&quot;</span></span>
+<span data-line> </span>
+<span data-line><span># === Orchestration Commands ===</span></span>
+<span data-line><span>orch-foundation:</span></span>
+<span data-line><span>    @echo &quot;🚀 Starting Foundation Orchestrator...&quot;</span></span>
+<span data-line> </span>
+<span data-line><span># === Docker Commands ===</span></span>
+<span data-line><span>docker-setup:</span></span>
+<span data-line><span>    ./scripts/setup_docker.sh</span></span>
+<span data-line> </span>
+<span data-line><span>docker-up:</span></span>
+<span data-line><span>    cd docker &amp;&amp; docker compose up -d</span></span>
+<span data-line> </span>
+<span data-line><span># === Git Commands ===</span></span>
+<span data-line><span>branch WS_ID:</span></span>
+<span data-line><span>    #!/usr/bin/env nu</span></span>
+<span data-line><span>    use scripts/nu/modules/github.nu *</span></span>
+<span data-line><span>    gh-create-branch &quot;{{WS_ID}}&quot;</span></span>
+<span data-line> </span>
+<span data-line><span>pr TITLE:</span></span>
+<span data-line><span>    #!/usr/bin/env nu</span></span>
+<span data-line><span>    use scripts/nu/modules/github.nu *</span></span>
+<span data-line><span>    gh-create-pr &quot;{{TITLE}}&quot;</span></span></code></pre></figure>
+<p><strong>Key Patterns:</strong></p>
+<ol>
+<li>Recipes organized by functional area</li>
+<li>Bash/Nushell shebang for polyglot support</li>
+<li>Parameters using <code>{{var}}</code> syntax</li>
+<li>Recipes can chain with <code>recipe1 recipe2 recipe3</code></li>
+<li><code>@</code> suppresses echo, <code>!</code> is important</li>
+</ol>
+<h3 id="32-nushell-automation-scripts">3.2 Nushell Automation Scripts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-nushell-automation-scripts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>scripts/nu/</code></p>
+<p><strong>Module Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/usr/bin/env nu</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># File: scripts/nu/modules/github.nu</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ../</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">COLORS,</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> log-success,</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> log-error,</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> log-warning,</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> log-info</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export reusable functions</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">export def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> gh-create-branch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    branch_name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    base_branch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;main&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Function body with error handling, logging</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    try</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        log-info</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> $&quot;Creating branch: (</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$branch_name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">)&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> -</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">b</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $branch_name</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        log-success</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> $&quot;Created: (</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$branch_name</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">)&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    } </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">catch</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {|</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">err</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">|</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        log-error</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> $&quot;Failed: (</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$err.msg</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">)&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> false</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">export def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> gh-create-pr</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">    title</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;">    --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">body</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;">    --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">base</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;main&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;">    --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">draft</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;">    --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">labels</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">list</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">string</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> = []</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Full implementation with validation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Three-Layer Module Structure:</strong></p>
+<ol>
+<li>
+<p><strong>config.nu</strong> - Core utilities</p>
+<ul>
+<li>Color constants and logging functions</li>
+<li>Project paths (project-root, docs-dir, models-dir)</li>
+<li>File system utilities</li>
+<li>Git utilities (current-branch, is-git-clean)</li>
+<li>Hardware detection (has-nvidia-gpu, gpu-model)</li>
+<li>Environment checks</li>
+</ul>
+</li>
+<li>
+<p><strong>modules/github.nu</strong> - GitHub automation</p>
+<ul>
+<li>gh-create-branch</li>
+<li>gh-create-pr</li>
+<li>gh-auto-merge</li>
+<li>gh-rebase-main</li>
+<li>gh-check-status</li>
+<li>gh-list-prs</li>
+<li>gh-request-review</li>
+</ul>
+</li>
+<li>
+<p><strong>modules/dgx.nu</strong> - Hardware utilities</p>
+<ul>
+<li>dgx-gpu-stats</li>
+<li>dgx-validate-hardware</li>
+<li>dgx-benchmark-memory</li>
+<li>dgx-export-topology</li>
+</ul>
+</li>
+</ol>
+<p><strong>Usage Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># In justfile</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">validate-gpu</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    #!/usr/bin/env nu</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    check-dgx-prerequisites</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or directly</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">github</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> result</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-create-branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;feature/new-ui&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    print</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Branch created successfully&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="33-rust-project-structure">3.3 Rust Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-rust-project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>rust/</code> with monorepo Cargo workspace</p>
+<pre><code>rust/
+├── Cargo.toml              # Workspace definition
+├── Cargo.lock
+├── src/
+│   ├── main.rs            # TUI entry point
+│   ├── app.rs             # Application state (Screen enum, JobStatus, App struct)
+│   ├── zmq_client.rs      # ZeroMQ communication
+│   ├── messages.rs        # Protocol messages (Request, Response, ProgressUpdate)
+│   ├── comparison.rs      # Side-by-side model comparison logic
+│   ├── reports.rs         # Report generation
+│   ├── events/
+│   │   ├── mod.rs
+│   │   └── handler.rs     # Event handling (keyboard, resize)
+│   ├── ui/
+│   │   ├── mod.rs         # Main render function
+│   │   ├── layout.rs      # Grid layout for screens
+│   │   ├── theme.rs       # Colors and styles
+│   │   └── screens/
+│   │       ├── mod.rs
+│   │       ├── generation.rs
+│   │       ├── comparison.rs    # NEW: Side-by-side UI
+│   │       ├── gallery.rs
+│   │       ├── models.rs
+│   │       ├── queue.rs
+│   │       ├── monitor.rs
+│   │       ├── settings.rs
+│   │       └── help.rs
+│   └── sixel/
+│       ├── mod.rs
+│       ├── image_renderer.rs    # Sixel encoding
+│       ├── preview_manager.rs   # Async image preview loading
+│       └── terminal_detection.rs # Detect Sixel support
+├── tests/
+│   └── integration_test.rs
+└── benches/
+    └── (benchmarks)
+</code></pre>
+<p><strong>Cargo.toml Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">package</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;dgx-pixels-tui&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1.0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">edition</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2021&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">rust-version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.70&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">bin</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;dgx-pixels-tui&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;src/main.rs&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dependencies</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># TUI framework</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ratatui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.26&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">crossterm</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.27&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Async runtime</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tokio</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.35&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;full&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Serialization</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">serde</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.0&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;derive&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Error handling</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">anyhow</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">thiserror</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.0&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Logging</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tracing</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.1&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">tracing-subscriber</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">version</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">features</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;env-filter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">] }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># IPC</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">zmq</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.10.0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">rmp-serde</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1.3.0&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Image processing</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.24&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">viuer</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.7&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Performance</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">dashmap</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;5.5&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">parking_lot</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.12&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">profile</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">release</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">opt-level</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">lto</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">codegen-units</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">strip</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span></code></pre></figure>
+<h3 id="34-python-project-structure">3.4 Python Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#34-python-project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>python/
+├── requirements.txt
+├── requirements-base.txt
+├── requirements-extra.txt
+├── requirements-comfyui.txt
+├── workers/
+│   ├── __init__.py
+│   ├── generation_worker.py     # Main worker
+│   └── zmq_server.py            # ZeroMQ server
+├── mcp_server/
+│   ├── __init__.py
+│   └── server.py                # FastMCP server
+├── training/
+│   ├── lora_trainer.py
+│   └── dataset_tools.py
+├── tests/
+│   ├── test_worker.py
+│   └── test_mcp.py
+└── pyproject.toml
+</code></pre>
+<p><strong>Key Implementation Patterns:</strong></p>
+<ol>
+<li>
+<p><strong>ZeroMQ Server (REQ-REP + PUB-SUB)</strong></p>
+<ul>
+<li>REQ-REP (Request-Reply): Job submission, status queries</li>
+<li>PUB-SUB (Publish-Subscribe): Progress updates, notifications</li>
+</ul>
+</li>
+<li>
+<p><strong>Worker Loop</strong></p>
+<ul>
+<li>Listen on REQ-REP socket for job requests</li>
+<li>Publish progress on SUB socket</li>
+<li>Communicate with ComfyUI via HTTP</li>
+<li>Return results and status</li>
+</ul>
+</li>
+<li>
+<p><strong>MCP Server</strong></p>
+<ul>
+<li>FastMCP for MCP protocol</li>
+<li>Tools for Bevy integration</li>
+<li>Handles asset deployment</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h2 id="4-docker--containerization-strategy">4. DOCKER &amp; CONTAINERIZATION STRATEGY<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-docker--containerization-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="41-docker-compose-architecture">4.1 Docker Compose Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#41-docker-compose-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>docker/docker-compose.yml</code></p>
+<p><strong>Service Stack:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">services</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  comfyui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # AI inference engine</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">docker/Dockerfile.comfyui</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">none</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">8188</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    volumes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">models, outputs, workflows</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  backend-worker</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Python ZeroMQ server + ComfyUI client</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">docker/Dockerfile.backend</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">comfyui (service_healthy)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5555 (REQ-REP), 5556 (PUB-SUB)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    volumes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">workflows, outputs</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  mcp-server</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # FastMCP for Bevy integration</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">docker/Dockerfile.mcp</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">backend-worker (service_healthy)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">3001</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dcgm-exporter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # GPU metrics (NVIDIA DCGM)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">nvidia/dcgm-exporter:3.1.7</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">9400</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  prometheus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Time-series metrics database</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">prom/prometheus:v2.48.0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">9090</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">dcgm-exporter, backend-worker</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  grafana</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Metrics visualization</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">grafana/grafana:10.2.2</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">3000</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">prometheus</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  node-exporter</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Host system metrics</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">prom/node-exporter:v1.7.0</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    ports</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">9100</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dgx-pixels-dev</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    # Development container (optional, profile:dev)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    build</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">docker/Dockerfile</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    depends_on</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">none</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    profiles</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">dev</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span></code></pre></figure>
+<p><strong>Network Configuration:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">networks</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dgx-pixels-net</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    driver</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bridge</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    subnet</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">172.28.0.0/16</span></span></code></pre></figure>
+<p><strong>Volume Configuration:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">volumes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Persistent storage for models (shared across services)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  comfyui-models</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Persistent storage for outputs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  comfyui-outputs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  backend-outputs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Development bind mounts</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dgx-pixels-models</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">(bind to host ./models)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  dgx-pixels-outputs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">(bind to host ./outputs)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  </span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Observability</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  prometheus-data</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  grafana-data</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span></code></pre></figure>
+<h3 id="42-dockerfile-patterns">4.2 Dockerfile Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#42-dockerfile-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Base Image Strategy:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light one-dark-pro"><code data-language="dockerfile" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Main development container (ARM64 compatible)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> nvcr.io/nvidia/pytorch:24.11-py3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Why NGC base:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - PyTorch wheels for ARM+CUDA unavailable on PyPI</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Pre-built with CUDA support</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - NVIDIA optimized</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Includes Python 3.12 + PyTorch 2.6</span></span></code></pre></figure>
+<p><strong>Layer Optimization:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light one-dark-pro"><code data-language="dockerfile" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. System packages (slow - do first)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">RUN</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends \</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    vim curl git ...</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Python dependencies (medium - do middle)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> requirements.txt /tmp/</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">RUN</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> pip install --no-cache-dir -r /tmp/requirements.txt</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Application code (fast - do last)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">COPY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> src/ /app/src/</span></span></code></pre></figure>
+<p><strong>Health Checks:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="dockerfile" data-theme="github-light one-dark-pro"><code data-language="dockerfile" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">HEALTHCHECK</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> --interval=30s --timeout=10s --retries=3 --start-period=60s \</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#61AFEF;">    CMD</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> curl -f http://localhost:8188/system_stats</span></span></code></pre></figure>
+<h3 id="43-docker-setup-script">4.3 Docker Setup Script<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#43-docker-setup-script" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>scripts/setup_docker.sh</code></p>
+<p><strong>Checks Performed:</strong></p>
+<ol>
+<li>Docker v20.10+</li>
+<li>Docker Compose v2+</li>
+<li>NVIDIA Container Toolkit</li>
+<li>NVIDIA drivers</li>
+<li>DGX-Spark GB10 hardware</li>
+</ol>
+<p><strong>Creates:</strong></p>
+<ul>
+<li><code>docker/.env</code> configuration</li>
+<li>Directory structure</li>
+<li>Initial Docker images</li>
+<li>Networks</li>
+</ul>
+<hr/>
+<h2 id="5-zeromq-ipc-patterns">5. ZEROMQ IPC PATTERNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-zeromq-ipc-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-communication-architecture">5.1 Communication Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-communication-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Pattern: REQ-REP + PUB-SUB Hybrid</strong></p>
+<pre><code>Rust TUI                        Python Backend
+  │                                  │
+  ├──→ REQ (Request) ──────→┐        │
+  │                         │        │
+  │                    ┌────▼────┐   │
+  │                    │ REQ-REP  │   │
+  │                    │ Socket   │   │
+  │                    │ Port 5555│   │
+  │                    └────┬────┘   │
+  │                         │        │
+  │    ┌──────────PUB/SUB───┤        │
+  │    │ Updates (Progress) │        │
+  │    │ Port 5556          │        │
+  │    │                    │        │
+  └────┴──────────Sub────────────────┘
+       │
+       └─ Receives progress updates
+</code></pre>
+<h3 id="52-message-patterns">5.2 Message Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-message-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Rust Implementation (zmq_client.rs):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ZmqClient</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    req_sender</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Sender</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ClientRequest</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    resp_receiver</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Receiver</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Response</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    update_receiver</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Receiver</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ProgressUpdate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    _req_thread</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> thread</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">JoinHandle</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;()>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    _sub_thread</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> thread</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">JoinHandle</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;()>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ZmqClient</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">req_addr</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">pub_addr</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">Self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        // Spawn two threads:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        // 1. REQ-REP thread for request/response</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        // 2. PUB-SUB thread for updates</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Message Protocol (messages.rs):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> enum</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Request</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Generate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">prompt</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">model</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    GetStatus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Cancel</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> enum</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Response</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    JobQueued</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Status</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">status</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> JobStatus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">image_path</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> PathBuf</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">metadata</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Error</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">message</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">pub</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ProgressUpdate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    stage</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    progress</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    eta_s</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Serialization: MessagePack (rmp-serde)</strong></p>
+<ul>
+<li>Binary format (smaller than JSON)</li>
+<li>Fast serialization/deserialization</li>
+<li>Type-safe in both Rust and Python</li>
+</ul>
+<hr/>
+<h2 id="6-project-structure-template">6. PROJECT STRUCTURE TEMPLATE<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-project-structure-template" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-directory-organization">6.1 Directory Organization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-directory-organization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>sparky/
+├── README.md
+├── CONTRIBUTING.md
+├── CLAUDE.md                    # Claude Code guidance
+├── justfile                     # Task automation
+│
+├── docs/
+│   ├── orchestration/           # Orchestration patterns
+│   │   ├── meta-orchestrator.md
+│   │   ├── workstream-plan.md
+│   │   ├── orchestrators/
+│   │   │   ├── foundation.md
+│   │   │   ├── model.md
+│   │   │   ├── interface.md
+│   │   │   └── integration.md
+│   │   └── workstreams/
+│   │       ├── start-here.md
+│   │       ├── template.md
+│   │       ├── ws01-xxx/README.md
+│   │       └── ...
+│   ├── adr/                    # Architecture Decision Records
+│   │   └── 0001-decision.md
+│   └── (domain-specific docs)
+│
+├── rust/
+│   ├── Cargo.toml              # Workspace
+│   ├── src/
+│   │   ├── main.rs
+│   │   ├── app.rs
+│   │   ├── events/
+│   │   ├── ui/
+│   │   └── (domain modules)
+│   ├── tests/
+│   └── benches/
+│
+├── python/
+│   ├── requirements.txt
+│   ├── workers/
+│   ├── mcp_server/
+│   ├── training/
+│   └── tests/
+│
+├── docker/
+│   ├── docker-compose.yml
+│   ├── Dockerfile
+│   ├── Dockerfile.backend
+│   ├── Dockerfile.mcp
+│   ├── requirements-base.txt
+│   └── requirements-comfyui.txt
+│
+├── scripts/
+│   ├── setup_docker.sh
+│   ├── docker_health_check.sh
+│   ├── docker_cleanup.sh
+│   └── nu/
+│       ├── config.nu
+│       └── modules/
+│           ├── github.nu
+│           ├── dgx.nu
+│           └── (domain modules)
+│
+├── config/
+│   ├── mcp_config.yaml
+│   └── (service configs)
+│
+├── deploy/
+│   ├── prometheus/
+│   ├── grafana/
+│   └── dcgm/
+│
+├── models/
+│   ├── checkpoints/
+│   ├── loras/
+│   └── configs/
+│
+├── workflows/
+│   └── (workflow templates)
+│
+└── examples/
+    └── (example implementations)
+</code></pre>
+<h3 id="62-configuration-files">6.2 Configuration Files<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-configuration-files" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>docker/.env</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Ports</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">COMFYUI_PORT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8188</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">ZMQ_PORT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5555</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">GRAFANA_PORT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3000</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Paths</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">PROJECT_ROOT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/path/to/sparky</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">MODELS_DIR</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">./models</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">OUTPUTS_DIR</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">./outputs</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Credentials</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">GRAFANA_ADMIN_PASSWORD</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">admin</span></span></code></pre></figure>
+<p><strong>dgx-pixels.toml (project config)</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">api</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">port</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">8000</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">zmq_req_port</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">5555</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">zmq_pub_port</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">5556</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">comfyui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">url</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;http://localhost:8188&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">models</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">dir</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;models&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">observability</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">prometheus_url</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;http://localhost:9090&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">grafana_url</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;http://localhost:3000&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="7-cicd-and-testing-patterns">7. CI/CD AND TESTING PATTERNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-cicd-and-testing-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="71-test-driven-development-tdd">7.1 Test-Driven Development (TDD)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#71-test-driven-development-tdd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Pattern Used:</strong></p>
+<ol>
+<li>Write tests FIRST</li>
+<li>Implement code</li>
+<li>Run tests</li>
+<li>Code review with passing tests</li>
+</ol>
+<p><strong>Test Locations:</strong></p>
+<pre><code>rust/tests/integration_test.rs
+python/tests/test_*.py
+</code></pre>
+<p><strong>Test Command:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    # Run all tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test-coverage</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # With coverage report</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test-integration</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">       # Integration tests only</span></span></code></pre></figure>
+<h3 id="72-pre-commit-checks">7.2 Pre-commit Checks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#72-pre-commit-checks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Command Chain:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                     # Runs: fmt + lint + test</span></span></code></pre></figure>
+<p><strong>Components:</strong></p>
+<ol>
+<li>
+<p><strong>fmt</strong> - Code formatting</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> fmt</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --all</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # Rust</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ruff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> python/</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">      # Python</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>lint</strong> - Code quality checks</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clippy</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --workspace</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -D</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> warnings</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>test</strong> - Unit + integration tests</p>
+</li>
+</ol>
+<h3 id="73-github-workflow">7.3 GitHub Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#73-github-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Standard PR Workflow:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Create branch for workstream</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Implement with TDD</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (write tests, implement, run tests)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Run CI checks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Create PR</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement WS-01: Title&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Enable auto-merge</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh-auto-merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --merge-method</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> squash</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 6. Before next workstream, rebase</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh-rebase-main</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 7. Push with force-with-lease</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --force-with-lease</span></span></code></pre></figure>
+<hr/>
+<h2 id="8-monitoring--observability">8. MONITORING &amp; OBSERVABILITY<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-monitoring--observability" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="81-observability-stack">8.1 Observability Stack<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#81-observability-stack" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Components:</strong></p>
+<ol>
+<li><strong>DCGM Exporter</strong> - GPU metrics (NVIDIA Data Center GPU Manager)</li>
+<li><strong>Prometheus</strong> - Time-series metrics collection</li>
+<li><strong>Grafana</strong> - Visualization dashboards</li>
+<li><strong>Node Exporter</strong> - Host system metrics</li>
+</ol>
+<p><strong>Metrics Collected:</strong></p>
+<ul>
+<li>GPU utilization, memory, temperature</li>
+<li>Power draw, clock speeds</li>
+<li>Inference latency, throughput</li>
+<li>Queue depth, job completion rate</li>
+<li>Model accuracy metrics</li>
+</ul>
+<p><strong>URLs:</strong></p>
+<ul>
+<li>Prometheus: <a href="http://localhost:9090" class="external">http://localhost:9090<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Grafana: <a href="http://localhost:3000" class="external">http://localhost:3000<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> (admin/admin)</li>
+<li>DCGM metrics: <a href="http://localhost:9400/metrics" class="external">http://localhost:9400/metrics<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<hr/>
+<h2 id="9-agent-spawning-patterns">9. AGENT SPAWNING PATTERNS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-agent-spawning-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="91-agent-types-by-workstream">9.1 Agent Types by Workstream<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#91-agent-types-by-workstream" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Workstream Type</th><th>Agent Type</th><th>Rationale</th></tr></thead><tbody><tr><td>Infrastructure/DevOps</td><td><code>devops-automator</code></td><td>Docker, shell, CI/CD</td></tr><tr><td>Rust TUI</td><td><code>rust-pro</code></td><td>TUI frameworks, async</td></tr><tr><td>Python/AI</td><td><code>ai-engineer</code> + <code>python-pro</code></td><td>ML models, optimization</td></tr><tr><td>Integration</td><td><code>backend-architect</code></td><td>API design, protocols</td></tr></tbody></table></div>
+<h3 id="92-workstream-spawn-command">9.2 Workstream Spawn Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#92-workstream-spawn-command" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Standard Pattern:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {agent-type}</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {WS-XX}</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --spec</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/workstreams/{ws-name}/README.md</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --priority</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {P0-P3}</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --depends</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {WS-YY}</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> {completion-path}</span></span></code></pre></figure>
+<p><strong>Example:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> agent</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> devops-automator</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --workstream</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --spec</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/workstreams/ws01-hardware-baselines/README.md</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --priority</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> P0</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/workstreams/ws01-hardware-baselines/COMPLETION_SUMMARY.md</span></span></code></pre></figure>
+<h3 id="93-orchestrator-coordination">9.3 Orchestrator Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#93-orchestrator-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Meta Orchestrator</strong> monitors:</p>
+<ul>
+<li>Workstream completion status</li>
+<li>Cross-domain dependencies</li>
+<li>Blocker resolution</li>
+<li>Phase gate readiness</li>
+</ul>
+<p><strong>Status Update Format (JSON):</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;orchestrator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Model Orchestrator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;active&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;workstreams&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;WS-04&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;complete&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;completion_time&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2025-11-12T14:30:00Z&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;WS-05&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;in_progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;progress&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.65</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;eta&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;2025-11-13T10:00:00Z&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">},</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;WS-06&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;blocked&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">&quot;blocker&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;WS-05 incomplete&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  },</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;blockers&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;decisions_needed&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: []</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="10-key-takeaways-for-sparky">10. KEY TAKEAWAYS FOR SPARKY<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#10-key-takeaways-for-sparky" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="101-core-patterns-to-adopt">10.1 Core Patterns to Adopt<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#101-core-patterns-to-adopt" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Multi-tier Orchestration</strong></p>
+<ul>
+<li>One Meta Orchestrator</li>
+<li>Multiple Domain Orchestrators</li>
+<li>Sequential → Parallel progression</li>
+</ul>
+</li>
+<li>
+<p><strong>Workstream Structure</strong></p>
+<ul>
+<li>Standardized README format</li>
+<li>Clear acceptance criteria</li>
+<li>Tracked completion summaries</li>
+</ul>
+</li>
+<li>
+<p><strong>Automation Stack</strong></p>
+<ul>
+<li>Justfile for command orchestration</li>
+<li>Nushell modules for reusable automation</li>
+<li>GitHub CLI for workflow automation</li>
+</ul>
+</li>
+<li>
+<p><strong>Technology Stack</strong></p>
+<ul>
+<li>Rust for performance-critical components</li>
+<li>Python for ML/AI components</li>
+<li>ZeroMQ for inter-process communication</li>
+<li>Docker Compose for deployment</li>
+</ul>
+</li>
+<li>
+<p><strong>Phase Gates</strong></p>
+<ul>
+<li>Gating prevents out-of-order work</li>
+<li>Clear acceptance criteria</li>
+<li>Blocks dependent workstreams</li>
+</ul>
+</li>
+</ol>
+<h3 id="102-implementation-roadmap-for-sparky">10.2 Implementation Roadmap for Sparky<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#102-implementation-roadmap-for-sparky" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Week 1-2: Foundation</strong></p>
+<ul>
+<li>Copy orchestration structure from dgx-pixels</li>
+<li>Adapt workstream templates</li>
+<li>Set up initial Docker Compose</li>
+<li>Establish Justfile and Nushell modules</li>
+</ul>
+<p><strong>Week 3-4: Domain Orchestrators</strong></p>
+<ul>
+<li>Create domain orchestrator specs</li>
+<li>Populate workstream specs</li>
+<li>Establish automation scripts</li>
+<li>Set up GitHub workflows</li>
+</ul>
+<p><strong>Week 5+: Parallel Execution</strong></p>
+<ul>
+<li>Spawn agents for first workstreams</li>
+<li>Monitor progress via status reports</li>
+<li>Manage phase gates</li>
+<li>Escalate blockers as needed</li>
+</ul>
+<h3 id="103-file-reference-summary">10.3 File Reference Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#103-file-reference-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Must-Read Patterns:</strong></p>
+<ul>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/justfile</code> - Task automation</li>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/docs/orchestration/meta-orchestrator.md</code> - Orchestration strategy</li>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/docker/docker-compose.yml</code> - Service architecture</li>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/scripts/nu/config.nu</code> - Nushell utilities</li>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/scripts/nu/modules/github.nu</code> - GitHub automation</li>
+<li><code>/home/beengud/raibid-labs/dgx-pixels/CONTRIBUTING.md</code> - Development workflow</li>
+</ul>
+<hr/>
+<h2 id="11-critical-insights">11. CRITICAL INSIGHTS<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#11-critical-insights" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Orchestration is Hierarchical</strong></p>
+<ul>
+<li>Don’t try to manage 18 workstreams flat</li>
+<li>Group by domain (4 orchestrators)</li>
+<li>Each orchestrator owns 3-6 workstreams</li>
+</ul>
+</li>
+<li>
+<p><strong>Phase Gates Are Crucial</strong></p>
+<ul>
+<li>Prevent out-of-order work</li>
+<li>Save rework and integration pain</li>
+<li>Make dependencies explicit</li>
+</ul>
+</li>
+<li>
+<p><strong>Automation Saves Repetition</strong></p>
+<ul>
+<li>Nushell modules provide reusable functions</li>
+<li>Justfile provides task entry points</li>
+<li>GitHub automation reduces manual work</li>
+</ul>
+</li>
+<li>
+<p><strong>Docker is Non-Negotiable</strong></p>
+<ul>
+<li>Reproducible environments</li>
+<li>GPU access through NVIDIA Container Toolkit</li>
+<li>Network of interdependent services</li>
+</ul>
+</li>
+<li>
+<p><strong>ZeroMQ + MessagePack</strong> is Optimal for IPC</p>
+<ul>
+<li>Low latency (&lt;1ms)</li>
+<li>Binary format saves bandwidth</li>
+<li>REQ-REP + PUB-SUB patterns are flexible</li>
+</ul>
+</li>
+<li>
+<p><strong>Metrics-First Observability</strong></p>
+<ul>
+<li>DCGM for GPU metrics</li>
+<li>Prometheus for time-series</li>
+<li>Grafana for visualization</li>
+<li>Track from day 1, not at end</li>
+</ul>
+</li>
+<li>
+<p><strong>Test-Driven Development</strong></p>
+<ul>
+<li>Tests first, implementation second</li>
+<li>Prevents integration surprises</li>
+<li>CI gates enforce quality</li>
+</ul>
+</li>
+<li>
+<p><strong>Documentation as Code</strong></p>
+<ul>
+<li>Markdown in docs/ alongside code</li>
+<li>Workstream specs are contracts</li>
+<li>Architecture decisions in ADRs</li>
+</ul>
+</li>
+</ol>
+<hr/>
+<h2 id="appendix-quick-command-reference">APPENDIX: Quick Command Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#appendix-quick-command-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Project initialization</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> init</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                       # One-time setup</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> validate-gpu</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">              # Verify hardware</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Development</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tui</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                        # Run Rust TUI</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> backend</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    # Run Python backend</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> comfyui</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    # Run ComfyUI server</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Testing &amp; Quality</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                       # Run tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                         # Format, lint, test</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pre-commit</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                 # Pre-commit checks</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Docker</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> up</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            # Start all services</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> compose</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">          # Follow logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/docker_health_check.sh</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Git workflow</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">               # Create workstream branch</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Title&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                 # Create PR</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh-auto-merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --merge-method</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> squash</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh-rebase-main</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                  # Rebase onto main</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Monitoring</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gpu-status</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                 # One-time GPU stats</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gpu-watch</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                  # Live GPU monitoring</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hw-info</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    # All hardware info</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">      # Grafana</span></span></code></pre></figure></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-298" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-pixels-orchestration-and-parallelization-patterns---comprehensive-analysis" data-for="dgx-pixels-orchestration-and-parallelization-patterns---comprehensive-analysis">DGX-Pixels Orchestration and Parallelization Patterns - Comprehensive Analysis</a></li><li class="depth-1"><a href="#executive-summary" data-for="executive-summary">Executive Summary</a></li><li class="depth-1"><a href="#1-orchestrator-architecture" data-for="1-orchestrator-architecture">1. ORCHESTRATOR ARCHITECTURE</a></li><li class="depth-2"><a href="#11-multi-tier-orchestration-model" data-for="11-multi-tier-orchestration-model">1.1 Multi-Tier Orchestration Model</a></li><li class="depth-2"><a href="#12-orchestration-spawning-protocol" data-for="12-orchestration-spawning-protocol">1.2 Orchestration Spawning Protocol</a></li><li class="depth-1"><a href="#2-parallel-workstream-coordination" data-for="2-parallel-workstream-coordination">2. PARALLEL WORKSTREAM COORDINATION</a></li><li class="depth-2"><a href="#21-workstream-structure" data-for="21-workstream-structure">2.1 Workstream Structure</a></li><li class="depth-2"><a href="#22-workstream-plan-matrix" data-for="22-workstream-plan-matrix">2.2 Workstream Plan Matrix</a></li><li class="depth-2"><a href="#23-dependency-management" data-for="23-dependency-management">2.3 Dependency Management</a></li><li class="depth-1"><a href="#3-implementation-patterns" data-for="3-implementation-patterns">3. IMPLEMENTATION PATTERNS</a></li><li class="depth-2"><a href="#31-justfile-command-organization" data-for="31-justfile-command-organization">3.1 Justfile Command Organization</a></li><li class="depth-2"><a href="#32-nushell-automation-scripts" data-for="32-nushell-automation-scripts">3.2 Nushell Automation Scripts</a></li><li class="depth-2"><a href="#33-rust-project-structure" data-for="33-rust-project-structure">3.3 Rust Project Structure</a></li><li class="depth-2"><a href="#34-python-project-structure" data-for="34-python-project-structure">3.4 Python Project Structure</a></li><li class="depth-1"><a href="#4-docker--containerization-strategy" data-for="4-docker--containerization-strategy">4. DOCKER &amp; CONTAINERIZATION STRATEGY</a></li><li class="depth-2"><a href="#41-docker-compose-architecture" data-for="41-docker-compose-architecture">4.1 Docker Compose Architecture</a></li><li class="depth-2"><a href="#42-dockerfile-patterns" data-for="42-dockerfile-patterns">4.2 Dockerfile Patterns</a></li><li class="depth-2"><a href="#43-docker-setup-script" data-for="43-docker-setup-script">4.3 Docker Setup Script</a></li><li class="depth-1"><a href="#5-zeromq-ipc-patterns" data-for="5-zeromq-ipc-patterns">5. ZEROMQ IPC PATTERNS</a></li><li class="depth-2"><a href="#51-communication-architecture" data-for="51-communication-architecture">5.1 Communication Architecture</a></li><li class="depth-2"><a href="#52-message-patterns" data-for="52-message-patterns">5.2 Message Patterns</a></li><li class="depth-1"><a href="#6-project-structure-template" data-for="6-project-structure-template">6. PROJECT STRUCTURE TEMPLATE</a></li><li class="depth-2"><a href="#61-directory-organization" data-for="61-directory-organization">6.1 Directory Organization</a></li><li class="depth-2"><a href="#62-configuration-files" data-for="62-configuration-files">6.2 Configuration Files</a></li><li class="depth-1"><a href="#7-cicd-and-testing-patterns" data-for="7-cicd-and-testing-patterns">7. CI/CD AND TESTING PATTERNS</a></li><li class="depth-2"><a href="#71-test-driven-development-tdd" data-for="71-test-driven-development-tdd">7.1 Test-Driven Development (TDD)</a></li><li class="depth-2"><a href="#72-pre-commit-checks" data-for="72-pre-commit-checks">7.2 Pre-commit Checks</a></li><li class="depth-2"><a href="#73-github-workflow" data-for="73-github-workflow">7.3 GitHub Workflow</a></li><li class="depth-1"><a href="#8-monitoring--observability" data-for="8-monitoring--observability">8. MONITORING &amp; OBSERVABILITY</a></li><li class="depth-2"><a href="#81-observability-stack" data-for="81-observability-stack">8.1 Observability Stack</a></li><li class="depth-1"><a href="#9-agent-spawning-patterns" data-for="9-agent-spawning-patterns">9. AGENT SPAWNING PATTERNS</a></li><li class="depth-2"><a href="#91-agent-types-by-workstream" data-for="91-agent-types-by-workstream">9.1 Agent Types by Workstream</a></li><li class="depth-2"><a href="#92-workstream-spawn-command" data-for="92-workstream-spawn-command">9.2 Workstream Spawn Command</a></li><li class="depth-2"><a href="#93-orchestrator-coordination" data-for="93-orchestrator-coordination">9.3 Orchestrator Coordination</a></li><li class="depth-1"><a href="#10-key-takeaways-for-sparky" data-for="10-key-takeaways-for-sparky">10. KEY TAKEAWAYS FOR SPARKY</a></li><li class="depth-2"><a href="#101-core-patterns-to-adopt" data-for="101-core-patterns-to-adopt">10.1 Core Patterns to Adopt</a></li><li class="depth-2"><a href="#102-implementation-roadmap-for-sparky" data-for="102-implementation-roadmap-for-sparky">10.2 Implementation Roadmap for Sparky</a></li><li class="depth-2"><a href="#103-file-reference-summary" data-for="103-file-reference-summary">10.3 File Reference Summary</a></li><li class="depth-1"><a href="#11-critical-insights" data-for="11-critical-insights">11. CRITICAL INSIGHTS</a></li><li class="depth-1"><a href="#appendix-quick-command-reference" data-for="appendix-quick-command-reference">APPENDIX: Quick Command Reference</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../projects/sparky/README" class="internal">README</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

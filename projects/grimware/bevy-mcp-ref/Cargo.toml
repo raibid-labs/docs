@@ -1,0 +1,28 @@
+[package]
+name = "bevy-mcp-ref"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.16", features = ["dynamic_linking"] }
+bevy_brp_extras = { version = "0.1", optional = true }
+
+[features]
+default = []
+# Enable Bevy Remote Protocol for MCP integration
+brp = ["bevy/bevy_remote", "bevy_brp_extras"]
+
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[[example]]
+name = "basic_scene"
+path = "examples/basic_scene.rs"
+
+[[example]]
+name = "brp_demo"
+path = "examples/brp_demo.rs"
+required-features = ["brp"]

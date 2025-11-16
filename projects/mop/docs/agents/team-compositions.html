@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>team-compositions</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="team-compositions"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="team-compositions"/><meta name="twitter:description" content="Team Compositions This document defines standard team compositions for the MOP project based on raibid-labs patterns."/><meta property="og:description" content="Team Compositions This document defines standard team compositions for the MOP project based on raibid-labs patterns."/><meta property="og:image:alt" content="Team Compositions This document defines standard team compositions for the MOP project based on raibid-labs patterns."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/team-compositions"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/team-compositions"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Team Compositions This document defines standard team compositions for the MOP project based on raibid-labs patterns."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/team-compositions-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/team-compositions-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/docs/agents/team-compositions-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/docs/agents/team-compositions"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-379"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-379" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/docs/agents/">agents</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>team compositions</a></div></nav><h1 class="article-title">team-compositions</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.446Z">Nov 16, 2025</time><span>14 min read</span></p></div></div><article class="popover-hint"><h1 id="team-compositions">Team Compositions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#team-compositions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This document defines standard team compositions for the MOP project based on raibid-labs patterns. Teams are organized by workstream with clear roles, model distribution, and coordination strategies.</p>
+<hr/>
+<h2 id="core-principles">Core Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#core-principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="team-design-guidelines">Team Design Guidelines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#team-design-guidelines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Size</strong>: 4-8 agents per team for optimal coordination</li>
+<li><strong>Leadership</strong>: 1 Opus agent as team lead for strategic decisions</li>
+<li><strong>Workers</strong>: 3-7 Sonnet agents for implementation</li>
+<li><strong>Specialization</strong>: Clear domain boundaries between teams</li>
+<li><strong>Coordination</strong>: Mesh within teams, hierarchical between teams</li>
+</ol>
+<h3 id="model-distribution-rationale">Model Distribution Rationale<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#model-distribution-rationale" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Opus (15-20%)</strong>: Strategic thinking, architecture, complex decisions</li>
+<li><strong>Sonnet (80-85%)</strong>: Implementation, analysis, most development work</li>
+<li><strong>Haiku (0-5%)</strong>: Simple tasks only (rarely needed for MOP)</li>
+</ul>
+<h3 id="workstream-assignment">Workstream Assignment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-assignment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each team owns a specific workstream with:</p>
+<ul>
+<li>Dedicated directory ownership</li>
+<li>Clear boundaries</li>
+<li>Minimal cross-team dependencies</li>
+<li>Parallel execution capability</li>
+</ul>
+<hr/>
+<h2 id="standard-team-compositions">Standard Team Compositions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#standard-team-compositions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-platform-team-6-8-agents">1. Platform Team (6-8 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-platform-team-6-8-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mission</strong>: Kubernetes infrastructure, cluster management, base platform</p>
+<p><strong>Composition:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Team</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Platform</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6-8 agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Model Distribution</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1-2 Opus, 5-6 Sonnet</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Coordination</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Mesh within team, reports to hierarchical-coordinator</span></span></code></pre></figure>
+<p><strong>Agents:</strong></p>
+<ol>
+<li>
+<p><strong>kubernetes-architect</strong> (Opus) - Team Lead</p>
+<ul>
+<li>Role: Architecture decisions, technical leadership</li>
+<li>Responsibilities: Design cluster architecture, set standards, mentor team</li>
+<li>Time allocation: 30% design, 40% review, 30% coordination</li>
+</ul>
+</li>
+<li>
+<p><strong>cloud-architect</strong> (Opus) - Strategic advisor</p>
+<ul>
+<li>Role: Cloud strategy, cost optimization</li>
+<li>Responsibilities: Multi-cloud design, vendor decisions, cost analysis</li>
+<li>Time allocation: 40% strategy, 30% optimization, 30% compliance</li>
+</ul>
+</li>
+<li>
+<p><strong>platform-engineer-1</strong> (Sonnet) - Dev environment</p>
+<ul>
+<li>Role: Dev cluster implementation</li>
+<li>Responsibilities: Dev environment Kubernetes configs, dev Tanka setup</li>
+<li>File ownership: <code>environments/dev/kubernetes/</code>, <code>environments/dev/infrastructure/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>platform-engineer-2</strong> (Sonnet) - Staging environment</p>
+<ul>
+<li>Role: Staging cluster implementation</li>
+<li>Responsibilities: Staging environment configs, staging Tanka</li>
+<li>File ownership: <code>environments/staging/kubernetes/</code>, <code>environments/staging/infrastructure/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>platform-engineer-3</strong> (Sonnet) - Production environment</p>
+<ul>
+<li>Role: Production cluster implementation</li>
+<li>Responsibilities: Production configs, production Tanka, high-availability setup</li>
+<li>File ownership: <code>environments/prod/kubernetes/</code>, <code>environments/prod/infrastructure/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>terraform-specialist</strong> (Sonnet)</p>
+<ul>
+<li>Role: Infrastructure as code</li>
+<li>Responsibilities: Terraform modules, state management, cloud resources</li>
+<li>File ownership: <code>infrastructure/terraform/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>devops-troubleshooter</strong> (Sonnet) - Optional</p>
+<ul>
+<li>Role: Platform debugging and incident response</li>
+<li>Responsibilities: Debug cluster issues, performance tuning, incident handling</li>
+</ul>
+</li>
+<li>
+<p><strong>production-validator</strong> (Sonnet) - Optional</p>
+<ul>
+<li>Role: Production readiness validation</li>
+<li>Responsibilities: Validate prod changes, security audits, compliance checks</li>
+</ul>
+</li>
+</ol>
+<p><strong>Team Coordination:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Initialize platform team</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Kubernetes Architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Lead platform team deployment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Initialize mesh coordination for platform team</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Design cluster architecture for dev/staging/prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Define naming conventions and standards</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Assign tasks to platform engineers by environment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Review all platform changes before merge</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Store architecture decisions in memory: swarm/platform/architecture</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;kubernetes-architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Parallel environment implementation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 1 - Dev&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Implement dev environment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Get architecture from memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Create namespace: observability-dev</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Configure RBAC and network policies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Set resource quotas: 50 CPU, 128Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Deploy service mesh</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Post-edit hooks for each file</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Store completion in memory: swarm/platform/dev-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 2 - Staging&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Implement staging environment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Get architecture from memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Create namespace: observability-staging</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Configure RBAC and network policies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Set resource quotas: 75 CPU, 192Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Deploy service mesh</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Store completion in memory: swarm/platform/staging-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 3 - Prod&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Implement production environment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Get architecture and compliance requirements</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Create namespace: observability-prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Configure strict RBAC and network policies</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Set resource quotas: 100 CPU, 256Gi memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Deploy service mesh with mTLS</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Enable audit logging</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Store completion in memory: swarm/platform/prod-ready</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Terraform infrastructure</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Terraform Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Provision cloud infrastructure:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Create Terraform modules for Kubernetes clusters</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure networking and security groups</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set up storage classes and persistent volumes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Apply Terraform in dev → staging → prod order</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Store outputs in memory: swarm/platform/terraform-outputs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;terraform-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Kubernetes clusters in all environments</li>
+<li>Tanka library for infrastructure</li>
+<li>Network policies and RBAC</li>
+<li>Resource quotas and limits</li>
+<li>Documentation: architecture, runbooks</li>
+</ul>
+<hr/>
+<h3 id="2-observability-team-5-7-agents">2. Observability Team (5-7 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-observability-team-5-7-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mission</strong>: OBI experiments, Grafana stack, telemetry pipelines</p>
+<p><strong>Composition:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Team</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Observability</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5-7 agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Model Distribution</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1 Opus (optional), 5-6 Sonnet</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Coordination</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Mesh within team, reports to hierarchical-coordinator</span></span></code></pre></figure>
+<p><strong>Agents:</strong></p>
+<ol>
+<li>
+<p><strong>obi-specialist</strong> (Sonnet) - Team Lead</p>
+<ul>
+<li>Role: OBI experiment design and implementation</li>
+<li>Responsibilities: Lead observability team, design experiments, eBPF configuration</li>
+<li>File ownership: <code>charts/obi-*/</code>, <code>experiments/</code></li>
+<li>Time allocation: 20% leadership, 50% implementation, 30% review</li>
+</ul>
+</li>
+<li>
+<p><strong>grafana-specialist-1</strong> (Sonnet) - Metrics &amp; Traces</p>
+<ul>
+<li>Role: Tempo and Mimir configuration</li>
+<li>Responsibilities: Trace storage, metrics storage, long-term retention</li>
+<li>File ownership: <code>environments/*/observability/tempo/</code>, <code>environments/*/observability/mimir/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>grafana-specialist-2</strong> (Sonnet) - Logs &amp; Dashboards</p>
+<ul>
+<li>Role: Loki and Grafana configuration</li>
+<li>Responsibilities: Log aggregation, dashboard creation, data sources</li>
+<li>File ownership: <code>environments/*/observability/loki/</code>, <code>environments/*/observability/grafana/</code>, <code>dashboards/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>alloy-specialist</strong> (Sonnet)</p>
+<ul>
+<li>Role: Grafana Alloy pipeline configuration</li>
+<li>Responsibilities: OTLP receivers, data transformation, export targets</li>
+<li>File ownership: <code>lib/alloy/</code>, <code>environments/*/observability/alloy-config.river</code></li>
+</ul>
+</li>
+<li>
+<p><strong>experiment-designer</strong> (Sonnet)</p>
+<ul>
+<li>Role: Experiment methodology and analysis</li>
+<li>Responsibilities: Design experiments, define metrics, analyze results</li>
+<li>File ownership: <code>experiments/</code>, <code>docs/experiments/</code>, <code>analysis/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>performance-engineer</strong> (Sonnet) - Optional</p>
+<ul>
+<li>Role: Performance analysis and optimization</li>
+<li>Responsibilities: Benchmark experiments, optimize resource usage, capacity planning</li>
+</ul>
+</li>
+<li>
+<p><strong>system-architect</strong> (Opus) - Optional, Strategic advisor</p>
+<ul>
+<li>Role: Observability architecture</li>
+<li>Responsibilities: Design observability strategy, vendor decisions, long-term planning</li>
+</ul>
+</li>
+</ol>
+<p><strong>Team Coordination:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Initialize observability team</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist - Team Lead&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Lead observability team deployment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Wait for platform team completion (swarm/platform/*-ready)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Design OBI experiment framework</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Define metrics taxonomy and labels</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Assign tasks: Grafana specialists (parallel), Alloy specialist, Experiment designer</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Review all observability configurations</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Store framework in memory: swarm/observability/framework</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Parallel Grafana stack deployment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 1 - Metrics &amp; Traces&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Deploy Tempo and Mimir:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Check platform readiness and storage availability</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure Tempo with S3 backend for traces</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set trace retention: 7 days</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Configure Mimir with S3 backend for metrics</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Set metrics retention: 30 days</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Post-edit hooks for each component</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Store endpoints in memory: swarm/grafana/tempo-endpoint, swarm/grafana/mimir-endpoint</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 2 - Logs &amp; Dashboards&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Deploy Loki and Grafana:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Check platform readiness</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure Loki with S3 backend for logs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set log retention: 14 days</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Deploy Grafana with authentication</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Configure data sources: Tempo, Mimir, Loki</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Create dashboards: OBI Overview, Experiment Details, System Health</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Store Grafana URL in memory: swarm/grafana/grafana-url</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alloy Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Configure Alloy pipelines:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Wait for OBI and Grafana endpoints in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure OTLP receiver on port 4317</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set up metrics pipeline: OBI → transformation → Mimir</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Set up traces pipeline: OBI → sampling → Tempo</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Set up logs pipeline: cluster → filtering → Loki</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Add labels: cluster, namespace, experiment</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Deploy Alloy to all environments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Post-edit hooks, store pipeline status</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;alloy-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Experiment Designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Design initial experiments:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Pre-task: Review OBI framework from memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Design experiment: HTTP latency analysis</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Define metrics: p50, p95, p99 latency by endpoint</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Create experiment YAML with eBPF probes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Design experiment: Error rate tracking</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Define metrics: error_rate, error_count by service</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Document experiment methodology</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Store experiment specs in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;experiment-designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Optional performance analysis</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Performance Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Benchmark and optimize:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Test different sampling rates: 0.1%, 1%, 10%</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Measure resource overhead of experiments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Identify bottlenecks in pipeline</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Recommend optimal configurations</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Create performance dashboard</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Document findings</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;performance-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>OBI experiment framework</li>
+<li>Grafana stack deployment (Tempo, Mimir, Loki, Grafana)</li>
+<li>Alloy data pipelines</li>
+<li>Initial experiments (latency, errors)</li>
+<li>Dashboards and alerts</li>
+<li>Documentation: experiment guide, runbooks</li>
+</ul>
+<hr/>
+<h3 id="3-devops-team-4-5-agents">3. DevOps Team (4-5 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-devops-team-4-5-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mission</strong>: CI/CD, local development, automation, testing</p>
+<p><strong>Composition:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Team</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">DevOps</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4-5 agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Model Distribution</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4-5 Sonnet (no Opus needed for tactical work)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Coordination</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Mesh within team</span></span></code></pre></figure>
+<p><strong>Agents:</strong></p>
+<ol>
+<li>
+<p><strong>devops-automation</strong> (Sonnet) - Team Lead</p>
+<ul>
+<li>Role: Development workflow and automation</li>
+<li>Responsibilities: Tiltfile, Justfile, local dev environment</li>
+<li>File ownership: <code>Tiltfile</code>, <code>justfile</code>, <code>scripts/automation/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>cicd-engineer</strong> (Sonnet)</p>
+<ul>
+<li>Role: CI/CD pipelines</li>
+<li>Responsibilities: GitHub Actions, build automation, deployment pipelines</li>
+<li>File ownership: <code>.github/workflows/</code>, <code>scripts/ci/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>tester</strong> (Sonnet)</p>
+<ul>
+<li>Role: Testing and validation</li>
+<li>Responsibilities: Unit tests, integration tests, load tests</li>
+<li>File ownership: <code>tests/</code></li>
+</ul>
+</li>
+<li>
+<p><strong>production-validator</strong> (Sonnet)</p>
+<ul>
+<li>Role: Production readiness</li>
+<li>Responsibilities: Validate prod changes, security audits, compliance</li>
+<li>Time allocation: 60% validation, 40% auditing</li>
+</ul>
+</li>
+<li>
+<p><strong>devops-troubleshooter</strong> (Sonnet) - Optional</p>
+<ul>
+<li>Role: Incident response and debugging</li>
+<li>Responsibilities: Debug production issues, performance tuning, on-call</li>
+</ul>
+</li>
+</ol>
+<p><strong>Team Coordination:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DevOps team can work mostly in parallel</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Automation - Team Lead&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Set up local development environment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Create Tiltfile with all services: OBI, Grafana, Alloy</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Configure hot reload for configs</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Set up port forwards: Grafana (3000), Tempo (3200)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Create Justfile targets: dev-up, dev-down, dev-logs, dev-test</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Add scripts for common tasks</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Test full environment startup</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Document development workflow</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Store dev environment info in memory</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;CI/CD Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Build CI/CD pipelines:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Create GitHub Actions workflow for PR validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Add jobs: lint, test, build, validate-k8s</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Create deployment workflow: dev → staging → prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Add auto-deploy to dev on merge to main</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Require manual approval for prod deploys</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Configure secrets and credentials</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Test pipelines end-to-end</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Document CI/CD process</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;cicd-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Create comprehensive test suite:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Write unit tests for OBI experiment validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Create integration test: deploy experiment to test cluster</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Write load test: 1000 req/s, verify metrics collected</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Test Grafana dashboard rendering</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Test Alloy pipeline data flow</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Validate all environments: dev, staging, prod</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Achieve 80%+ test coverage</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Document testing strategy</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Production Validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Validate production readiness:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Check security: RBAC, network policies, secrets management</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Validate resource limits: CPU, memory, storage</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Check high availability: replicas, pod disruption budgets</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Audit configurations for best practices</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Validate backup and disaster recovery</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Check compliance requirements</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Approve or flag production changes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Document validation criteria</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;production-validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>Local development environment (Tilt)</li>
+<li>CI/CD pipelines (GitHub Actions)</li>
+<li>Comprehensive test suite</li>
+<li>Production validation criteria</li>
+<li>Documentation: dev setup, CI/CD guide, testing guide</li>
+</ul>
+<hr/>
+<h3 id="4-full-platform-team-12-15-agents">4. Full Platform Team (12-15 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-full-platform-team-12-15-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Mission</strong>: Complete platform deployment with all workstreams</p>
+<p><strong>Composition:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Team</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Full Platform</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">12-15 agents</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Model Distribution</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2-3 Opus, 10-12 Sonnet</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Coordination</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Hierarchical (coordinator → team leads → workers)</span></span></code></pre></figure>
+<p><strong>Structure:</strong></p>
+<ul>
+<li>1 hierarchical-coordinator (Opus)</li>
+<li>Platform Team (6-8 agents)</li>
+<li>Observability Team (5-7 agents)</li>
+<li>DevOps Team (4-5 agents)</li>
+</ul>
+<p><strong>Coordination:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Top-level coordination</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Hierarchical Coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Coordinate full platform deployment:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1. Initialize swarm with hierarchical topology, max 15 agents</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2. Spawn team leads: Kubernetes Architect, OBI Specialist, DevOps Automation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">3. Define workstreams:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">   - Platform: Infrastructure and Kubernetes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">   - Observability: OBI, Grafana, experiments</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">   - DevOps: CI/CD, testing, validation</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4. Set dependencies:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">   - Observability depends on Platform</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">   - DevOps can run parallel to others</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">5. Monitor progress across all teams</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">6. Resolve inter-team dependencies and conflicts</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">7. Generate status reports every 30 minutes</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">8. Coordinate final integration testing</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical-coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Team leads coordinate their teams (as shown in previous sections)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// All team members work in parallel within their workstreams</span></span></code></pre></figure>
+<p><strong>Execution Waves:</strong></p>
+<p><strong>Wave 1: Platform Foundation (Parallel)</strong></p>
+<ul>
+<li>All platform engineers work simultaneously on different environments</li>
+<li>Terraform specialist provisions cloud resources</li>
+<li>Target: Complete in 45-60 minutes</li>
+</ul>
+<p><strong>Wave 2: Observability Stack (Parallel, depends on Wave 1)</strong></p>
+<ul>
+<li>All Grafana specialists deploy stack components simultaneously</li>
+<li>OBI specialist designs experiments</li>
+<li>Alloy specialist configures pipelines</li>
+<li>Target: Complete in 30-45 minutes</li>
+</ul>
+<p><strong>Wave 3: DevOps &amp; Validation (Parallel, can start with Wave 1)</strong></p>
+<ul>
+<li>DevOps automation sets up Tiltfile</li>
+<li>CI/CD engineer builds pipelines</li>
+<li>Tester creates test suites</li>
+<li>Target: Complete in 30-45 minutes</li>
+</ul>
+<p><strong>Wave 4: Integration (Sequential)</strong></p>
+<ul>
+<li>Production validator checks all environments</li>
+<li>Tester runs integration tests</li>
+<li>All teams coordinate for final validation</li>
+<li>Target: Complete in 15-30 minutes</li>
+</ul>
+<p><strong>Total Time: 2-3 hours</strong> (vs 8-12 hours sequential)</p>
+<hr/>
+<h2 id="team-coordination-patterns">Team Coordination Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#team-coordination-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pattern-1-mesh-coordination-within-teams">Pattern 1: Mesh Coordination (Within Teams)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-1-mesh-coordination-within-teams" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Best for:</strong> Teams of 4-8 agents working on related tasks</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Peer-to-peer communication</li>
+<li>Shared memory for coordination</li>
+<li>No strict hierarchy</li>
+<li>Fast decision making</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Each team member has equal status</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__swarm_init</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">topology</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;mesh&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">maxAgents</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">8</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Agents coordinate through memory</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__memory_usage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  action</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;store&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  key</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;swarm/team/shared-decision&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">  value</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">JSON</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">stringify</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">({ </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">decision</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;use S3 for storage&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> })</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="pattern-2-hierarchical-coordination-between-teams">Pattern 2: Hierarchical Coordination (Between Teams)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-2-hierarchical-coordination-between-teams" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Best for:</strong> Multiple teams (12+ agents) with dependencies</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Clear leadership chain</li>
+<li>Team leads coordinate with coordinator</li>
+<li>Structured decision flow</li>
+<li>Scalable to 50+ agents</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Top-level coordinator</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__swarm_init</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">topology</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">maxAgents</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Coordinator spawns team leads</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__agent_spawn</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;kubernetes-architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">role</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;team-lead&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__agent_spawn</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">role</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;team-lead&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Team leads spawn their team members</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Coordinator manages dependencies between teams</span></span></code></pre></figure>
+<h3 id="pattern-3-adaptive-coordination-dynamic">Pattern 3: Adaptive Coordination (Dynamic)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pattern-3-adaptive-coordination-dynamic" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Best for:</strong> Complex projects with changing requirements</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>Topology changes based on needs</li>
+<li>Agents join/leave dynamically</li>
+<li>Self-organizing teams</li>
+<li>Handles uncertainty well</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">mcp__claude</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">flow__swarm_init</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">topology</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;adaptive&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E06C75;">maxAgents</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">20</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// System adapts coordination based on:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// - Task complexity</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// - Agent availability</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// - Dependency patterns</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// - Performance metrics</span></span></code></pre></figure>
+<hr/>
+<h2 id="team-size-guidelines">Team Size Guidelines<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#team-size-guidelines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="small-team-4-5-agents">Small Team (4-5 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#small-team-4-5-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Use case:</strong> Single workstream, focused task</li>
+<li><strong>Example:</strong> Deploy OBI to dev environment</li>
+<li><strong>Coordination:</strong> Mesh</li>
+<li><strong>Time to complete:</strong> 30-60 minutes</li>
+</ul>
+<h3 id="medium-team-6-10-agents">Medium Team (6-10 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#medium-team-6-10-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Use case:</strong> Multiple related workstreams</li>
+<li><strong>Example:</strong> Full observability stack deployment</li>
+<li><strong>Coordination:</strong> Mesh with optional lead</li>
+<li><strong>Time to complete:</strong> 1-2 hours</li>
+</ul>
+<h3 id="large-team-12-20-agents">Large Team (12-20 agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#large-team-12-20-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Use case:</strong> Complete platform with all workstreams</li>
+<li><strong>Example:</strong> Multi-cluster MOP deployment</li>
+<li><strong>Coordination:</strong> Hierarchical</li>
+<li><strong>Time to complete:</strong> 2-4 hours</li>
+</ul>
+<h3 id="very-large-team-20-agents">Very Large Team (20+ agents)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#very-large-team-20-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Use case:</strong> Multi-project or complex migration</li>
+<li><strong>Example:</strong> Migrate entire infrastructure to new platform</li>
+<li><strong>Coordination:</strong> Hierarchical + Adaptive</li>
+<li><strong>Time to complete:</strong> 4-8 hours</li>
+</ul>
+<hr/>
+<h2 id="model-distribution-strategies">Model Distribution Strategies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#model-distribution-strategies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="budget-conscious-minimize-opus-usage">Budget-Conscious (Minimize Opus Usage)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#budget-conscious-minimize-opus-usage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Opus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1 agent (5-10%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Sonnet</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">9-19 agents (90-95%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Single Opus as overall architect/coordinator</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Cost</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">$$</span></span></code></pre></figure>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Cost-sensitive projects</li>
+<li>Implementation-heavy tasks</li>
+<li>Clear requirements</li>
+</ul>
+<h3 id="balanced-standard">Balanced (Standard)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#balanced-standard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Opus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">2-3 agents (15-20%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Sonnet</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">12-18 agents (80-85%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Opus for team leads and key architects</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Cost</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">$$$</span></span></code></pre></figure>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>Most MOP projects</li>
+<li>Balance of strategy and implementation</li>
+<li>Standard complexity</li>
+</ul>
+<h3 id="quality-focused-maximize-expertise">Quality-Focused (Maximize Expertise)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quality-focused-maximize-expertise" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Opus</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">4-5 agents (25-30%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Sonnet</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">10-15 agents (70-75%)</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Strategy</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Opus for all leads and complex decisions</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">Cost</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">$$$$</span></span></code></pre></figure>
+<p><strong>Best for:</strong></p>
+<ul>
+<li>High-stakes projects</li>
+<li>Complex architecture</li>
+<li>Quality-critical work</li>
+</ul>
+<hr/>
+<h2 id="dependency-management">Dependency Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependency-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="independent-teams-parallel">Independent Teams (Parallel)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#independent-teams-parallel" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>DevOps + Platform</strong> (can run simultaneously)</p>
+<ul>
+<li>DevOps doesn’t depend on Platform for initial work</li>
+<li>Both can work on their domains independently</li>
+</ul>
+<h3 id="sequential-dependencies">Sequential Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sequential-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Platform → Observability</strong></p>
+<ul>
+<li>Observability team MUST wait for Platform completion</li>
+<li>Use memory checks: <code>swarm/platform/dev-ready</code>, etc.</li>
+</ul>
+<p><strong>Observability → Testing</strong></p>
+<ul>
+<li>Integration tests MUST wait for Observability deployment</li>
+<li>Use memory checks: <code>swarm/observability/deployed</code></li>
+</ul>
+<h3 id="partial-dependencies">Partial Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#partial-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Platform (90% complete) → Observability (start)</strong></p>
+<ul>
+<li>Observability can start when namespace is ready</li>
+<li>Don’t wait for complete Platform finish</li>
+<li>Use granular memory keys: <code>swarm/platform/namespace-ready</code></li>
+</ul>
+<hr/>
+<h2 id="performance-metrics">Performance Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="expected-speed-improvements">Expected Speed Improvements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#expected-speed-improvements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Team Size</th><th>Sequential Time</th><th>Parallel Time</th><th>Speedup</th></tr></thead><tbody><tr><td>4 agents</td><td>2 hours</td><td>45 minutes</td><td>2.7x</td></tr><tr><td>8 agents</td><td>4 hours</td><td>1.5 hours</td><td>2.7x</td></tr><tr><td>12 agents</td><td>6 hours</td><td>2 hours</td><td>3.0x</td></tr><tr><td>15 agents</td><td>8 hours</td><td>2.5 hours</td><td>3.2x</td></tr></tbody></table></div>
+<h3 id="token-usage-optimization">Token Usage Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#token-usage-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Mesh coordination</strong>: 10-15% token overhead</li>
+<li><strong>Hierarchical coordination</strong>: 20-25% token overhead</li>
+<li><strong>Memory usage</strong>: 5% token overhead</li>
+<li><strong>Hook execution</strong>: 8% token overhead</li>
+</ul>
+<p><strong>Net result</strong>: Despite overhead, 2.8-4.4x faster execution</p>
+<hr/>
+<h2 id="best-practices">Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-team-composition">1. Team Composition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-team-composition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Start with small teams (4-5 agents)</li>
+<li>Scale up only when needed</li>
+<li>Keep related work in same team</li>
+<li>Use Opus strategically (leadership roles)</li>
+</ul>
+<h3 id="2-coordination">2. Coordination<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-coordination" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Mesh within teams (fast decisions)</li>
+<li>Hierarchical between teams (clear dependencies)</li>
+<li>Use memory for all coordination</li>
+<li>Execute hooks consistently</li>
+</ul>
+<h3 id="3-parallel-execution">3. Parallel Execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-parallel-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Identify independent workstreams</li>
+<li>Launch all agents in ONE message</li>
+<li>Use memory for dependency checks</li>
+<li>Monitor progress centrally</li>
+</ul>
+<h3 id="4-model-distribution">4. Model Distribution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-model-distribution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>1 Opus per team as lead (small teams)</li>
+<li>2-3 Opus for large deployments (team leads + coordinator)</li>
+<li>Sonnet for all implementation work</li>
+<li>Avoid Haiku (not needed for MOP complexity)</li>
+</ul>
+<h3 id="5-dependency-management">5. Dependency Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-dependency-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Map dependencies before starting</li>
+<li>Use granular memory keys</li>
+<li>Don’t over-serialize (partial dependencies OK)</li>
+<li>Have fallback strategies</li>
+</ul>
+<hr/>
+<h2 id="example-complete-platform-deployment">Example: Complete Platform Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-complete-platform-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="launch-command-single-message">Launch Command (Single Message)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#launch-command-single-message" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="javascript" data-theme="github-light one-dark-pro"><code data-language="javascript" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// ONE message spawns entire 15-agent team</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Hierarchical Coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Coordinate full deployment...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;hierarchical-coordinator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Platform Team (6 agents - parallel)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Kubernetes Architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Lead platform team...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;kubernetes-architect&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Implement dev environment...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Implement staging environment...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Platform Engineer 3&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Implement prod environment...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;platform-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Terraform Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Provision cloud resources...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;terraform-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Production Validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Validate all environments...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;production-validator&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Observability Team (5 agents - parallel, depends on platform)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;OBI Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Lead observability team...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;obi-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 1&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy Tempo and Mimir...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Grafana Specialist 2&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Deploy Loki and Grafana...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;grafana-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alloy Specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Configure pipelines...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;alloy-specialist&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Experiment Designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Design experiments...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;experiment-designer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// DevOps Team (4 agents - parallel, independent)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Setup local dev environment...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-automation&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;CI/CD Engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Build CI/CD pipelines...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;cicd-engineer&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Create test suite...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tester&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Task</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DevOps Troubleshooter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monitor and debug...&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;devops-troubleshooter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// All agents coordinate through hooks and memory</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Complete deployment in 2-3 hours (vs 8-12 hours sequential)</span></span></code></pre></figure>
+<hr/>
+<h2 id="summary">Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Effective team composition requires:</p>
+<ol>
+<li>✅ Right-sized teams (4-8 agents per team)</li>
+<li>✅ Strategic Opus usage (15-20% for leads)</li>
+<li>✅ Clear workstream boundaries</li>
+<li>✅ Appropriate coordination (mesh vs hierarchical)</li>
+<li>✅ Parallel execution where possible</li>
+<li>✅ Dependency management through memory</li>
+<li>✅ Consistent hook execution</li>
+</ol>
+<p>Follow these patterns to achieve <strong>2.8-4.4x speed improvements</strong> while maintaining quality and coordination.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-169" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#team-compositions" data-for="team-compositions">Team Compositions</a></li><li class="depth-1"><a href="#core-principles" data-for="core-principles">Core Principles</a></li><li class="depth-2"><a href="#team-design-guidelines" data-for="team-design-guidelines">Team Design Guidelines</a></li><li class="depth-2"><a href="#model-distribution-rationale" data-for="model-distribution-rationale">Model Distribution Rationale</a></li><li class="depth-2"><a href="#workstream-assignment" data-for="workstream-assignment">Workstream Assignment</a></li><li class="depth-1"><a href="#standard-team-compositions" data-for="standard-team-compositions">Standard Team Compositions</a></li><li class="depth-2"><a href="#1-platform-team-6-8-agents" data-for="1-platform-team-6-8-agents">1. Platform Team (6-8 agents)</a></li><li class="depth-2"><a href="#2-observability-team-5-7-agents" data-for="2-observability-team-5-7-agents">2. Observability Team (5-7 agents)</a></li><li class="depth-2"><a href="#3-devops-team-4-5-agents" data-for="3-devops-team-4-5-agents">3. DevOps Team (4-5 agents)</a></li><li class="depth-2"><a href="#4-full-platform-team-12-15-agents" data-for="4-full-platform-team-12-15-agents">4. Full Platform Team (12-15 agents)</a></li><li class="depth-1"><a href="#team-coordination-patterns" data-for="team-coordination-patterns">Team Coordination Patterns</a></li><li class="depth-2"><a href="#pattern-1-mesh-coordination-within-teams" data-for="pattern-1-mesh-coordination-within-teams">Pattern 1: Mesh Coordination (Within Teams)</a></li><li class="depth-2"><a href="#pattern-2-hierarchical-coordination-between-teams" data-for="pattern-2-hierarchical-coordination-between-teams">Pattern 2: Hierarchical Coordination (Between Teams)</a></li><li class="depth-2"><a href="#pattern-3-adaptive-coordination-dynamic" data-for="pattern-3-adaptive-coordination-dynamic">Pattern 3: Adaptive Coordination (Dynamic)</a></li><li class="depth-1"><a href="#team-size-guidelines" data-for="team-size-guidelines">Team Size Guidelines</a></li><li class="depth-2"><a href="#small-team-4-5-agents" data-for="small-team-4-5-agents">Small Team (4-5 agents)</a></li><li class="depth-2"><a href="#medium-team-6-10-agents" data-for="medium-team-6-10-agents">Medium Team (6-10 agents)</a></li><li class="depth-2"><a href="#large-team-12-20-agents" data-for="large-team-12-20-agents">Large Team (12-20 agents)</a></li><li class="depth-2"><a href="#very-large-team-20-agents" data-for="very-large-team-20-agents">Very Large Team (20+ agents)</a></li><li class="depth-1"><a href="#model-distribution-strategies" data-for="model-distribution-strategies">Model Distribution Strategies</a></li><li class="depth-2"><a href="#budget-conscious-minimize-opus-usage" data-for="budget-conscious-minimize-opus-usage">Budget-Conscious (Minimize Opus Usage)</a></li><li class="depth-2"><a href="#balanced-standard" data-for="balanced-standard">Balanced (Standard)</a></li><li class="depth-2"><a href="#quality-focused-maximize-expertise" data-for="quality-focused-maximize-expertise">Quality-Focused (Maximize Expertise)</a></li><li class="depth-1"><a href="#dependency-management" data-for="dependency-management">Dependency Management</a></li><li class="depth-2"><a href="#independent-teams-parallel" data-for="independent-teams-parallel">Independent Teams (Parallel)</a></li><li class="depth-2"><a href="#sequential-dependencies" data-for="sequential-dependencies">Sequential Dependencies</a></li><li class="depth-2"><a href="#partial-dependencies" data-for="partial-dependencies">Partial Dependencies</a></li><li class="depth-1"><a href="#performance-metrics" data-for="performance-metrics">Performance Metrics</a></li><li class="depth-2"><a href="#expected-speed-improvements" data-for="expected-speed-improvements">Expected Speed Improvements</a></li><li class="depth-2"><a href="#token-usage-optimization" data-for="token-usage-optimization">Token Usage Optimization</a></li><li class="depth-1"><a href="#best-practices" data-for="best-practices">Best Practices</a></li><li class="depth-2"><a href="#1-team-composition" data-for="1-team-composition">1. Team Composition</a></li><li class="depth-2"><a href="#2-coordination" data-for="2-coordination">2. Coordination</a></li><li class="depth-2"><a href="#3-parallel-execution" data-for="3-parallel-execution">3. Parallel Execution</a></li><li class="depth-2"><a href="#4-model-distribution" data-for="4-model-distribution">4. Model Distribution</a></li><li class="depth-2"><a href="#5-dependency-management" data-for="5-dependency-management">5. Dependency Management</a></li><li class="depth-1"><a href="#example-complete-platform-deployment" data-for="example-complete-platform-deployment">Example: Complete Platform Deployment</a></li><li class="depth-2"><a href="#launch-command-single-message" data-for="launch-command-single-message">Launch Command (Single Message)</a></li><li class="depth-1"><a href="#summary" data-for="summary">Summary</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

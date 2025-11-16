@@ -1,0 +1,77 @@
+---
+# CoreDNS Custom Configuration
+# Add custom DNS entries for raibid-ci services
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: dns
+    app.kubernetes.io/part-of: raibid-ci
+data:
+  # Custom DNS entries for raibid-ci services
+  raibid.server: |
+    # Custom DNS entries for raibid-ci
+    raibid.local:53 {
+      errors
+      cache 30
+      forward . /etc/resolv.conf
+      hosts {
+        # DGX Spark host
+        192.168.1.100 dgx-spark.local
+
+        # Gitea service (use cluster DNS)
+        # This is handled by Kubernetes service DNS
+        fallthrough
+      }
+    }
+
+  # Custom stub domains (if needed)
+  custom.server: |
+    # Example stub domain for custom services
+    # custom.local:53 {
+    #   errors
+    #   cache 30
+    #   forward . 192.168.1.1
+    # }
+
+---
+# CoreDNS ConfigMap patch
+# This extends the default CoreDNS configuration
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: coredns
+    app.kubernetes.io/component: dns
+    app.kubernetes.io/part-of: raibid-ci
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+            lameduck 5s
+        }
+        ready
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        }
+        prometheus :9153
+        forward . /etc/resolv.conf
+        cache 30
+        loop
+        reload
+        loadbalance
+        import /etc/coredns/custom/*.server
+    }
+
+    # Import custom server blocks
+    import /etc/coredns/custom/*.override

@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>ISSUE_ENRICHMENT_AGENT</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="ISSUE_ENRICHMENT_AGENT"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="ISSUE_ENRICHMENT_AGENT"/><meta name="twitter:description" content="Issue Enrichment Agent Guide Draft Issue Enrichment Workflow - Preparing Issues for Implementation Overview The Issue Enrichment Agent is a specialized agent that improves draft issues before implementation begins."/><meta property="og:description" content="Issue Enrichment Agent Guide Draft Issue Enrichment Workflow - Preparing Issues for Implementation Overview The Issue Enrichment Agent is a specialized agent that improves draft issues before implementation begins."/><meta property="og:image:alt" content="Issue Enrichment Agent Guide Draft Issue Enrichment Workflow - Preparing Issues for Implementation Overview The Issue Enrichment Agent is a specialized agent that improves draft issues before implementation begins."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Issue Enrichment Agent Guide Draft Issue Enrichment Workflow - Preparing Issues for Implementation Overview The Issue Enrichment Agent is a specialized agent that improves draft issues before implementation begins."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/raibid-ci/docs/ISSUE_ENRICHMENT_AGENT"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-420"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-420" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/raibid-ci/">raibid ci</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/raibid-ci/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>ISSUE_ENRICHMENT_AGENT</a></div></nav><h1 class="article-title">ISSUE_ENRICHMENT_AGENT</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:14.282Z">Nov 16, 2025</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="issue-enrichment-agent-guide">Issue Enrichment Agent Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-enrichment-agent-guide" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<blockquote>
+<p><strong>Draft Issue Enrichment Workflow - Preparing Issues for Implementation</strong></p>
+</blockquote>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The Issue Enrichment Agent is a specialized agent that improves draft issues before implementation begins. This agent iterates with the issue creator to ensure all requirements are clear, complete, and actionable for development agents.</p>
+<h2 id="when-to-use">When to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#when-to-use" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Enrichment agents are spawned automatically when:</strong></p>
+<ul>
+<li>An issue is created or edited with the <code>draft</code> or <code>status:draft</code> label</li>
+<li>The issue needs clarification, structure, or additional context</li>
+<li>The issue creator wants to iterate on requirements before implementation</li>
+</ul>
+<p><strong>Enrichment completes when:</strong></p>
+<ul>
+<li>The issue body has proper structure (Summary, Requirements, Acceptance Criteria)</li>
+<li>The issue has clear, testable acceptance criteria</li>
+<li>The draft label is removed by the enrichment agent</li>
+<li>The issue is ready for implementation (clarifying questions can be answered during development)</li>
+</ul>
+<h2 id="workflow">Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-draft-issue-created">1. Draft Issue Created<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-draft-issue-created" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>User creates issue with &quot;draft&quot; label
+    ↓
+Enrichment workflow detects draft state
+    ↓
+Posts enrichment agent spawn trigger
+    ↓
+Orchestrator spawns enrichment agent
+</code></pre>
+<h3 id="2-enrichment-agent-tasks">2. Enrichment Agent Tasks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-enrichment-agent-tasks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The enrichment agent should:</p>
+<h4 id="analyze-current-state">Analyze Current State<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#analyze-current-state" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li>Read the issue title and body using <code>gh issue view &lt;number></code></li>
+<li>Identify what’s clear vs. unclear</li>
+<li>Note missing sections or information</li>
+<li>Assess completeness for implementation</li>
+</ul>
+<h4 id="update-issue-body-directly">Update Issue Body Directly<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#update-issue-body-directly" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>IMPORTANT</strong>: Update the issue body using <code>gh issue edit &lt;number> --body &quot;...&quot;</code> to add structure:</p>
+<ul>
+<li>This ensures implementation agents see the enriched version in the issue description</li>
+<li>Use comments for clarifying questions and progress updates (supplementary)</li>
+<li>The issue body is the source of truth - must contain all requirements and acceptance criteria</li>
+</ul>
+<h4 id="identify-gaps">Identify Gaps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#identify-gaps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Requirements</strong>: Are all functional requirements specified?</li>
+<li><strong>Acceptance Criteria</strong>: Are success conditions testable and specific?</li>
+<li><strong>Context</strong>: Is there sufficient background information?</li>
+<li><strong>Dependencies</strong>: Are dependencies on other work identified?</li>
+<li><strong>Scope</strong>: Is the scope well-defined and reasonable?</li>
+<li><strong>Technical Constraints</strong>: Are there platform/technology constraints?</li>
+</ul>
+<h4 id="ask-clarifying-questions">Ask Clarifying Questions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ask-clarifying-questions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Post comments with a <code>## Clarifying Questions</code> section:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Clarifying Questions</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Which authentication method should be used (OAuth, JWT, API keys)?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Should the API support pagination? If so, what page sizes?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Are there rate limiting requirements?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Should errors return detailed messages or generic ones for security?</span></span></code></pre></figure>
+<h4 id="suggest-structure">Suggest Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#suggest-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>If missing, recommend adding sections:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Summary</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">One-paragraph overview of the issue</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Requirements</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Specific functional requirement 1</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Specific functional requirement 2</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Non-functional requirement (performance, security, etc.)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Acceptance Criteria</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Specific, testable criterion 1</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Specific, testable criterion 2</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Tests pass</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Documentation updated</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Dependencies</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Depends on: #123, #456</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Blocks: #789</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Technical Notes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Platform constraints</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Technology choices</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Architecture considerations</span></span></code></pre></figure>
+<h4 id="enrich-content">Enrich Content<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enrich-content" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Expand vague requirements</strong> into specific ones</li>
+<li><strong>Suggest test scenarios</strong> to validate requirements</li>
+<li><strong>Identify edge cases</strong> that need handling</li>
+<li><strong>Recommend phasing</strong> if scope is large</li>
+<li><strong>Flag risks</strong> or complex areas</li>
+<li><strong>Suggest similar examples</strong> from the codebase</li>
+</ul>
+<h3 id="3-completion-and-transition">3. Completion and Transition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-completion-and-transition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Agent enriches issue body with structure
+    ↓
+Agent posts clarifying questions (optional, as comments)
+    ↓
+Agent removes draft label (enrichment complete)
+    ↓
+Normal implementation workflow begins
+    ↓
+If questions exist: Normal workflow adds &quot;waiting:answers&quot; label
+    ↓
+Development can proceed, or pause until questions answered
+</code></pre>
+<h2 id="best-practices">Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="do-">DO ✅<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#do-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Be Specific in Questions</strong></p>
+<ul>
+<li>❌ “How should this work?”</li>
+<li>✅ “Should the search be case-sensitive or case-insensitive?”</li>
+</ul>
+</li>
+<li>
+<p><strong>Suggest Concrete Options</strong></p>
+<ul>
+<li>❌ “What should the API look like?”</li>
+<li>✅ “Should the API follow REST principles with GET /users/{id} or use GraphQL?”</li>
+</ul>
+</li>
+<li>
+<p><strong>Identify Testability</strong></p>
+<ul>
+<li>Add specific, measurable acceptance criteria</li>
+<li>Suggest test scenarios for each requirement</li>
+<li>Note what success looks like</li>
+</ul>
+</li>
+<li>
+<p><strong>Flag Dependencies Early</strong></p>
+<ul>
+<li>Identify which other issues must complete first</li>
+<li>Note if existing code needs refactoring</li>
+<li>Highlight integration points</li>
+</ul>
+</li>
+<li>
+<p><strong>Maintain Issue Structure</strong></p>
+<ul>
+<li>Keep sections organized and clear</li>
+<li>Use consistent formatting</li>
+<li>Add links to relevant documentation</li>
+</ul>
+</li>
+<li>
+<p><strong>Iterate Gradually</strong></p>
+<ul>
+<li>Focus on biggest gaps first</li>
+<li>Don’t overwhelm with too many questions</li>
+<li>Build on previous answers</li>
+</ul>
+</li>
+</ol>
+<h3 id="dont-">DON’T ❌<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dont-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Don’t Start Implementation</strong></p>
+<ul>
+<li>This is preparation only, not coding</li>
+<li>Don’t write code or create PRs</li>
+<li>Don’t make architecture decisions unilaterally</li>
+</ul>
+</li>
+<li>
+<p><strong>Don’t Make Assumptions</strong></p>
+<ul>
+<li>If unclear, ask - don’t guess</li>
+<li>Don’t assume technology choices</li>
+<li>Don’t infer requirements not stated</li>
+</ul>
+</li>
+<li>
+<p><strong>Don’t Bikeshed</strong></p>
+<ul>
+<li>Focus on meaningful gaps, not style</li>
+<li>Don’t debate naming until implementation</li>
+<li>Keep it actionable, not theoretical</li>
+</ul>
+</li>
+<li>
+<p><strong>Don’t Block</strong></p>
+<ul>
+<li>If one area is unclear, move to others</li>
+<li>Don’t wait for all answers before enriching</li>
+<li>Make progress incrementally</li>
+</ul>
+</li>
+</ol>
+<h2 id="example-enrichment-session">Example Enrichment Session<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-enrichment-session" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="initial-draft-issue">Initial Draft Issue<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#initial-draft-issue" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Add User Authentication</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">We need authentication for the app.</span></span></code></pre></figure>
+<h3 id="after-enrichment-agent-iteration-1">After Enrichment Agent (Iteration 1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#after-enrichment-agent-iteration-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Agent Comment:</strong></p>
+<p>I’ve analyzed this draft issue and identified several areas that need clarification. I’ve updated the issue structure and added clarifying questions below.</p>
+<p><strong>Updated Issue Body:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Add User Authentication</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Summary</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Implement user authentication to secure the application and identify users.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Requirements (DRAFT - needs clarification)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> User login functionality</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Secure credential storage</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Session management</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [Need to clarify: logout, password reset, etc.]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Clarifying Questions</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Authentication Method**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Should we use OAuth 2.0, JWT tokens, session cookies, or another method?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Password Requirements**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Are there specific password complexity requirements (length, special characters, etc.)?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Session Duration**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: How long should user sessions last? Should there be &quot;remember me&quot; functionality?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Multi-Factor Auth**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Is two-factor authentication (2FA) required?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">5.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Social Login**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Should users be able to authenticate via Google, GitHub, or other providers?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">6.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Account Recovery**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: What's the process for password reset? Email-based, security questions, or admin reset?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">7.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Rate Limiting**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Should we implement rate limiting on login attempts to prevent brute force attacks?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">8.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Concurrent Sessions**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Can a user be logged in from multiple devices simultaneously?</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Acceptance Criteria (TO BE REFINED after questions answered)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Users can securely authenticate</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Credentials are encrypted at rest</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Sessions expire appropriately</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] All authentication tests pass</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Security best practices followed</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Technical Notes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Consider using bcrypt for password hashing</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Need to choose between stateful (server sessions) vs. stateless (JWT) approach</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> May impact database schema (users table)</span></span></code></pre></figure>
+<h3 id="after-user-answers">After User Answers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#after-user-answers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>User Comment:</strong></p>
+<pre><code>1. Use JWT tokens
+2. Minimum 8 characters, at least one number
+3. 24 hours, with refresh tokens for 30 days
+4. Not required for MVP
+5. Not needed for MVP
+6. Email-based reset with time-limited token
+7. Yes, 5 attempts per 15 minutes per IP
+8. Yes, multiple concurrent sessions allowed
+</code></pre>
+<h3 id="after-enrichment-agent-iteration-2">After Enrichment Agent (Iteration 2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#after-enrichment-agent-iteration-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Agent Comment:</strong></p>
+<p>Thank you for the answers! I’ve updated the issue with specific requirements based on your responses. The issue is now much clearer and ready for implementation once you remove the draft label.</p>
+<p><strong>Final Issue Body:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># Add User Authentication with JWT</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Summary</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Implement JWT-based authentication system with email/password login, password reset capability, and rate-limited login attempts.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Requirements</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> JWT token-based authentication (access + refresh tokens)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Email/password user registration</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Secure login with bcrypt password hashing</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Access tokens valid for 24 hours</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Refresh tokens valid for 30 days</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Email-based password reset with time-limited tokens</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Rate limiting: 5 login attempts per IP per 15 minutes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Support for multiple concurrent sessions per user</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Password Policy</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Minimum 8 characters</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Must contain at least one number</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Case-sensitive</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Stored using bcrypt with appropriate cost factor</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Acceptance Criteria</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Users can register with email/password</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Users can log in and receive JWT access + refresh tokens</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Tokens are validated on protected endpoints</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Access tokens expire after 24 hours</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Refresh tokens can generate new access tokens</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Refresh tokens expire after 30 days</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Password reset sends email with time-limited token (1 hour)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Password reset validates token and allows new password</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Rate limiting blocks IPs after 5 failed attempts for 15 minutes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Passwords are hashed with bcrypt (cost factor >= 10)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] All tests pass (unit + integration)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Security audit completed (no secrets in code, proper error handling)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] API documentation updated</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## API Endpoints (Suggested)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/register</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Create new user account</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/login</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Authenticate and receive tokens</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/refresh</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Get new access token using refresh token</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/logout</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Invalidate refresh token</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/password-reset-request</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Request password reset email</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> `</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">POST /auth/password-reset-confirm</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> - Submit new password with token</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Dependencies</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Depends on: User model/database schema (#XX if exists)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Depends on: Email service setup (#XX if exists)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Blocks: All features requiring authentication</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Technical Considerations</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Use standard JWT library (e.g., jsonwebtoken)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Store refresh tokens in database with user association</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Include user ID in JWT claims</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Use environment variables for JWT secret</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Implement middleware for protected routes</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Consider Redis for rate limiting storage</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Email templates needed for password reset</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Test Scenarios</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">1.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Happy Path**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Register → Login → Access protected resource → Refresh token → Logout</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">2.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Invalid Credentials**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Login with wrong password (should fail, count toward rate limit)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">3.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Expired Token**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Use expired access token (should reject, require refresh)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">4.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Concurrent Sessions**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Login from multiple devices (both should work)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">5.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Rate Limiting**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: 6 rapid failed logins (6th should be blocked)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">6.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Password Reset**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Request reset → Receive email → Submit new password → Login with new password</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">7.</span><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;"> **Invalid Reset Token**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Try reset with expired/invalid token (should fail)</span></span></code></pre></figure>
+<h3 id="enrichment-agent-removes-draft-label">Enrichment Agent Removes Draft Label<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#enrichment-agent-removes-draft-label" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Agent Final Comment:</strong></p>
+<p>Enrichment complete! I’ve updated the issue with:</p>
+<ul>
+<li>Clear requirements and acceptance criteria</li>
+<li>Technical approach and implementation notes</li>
+<li>Clarifying questions for refinement (optional - can be answered during implementation)</li>
+</ul>
+<p>Removing draft label - issue is ready for implementation agent.</p>
+<p><strong>Result:</strong> Issue is now ready for implementation! The normal orchestrator workflow will:</p>
+<ul>
+<li>Detect clarifying questions (if any) and add “waiting:answers” label</li>
+<li>Or spawn development agent immediately if no questions</li>
+<li>Development agent will implement following TDD workflow</li>
+</ul>
+<h2 id="agent-response-examples">Agent Response Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-response-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="good-clarifying-question">Good Clarifying Question<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#good-clarifying-question" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Clarifying Question: API Pagination</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">I noticed the requirement mentions &quot;list all users&quot; but no pagination details.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Question**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: Should the API support pagination for the user list endpoint?</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Options to consider**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> A) Cursor-based pagination (recommended for large datasets)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> B) Offset-based pagination (simpler, may have performance issues at high offsets)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> C) No pagination (return all users - only suitable for small user bases)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Additional questions if pagination is needed**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> What should the default page size be?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> What should the maximum page size be?</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Should the response include pagination metadata (total count, has_more, etc.)?</span></span></code></pre></figure>
+<h3 id="good-enrichment-suggestion">Good Enrichment Suggestion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#good-enrichment-suggestion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">I've reviewed the acceptance criteria and notice they're quite high-level. Here are more specific, testable criteria I recommend:</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Current**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: &quot;Search should work correctly&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**Suggested Replacement**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search returns exact matches first, then partial matches</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search is case-insensitive</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search handles special characters without errors</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search returns results within 200ms for datasets up to 10,000 items</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Empty search query returns all items (up to pagination limit)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search with no matches returns empty array (not error)</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Search terms are trimmed of leading/trailing whitespace</span></span></code></pre></figure>
+<h2 id="labels-used">Labels Used<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#labels-used" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong><code>draft</code></strong> or <strong><code>status:draft</code></strong> - Issue is in draft state for enrichment</li>
+<li><strong><code>enrichment:active</code></strong> - Enrichment agent is currently working on this issue</li>
+<li><strong><code>waiting:answers</code></strong> - Clarifying questions need answering (added by enrichment agent)</li>
+</ul>
+<h2 id="transition-to-implementation">Transition to Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transition-to-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When the issue creator removes the <code>draft</code> label:</p>
+<ol>
+<li><strong>Enrichment workflow</strong> posts completion message</li>
+<li><strong>Enrichment label</strong> (<code>enrichment:active</code>) is removed</li>
+<li><strong>Normal issue workflow</strong> checks for remaining clarifying questions</li>
+<li><strong>If no questions or all answered</strong>: Development agent is spawned</li>
+<li><strong>If questions remain</strong>: Issue enters <code>waiting:answers</code> state until answered</li>
+</ol>
+<h2 id="tips-for-issue-creators">Tips for Issue Creators<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tips-for-issue-creators" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="to-get-best-results">To Get Best Results<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#to-get-best-results" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Start with what you know</strong> - Don’t wait for perfect clarity</li>
+<li><strong>Use draft label early</strong> - Get enrichment help before coding starts</li>
+<li><strong>Respond to questions promptly</strong> - Faster iteration means faster delivery</li>
+<li><strong>Provide context</strong> - Link to similar features, explain the “why” not just “what”</li>
+<li><strong>Remove draft when satisfied</strong> - Trust that enrichment is complete enough</li>
+</ol>
+<h3 id="example-starting-template">Example Starting Template<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#example-starting-template" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;"># [Feature Name]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-light-font-weight:bold;--shiki-dark:#D19A66;--shiki-dark-font-weight:inherit;">**draft**</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (add this label)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## What I Want</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Brief description of the feature or fix needed.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Why</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">Business value or problem this solves.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Ideas/Constraints</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Any initial thoughts</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Technical constraints known</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Similar features to reference</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[Let enrichment agent fill in the rest!]</span></span></code></pre></figure>
+<h2 id="orchestrator-integration">Orchestrator Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#orchestrator-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>The enrichment agent system integrates with the orchestrator via:</p>
+<ul>
+<li><strong>Workflow</strong>: <code>.github/workflows/orchestrator-draft-enrichment.yml</code></li>
+<li><strong>Detection Script</strong>: <code>.github/scripts/check-draft-status.sh</code></li>
+<li><strong>Spawn Trigger</strong>: Comment containing <code>ORCHESTRATOR-SPAWN-ENRICHMENT-AGENT</code></li>
+<li><strong>State Marker</strong>: Comment containing <code>ENRICHMENT-AGENT-ACTIVE</code></li>
+</ul>
+<p>The orchestrator will:</p>
+<ol>
+<li>Detect draft-labeled issues</li>
+<li>Spawn enrichment agent</li>
+<li>Skip normal implementation workflow while draft</li>
+<li>Transition to implementation workflow when draft removed</li>
+</ol>
+<h2 id="related-documentation">Related Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#related-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>Main Orchestrator Guide</strong>: <a href="../../.././ORCHESTRATOR" class="internal alias" data-slug="ORCHESTRATOR">ORCHESTRATOR.md</a></li>
+<li><strong>Event-Driven Architecture</strong>: <a href="../../../architecture/event-driven-orchestration" class="internal alias" data-slug="architecture/event-driven-orchestration">event-driven-orchestration.md</a></li>
+<li><strong>Agent Patterns</strong>: <a href="../../../projects/raibid-ci/docs/ORCHESTRATOR_AGENT" class="internal alias" data-slug="projects/raibid-ci/docs/ORCHESTRATOR_AGENT">ORCHESTRATOR_AGENT.md</a></li>
+</ul>
+<hr/>
+<p><strong>Status</strong>: Active
+<strong>Version</strong>: 1.0
+<strong>Last Updated</strong>: 2025-10-30</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-210" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#issue-enrichment-agent-guide" data-for="issue-enrichment-agent-guide">Issue Enrichment Agent Guide</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#when-to-use" data-for="when-to-use">When to Use</a></li><li class="depth-1"><a href="#workflow" data-for="workflow">Workflow</a></li><li class="depth-2"><a href="#1-draft-issue-created" data-for="1-draft-issue-created">1. Draft Issue Created</a></li><li class="depth-2"><a href="#2-enrichment-agent-tasks" data-for="2-enrichment-agent-tasks">2. Enrichment Agent Tasks</a></li><li class="depth-2"><a href="#3-completion-and-transition" data-for="3-completion-and-transition">3. Completion and Transition</a></li><li class="depth-1"><a href="#best-practices" data-for="best-practices">Best Practices</a></li><li class="depth-2"><a href="#do-" data-for="do-">DO ✅</a></li><li class="depth-2"><a href="#dont-" data-for="dont-">DON’T ❌</a></li><li class="depth-1"><a href="#example-enrichment-session" data-for="example-enrichment-session">Example Enrichment Session</a></li><li class="depth-2"><a href="#initial-draft-issue" data-for="initial-draft-issue">Initial Draft Issue</a></li><li class="depth-2"><a href="#after-enrichment-agent-iteration-1" data-for="after-enrichment-agent-iteration-1">After Enrichment Agent (Iteration 1)</a></li><li class="depth-2"><a href="#after-user-answers" data-for="after-user-answers">After User Answers</a></li><li class="depth-2"><a href="#after-enrichment-agent-iteration-2" data-for="after-enrichment-agent-iteration-2">After Enrichment Agent (Iteration 2)</a></li><li class="depth-2"><a href="#enrichment-agent-removes-draft-label" data-for="enrichment-agent-removes-draft-label">Enrichment Agent Removes Draft Label</a></li><li class="depth-1"><a href="#agent-response-examples" data-for="agent-response-examples">Agent Response Examples</a></li><li class="depth-2"><a href="#good-clarifying-question" data-for="good-clarifying-question">Good Clarifying Question</a></li><li class="depth-2"><a href="#good-enrichment-suggestion" data-for="good-enrichment-suggestion">Good Enrichment Suggestion</a></li><li class="depth-1"><a href="#labels-used" data-for="labels-used">Labels Used</a></li><li class="depth-1"><a href="#transition-to-implementation" data-for="transition-to-implementation">Transition to Implementation</a></li><li class="depth-1"><a href="#tips-for-issue-creators" data-for="tips-for-issue-creators">Tips for Issue Creators</a></li><li class="depth-2"><a href="#to-get-best-results" data-for="to-get-best-results">To Get Best Results</a></li><li class="depth-2"><a href="#example-starting-template" data-for="example-starting-template">Example Starting Template</a></li><li class="depth-1"><a href="#orchestrator-integration" data-for="orchestrator-integration">Orchestrator Integration</a></li><li class="depth-1"><a href="#related-documentation" data-for="related-documentation">Related Documentation</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

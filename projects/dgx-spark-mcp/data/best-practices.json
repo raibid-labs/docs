@@ -1,0 +1,174 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-14",
+  "categories": {
+    "executor": {
+      "memory": {
+        "min": "4g",
+        "max": "64g",
+        "recommended": "8-32g",
+        "rationale": "Large executors (>64GB) cause GC issues, small executors (<4GB) cause spilling"
+      },
+      "cores": {
+        "min": 1,
+        "max": 8,
+        "recommended": "4-6",
+        "rationale": "4-6 cores per executor provides optimal HDFS throughput"
+      },
+      "instances": {
+        "min": 2,
+        "recommended": "4-8",
+        "rationale": "Multiple executors improve fault tolerance and resource utilization"
+      }
+    },
+    "driver": {
+      "memory": {
+        "min": "1g",
+        "max": "64g",
+        "recommended": "1-2x executor memory",
+        "rationale": "Driver collects results and coordinates executors"
+      },
+      "cores": {
+        "recommended": "2-4",
+        "rationale": "Driver is typically not CPU intensive"
+      }
+    },
+    "shuffle": {
+      "partitions": {
+        "formula": "2-3x total cores",
+        "min": "total_cores",
+        "recommended": "total_cores * 3",
+        "rationale": "Too few partitions underutilize cluster, too many create overhead"
+      },
+      "compression": {
+        "recommended": true,
+        "rationale": "Reduces I/O and network traffic"
+      }
+    },
+    "memory": {
+      "fraction": {
+        "min": 0.4,
+        "max": 0.8,
+        "recommended": 0.6,
+        "rationale": "Balance between execution and storage memory"
+      },
+      "storageFraction": {
+        "min": 0.3,
+        "max": 0.7,
+        "recommended": 0.5,
+        "rationale": "Fraction of execution memory for caching"
+      },
+      "offHeap": {
+        "recommended": true,
+        "size": "10-20% of executor memory",
+        "rationale": "Reduces GC pressure for large allocations"
+      }
+    },
+    "gpu": {
+      "rapids": {
+        "recommended": true,
+        "rationale": "RAPIDS provides GPU-accelerated DataFrame operations"
+      },
+      "memoryFraction": {
+        "recommended": 0.9,
+        "rationale": "GPUs have faster memory, can use higher fraction"
+      },
+      "pooling": {
+        "recommended": true,
+        "mode": "ARENA",
+        "rationale": "Reduces GPU memory allocation overhead"
+      }
+    },
+    "optimization": {
+      "serialization": {
+        "recommended": "Kryo",
+        "rationale": "Kryo is 10x faster than Java serialization"
+      },
+      "adaptiveExecution": {
+        "recommended": true,
+        "rationale": "Runtime optimizations for shuffles, joins, and skew"
+      },
+      "speculation": {
+        "recommended": true,
+        "rationale": "Mitigates slow tasks and stragglers"
+      }
+    }
+  },
+  "antiPatterns": [
+    {
+      "name": "Giant Executor",
+      "description": "Executors with >64GB memory",
+      "impact": "Severe GC overhead and poor performance",
+      "fix": "Use multiple smaller executors"
+    },
+    {
+      "name": "Tiny Executor",
+      "description": "Executors with <2GB memory",
+      "impact": "Frequent spilling and poor performance",
+      "fix": "Increase executor memory to at least 4-8GB"
+    },
+    {
+      "name": "Fat Executor",
+      "description": "Executors with >8 cores",
+      "impact": "Reduced HDFS throughput and GC issues",
+      "fix": "Use 4-6 cores per executor"
+    },
+    {
+      "name": "Insufficient Shuffle Partitions",
+      "description": "Shuffle partitions < 2x cores",
+      "impact": "Underutilized parallelism",
+      "fix": "Set shuffle partitions to 2-3x total cores"
+    },
+    {
+      "name": "Java Serialization",
+      "description": "Using default Java serialization",
+      "impact": "10x slower serialization",
+      "fix": "Use Kryo serialization"
+    },
+    {
+      "name": "No Compression",
+      "description": "Shuffle compression disabled",
+      "impact": "High I/O and network usage",
+      "fix": "Enable shuffle compression"
+    }
+  ],
+  "workloadSpecific": {
+    "ml-training": {
+      "gpu": {
+        "recommended": true,
+        "rationale": "3-10x speedup for training"
+      },
+      "offHeap": {
+        "recommended": true,
+        "rationale": "Iterative algorithms benefit from reduced GC"
+      },
+      "caching": {
+        "recommended": true,
+        "rationale": "Avoid re-reading training data"
+      }
+    },
+    "analytics": {
+      "adaptiveExecution": {
+        "skewJoin": true,
+        "rationale": "Handle skewed dimension tables"
+      },
+      "broadcastThreshold": "10-20mb",
+      "rationale": "Optimize small table joins"
+    },
+    "streaming": {
+      "dynamicAllocation": {
+        "recommended": false,
+        "rationale": "Predictable resources for stable latency"
+      },
+      "checkpointing": {
+        "recommended": true,
+        "rationale": "Fault tolerance for stateful operations"
+      }
+    },
+    "etl": {
+      "fileFormat": "Parquet",
+      "compression": "Snappy",
+      "rationale": "Efficient storage and query performance"
+    }
+  }
+}

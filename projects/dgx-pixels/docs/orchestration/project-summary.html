@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>project-summary</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="project-summary"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="project-summary"/><meta name="twitter:description" content="DGX-Pixels Project Orchestration Summary Document Version: 1.0 Created: 2025-11-10 Author: Claude Code (based on raibid-labs patterns) Status: Ready for Review Executive Summary DGX-Pixels has been decomposed into 18 workstreams organized under 4 domain orchestrators, managed by a Meta Orchestrator."/><meta property="og:description" content="DGX-Pixels Project Orchestration Summary Document Version: 1.0 Created: 2025-11-10 Author: Claude Code (based on raibid-labs patterns) Status: Ready for Review Executive Summary DGX-Pixels has been decomposed into 18 workstreams organized under 4 domain orchestrators, managed by a Meta Orchestrator."/><meta property="og:image:alt" content="DGX-Pixels Project Orchestration Summary Document Version: 1.0 Created: 2025-11-10 Author: Claude Code (based on raibid-labs patterns) Status: Ready for Review Executive Summary DGX-Pixels has been decomposed into 18 workstreams organized under 4 domain orchestrators, managed by a Meta Orchestrator."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/orchestration/project-summary"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/orchestration/project-summary"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="DGX-Pixels Project Orchestration Summary Document Version: 1.0 Created: 2025-11-10 Author: Claude Code (based on raibid-labs patterns) Status: Ready for Review Executive Summary DGX-Pixels has been decomposed into 18 workstreams organized under 4 domain orchestrators, managed by a Meta Orchestrator."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/orchestration/project-summary-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/orchestration/project-summary-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/orchestration/project-summary-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-pixels/docs/orchestration/project-summary"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-193"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-193" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-pixels/">dgx pixels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-pixels/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/dgx-pixels/docs/orchestration/">orchestration</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>project summary</a></div></nav><h1 class="article-title">project-summary</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:06.770Z">Nov 16, 2025</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="dgx-pixels-project-orchestration-summary">DGX-Pixels Project Orchestration Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-pixels-project-orchestration-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Document Version</strong>: 1.0
+<strong>Created</strong>: 2025-11-10
+<strong>Author</strong>: Claude Code (based on raibid-labs patterns)
+<strong>Status</strong>: Ready for Review</p>
+<hr/>
+<h2 id="executive-summary">Executive Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#executive-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>DGX-Pixels has been decomposed into <strong>18 workstreams</strong> organized under <strong>4 domain orchestrators</strong>, managed by a <strong>Meta Orchestrator</strong>. This structure enables maximum parallel execution while respecting dependencies, reducing the project timeline from 16-20 weeks (sequential) to <strong>12 weeks</strong> (parallel).</p>
+<h3 id="key-metrics">Key Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td><strong>Total Workstreams</strong></td><td>18</td></tr><tr><td><strong>Domain Orchestrators</strong></td><td>4</td></tr><tr><td><strong>Project Timeline</strong></td><td>12 weeks</td></tr><tr><td><strong>Milestones</strong></td><td>6 (M0-M5)</td></tr><tr><td><strong>Maximum Parallel Workstreams</strong></td><td>6 (Phase 2)</td></tr><tr><td><strong>Total Estimated Effort</strong></td><td>90-110 days → 60-70 days (parallelized)</td></tr><tr><td><strong>Documentation Created</strong></td><td>8,500+ lines</td></tr></tbody></table></div>
+<hr/>
+<h2 id="orchestration-hierarchy">Orchestration Hierarchy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#orchestration-hierarchy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="meta-orchestrator-top-level">Meta Orchestrator (Top Level)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#meta-orchestrator-top-level" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Role</strong>: Orchestrator of orchestrators - coordinates 4 domain orchestrators
+<strong>Location</strong>: <code>docs/orchestration/meta-orchestrator.md</code>
+<strong>Responsibilities</strong>:</p>
+<ul>
+<li>Spawn domain orchestrators sequentially (based on phase gates)</li>
+<li>Monitor cross-domain dependencies</li>
+<li>Resolve inter-orchestrator blockers</li>
+<li>Weekly status reporting</li>
+<li>Phase transition management</li>
+</ul>
+<h3 id="domain-orchestrators-4-total">Domain Orchestrators (4 total)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domain-orchestrators-4-total" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Orchestrator</th><th>Workstreams</th><th>Milestone</th><th>Timeline</th><th>Agent Types</th></tr></thead><tbody><tr><td><strong>Foundation</strong></td><td>WS-01 to WS-03</td><td>M0</td><td>Weeks 1-2</td><td>devops-automator, performance-benchmarker</td></tr><tr><td><strong>Model</strong></td><td>WS-04 to WS-07</td><td>M1, M3</td><td>Weeks 3-6</td><td>ai-engineer, python-pro</td></tr><tr><td><strong>Interface</strong></td><td>WS-08 to WS-12</td><td>M2</td><td>Weeks 3-6</td><td>rust-pro, python-pro, backend-architect</td></tr><tr><td><strong>Integration</strong></td><td>WS-13 to WS-18</td><td>M4, M5</td><td>Weeks 7-12</td><td>backend-architect, devops-automator, frontend-developer</td></tr></tbody></table></div>
+<p><strong>Locations</strong>:</p>
+<ul>
+<li><code>docs/orchestration/orchestrators/foundation.md</code></li>
+<li><code>docs/orchestration/orchestrators/model.md</code></li>
+<li><code>docs/orchestration/orchestrators/interface.md</code></li>
+<li><code>docs/orchestration/orchestrators/integration.md</code></li>
+</ul>
+<hr/>
+<h2 id="project-phases">Project Phases<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-phases" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-foundation-weeks-1-2">Phase 1: Foundation (Weeks 1-2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-foundation-weeks-1-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Goal</strong>: Establish hardware baselines, reproducibility, benchmarks
+<strong>Orchestrator</strong>: Foundation
+<strong>Execution</strong>: Sequential (critical path)
+<strong>Workstreams</strong>: 3</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>WS</th><th>Name</th><th>Duration</th><th>Priority</th></tr></thead><tbody><tr><td>WS-01</td><td>Hardware Baselines</td><td>3-4 days</td><td>P0</td></tr><tr><td>WS-02</td><td>Reproducibility Framework</td><td>4-5 days</td><td>P0</td></tr><tr><td>WS-03</td><td>Benchmark Suite</td><td>3-4 days</td><td>P1</td></tr></tbody></table></div>
+<p><strong>Phase Gate</strong>: Foundation Complete</p>
+<ul>
+<li>✅ Hardware verified (GB10, 128GB unified, ARM)</li>
+<li>✅ Docker environment working</li>
+<li>✅ Smoke test generates 10 images</li>
+<li>✅ Baseline metrics recorded</li>
+</ul>
+<p><strong>Blocks</strong>: All other phases (nothing proceeds until foundation is solid)</p>
+<hr/>
+<h3 id="phase-2a-model-inference--training-weeks-3-6">Phase 2A: Model Inference &amp; Training (Weeks 3-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2a-model-inference--training-weeks-3-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Goal</strong>: ComfyUI, SDXL optimization, LoRA training
+<strong>Orchestrator</strong>: Model
+<strong>Execution</strong>: WS-04/05 sequential, then WS-06/07 parallel
+<strong>Workstreams</strong>: 4</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>WS</th><th>Name</th><th>Duration</th><th>Priority</th><th>Depends On</th></tr></thead><tbody><tr><td>WS-04</td><td>ComfyUI Setup</td><td>4-5 days</td><td>P0</td><td>WS-01</td></tr><tr><td>WS-05</td><td>SDXL Inference Optimization</td><td>5-7 days</td><td>P0</td><td>WS-04</td></tr><tr><td>WS-06</td><td>LoRA Training Pipeline</td><td>7-10 days</td><td>P1</td><td>WS-05</td></tr><tr><td>WS-07</td><td>Dataset Tools &amp; Validation</td><td>5-6 days</td><td>P1</td><td>WS-05</td></tr></tbody></table></div>
+<p><strong>Phase Gate</strong>: Model Complete</p>
+<ul>
+<li>✅ ComfyUI operational on ARM</li>
+<li>✅ SDXL inference ≤3s per 1024×1024 image</li>
+<li>✅ Batch throughput ≥15 images/min</li>
+<li>✅ LoRA training pipeline functional</li>
+</ul>
+<p><strong>Enables</strong>: WS-10 (Backend needs ComfyUI API), WS-12 (Comparison needs LoRA)</p>
+<hr/>
+<h3 id="phase-2b-interface-development-weeks-3-6">Phase 2B: Interface Development (Weeks 3-6)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2b-interface-development-weeks-3-6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Goal</strong>: Rust TUI, ZeroMQ IPC, Python backend, Sixel preview
+<strong>Orchestrator</strong>: Interface
+<strong>Execution</strong>: WS-08 first, WS-09/10 parallel, then WS-11/12 parallel
+<strong>Workstreams</strong>: 5</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>WS</th><th>Name</th><th>Duration</th><th>Priority</th><th>Depends On</th></tr></thead><tbody><tr><td>WS-08</td><td>Rust TUI Core</td><td>6-8 days</td><td>P0</td><td>WS-01</td></tr><tr><td>WS-09</td><td>ZeroMQ IPC Layer</td><td>4-5 days</td><td>P0</td><td>WS-08</td></tr><tr><td>WS-10</td><td>Python Backend Worker</td><td>5-6 days</td><td>P0</td><td>WS-04, WS-09</td></tr><tr><td>WS-11</td><td>Sixel Image Preview</td><td>3-4 days</td><td>P1</td><td>WS-08, WS-10</td></tr><tr><td>WS-12</td><td>Side-by-Side Model Comparison</td><td>4-5 days</td><td>P1</td><td>WS-10, WS-11</td></tr></tbody></table></div>
+<p><strong>Phase Gate</strong>: Interface Complete</p>
+<ul>
+<li>✅ Rust TUI renders at 60 FPS</li>
+<li>✅ ZeroMQ IPC latency &lt;1ms</li>
+<li>✅ Python backend communicates with ComfyUI</li>
+<li>✅ Sixel preview working in supported terminals</li>
+<li>✅ Side-by-side comparison functional</li>
+</ul>
+<p><strong>Enables</strong>: WS-13 (MCP needs backend), WS-14 (Bevy needs working system)</p>
+<hr/>
+<h3 id="phase-3-integration--production-weeks-7-12">Phase 3: Integration &amp; Production (Weeks 7-12)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-integration--production-weeks-7-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Goal</strong>: Bevy MCP integration, observability, deployment, CI/CD
+<strong>Orchestrator</strong>: Integration
+<strong>Execution</strong>: WS-13/14/15 sequential, WS-16/17/18 parallel
+<strong>Workstreams</strong>: 6</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>WS</th><th>Name</th><th>Duration</th><th>Priority</th><th>Depends On</th></tr></thead><tbody><tr><td>WS-13</td><td>FastMCP Server</td><td>5-6 days</td><td>P0</td><td>WS-10</td></tr><tr><td>WS-14</td><td>Bevy Plugin Integration</td><td>6-7 days</td><td>P0</td><td>WS-13</td></tr><tr><td>WS-15</td><td>Asset Deployment Pipeline</td><td>4-5 days</td><td>P1</td><td>WS-13, WS-14</td></tr><tr><td>WS-16</td><td>DCGM Metrics &amp; Observability</td><td>5-6 days</td><td>P1</td><td>WS-05</td></tr><tr><td>WS-17</td><td>Docker Compose Deployment</td><td>4-5 days</td><td>P1</td><td>WS-10, WS-16</td></tr><tr><td>WS-18</td><td>CI/CD Pipeline</td><td>6-8 days</td><td>P2</td><td>WS-17</td></tr></tbody></table></div>
+<p><strong>Phase Gate</strong>: Production Complete</p>
+<ul>
+<li>✅ MCP server working with Bevy</li>
+<li>✅ Example game using AI-generated sprites</li>
+<li>✅ DCGM metrics and Grafana dashboards operational</li>
+<li>✅ Docker Compose stack deploys successfully</li>
+<li>✅ CI/CD pipeline runs tests and builds images</li>
+</ul>
+<p><strong>Enables</strong>: Project completion, production deployment</p>
+<hr/>
+<h2 id="parallel-execution-strategy">Parallel Execution Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-execution-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="concurrency-by-phase">Concurrency by Phase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#concurrency-by-phase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Phase 1</strong> (Weeks 1-2):</p>
+<pre><code>Week 1: WS-01 (alone)
+Week 2: WS-02 + WS-03 (parallel)
+Max Concurrency: 2 agents
+</code></pre>
+<p><strong>Phase 2</strong> (Weeks 3-6):</p>
+<pre><code>Week 3-4: WS-04 → WS-05 (sequential Model track)
+          WS-08 → WS-09 (sequential Interface track)
+Week 5-6: WS-06 + WS-07 (parallel Model)
+          WS-10 + WS-11 + WS-12 (parallel Interface)
+Max Concurrency: 6 agents (2 Model + 4 Interface)
+</code></pre>
+<p><strong>Phase 3</strong> (Weeks 7-12):</p>
+<pre><code>Week 7-9: WS-13 → WS-14 → WS-15 (sequential integration)
+          WS-16 + WS-17 (parallel infrastructure)
+Week 10-12: WS-18 (alone)
+Max Concurrency: 3 agents
+</code></pre>
+<h3 id="critical-path">Critical Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#critical-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The absolute minimum timeline (critical path):</p>
+<pre><code>WS-01 (4d) → WS-04 (5d) → WS-05 (7d) → WS-10 (6d) → WS-13 (6d) → WS-14 (7d)
+= 35 days minimum (5 weeks)
+</code></pre>
+<p>With buffers and parallel work: <strong>12 weeks</strong></p>
+<hr/>
+<h2 id="documentation-structure">Documentation Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="created-files-ready-for-use">Created Files (Ready for Use)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#created-files-ready-for-use" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>docs/orchestration/
+├── meta-orchestrator.md                   # Top-level orchestration (600 lines)
+├── workstream-plan.md                      # All 18 workstreams (1,100 lines)
+├── project-summary.md                      # This document (summary)
+├── orchestrators/                          # Domain orchestrator specs
+│   ├── foundation.md                       # (500 lines)
+│   ├── model.md                            # (457 lines)
+│   ├── interface.md                        # (488 lines)
+│   └── integration.md                      # (527 lines)
+└── workstreams/                            # Individual workstream specs
+    ├── template.md                         # Template for all workstreams (330 lines)
+    ├── ws01-hardware-baselines/
+    │   └── README.md                       # Complete spec (537 lines)
+    ├── ws08-rust-tui-core/
+    │   └── README.md                       # Complete spec (647 lines)
+    └── ws13-fastmcp-server/
+        └── README.md                       # Complete spec (729 lines)
+</code></pre>
+<p><strong>Total Documentation</strong>: ~8,500 lines across 11 files</p>
+<hr/>
+<h2 id="workstream-specifications-status">Workstream Specifications Status<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-specifications-status" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="complete-specifications-3">Complete Specifications (3)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#complete-specifications-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>✅ <strong>WS-01</strong>: Hardware Baselines (537 lines)
+✅ <strong>WS-08</strong>: Rust TUI Core (647 lines)
+✅ <strong>WS-13</strong>: FastMCP Server (729 lines)</p>
+<h3 id="remaining-specifications-15">Remaining Specifications (15)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#remaining-specifications-15" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The template (<code>template.md</code>) is ready. Remaining workstreams can be generated using:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate remaining workstream specs from template</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/generate_workstream_specs.sh</span></span></code></pre></figure>
+<p><strong>Or</strong>: Generate as needed (orchestrators will create them when spawning agents)</p>
+<p><strong>Priority</strong>: Create WS-02, WS-03, WS-04 next (Foundation and early Model workstreams)</p>
+<hr/>
+<h2 id="how-to-start">How to Start<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-to-start" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="option-1-review-first-approach-recommended">Option 1: Review-First Approach (Recommended)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-1-review-first-approach-recommended" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Review this summary</strong> (<code>docs/orchestration/project-summary.md</code>)</li>
+<li><strong>Review Meta Orchestrator</strong> (<code>docs/orchestration/meta-orchestrator.md</code>)</li>
+<li><strong>Review Workstream Plan</strong> (<code>docs/orchestration/workstream-plan.md</code>)</li>
+<li><strong>Review Foundation Orchestrator</strong> (<code>docs/orchestration/orchestrators/foundation.md</code>)</li>
+<li><strong>Review WS-01 spec</strong> (<code>docs/orchestration/workstreams/ws01-hardware-baselines/README.md</code>)</li>
+<li><strong>Provide feedback</strong> on approach, structure, timeline</li>
+<li><strong>Generate GitHub issues</strong> (after approval)</li>
+<li><strong>Spawn Foundation Orchestrator</strong> (after issues created)</li>
+</ol>
+<h3 id="option-2-quick-start-for-experienced-users">Option 2: Quick Start (For Experienced Users)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#option-2-quick-start-for-experienced-users" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /home/beengud/raibid-labs/dgx-pixels</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Review summary (this document)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/project-summary.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Generate all remaining workstream specs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/generate_workstream_specs.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # (to be created)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Generate GitHub issues from all workstream specs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/generate_github_issues.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">     # (to be created)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Initialize Meta Orchestrator</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/init_meta_orchestrator.sh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">     # (to be created)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Spawn Foundation Orchestrator</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">npx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> claude-flow@alpha</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> spawn</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> orchestrator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> foundation</span></span></code></pre></figure>
+<hr/>
+<h2 id="github-issue-generation-plan">GitHub Issue Generation Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-issue-generation-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issue-naming-convention">Issue Naming Convention<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-naming-convention" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Format</strong>: <code>PIXELS-XXX: [Workstream Title]</code></p>
+<p><strong>Examples</strong>:</p>
+<ul>
+<li><code>PIXELS-001: Hardware Baselines and Verification</code></li>
+<li><code>PIXELS-008: Rust TUI Core Development</code></li>
+<li><code>PIXELS-013: FastMCP Server Implementation</code></li>
+</ul>
+<h3 id="issue-structure">Issue Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each issue will include:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="markdown" data-theme="github-light one-dark-pro"><code data-language="markdown" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Summary</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[One paragraph from workstream spec]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Workstream</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">WS-XX: [</span><span style="--shiki-light:#032F62;--shiki-light-text-decoration:underline;--shiki-dark:#61AFEF;--shiki-dark-text-decoration:inherit;">Name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Orchestrator</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[Foundation | Model | Interface | Integration]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Milestone</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">MX</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Acceptance Criteria</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Criterion 1</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ ] Criterion 2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">...</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Dependencies</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Depends on: #PIXELS-XXX</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-dark:#E5C07B;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> Blocks: #PIXELS-YYY</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Agent Type</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">agent-type</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Priority</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">P0/P1/P2</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Estimated Duration</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">X-Y days</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-light-font-weight:bold;--shiki-dark:#E06C75;--shiki-dark-font-weight:inherit;">## Specification</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">See: </span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span><span style="--shiki-light:#005CC5;--shiki-dark:#98C379;">docs/orchestration/workstreams/wsXX-name/README.md</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">`</span></span></code></pre></figure>
+<h3 id="issue-labels">Issue Labels<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-labels" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Status Labels</strong>:</p>
+<ul>
+<li><code>status:draft</code> - Issue needs enrichment</li>
+<li><code>status:ready</code> - Ready for agent spawn</li>
+<li><code>status:in-progress</code> - Agent working on it</li>
+<li><code>status:review</code> - Needs review</li>
+<li><code>status:completed</code> - Done</li>
+</ul>
+<p><strong>Priority Labels</strong>:</p>
+<ul>
+<li><code>priority:P0</code> - Critical path</li>
+<li><code>priority:P1</code> - High priority</li>
+<li><code>priority:P2</code> - Nice to have</li>
+</ul>
+<p><strong>Domain Labels</strong>:</p>
+<ul>
+<li><code>domain:foundation</code></li>
+<li><code>domain:model</code></li>
+<li><code>domain:interface</code></li>
+<li><code>domain:integration</code></li>
+</ul>
+<p><strong>Milestone Labels</strong>:</p>
+<ul>
+<li><code>milestone:M0</code></li>
+<li><code>milestone:M1</code></li>
+<li><code>milestone:M2</code></li>
+<li><code>milestone:M3</code></li>
+<li><code>milestone:M4</code></li>
+<li><code>milestone:M5</code></li>
+</ul>
+<h3 id="issue-generation-command">Issue Generation Command<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-generation-command" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate all 18 GitHub issues from workstream specs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/generate_github_issues.sh</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --draft</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Output:</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Created PIXELS-001: Hardware Baselines (status:draft)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Created PIXELS-002: Reproducibility Framework (status:draft)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ...</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Created PIXELS-018: CI/CD Pipeline (status:draft)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Total: 18 issues created</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># All issues created with status:draft for review</span></span></code></pre></figure>
+<hr/>
+<h2 id="agent-types-required">Agent Types Required<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#agent-types-required" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Based on raibid-labs patterns and workstream analysis:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Agent Type</th><th>Workstreams</th><th>Skills Required</th></tr></thead><tbody><tr><td><strong>devops-automator</strong></td><td>WS-01, WS-02, WS-03, WS-15, WS-16, WS-17, WS-18</td><td>Docker, bash scripting, DCGM, Prometheus</td></tr><tr><td><strong>performance-benchmarker</strong></td><td>WS-03</td><td>Benchmarking, performance analysis</td></tr><tr><td><strong>ai-engineer</strong></td><td>WS-04, WS-05, WS-06, WS-07</td><td>ComfyUI, SDXL, LoRA training, PyTorch</td></tr><tr><td><strong>python-pro</strong></td><td>WS-10, WS-12 (partial)</td><td>Python, asyncio, ZeroMQ, aiohttp</td></tr><tr><td><strong>rust-pro</strong></td><td>WS-08, WS-09, WS-11, WS-12, WS-14</td><td>Rust, ratatui, tokio, Bevy</td></tr><tr><td><strong>backend-architect</strong></td><td>WS-09 (partial), WS-13</td><td>API design, MCP, FastAPI</td></tr></tbody></table></div>
+<p><strong>Note</strong>: Some workstreams may use multiple agent types (e.g., WS-09 uses both <code>rust-pro</code> and <code>backend-architect</code>)</p>
+<hr/>
+<h2 id="risk-assessment">Risk Assessment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-assessment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="high-risk-items">High-Risk Items<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#high-risk-items" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Impact</th><th>Workstreams Affected</th><th>Mitigation</th></tr></thead><tbody><tr><td><strong>ARM compatibility issues</strong></td><td>High</td><td>WS-02, WS-04, WS-05, WS-09</td><td>Research ARM packages early, have x86 fallbacks</td></tr><tr><td><strong>Performance targets not met</strong></td><td>High</td><td>WS-05, WS-06</td><td>Profile early, iterate, adjust targets if needed</td></tr><tr><td><strong>ZeroMQ unavailable for ARM</strong></td><td>Medium</td><td>WS-09, WS-10, WS-12</td><td>Alternative IPC ready (gRPC, Unix sockets)</td></tr><tr><td><strong>ComfyUI dependencies break</strong></td><td>High</td><td>WS-04, WS-05, WS-10</td><td>Pin versions, test in Docker early</td></tr><tr><td><strong>Timeline slippage</strong></td><td>Medium</td><td>All</td><td>Buffer weeks built in, parallel execution maximized</td></tr></tbody></table></div>
+<h3 id="critical-path-risks">Critical Path Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#critical-path-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Bottleneck Workstreams</strong> (delays here add to timeline):</p>
+<ul>
+<li>WS-01 (blocks everything)</li>
+<li>WS-04 (blocks Model + Interface backend)</li>
+<li>WS-05 (blocks training + metrics)</li>
+<li>WS-10 (blocks all integration)</li>
+<li>WS-13 (blocks Bevy integration)</li>
+</ul>
+<p><strong>Mitigation</strong>: Prioritize P0 workstreams, monitor critical path daily</p>
+<hr/>
+<h2 id="success-criteria">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="project-level-success">Project-Level Success<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-level-success" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>✅ <strong>Timeline</strong>: Complete in ≤ 12 weeks (+1 week buffer acceptable)
+✅ <strong>Quality</strong>: All 18 workstreams meet acceptance criteria
+✅ <strong>Testing</strong>: ≥80% test coverage across all code
+✅ <strong>Performance</strong>: All targets from <code>docs/metrics.md</code> met
+✅ <strong>Integration</strong>: End-to-end workflow (TUI → Backend → ComfyUI → Bevy) working
+✅ <strong>Documentation</strong>: Complete docs for all components</p>
+<h3 id="orchestrator-level-success">Orchestrator-Level Success<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#orchestrator-level-success" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each orchestrator succeeds when:</p>
+<ul>
+<li>All workstreams complete within estimated time (+25% acceptable)</li>
+<li>All phase gates pass</li>
+<li>All blockers resolved within 48 hours</li>
+<li>Handoff to next orchestrator smooth (no missing artifacts)</li>
+<li>Completion reports generated</li>
+</ul>
+<h3 id="workstream-level-success">Workstream-Level Success<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workstream-level-success" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Each workstream succeeds when:</p>
+<ul>
+<li>All deliverables created and working</li>
+<li>All acceptance criteria met</li>
+<li>Tests passing (unit + integration + performance)</li>
+<li>Documentation complete</li>
+<li>Code reviewed and merged</li>
+<li>Completion summary created</li>
+</ul>
+<hr/>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="immediate-this-week">Immediate (This Week)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#immediate-this-week" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>User Review</strong> (you):</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Review this summary document</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review <code>docs/orchestration/meta-orchestrator.md</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review <code>docs/orchestration/workstream-plan.md</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review <code>docs/orchestration/orchestrators/foundation.md</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review <code>docs/orchestration/workstreams/ws01-hardware-baselines/README.md</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Provide feedback on structure, approach, timeline</li>
+</ul>
+</li>
+<li>
+<p><strong>Generate Remaining Workstream Specs</strong> (if approved):</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create WS-02 through WS-18 specifications (use template)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review and refine as needed</li>
+</ul>
+</li>
+<li>
+<p><strong>Generate GitHub Issues</strong> (if approved):</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Run issue generation script</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create all 18 issues with <code>status:draft</code> label</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review issues in GitHub</li>
+</ul>
+</li>
+<li>
+<p><strong>Initialize Meta Orchestrator</strong> (if ready to start):</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Run initialization script</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify hardware prerequisites</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Spawn Foundation Orchestrator</li>
+</ul>
+</li>
+</ol>
+<h3 id="short-term-weeks-1-2">Short Term (Weeks 1-2)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#short-term-weeks-1-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Execute Phase 1</strong> (Foundation):</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Foundation Orchestrator spawns WS-01 agent</li>
+<li class="task-list-item"><input type="checkbox" disabled/> WS-01 completes (hardware baselines)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> WS-02 starts (reproducibility)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> WS-03 starts (benchmarks)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Phase Gate 1 verification</li>
+</ul>
+</li>
+<li>
+<p><strong>Prepare Phase 2</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Review Model Orchestrator spec</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review Interface Orchestrator spec</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Prepare for parallel execution</li>
+</ul>
+</li>
+</ol>
+<h3 id="medium-term-weeks-3-12">Medium Term (Weeks 3-12)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#medium-term-weeks-3-12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Follow the orchestration plan in <code>docs/orchestration/meta-orchestrator.md</code> and <code>docs/orchestration/workstream-plan.md</code>.</p>
+<hr/>
+<h2 id="questions-for-user">Questions for User<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#questions-for-user" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before proceeding, please clarify:</p>
+<ol>
+<li>
+<p><strong>Orchestration Approach</strong>: Does the Meta Orchestrator + 4 domain orchestrators structure make sense? Or would you prefer a simpler approach?</p>
+</li>
+<li>
+<p><strong>Issue Generation</strong>: Should we generate all 18 GitHub issues now (with <code>status:draft</code>), or generate them incrementally as orchestrators spawn?</p>
+</li>
+<li>
+<p><strong>Workstream Specs</strong>: Should I generate all remaining 15 workstream specifications now (WS-02 through WS-07, WS-09 through WS-12, WS-14 through WS-18), or generate them as needed?</p>
+</li>
+<li>
+<p><strong>Timeline</strong>: Is 12 weeks acceptable, or do you have a different target timeline?</p>
+</li>
+<li>
+<p><strong>Agent Availability</strong>: Do you have access to claude-flow or similar orchestration tools? Or should I adapt the approach for manual coordination?</p>
+</li>
+<li>
+<p><strong>Execution Start</strong>: Are you ready to start immediately with WS-01 (Hardware Baselines), or do you want more planning first?</p>
+</li>
+</ol>
+<hr/>
+<h2 id="approval-checklist">Approval Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#approval-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before proceeding to issue generation and execution:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Meta Orchestrator approach approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> 4 domain orchestrators structure approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> 18 workstream breakdown approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Timeline (12 weeks) approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Parallel execution strategy approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation structure approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Issue naming convention approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Agent types and spawn strategy approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Risk assessment and mitigation plans approved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Success criteria approved</li>
+</ul>
+<hr/>
+<h2 id="summary-visualization">Summary Visualization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#summary-visualization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>DGX-Pixels Project (12 weeks)
+├── Phase 1: Foundation (Weeks 1-2) [SEQUENTIAL]
+│   └── Foundation Orchestrator → WS-01, WS-02, WS-03
+│
+├── Phase 2: Models + Interface (Weeks 3-6) [PARALLEL]
+│   ├── Model Orchestrator → WS-04, WS-05, WS-06, WS-07
+│   └── Interface Orchestrator → WS-08, WS-09, WS-10, WS-11, WS-12
+│
+└── Phase 3: Integration + Production (Weeks 7-12) [MIXED]
+    └── Integration Orchestrator → WS-13, WS-14, WS-15, WS-16, WS-17, WS-18
+
+Meta Orchestrator (coordinates all 4 orchestrators throughout)
+</code></pre>
+<hr/>
+<p><strong>Status</strong>: Ready for user review and feedback</p>
+<p><strong>Contact</strong>: Provide feedback via GitHub discussion or direct message</p>
+<p><strong>Last Updated</strong>: 2025-11-10</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-60" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-pixels-project-orchestration-summary" data-for="dgx-pixels-project-orchestration-summary">DGX-Pixels Project Orchestration Summary</a></li><li class="depth-1"><a href="#executive-summary" data-for="executive-summary">Executive Summary</a></li><li class="depth-2"><a href="#key-metrics" data-for="key-metrics">Key Metrics</a></li><li class="depth-1"><a href="#orchestration-hierarchy" data-for="orchestration-hierarchy">Orchestration Hierarchy</a></li><li class="depth-2"><a href="#meta-orchestrator-top-level" data-for="meta-orchestrator-top-level">Meta Orchestrator (Top Level)</a></li><li class="depth-2"><a href="#domain-orchestrators-4-total" data-for="domain-orchestrators-4-total">Domain Orchestrators (4 total)</a></li><li class="depth-1"><a href="#project-phases" data-for="project-phases">Project Phases</a></li><li class="depth-2"><a href="#phase-1-foundation-weeks-1-2" data-for="phase-1-foundation-weeks-1-2">Phase 1: Foundation (Weeks 1-2)</a></li><li class="depth-2"><a href="#phase-2a-model-inference--training-weeks-3-6" data-for="phase-2a-model-inference--training-weeks-3-6">Phase 2A: Model Inference &amp; Training (Weeks 3-6)</a></li><li class="depth-2"><a href="#phase-2b-interface-development-weeks-3-6" data-for="phase-2b-interface-development-weeks-3-6">Phase 2B: Interface Development (Weeks 3-6)</a></li><li class="depth-2"><a href="#phase-3-integration--production-weeks-7-12" data-for="phase-3-integration--production-weeks-7-12">Phase 3: Integration &amp; Production (Weeks 7-12)</a></li><li class="depth-1"><a href="#parallel-execution-strategy" data-for="parallel-execution-strategy">Parallel Execution Strategy</a></li><li class="depth-2"><a href="#concurrency-by-phase" data-for="concurrency-by-phase">Concurrency by Phase</a></li><li class="depth-2"><a href="#critical-path" data-for="critical-path">Critical Path</a></li><li class="depth-1"><a href="#documentation-structure" data-for="documentation-structure">Documentation Structure</a></li><li class="depth-2"><a href="#created-files-ready-for-use" data-for="created-files-ready-for-use">Created Files (Ready for Use)</a></li><li class="depth-1"><a href="#workstream-specifications-status" data-for="workstream-specifications-status">Workstream Specifications Status</a></li><li class="depth-2"><a href="#complete-specifications-3" data-for="complete-specifications-3">Complete Specifications (3)</a></li><li class="depth-2"><a href="#remaining-specifications-15" data-for="remaining-specifications-15">Remaining Specifications (15)</a></li><li class="depth-1"><a href="#how-to-start" data-for="how-to-start">How to Start</a></li><li class="depth-2"><a href="#option-1-review-first-approach-recommended" data-for="option-1-review-first-approach-recommended">Option 1: Review-First Approach (Recommended)</a></li><li class="depth-2"><a href="#option-2-quick-start-for-experienced-users" data-for="option-2-quick-start-for-experienced-users">Option 2: Quick Start (For Experienced Users)</a></li><li class="depth-1"><a href="#github-issue-generation-plan" data-for="github-issue-generation-plan">GitHub Issue Generation Plan</a></li><li class="depth-2"><a href="#issue-naming-convention" data-for="issue-naming-convention">Issue Naming Convention</a></li><li class="depth-2"><a href="#issue-structure" data-for="issue-structure">Issue Structure</a></li><li class="depth-2"><a href="#issue-labels" data-for="issue-labels">Issue Labels</a></li><li class="depth-2"><a href="#issue-generation-command" data-for="issue-generation-command">Issue Generation Command</a></li><li class="depth-1"><a href="#agent-types-required" data-for="agent-types-required">Agent Types Required</a></li><li class="depth-1"><a href="#risk-assessment" data-for="risk-assessment">Risk Assessment</a></li><li class="depth-2"><a href="#high-risk-items" data-for="high-risk-items">High-Risk Items</a></li><li class="depth-2"><a href="#critical-path-risks" data-for="critical-path-risks">Critical Path Risks</a></li><li class="depth-1"><a href="#success-criteria" data-for="success-criteria">Success Criteria</a></li><li class="depth-2"><a href="#project-level-success" data-for="project-level-success">Project-Level Success</a></li><li class="depth-2"><a href="#orchestrator-level-success" data-for="orchestrator-level-success">Orchestrator-Level Success</a></li><li class="depth-2"><a href="#workstream-level-success" data-for="workstream-level-success">Workstream-Level Success</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-2"><a href="#immediate-this-week" data-for="immediate-this-week">Immediate (This Week)</a></li><li class="depth-2"><a href="#short-term-weeks-1-2" data-for="short-term-weeks-1-2">Short Term (Weeks 1-2)</a></li><li class="depth-2"><a href="#medium-term-weeks-3-12" data-for="medium-term-weeks-3-12">Medium Term (Weeks 3-12)</a></li><li class="depth-1"><a href="#questions-for-user" data-for="questions-for-user">Questions for User</a></li><li class="depth-1"><a href="#approval-checklist" data-for="approval-checklist">Approval Checklist</a></li><li class="depth-1"><a href="#summary-visualization" data-for="summary-visualization">Summary Visualization</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

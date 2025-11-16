@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>08-tui-design</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="08-tui-design"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="08-tui-design"/><meta name="twitter:description" content="TUI Design and Workflows Overview This document details the Terminal User Interface (TUI) design for DGX-Pixels, including screen layouts, interaction patterns, and workflows."/><meta property="og:description" content="TUI Design and Workflows Overview This document details the Terminal User Interface (TUI) design for DGX-Pixels, including screen layouts, interaction patterns, and workflows."/><meta property="og:image:alt" content="TUI Design and Workflows Overview This document details the Terminal User Interface (TUI) design for DGX-Pixels, including screen layouts, interaction patterns, and workflows."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/08-tui-design"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/08-tui-design"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="TUI Design and Workflows Overview This document details the Terminal User Interface (TUI) design for DGX-Pixels, including screen layouts, interaction patterns, and workflows."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/08-tui-design-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/08-tui-design-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/08-tui-design-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-pixels/docs/08-tui-design"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-157"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-157" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/">dgx pixels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>08 tui design</a></div></nav><h1 class="article-title">08-tui-design</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:06.769Z">Nov 16, 2025</time><span>16 min read</span></p></div></div><article class="popover-hint"><h1 id="tui-design-and-workflows">TUI Design and Workflows<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tui-design-and-workflows" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="overview">Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document details the Terminal User Interface (TUI) design for DGX-Pixels, including screen layouts, interaction patterns, and workflows. The TUI is built with <strong>ratatui</strong> in Rust, providing a fast, responsive interface for pixel art generation.</p>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="#design-philosophy" class="internal alias">Design Philosophy</a></li>
+<li><a href="#screen-layouts" class="internal alias">Screen Layouts</a></li>
+<li><a href="#key-features" class="internal alias">Key Features</a></li>
+<li><a href="#interaction-patterns" class="internal alias">Interaction Patterns</a></li>
+<li><a href="#side-by-side-model-comparison" class="internal alias">Side-by-Side Model Comparison</a></li>
+<li><a href="#image-preview" class="internal alias">Image Preview</a></li>
+</ul>
+<hr/>
+<h2 id="design-philosophy">Design Philosophy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#design-philosophy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="principles">Principles<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#principles" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Speed First</strong>: 60+ FPS rendering, &lt;50ms input latency</li>
+<li><strong>Information Dense</strong>: Max info in limited terminal space</li>
+<li><strong>Keyboard Driven</strong>: All actions accessible via keyboard</li>
+<li><strong>Visual Feedback</strong>: Clear indication of state and progress</li>
+<li><strong>Non-Blocking</strong>: UI remains responsive during generation</li>
+</ol>
+<h3 id="color-scheme">Color Scheme<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#color-scheme" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Primary:   Cyan    (#00FFFF) - Active elements, highlights
+Secondary: Yellow  (#FFFF00) - Warnings, notifications
+Success:   Green   (#00FF00) - Completed jobs, success states
+Error:     Red     (#FF0000) - Errors, failures
+Muted:     Gray    (#808080) - Inactive, disabled elements
+Background: Black  (#000000) - Terminal background
+</code></pre>
+<h3 id="typography">Typography<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#typography" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Headers</strong>: Bold, uppercase</li>
+<li><strong>Values</strong>: Regular weight</li>
+<li><strong>Hotkeys</strong>: Square brackets <code>[K]</code></li>
+<li><strong>Status</strong>: Colored indicators <code>●</code></li>
+</ul>
+<hr/>
+<h2 id="screen-layouts">Screen Layouts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#screen-layouts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-generation-screen-main">1. Generation Screen (Main)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-generation-screen-main" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels v0.1.0                          [Q]uit [Tab] Switch Panel    │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ ┌─ Generate ─────────────────────────────────────────────────────────┐ │
+│ │                                                                      │ │
+│ │ Prompt:                                                              │ │
+│ │ ┌──────────────────────────────────────────────────────────────────┐│ │
+│ │ │medieval knight character, standing pose, side view, pixel art__  ││ │
+│ │ └──────────────────────────────────────────────────────────────────┘│ │
+│ │                                                                      │ │
+│ │ Model: [SDXL Pixel Art v2 ▼]  LoRA: [16bit_rpg ▼]  Size: [32x32]  │ │
+│ │                                                                      │ │
+│ │ ┌─ Options ─────────────────────┬─ Preview ───────────────────────┐│ │
+│ │ │ Steps:         [30        ]    │                                 ││ │
+│ │ │ CFG Scale:     [7.5       ]    │    ░░▓▓▓▓██████▓▓░░             ││ │
+│ │ │ Seed:          [Random    ]    │    ░░██████████████░░           ││ │
+│ │ │ Batch Size:    [1         ]    │    ▓▓██████████████▓▓           ││ │
+│ │ │ Palette:       [16 colors ]    │    ▓▓██████████████▓▓           ││ │
+│ │ │                                 │    ▓▓██████████████▓▓           ││ │
+│ │ │ [G]enerate  [C]ompare Models   │    ██████████████████           ││ │
+│ │ └─────────────────────────────────┴─────────────────────────────────┘│ │
+│ │                                                                      │ │
+│ │ ┌─ Recent Generations ──────────────────────────────────────────────┐│ │
+│ │ │ ● job_001  knight      SDXL+16bit   12.3s  [View] [Deploy]       ││ │
+│ │ │ ● job_002  mage        SDXL+16bit   13.1s  [View] [Deploy]       ││ │
+│ │ │ ○ job_003  warrior     Generating... 45%   [Cancel]              ││ │
+│ │ └──────────────────────────────────────────────────────────────────┘│ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ GPU: 87% (78°C) │ Mem: 24.2/128GB │ Queue: 1 job │ [1]Gen [2]Queue     │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Large prompt input area</li>
+<li>Model/LoRA selection dropdowns</li>
+<li>Real-time preview (updated as generation progresses)</li>
+<li>Options panel with common settings</li>
+<li>Recent generations list with quick actions</li>
+<li>Status bar with GPU/memory metrics</li>
+</ul>
+<h3 id="2-compare-models-screen">2. Compare Models Screen<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-compare-models-screen" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels - Model Comparison                        [Esc] Back         │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ Prompt: &quot;medieval knight character, standing pose&quot;                       │
+│                                                                           │
+│ ┌─ Model A: SDXL Base ───────────────┬─ Model B: SDXL + 16bit_rpg ────┐│
+│ │                                     │                                 ││
+│ │   ░░▓▓▓▓██████▓▓░░                  │   ░░▓▓▓▓██████▓▓░░             ││
+│ │   ░░██████████████░░                │   ░░██████████████░░           ││
+│ │   ▓▓██████████████▓▓                │   ▓▓██████████████▓▓           ││
+│ │   ▓▓██████████████▓▓                │   ▓▓██████████████▓▓           ││
+│ │   ▓▓██████████████▓▓                │   ▓▓██████████████▓▓           ││
+│ │   ██████████████████                │   ██████████████████           ││
+│ │                                     │                                 ││
+│ │ Time: 14.2s                         │ Time: 12.8s                     ││
+│ │ Steps: 30                           │ Steps: 30                       ││
+│ │ CFG: 7.5                            │ CFG: 7.5                        ││
+│ │                                     │                                 ││
+│ │ Style: Generic                      │ Style: 16-bit RPG ✓             ││
+│ │ Colors: 256 (smooth)                │ Colors: 16 (quantized) ✓       ││
+│ │ Detail: High                        │ Detail: Pixel-perfect ✓        ││
+│ │                                     │                                 ││
+│ │ [1] Select Model A                  │ [2] Select Model B              ││
+│ ├─────────────────────────────────────┴─────────────────────────────────┤│
+│ │ ┌─ Model C: Custom Trained ──────────────────────────────────────────┐││
+│ │ │   ░░▓▓▓▓██████▓▓░░     Time: 11.9s  Style: Custom Fantasy ✓       │││
+│ │ │   ░░██████████████░░   Steps: 30    Colors: 16 ✓                  │││
+│ │ │   (similar preview)    CFG: 8.0     Detail: High ✓                │││
+│ │ │                                                                     │││
+│ │ │ [3] Select Model C                                                 │││
+│ │ └─────────────────────────────────────────────────────────────────────┘││
+│ └───────────────────────────────────────────────────────────────────────┘│
+│                                                                           │
+│ [G]enerate All  [S]ave Comparison  [V]ote (Mark Best)                   │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Generating with 3 models... │ ETA: 24s │ [Esc] Cancel                   │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Side-by-side comparison of 2-4 models</li>
+<li>Same prompt for all models (A/B testing)</li>
+<li>Metrics comparison (time, style matching, color accuracy)</li>
+<li>Visual checkmarks for desired attributes</li>
+<li>Quick selection for further use</li>
+<li>Batch generation across models</li>
+</ul>
+<h3 id="3-queue-manager-screen">3. Queue Manager Screen<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-queue-manager-screen" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels - Job Queue                      [Esc] Back [R]efresh        │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ ┌─ Active Jobs (2) ──────────────────────────────────────────────────┐ │
+│ │                                                                      │ │
+│ │ ● job_005  RUNNING   &quot;dragon breathing fire&quot;      [████████░░] 85%  │ │
+│ │   Model: SDXL+fantasy  Step 26/30  ETA: 2s         [P]ause [X]Kill  │ │
+│ │   Preview: ░░▓▓██████▓▓░░                                           │ │
+│ │                                                                      │ │
+│ │ ○ job_006  QUEUED    &quot;wizard casting spell&quot;        [░░░░░░░░░░] 0%  │ │
+│ │   Model: SDXL+16bit   Waiting...   ETA: 15s        [U]p [D]own      │ │
+│ │                                                                      │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ Completed Jobs (15) ──────────────────────────────────────────────┐ │
+│ │ ✓ job_004  &quot;knight&quot;       SDXL+16bit    12.3s  output/knight.png   │ │
+│ │ ✓ job_003  &quot;mage&quot;         SDXL+16bit    13.1s  output/mage.png     │ │
+│ │ ✓ job_002  &quot;warrior&quot;      SDXL+custom   11.8s  output/warrior.png  │ │
+│ │ ✗ job_001  &quot;invalid&quot;      FAILED        Error: Invalid prompt      │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ Queue Stats ──────────────────────────────────────────────────────┐ │
+│ │ Total Jobs: 21       Completed: 15      Failed: 1      Queued: 2   │ │
+│ │ Avg Time: 12.8s      Success Rate: 93%  GPU Util: 87%              │ │
+│ │                                                                      │ │
+│ │ Throughput: 4.2 jobs/min                                            │ │
+│ │ Est. Queue Clear: 25 seconds                                        │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ [N]ew Job  [C]lear Completed  [F]ilter  [E]xport Queue                  │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Active: 2 │ Queued: 2 │ Completed: 15 │ Failed: 1                       │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Real-time job status with progress bars</li>
+<li>Live preview thumbnails for running jobs</li>
+<li>Queue reordering (up/down)</li>
+<li>Pause/resume/cancel controls</li>
+<li>Completed job history with quick actions</li>
+<li>Queue statistics and throughput metrics</li>
+</ul>
+<h3 id="4-gpu-monitor-screen">4. GPU Monitor Screen<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-gpu-monitor-screen" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels - System Monitor                 [Esc] Back [R]efresh       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ ┌─ GPU Metrics ──────────────────────────────────────────────────────┐ │
+│ │                                                                      │ │
+│ │ Utilization:  [████████████████████████████████████████████░░] 87%  │ │
+│ │                                                                      │ │
+│ │ Temperature:  78°C  [████████████████░░░░░░░░░░░░░░░░░░░░░░]       │ │
+│ │               ▲ 72  73  74  75  76  77  78  78  78  78  (last 10s)  │ │
+│ │                                                                      │ │
+│ │ Power:        240W / 350W  [████████████████████████░░░░░░░░] 68%   │ │
+│ │                                                                      │ │
+│ │ Memory:       24.2 GB / 128 GB  [███████░░░░░░░░░░░░░░░░░░░] 19%   │ │
+│ │               ▼ Breakdown:                                           │ │
+│ │                 - SDXL Model:     8.2 GB                             │ │
+│ │                 - LoRA Adapters:  0.4 GB                             │ │
+│ │                 - Active Batch:   2.1 GB                             │ │
+│ │                 - ComfyUI:        1.2 GB                             │ │
+│ │                 - Python Worker:  0.3 GB                             │ │
+│ │                 - Available:     104 GB                              │ │
+│ │                                                                      │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ Performance History (Last 5 min) ─────────────────────────────────┐ │
+│ │                                                                      │ │
+│ │ Inference Time:                                                      │ │
+│ │  14s │                              ██                               │ │
+│ │  12s │                 ██      ██   ██                               │ │
+│ │  10s │     ██   ██     ██      ██   ██      ██                       │ │
+│ │   8s │     ██   ██     ██      ██   ██      ██                       │ │
+│ │      └─────────────────────────────────────────────                 │ │
+│ │       :00  :30  1:00  1:30  2:00  2:30  3:00  3:30  4:00  4:30  5:00│ │
+│ │                                                                      │ │
+│ │ Avg: 12.3s   Min: 10.8s   Max: 14.2s   Std Dev: 1.2s                │ │
+│ │                                                                      │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ System Resources ─────────────────────────────────────────────────┐ │
+│ │ CPU:  [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23%  (16 of 20 cores)│ │
+│ │ RAM:  [████████████████████████░░░░░░░░░░░░] 64GB / 128GB (50%)   │ │
+│ │ Disk: [████████████████████████████████████░░] 892GB / 1TB (89%)   │ │
+│ │ Net:  ↓ 2.3 MB/s  ↑ 0.8 MB/s                                        │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ [S]napshot  [E]xport Metrics  [A]lerts  [L]ogs                          │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ GPU: 87% (78°C) │ Mem: 24.2/128GB │ Jobs: 2 active, 2 queued            │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Real-time GPU metrics (util, temp, power, memory)</li>
+<li>Memory breakdown by component</li>
+<li>Performance history graphs</li>
+<li>System resource monitoring</li>
+<li>Alerts for threshold violations</li>
+</ul>
+<h3 id="5-model-manager-screen">5. Model Manager Screen<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-model-manager-screen" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels - Model Manager                   [Esc] Back [R]efresh       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ ┌─ Base Models ──────────────────────────────────────────────────────┐ │
+│ │ ✓ stabilityai/stable-diffusion-xl-base-1.0          8.2 GB  LOADED │ │
+│ │   Default model for generation                                      │ │
+│ │   [U]nload  [I]nfo  [B]enchmark                                     │ │
+│ │                                                                      │ │
+│ │ ○ stable-diffusion-v1-5                             3.8 GB          │ │
+│ │   Smaller, faster model for quick iteration                         │ │
+│ │   [L]oad  [I]nfo  [D]ownload                                        │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ LoRA Adapters ────────────────────────────────────────────────────┐ │
+│ │ ✓ 16bit_rpg_v1              420 MB  LOADED   ⭐⭐⭐⭐⭐ (23 uses)      │ │
+│ │   16-bit RPG style, trained on 75 images                            │ │
+│ │   Trained: 2025-01-15  Steps: 3000  Rank: 64                        │ │
+│ │   [U]nload  [I]nfo  [R]etrain  [C]ompare                            │ │
+│ │                                                                      │ │
+│ │ ○ fantasy_characters_v2     385 MB           ⭐⭐⭐⭐ (12 uses)        │ │
+│ │   Character sprites, fantasy theme                                  │ │
+│ │   [L]oad  [I]nfo  [T]est                                            │ │
+│ │                                                                      │ │
+│ │ ○ 32bit_modern_v1           410 MB           ⭐⭐⭐ (5 uses)          │ │
+│ │   32-bit modern pixel art style                                     │ │
+│ │   [L]oad  [I]nfo  [D]elete                                          │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ Custom Training ──────────────────────────────────────────────────┐ │
+│ │ Dataset: my_game_style/         75 images  22.4 MB                  │ │
+│ │ Status:  Ready to train                                             │ │
+│ │                                                                      │ │
+│ │ [T]rain New LoRA  [V]alidate Dataset  [P]review Samples            │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ ┌─ Model Comparison History ─────────────────────────────────────────┐ │
+│ │ 2025-01-15  &quot;knight sprite&quot;  Winner: 16bit_rpg (4/5 votes)         │ │
+│ │ 2025-01-14  &quot;mage sprite&quot;    Winner: fantasy_char (3/5 votes)      │ │
+│ │ [V]iew Details  [E]xport Report                                     │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ [D]ownload Model  [T]rain LoRA  [C]ompare Models  [S]ettings            │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Loaded: 1 base, 1 LoRA │ Memory: 8.6/128 GB │ [5] Models                │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Base model management (load/unload/download)</li>
+<li>LoRA adapter library with ratings</li>
+<li>Model comparison history</li>
+<li>Training interface for custom LoRAs</li>
+<li>Memory usage tracking</li>
+<li>Quick model switching</li>
+</ul>
+<h3 id="6-gallery-browser">6. Gallery Browser<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-gallery-browser" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────┐
+│ DGX-Pixels - Gallery                        [Esc] Back [←→] Navigate    │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                           │
+│ Filter: [All ▼]  Sort: [Recent ▼]  Search: [________________] [Enter]  │
+│                                                                           │
+│ ┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐│
+│ │ knight_001.png  │ mage_002.png    │ warrior_003.png │ dragon_004.png  ││
+│ │                 │                 │                 │                 ││
+│ │   ▓▓██████▓▓    │   ░░████████    │   ██████████    │   ▓▓▓▓████      ││
+│ │   ██████████    │   ▓▓████████    │   ██████████    │   ████████▓▓    ││
+│ │   ██████████    │   ██████████    │   ██████████    │   ████████░░    ││
+│ │                 │                 │                 │                 ││
+│ │ 32x32  12.3s    │ 32x32  13.1s    │ 32x32  11.8s    │ 64x64  18.2s    ││
+│ │ 16bit_rpg ⭐⭐⭐   │ 16bit_rpg ⭐⭐    │ custom_v2 ⭐⭐⭐   │ fantasy ⭐⭐⭐⭐    ││
+│ ├─────────────────┼─────────────────┼─────────────────┼─────────────────┤│
+│ │ (4 more rows...)                                                     ││
+│ └──────────────────────────────────────────────────────────────────────┘│
+│                                                                           │
+│ ┌─ Selected: knight_001.png ─────────────────────────────────────────┐ │
+│ │                                                                      │ │
+│ │     ░░▓▓▓▓██████▓▓░░           Prompt: &quot;medieval knight character,  │ │
+│ │     ░░██████████████░░                  standing pose, side view&quot;   │ │
+│ │     ▓▓██████████████▓▓         Model: SDXL + 16bit_rpg_v1          │ │
+│ │     ▓▓██████████████▓▓         Size: 32x32                          │ │
+│ │     ▓▓██████████████▓▓         Time: 12.3s                          │ │
+│ │     ██████████████████         Seed: 42                             │ │
+│ │                                 Rating: ⭐⭐⭐                          │ │
+│ │                                                                      │ │
+│ │ [V]iew Full  [D]eploy to Bevy  [E]dit  [Del]ete  [S]hare           │ │
+│ └──────────────────────────────────────────────────────────────────────┘ │
+│                                                                           │
+│ [F]ilter  [S]ort  [T]ag  [B]atch Actions  [E]xport                      │
+│                                                                           │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Total: 247 images │ Selected: 1 │ Space: 892 MB │ [6] Gallery          │
+└─────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Grid view of generated images</li>
+<li>Thumbnail previews with metadata</li>
+<li>Filter and search</li>
+<li>Detailed view with full metadata</li>
+<li>Quick actions (deploy, edit, delete)</li>
+<li>Batch operations</li>
+</ul>
+<hr/>
+<h2 id="key-features">Key Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-features" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-live-image-preview">1. Live Image Preview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-live-image-preview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Implementation</strong>: ratatui-image supports multiple protocols:</p>
+<ul>
+<li><strong>Sixels</strong>: High-quality image rendering (if terminal supports)</li>
+<li><strong>Unicode halfblocks</strong>: Fallback for wider compatibility</li>
+<li><strong>ASCII art</strong>: Ultimate fallback</li>
+</ul>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ratatui_image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">protocol</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">StatefulProtocol</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">};</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// In render function</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> img</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;preview.png&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> image_widget</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">f</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">render_widget</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">image_widget</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">preview_area</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span></code></pre></figure>
+<p><strong>Preview Modes</strong>:</p>
+<ol>
+<li><strong>Live Preview</strong>: Updates every 500ms during generation (from Python pub-sub)</li>
+<li><strong>Final Preview</strong>: Full resolution after completion</li>
+<li><strong>Thumbnail Grid</strong>: Multiple images in gallery view</li>
+</ol>
+<h3 id="2-model-comparison-workflow">2. Model Comparison Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-model-comparison-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>User Flow</strong>:</p>
+<pre><code>1. Enter prompt
+2. Press [C] to compare models
+3. Select 2-4 models/LoRAs
+4. TUI generates with all models in parallel
+5. Results displayed side-by-side
+6. User votes/selects best
+7. Winner noted for future reference
+</code></pre>
+<p><strong>Data Tracking</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ModelComparison</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    prompt</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    models</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ModelConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    results</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">GenerationResult</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    winner</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Option</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Index of winning model</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    votes</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Vote</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    timestamp</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> SystemTime</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Store in SQLite</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> save_comparison</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">comp</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ModelComparison</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    db</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">execute</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;INSERT INTO comparisons (prompt, winner, votes, timestamp) VALUES (?, ?, ?, ?)&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        // ...</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    );</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="3-real-time-progress">3. Real-Time Progress<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-real-time-progress" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Progress Sources</strong>:</p>
+<ul>
+<li>ComfyUI WebSocket (step-by-step)</li>
+<li>Python worker pub-sub (high-level status)</li>
+<li>Preview images (partial results)</li>
+</ul>
+<p><strong>Rendering</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Progress bar</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> gauge</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Gauge</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">block</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Block</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">title</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Generating&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gauge_style</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Style</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">default</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">fg</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Color</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Cyan</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">))</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">    .</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">percent</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">progress</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> as</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> u16</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// With ETA</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> label</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Step {}/{} - ETA: {}s&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">step</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">total</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">eta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> gauge</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> gauge</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">label</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">label</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span></code></pre></figure>
+<h3 id="4-batch-operations">4. Batch Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-batch-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Queue Multiple Jobs</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> batch_generate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">prompts</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> GenerateConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        for</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> prompt</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> in</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> prompts</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">            let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">zmq_client</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">generate</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">prompt</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">config</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">clone</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">())</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">            self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">job_queue</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">push</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Example</strong>: Generate 20 variations from prompt file:</p>
+<pre><code>[B] Batch Generate → Select file → Configure options → Submit all
+</code></pre>
+<h3 id="5-keyboard-shortcuts">5. Keyboard Shortcuts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-keyboard-shortcuts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Global</strong>:</p>
+<ul>
+<li><code>Tab</code> / <code>Shift+Tab</code> - Switch between panels</li>
+<li><code>Q</code> - Quit</li>
+<li><code>?</code> - Help overlay</li>
+<li><code>Esc</code> - Back/Cancel</li>
+</ul>
+<p><strong>Generation Screen</strong>:</p>
+<ul>
+<li><code>G</code> - Generate</li>
+<li><code>C</code> - Compare models</li>
+<li><code>B</code> - Batch generate</li>
+<li><code>S</code> - Settings</li>
+</ul>
+<p><strong>Queue Screen</strong>:</p>
+<ul>
+<li><code>P</code> - Pause selected job</li>
+<li><code>X</code> - Cancel selected job</li>
+<li><code>U</code> / <code>D</code> - Move job up/down in queue</li>
+<li><code>R</code> - Retry failed job</li>
+</ul>
+<p><strong>Gallery Screen</strong>:</p>
+<ul>
+<li><code>←</code> / <code>→</code> - Navigate images</li>
+<li><code>Space</code> - Select/deselect</li>
+<li><code>V</code> - View full size</li>
+<li><code>D</code> - Deploy to Bevy</li>
+<li><code>Del</code> - Delete</li>
+</ul>
+<hr/>
+<h2 id="interaction-patterns">Interaction Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#interaction-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dropdown-menus">Dropdown Menus<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dropdown-menus" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Model: [SDXL Pixel Art v2 ▼]  &lt;- Click or press Enter
+       ┌────────────────────────────┐
+       │ SDXL Base                  │
+       │ > SDXL Pixel Art v2        │  &lt;- Selected
+       │ SDXL + 16bit_rpg           │
+       │ SDXL + fantasy_char        │
+       │ Custom Trained v1          │
+       └────────────────────────────┘
+       Press ↑↓ to navigate, Enter to select
+</code></pre>
+<h3 id="modal-dialogs">Modal Dialogs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modal-dialogs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌───────────────────────────────────┐
+│ Deploy to Bevy Project            │
+├───────────────────────────────────┤
+│                                   │
+│ Project: /home/user/my_game       │
+│ Category: sprites/characters      │
+│ Filename: knight.png              │
+│                                   │
+│ [Deploy]  [Cancel]                │
+└───────────────────────────────────┘
+</code></pre>
+<h3 id="notifications">Notifications<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#notifications" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>┌────────────────────────────────────────┐
+│ ✓ Generation complete!                 │
+│   knight_001.png ready                 │
+└────────────────────────────────────────┘
+  (Auto-dismiss in 3s)
+
+┌────────────────────────────────────────┐
+│ ⚠ GPU temperature high (82°C)          │
+│   Consider reducing batch size         │
+└────────────────────────────────────────┘
+  [Dismiss]
+</code></pre>
+<hr/>
+<h2 id="side-by-side-model-comparison">Side-by-Side Model Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#side-by-side-model-comparison" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="workflow-detailed">Workflow Detailed<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workflow-detailed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Step 1: Initiate Comparison</strong></p>
+<pre><code>User is on Generation screen
+Enters prompt: &quot;fantasy mage character&quot;
+Presses [C] to compare models
+</code></pre>
+<p><strong>Step 2: Model Selection</strong></p>
+<pre><code>┌─ Select Models to Compare ──────────────┐
+│ □ SDXL Base                              │
+│ ☑ SDXL + 16bit_rpg                       │
+│ ☑ SDXL + fantasy_char                    │
+│ ☑ Custom Trained v2                      │
+│                                          │
+│ Selected: 3 models                       │
+│ Est. Time: 36-42s (3 × 12-14s)          │
+│                                          │
+│ [Generate]  [Cancel]                     │
+└──────────────────────────────────────────┘
+</code></pre>
+<p><strong>Step 3: Parallel Generation</strong></p>
+<pre><code>TUI sends 3 requests to Python worker:
+- Job 1: SDXL + 16bit_rpg
+- Job 2: SDXL + fantasy_char
+- Job 3: Custom Trained v2
+
+Python worker queues all 3 (processes sequentially)
+TUI subscribes to progress for all 3 jobs
+</code></pre>
+<p><strong>Step 4: Live Updates</strong></p>
+<pre><code>┌─ Generating with 3 models... ──────────┐
+│                                         │
+│ [████████░░] SDXL + 16bit_rpg     82%   │
+│ [███░░░░░░░] SDXL + fantasy_char  30%   │
+│ [░░░░░░░░░░] Custom Trained v2    0%    │
+│                                         │
+│ Overall: [████░░░░░░░] 37%              │
+│ ETA: 24 seconds                         │
+└─────────────────────────────────────────┘
+</code></pre>
+<p><strong>Step 5: Results Display</strong></p>
+<pre><code>(Shows comparison screen from Layout #2)
+- All 3 results side-by-side
+- Metrics comparison
+- Visual differences highlighted
+</code></pre>
+<p><strong>Step 6: User Votes</strong></p>
+<pre><code>User reviews all 3
+Presses [2] to select Model B (fantasy_char)
+System records:
+- Comparison ID
+- Prompt
+- Models tested
+- Winner: fantasy_char
+- User preference data
+</code></pre>
+<p><strong>Step 7: Use Winner</strong></p>
+<pre><code>Selected model becomes default for next generation
+Or user can immediately generate more with winner:
+[G] Generate More with Selected Model
+</code></pre>
+<h3 id="comparison-data-structure">Comparison Data Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comparison-data-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Debug</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Serialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Deserialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ComparisonSession</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Uuid</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    prompt</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    timestamp</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> SystemTime</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    models</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ModelConfig</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    results</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Vec</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">ComparisonResult</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    winner</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Option</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    user_notes</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Option</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">>,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Debug</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Serialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Deserialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ComparisonResult</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    model_name</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> String</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    generation_time</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Duration</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    image_path</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> PathBuf</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    metrics</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> GenerationMetrics</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">#[derive(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Debug</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Serialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Deserialize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">struct</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> GenerationMetrics</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    color_count</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> usize</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    style_score</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,      </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// How well it matches target style</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    prompt_adherence</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,  </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// How well it matches prompt</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    technical_quality</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> f32</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Sharpness, artifacts, etc.</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="comparison-history">Comparison History<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comparison-history" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Stored in SQLite:
+
+CREATE TABLE comparisons (
+    id TEXT PRIMARY KEY,
+    prompt TEXT NOT NULL,
+    timestamp INTEGER NOT NULL,
+    winner_model TEXT,
+    models_tested TEXT,  -- JSON array
+    user_notes TEXT
+);
+
+CREATE TABLE comparison_results (
+    comparison_id TEXT,
+    model_name TEXT,
+    generation_time_ms INTEGER,
+    image_path TEXT,
+    metrics TEXT,  -- JSON
+    FOREIGN KEY (comparison_id) REFERENCES comparisons(id)
+);
+</code></pre>
+<p><strong>Analytics Query</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="sql" data-theme="github-light one-dark-pro"><code data-language="sql" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">-- Which model wins most often?</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">SELECT</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> winner_model, </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">COUNT</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">*</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">as</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> wins</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> comparisons</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">WHERE</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> winner_model </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">IS NOT NULL</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">GROUP BY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> winner_model</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">ORDER BY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> wins </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">DESC</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">-- Average generation time by model</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">SELECT</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> model_name, </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">AVG</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(generation_time_ms) </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">as</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> avg_time</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">FROM</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> comparison_results</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">GROUP BY</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> model_name;</span></span></code></pre></figure>
+<hr/>
+<h2 id="image-preview">Image Preview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#image-preview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="sixel-support">Sixel Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sixel-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Check Terminal Capability</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ratatui_image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">protocol</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">StatefulProtocol</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> detect_best_protocol</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Box</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">dyn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> StatefulProtocol</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Try in order of quality</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    if</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sixel_supported</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Box</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">SixelProtocol</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    } </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">else</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> if</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> kitty_supported</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Box</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">KittyProtocol</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    } </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">else</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        Box</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">HalfblockProtocol</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">())</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Rendering</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">DynamicImage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> ratatui_image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Image</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> render_preview</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">f</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Frame</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">area</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Rect</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img_path</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> img</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">open</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img_path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">unwrap</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">    // Resize to fit terminal area</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">width</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">height</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> calculate_size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">area</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dimensions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">());</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> resized</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> img</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">resize_exact</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">width</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">height</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">FilterType</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Nearest</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> image_widget</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">new</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">resized</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    f</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">render_widget</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">image_widget</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">area</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="live-preview-updates">Live Preview Updates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#live-preview-updates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> subscribe_to_preview</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &amp;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">str</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> topic</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;preview.{}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        loop</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">            if</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> let</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">update</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">zmq_client</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">poll_updates</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">100</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">                if</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> let</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">preview_bytes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> update</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">preview {</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    // Save to temp file</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">                    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> path</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> format!</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/tmp/preview_{}.png&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">job_id</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">                    std</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">fs</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">write</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">preview_bytes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                    // Update TUI</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">                    self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">current_preview </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Some</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">                    self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">needs_redraw </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">                }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="performance-considerations">Performance Considerations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-considerations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="rendering-optimization">Rendering Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rendering-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Only redraw when needed</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">impl</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> App</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> should_redraw</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> bool</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">needs_redraw </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">||</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">has_active_jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">||</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">        self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">animation_frame_changed</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        loop</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">            if</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">should_redraw</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">                self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">render</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">mut</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> terminal</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">                self</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">needs_redraw </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> false</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">            }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">            // Poll at 60 FPS</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">            thread</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sleep</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">Duration</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">from_millis</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">16</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">));</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="async-preview-loading">Async Preview Loading<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#async-preview-loading" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> tokio</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">fs;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">async</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> fn</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> load_preview_async</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> PathBuf</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-></span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> Result</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">&lt;</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">DynamicImage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">> {</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> bytes</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> fs</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">read</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">await</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> img</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> =</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;"> tokio</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">task</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">spawn_blocking</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">move</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;"> ||</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">        image</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">::</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">load_from_memory</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bytes</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    })</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">await</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">??</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    Ok</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">img</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<hr/>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>See <code>docs/09-rust-project-structure.md</code> for codebase organization</li>
+<li>Review <code>docs/07-rust-python-architecture.md</code> for communication patterns</li>
+<li>Check <code>docs/06-implementation-plan.md</code> for implementation guide</li>
+<li>Reference ratatui examples: <a href="https://github.com/ratatui/ratatui/tree/main/examples" class="external">https://github.com/ratatui/ratatui/tree/main/examples<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-48" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#tui-design-and-workflows" data-for="tui-design-and-workflows">TUI Design and Workflows</a></li><li class="depth-1"><a href="#overview" data-for="overview">Overview</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#design-philosophy" data-for="design-philosophy">Design Philosophy</a></li><li class="depth-2"><a href="#principles" data-for="principles">Principles</a></li><li class="depth-2"><a href="#color-scheme" data-for="color-scheme">Color Scheme</a></li><li class="depth-2"><a href="#typography" data-for="typography">Typography</a></li><li class="depth-1"><a href="#screen-layouts" data-for="screen-layouts">Screen Layouts</a></li><li class="depth-2"><a href="#1-generation-screen-main" data-for="1-generation-screen-main">1. Generation Screen (Main)</a></li><li class="depth-2"><a href="#2-compare-models-screen" data-for="2-compare-models-screen">2. Compare Models Screen</a></li><li class="depth-2"><a href="#3-queue-manager-screen" data-for="3-queue-manager-screen">3. Queue Manager Screen</a></li><li class="depth-2"><a href="#4-gpu-monitor-screen" data-for="4-gpu-monitor-screen">4. GPU Monitor Screen</a></li><li class="depth-2"><a href="#5-model-manager-screen" data-for="5-model-manager-screen">5. Model Manager Screen</a></li><li class="depth-2"><a href="#6-gallery-browser" data-for="6-gallery-browser">6. Gallery Browser</a></li><li class="depth-1"><a href="#key-features" data-for="key-features">Key Features</a></li><li class="depth-2"><a href="#1-live-image-preview" data-for="1-live-image-preview">1. Live Image Preview</a></li><li class="depth-2"><a href="#2-model-comparison-workflow" data-for="2-model-comparison-workflow">2. Model Comparison Workflow</a></li><li class="depth-2"><a href="#3-real-time-progress" data-for="3-real-time-progress">3. Real-Time Progress</a></li><li class="depth-2"><a href="#4-batch-operations" data-for="4-batch-operations">4. Batch Operations</a></li><li class="depth-2"><a href="#5-keyboard-shortcuts" data-for="5-keyboard-shortcuts">5. Keyboard Shortcuts</a></li><li class="depth-1"><a href="#interaction-patterns" data-for="interaction-patterns">Interaction Patterns</a></li><li class="depth-2"><a href="#dropdown-menus" data-for="dropdown-menus">Dropdown Menus</a></li><li class="depth-2"><a href="#modal-dialogs" data-for="modal-dialogs">Modal Dialogs</a></li><li class="depth-2"><a href="#notifications" data-for="notifications">Notifications</a></li><li class="depth-1"><a href="#side-by-side-model-comparison" data-for="side-by-side-model-comparison">Side-by-Side Model Comparison</a></li><li class="depth-2"><a href="#workflow-detailed" data-for="workflow-detailed">Workflow Detailed</a></li><li class="depth-2"><a href="#comparison-data-structure" data-for="comparison-data-structure">Comparison Data Structure</a></li><li class="depth-2"><a href="#comparison-history" data-for="comparison-history">Comparison History</a></li><li class="depth-1"><a href="#image-preview" data-for="image-preview">Image Preview</a></li><li class="depth-2"><a href="#sixel-support" data-for="sixel-support">Sixel Support</a></li><li class="depth-2"><a href="#live-preview-updates" data-for="live-preview-updates">Live Preview Updates</a></li><li class="depth-1"><a href="#performance-considerations" data-for="performance-considerations">Performance Considerations</a></li><li class="depth-2"><a href="#rendering-optimization" data-for="rendering-optimization">Rendering Optimization</a></li><li class="depth-2"><a href="#async-preview-loading" data-for="async-preview-loading">Async Preview Loading</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

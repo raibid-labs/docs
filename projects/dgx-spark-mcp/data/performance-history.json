@@ -1,0 +1,124 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-14",
+  "benchmarks": [
+    {
+      "id": "ml-training-1tb",
+      "workloadType": "ml-training",
+      "dataSize": 1099511627776,
+      "hardware": {
+        "cpuCores": 96,
+        "totalMemory": 512,
+        "gpuCount": 8,
+        "gpuModel": "A100"
+      },
+      "config": {
+        "executorMemory": "32g",
+        "executorCores": 8,
+        "executorCount": 8,
+        "gpuEnabled": true
+      },
+      "metrics": {
+        "executionTimeMs": 1800000,
+        "throughputMBps": 600,
+        "cpuEfficiency": 0.85,
+        "gpuEfficiency": 0.92,
+        "memoryEfficiency": 0.88
+      }
+    },
+    {
+      "id": "analytics-10tb",
+      "workloadType": "analytics",
+      "dataSize": 10995116277760,
+      "hardware": {
+        "cpuCores": 96,
+        "totalMemory": 512,
+        "gpuCount": 0
+      },
+      "config": {
+        "executorMemory": "16g",
+        "executorCores": 5,
+        "executorCount": 16,
+        "gpuEnabled": false
+      },
+      "metrics": {
+        "executionTimeMs": 7200000,
+        "throughputMBps": 1500,
+        "cpuEfficiency": 0.78,
+        "memoryEfficiency": 0.82,
+        "shuffleReadMB": 5242880,
+        "shuffleWriteMB": 2621440
+      }
+    },
+    {
+      "id": "etl-5tb",
+      "workloadType": "etl",
+      "dataSize": 5497558138880,
+      "hardware": {
+        "cpuCores": 96,
+        "totalMemory": 512,
+        "gpuCount": 0
+      },
+      "config": {
+        "executorMemory": "12g",
+        "executorCores": 4,
+        "executorCount": 20,
+        "gpuEnabled": false
+      },
+      "metrics": {
+        "executionTimeMs": 3600000,
+        "throughputMBps": 1500,
+        "cpuEfficiency": 0.72,
+        "memoryEfficiency": 0.75,
+        "inputRecords": 50000000000,
+        "outputRecords": 48000000000
+      }
+    }
+  ],
+  "scalingData": [
+    {
+      "workloadType": "ml-training",
+      "baseConfig": {
+        "cpuCores": 48,
+        "dataSize": 1099511627776
+      },
+      "scalingResults": [
+        {
+          "scalingFactor": 1,
+          "cpuCores": 48,
+          "executionTimeMs": 3600000,
+          "efficiency": 1.0
+        },
+        {
+          "scalingFactor": 2,
+          "cpuCores": 96,
+          "executionTimeMs": 2000000,
+          "efficiency": 0.9
+        },
+        {
+          "scalingFactor": 4,
+          "cpuCores": 192,
+          "executionTimeMs": 1100000,
+          "efficiency": 0.82
+        }
+      ]
+    }
+  ],
+  "performanceModels": {
+    "ml-training": {
+      "baseThroughputPerCore": 2.5,
+      "gpuMultiplier": 4.0,
+      "scalingEfficiency": 0.85
+    },
+    "analytics": {
+      "baseThroughputPerCore": 5.0,
+      "shuffleOverhead": 0.3,
+      "scalingEfficiency": 0.78
+    },
+    "etl": {
+      "baseThroughputPerCore": 8.0,
+      "ioOverhead": 0.2,
+      "scalingEfficiency": 0.75
+    }
+  }
+}

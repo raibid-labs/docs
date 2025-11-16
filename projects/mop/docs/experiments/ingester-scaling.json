@@ -1,0 +1,62 @@
+{
+  "name": "Ingester Auto-Scaling Test",
+  "description": "Test reduced ingester count during low-traffic periods to optimize costs",
+  "author": "MOP Team",
+  "version": "1.0.0",
+  "changes": [
+    {
+      "type": "deployment",
+      "component": "mimir-ingester",
+      "container": "ingester",
+      "parameter": "replicas",
+      "value": "3",
+      "description": "Reduce ingester replicas from 6 to 3"
+    }
+  ],
+  "success_metrics": [
+    {
+      "name": "ingester_cpu_utilization",
+      "query": "avg(rate(container_cpu_usage_seconds_total{pod=~\"mimir-ingester.*\"}[5m]))",
+      "direction": "higher",
+      "threshold": 0.8,
+      "description": "Ingester CPU usage - should increase but remain below 80%"
+    },
+    {
+      "name": "ingester_memory_utilization",
+      "query": "avg(container_memory_working_set_bytes{pod=~\"mimir-ingester.*\"} / container_spec_memory_limit_bytes{pod=~\"mimir-ingester.*\"})",
+      "direction": "higher",
+      "threshold": 0.85,
+      "description": "Ingester memory usage - should increase but remain below 85%"
+    },
+    {
+      "name": "sample_ingestion_rate",
+      "query": "sum(rate(mimir_distributor_samples_in_total[5m]))",
+      "direction": "higher",
+      "threshold": 5000,
+      "description": "Sample ingestion rate - should remain stable"
+    },
+    {
+      "name": "ingestion_latency_p95",
+      "query": "histogram_quantile(0.95, rate(mimir_distributor_forward_duration_seconds_bucket[5m]))",
+      "direction": "lower",
+      "threshold": 0.1,
+      "description": "95th percentile ingestion latency - should remain acceptable"
+    }
+  ],
+  "expected_outcomes": {
+    "cost_reduction": "50%",
+    "resource_utilization": "increased but within limits",
+    "ingestion_impact": "none"
+  },
+  "rollback_criteria": {
+    "cpu_utilization": ">80%",
+    "memory_utilization": ">85%",
+    "ingestion_latency_increase": ">50%"
+  },
+  "notes": [
+    "Only run during confirmed low-traffic periods",
+    "Monitor resource utilization closely - should not exceed 80%",
+    "Ensure sufficient headroom for traffic spikes",
+    "Consider implementing HPA (Horizontal Pod Autoscaler) for automatic scaling"
+  ]
+}

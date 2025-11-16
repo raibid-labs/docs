@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>plan</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="plan"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="plan"/><meta name="twitter:description" content="raibid-ci Project Plan - DGX Spark CI Agent Pool Table of Contents Project Overview Milestones M1: Infrastructure Bootstrap M2: GitOps &amp; Autoscaling M3: Rust API &amp; Job Orchestration M4: TUI Client &amp; Management M5: Rust CI Agent M6: Repository Mirroring Dependencies &amp; Critical Path Re..."/><meta property="og:description" content="raibid-ci Project Plan - DGX Spark CI Agent Pool Table of Contents Project Overview Milestones M1: Infrastructure Bootstrap M2: GitOps &amp; Autoscaling M3: Rust API &amp; Job Orchestration M4: TUI Client &amp; Management M5: Rust CI Agent M6: Repository Mirroring Dependencies &amp; Critical Path Re..."/><meta property="og:image:alt" content="raibid-ci Project Plan - DGX Spark CI Agent Pool Table of Contents Project Overview Milestones M1: Infrastructure Bootstrap M2: GitOps &amp; Autoscaling M3: Rust API &amp; Job Orchestration M4: TUI Client &amp; Management M5: Rust CI Agent M6: Repository Mirroring Dependencies &amp; Critical Path Re..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/plan"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/plan"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="raibid-ci Project Plan - DGX Spark CI Agent Pool Table of Contents Project Overview Milestones M1: Infrastructure Bootstrap M2: GitOps &amp; Autoscaling M3: Rust API &amp; Job Orchestration M4: TUI Client &amp; Management M5: Rust CI Agent M6: Repository Mirroring Dependencies &amp; Critical Path Re..."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/plan-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/plan-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/raibid-ci/docs/work/plan-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/raibid-ci/docs/work/plan"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-462"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-462" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/">raibid ci</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/raibid-ci/docs/work/">work</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>plan</a></div></nav><h1 class="article-title">plan</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:14.286Z">Nov 16, 2025</time><span>21 min read</span></p></div></div><article class="popover-hint"><h1 id="raibid-ci-project-plan---dgx-spark-ci-agent-pool">raibid-ci Project Plan - DGX Spark CI Agent Pool<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#raibid-ci-project-plan---dgx-spark-ci-agent-pool" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><a href="#project-overview" class="internal alias">Project Overview</a></li>
+<li><a href="#milestones" class="internal alias">Milestones</a></li>
+<li><a href="#m1-infrastructure-bootstrap" class="internal alias">M1: Infrastructure Bootstrap</a></li>
+<li><a href="#m2-gitops--autoscaling" class="internal alias">M2: GitOps &amp; Autoscaling</a></li>
+<li><a href="#m3-rust-api--job-orchestration" class="internal alias">M3: Rust API &amp; Job Orchestration</a></li>
+<li><a href="#m4-tui-client--management" class="internal alias">M4: TUI Client &amp; Management</a></li>
+<li><a href="#m5-rust-ci-agent" class="internal alias">M5: Rust CI Agent</a></li>
+<li><a href="#m6-repository-mirroring" class="internal alias">M6: Repository Mirroring</a></li>
+<li><a href="#dependencies--critical-path" class="internal alias">Dependencies &amp; Critical Path</a></li>
+<li><a href="#resource-requirements" class="internal alias">Resource Requirements</a></li>
+</ol>
+<hr/>
+<h2 id="project-overview">Project Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Goal:</strong> Build a self-hosted, TUI-first, ephemeral CI agent pool for DGX Spark that maximizes utilization through auto-scaling and efficient resource management.</p>
+<p><strong>Target Platform:</strong></p>
+<ul>
+<li>NVIDIA DGX Spark</li>
+<li>20 CPU cores (10x Cortex-X925, 10x Cortex-A725)</li>
+<li>128GB RAM (112GB available)</li>
+<li>4TB NVMe storage</li>
+<li>Ubuntu 22.04 LTS</li>
+</ul>
+<p><strong>Tech Stack:</strong></p>
+<ul>
+<li>Infrastructure: k3s, Gitea, Redis Streams</li>
+<li>GitOps: Flux CD, KEDA</li>
+<li>Implementation: Rust, Ratatui, Nushell</li>
+<li>Reference: <a href="../../../.././technology-research" class="internal alias" data-slug="technology-research">technology-research.md</a></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Zero-to-N auto-scaling functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rust builds complete with caching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TUI provides real-time monitoring</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Repository mirroring operational</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Sub-60s cold start for new agents</li>
+</ul>
+<hr/>
+<h2 id="milestones">Milestones<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#milestones" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>ID</th><th>Milestone</th><th>Duration</th><th>Completion Criteria</th></tr></thead><tbody><tr><td>M1</td><td>Infrastructure Bootstrap</td><td>3-5 days</td><td>k3s running, Gitea accessible, Redis operational</td></tr><tr><td>M2</td><td>GitOps &amp; Autoscaling</td><td>2-3 days</td><td>Flux syncing, KEDA scaling from queue</td></tr><tr><td>M3</td><td>Rust API &amp; Job Orchestration</td><td>4-6 days</td><td>API handling webhooks, Redis job dispatch</td></tr><tr><td>M4</td><td>TUI Client &amp; Management</td><td>5-7 days</td><td>Real-time dashboard, cluster control</td></tr><tr><td>M5</td><td>Rust CI Agent</td><td>4-6 days</td><td>Agent building/testing Rust projects</td></tr><tr><td>M6</td><td>Repository Mirroring</td><td>3-4 days</td><td>GitHub→Gitea sync with filtering</td></tr></tbody></table></div>
+<p><strong>Total Estimated Duration:</strong> 21-31 days (single developer)</p>
+<hr/>
+<h2 id="m1-infrastructure-bootstrap">M1: Infrastructure Bootstrap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m1-infrastructure-bootstrap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Establish core infrastructure layer on DGX Spark</p>
+<h3 id="issues">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-1-k3s-cluster-setup">Issue #1: k3s Cluster Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-1-k3s-cluster-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> None</p>
+<p><strong>Description:</strong>
+Install and configure k3s on DGX Spark with ARM64-optimized settings.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Verify DGX Spark system requirements (20 cores, 128GB RAM, 4TB storage)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Download k3s ARM64 binary from <a href="https://get.k3s.io" class="external">https://get.k3s.io<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Install k3s with disabled components: <code>--disable traefik</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure kubeconfig at <code>/etc/rancher/k3s/k3s.yaml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify cluster health: <code>kubectl get nodes</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up namespace structure: <code>ci</code>, <code>infrastructure</code>, <code>monitoring</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure resource reservations (8 cores, 16GB for system)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>k3s cluster shows Ready status</li>
+<li>kubectl commands execute without errors</li>
+<li>Namespaces created successfully</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#1-k3s---lightweight-kubernetes-distribution" class="internal alias" data-slug="technology-research">k3s docs</a></p>
+<hr/>
+<h4 id="issue-2-gitea-deployment">Issue #2: Gitea Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-2-gitea-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #1</p>
+<p><strong>Description:</strong>
+Deploy Gitea with OCI registry enabled for Git hosting and container storage.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Gitea namespace: <code>kubectl create namespace infrastructure</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure PostgreSQL StatefulSet for Gitea database</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create PVC for Gitea data (100GB minimum)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Deploy Gitea using Helm chart or manifests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Enable OCI registry in <code>app.ini</code>: <code>[packages] ENABLED = true</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure ingress/service (port 3000 HTTP, 2222 SSH)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create admin user and test repository</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test container push/pull to registry</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure registry mirror for Docker Hub (bandwidth optimization)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Gitea accessible via browser</li>
+<li>Git push/pull operations work</li>
+<li>Docker image push to <code>gitea.dgx.local/test/image:latest</code> succeeds</li>
+<li>OCI registry endpoint reachable</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#2-gitea---self-hosted-git-service" class="internal alias" data-slug="technology-research">Gitea docs</a></p>
+<hr/>
+<h4 id="issue-3-redis-streams-setup">Issue #3: Redis Streams Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-3-redis-streams-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> #1</p>
+<p><strong>Description:</strong>
+Deploy Redis with Streams enabled and persistence configured for job queueing.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Deploy Redis using Bitnami Helm chart</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure AOF persistence: <code>appendonly yes, appendfsync everysec</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Enable RDB snapshots: <code>save 300 10</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create PVC for Redis data (10GB)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Expose Redis service (port 6379)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create initial consumer group: <code>XGROUP CREATE ci-jobs ci-workers 0 MKSTREAM</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test stream operations: <code>XADD</code>, <code>XREADGROUP</code>, <code>XACK</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure maxmemory policy: <code>noeviction</code></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Redis pod running and healthy</li>
+<li>Stream creation/consumption functional</li>
+<li>Persistence working after pod restart</li>
+<li>Consumer group visible via <code>XINFO GROUPS ci-jobs</code></li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#5-redis-streams---job-queue" class="internal alias" data-slug="technology-research">Redis Streams docs</a></p>
+<hr/>
+<h4 id="issue-4-network--storage-configuration">Issue #4: Network &amp; Storage Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-4-network--storage-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> #1</p>
+<p><strong>Description:</strong>
+Configure k3s networking, storage classes, and registry integration.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Set up local-path storage provisioner (k3s default)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test PVC creation and pod mounting</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure k3s registry integration via <code>/etc/rancher/k3s/registries.yaml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Gitea registry as trusted (skip TLS verification for local)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up CoreDNS custom entries for <code>gitea.dgx.local</code>, <code>redis.dgx.local</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Flannel CNI (verify VXLAN port 8472/UDP)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test cross-pod communication</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>PVCs provision successfully</li>
+<li>k3s can pull from Gitea registry</li>
+<li>DNS resolution works for custom domains</li>
+<li>Pod-to-pod networking functional</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#integration-points-3" class="internal alias" data-slug="technology-research">k3s registries config</a></p>
+<hr/>
+<h3 id="m1-deliverables">M1 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m1-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> k3s cluster operational</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Gitea accessible with OCI registry</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Redis Streams functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Storage/networking configured</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation: installation runbook</li>
+</ul>
+<hr/>
+<h2 id="m2-gitops--autoscaling">M2: GitOps &amp; Autoscaling<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m2-gitops--autoscaling" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Enable GitOps automation and event-driven autoscaling</p>
+<h3 id="issues-1">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-5-flux-cd-bootstrap">Issue #5: Flux CD Bootstrap<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-5-flux-cd-bootstrap" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #2</p>
+<p><strong>Description:</strong>
+Bootstrap Flux CD with Gitea as Git source for declarative cluster management.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Generate Gitea personal access token with repo permissions</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Install Flux CLI on DGX: <code>curl -s https://fluxcd.io/install.sh | bash</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Bootstrap Flux: <code>flux bootstrap gitea --hostname=gitea.dgx.local --owner=admin --repository=flux-system</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify Flux controllers running: <code>flux check</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create repository structure: <code>clusters/dgx-spark/{infrastructure,apps}</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up Kustomization hierarchy</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test reconciliation: <code>flux reconcile kustomization flux-system</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure SOPS/Age for secret encryption (optional MVP extension)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Flux controllers healthy</li>
+<li>Git commits auto-applied to cluster</li>
+<li><code>flux get all</code> shows synced resources</li>
+<li>Gitea repository contains cluster state</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#gitea-integration" class="internal alias" data-slug="technology-research">Flux Gitea bootstrap</a></p>
+<hr/>
+<h4 id="issue-6-keda-deployment">Issue #6: KEDA Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-6-keda-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #5</p>
+<p><strong>Description:</strong>
+Deploy KEDA via Flux for Redis Streams-based autoscaling.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create HelmRepository for KEDA: <code>kedacore/charts</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create HelmRelease manifest in <code>infrastructure/keda/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure KEDA namespace and resource limits</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Commit to Git and verify Flux applies</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify KEDA pods: <code>kubectl get pods -n keda</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Check KEDA CRDs: <code>kubectl get crd | grep keda</code></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>KEDA operator and metrics server running</li>
+<li>CRDs installed: <code>scaledjobs.keda.sh</code>, <code>scaledobjects.keda.sh</code></li>
+<li><code>kubectl get scaledjobs --all-namespaces</code> returns no errors</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#installation-example-4" class="internal alias" data-slug="technology-research">KEDA installation</a></p>
+<hr/>
+<h4 id="issue-7-scaledjob-configuration">Issue #7: ScaledJob Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-7-scaledjob-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #6</p>
+<p><strong>Description:</strong>
+Create ScaledJob CRD for CI agent autoscaling based on Redis queue depth.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create ScaledJob manifest: <code>infrastructure/keda/ci-agent-scaledjob.yaml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Redis Streams trigger:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">triggers</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">- </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">redis-streams</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">  metadata</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    address</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">redis.infrastructure.svc:6379</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    stream</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ci-jobs</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    consumerGroup</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">ci-workers</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    pendingEntriesCount</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1&quot;</span></span></code></pre></figure>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set scaling parameters: <code>minReplicaCount: 0</code>, <code>maxReplicaCount: 10</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Job template (placeholder container for testing)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set polling interval: <code>pollingInterval: 10</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Commit and apply via Flux</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test scaling: <code>XADD ci-jobs * test job</code>, verify pod creation</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>ScaledJob resource created</li>
+<li>Adding messages to Redis spawns pods</li>
+<li>Pods terminate after processing</li>
+<li>Scaling to zero after queue empty</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#redis-streams-integration" class="internal alias" data-slug="technology-research">KEDA Redis Streams scaler</a></p>
+<hr/>
+<h3 id="m2-deliverables">M2 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m2-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Flux CD managing cluster state</li>
+<li class="task-list-item"><input type="checkbox" disabled/> KEDA autoscaling functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> ScaledJob responds to Redis queue</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation: GitOps workflow guide</li>
+</ul>
+<hr/>
+<h2 id="m3-rust-api--job-orchestration">M3: Rust API &amp; Job Orchestration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m3-rust-api--job-orchestration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Build server-side Rust API for job dispatch and communication</p>
+<h3 id="issues-2">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-8-api-project-scaffolding">Issue #8: API Project Scaffolding<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-8-api-project-scaffolding" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> None</p>
+<p><strong>Description:</strong>
+Initialize Rust API project with dependencies and project structure.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Rust workspace: <code>cargo new --lib raibid-api</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add dependencies to <code>Cargo.toml</code>:
+<ul>
+<li><code>axum</code> (web framework)</li>
+<li><code>tokio</code> (async runtime)</li>
+<li><code>redis</code> (Redis client)</li>
+<li><code>serde</code>, <code>serde_json</code> (serialization)</li>
+<li><code>kube</code>, <code>k8s-openapi</code> (Kubernetes client)</li>
+<li><code>tracing</code>, <code>tracing-subscriber</code> (logging)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up module structure: <code>api/</code>, <code>jobs/</code>, <code>webhook/</code>, <code>config/</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure cross-compilation for ARM64</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create Dockerfile with multi-stage build</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li><code>cargo build</code> succeeds</li>
+<li>Project compiles for ARM64</li>
+<li>Dependencies resolve correctly</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#81-kube-rs---rust-kubernetes-client" class="internal alias" data-slug="technology-research">kube-rs docs</a></p>
+<hr/>
+<h4 id="issue-9-webhook-handler-implementation">Issue #9: Webhook Handler Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-9-webhook-handler-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #8</p>
+<p><strong>Description:</strong>
+Implement Gitea webhook receiver to capture push events and enqueue jobs.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Axum route: <code>POST /webhook/gitea</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Parse Gitea webhook payload (JSON)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Extract: repository, branch, commit SHA, author</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate webhook signature (HMAC secret)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Generate unique job ID (UUID)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Push job to Redis Streams: <code>XADD ci-jobs * job_id &lt;uuid> repo &lt;repo> ...</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Return 200 OK with job ID</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add error handling and logging</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write unit tests</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Webhook endpoint accepts POST requests</li>
+<li>Jobs appear in Redis stream</li>
+<li>Invalid signatures rejected</li>
+<li>Logs show job creation events</li>
+</ul>
+<p><strong>Reference:</strong> <a href="https://docs.gitea.com/usage/webhooks" class="external">Gitea webhooks<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h4 id="issue-10-job-status-tracker">Issue #10: Job Status Tracker<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-10-job-status-tracker" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #9</p>
+<p><strong>Description:</strong>
+Implement job status tracking using Redis hashes for real-time monitoring.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Redis hash structure: <code>job:&lt;job_id></code> with fields <code>status</code>, <code>started_at</code>, <code>finished_at</code>, <code>agent</code>, <code>logs</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update status on job state changes: <code>pending</code>, <code>running</code>, <code>success</code>, <code>failed</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement TTL for completed jobs (24 hours)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create API endpoint: <code>GET /jobs/:id</code> to fetch status</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create list endpoint: <code>GET /jobs</code> with filtering (status, repo)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add pagination support</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement log streaming via Server-Sent Events (SSE)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Job status persists in Redis</li>
+<li>API returns current job state</li>
+<li>Completed jobs expire after TTL</li>
+<li>SSE streams logs in real-time</li>
+</ul>
+<hr/>
+<h4 id="issue-11-kubernetes-job-creator">Issue #11: Kubernetes Job Creator<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-11-kubernetes-job-creator" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Large | <strong>Depends On:</strong> #8</p>
+<p><strong>Description:</strong>
+Integrate kube-rs to create/manage Kubernetes Jobs for CI agents (alternative to KEDA for manual control).</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Initialize kube client: <code>Client::try_default()</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create Job template in code (mirrors ScaledJob template)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set resource limits: 2 CPU, 4GB RAM per agent</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mount volumes: Docker socket (if using Docker-in-Docker)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set environment variables: <code>REDIS_URL</code>, <code>JOB_ID</code>, <code>REPO</code>, <code>COMMIT</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Apply Job via API: <code>jobs.create(&amp;PostParams::default(), &amp;job_spec)</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Watch Job status and update Redis</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement cleanup: delete completed Jobs after N minutes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add retry logic for failed Jobs</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>API creates Jobs on demand</li>
+<li>Jobs appear in <code>kubectl get jobs -n ci</code></li>
+<li>Job status synced to Redis</li>
+<li>Cleanup removes old Jobs</li>
+</ul>
+<p><strong>Note:</strong> This issue may be deferred if KEDA ScaledJob (Issue #7) handles Job creation adequately. Useful for advanced scheduling logic.</p>
+<p><strong>Reference:</strong> <a href="https://github.com/kube-rs/kube/tree/main/examples" class="external">kube-rs examples<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h4 id="issue-12-api-deployment">Issue #12: API Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-12-api-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #9, #10</p>
+<p><strong>Description:</strong>
+Deploy Rust API to k3s cluster via Flux CD.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Build Docker image: <code>docker buildx build --platform linux/arm64</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Push to Gitea registry: <code>gitea.dgx.local/raibid/api:v0.1</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create Kubernetes Deployment manifest: <code>apps/raibid-api/deployment.yaml</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Service: ClusterIP or LoadBalancer</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set environment variables: <code>REDIS_URL=redis://redis.infrastructure.svc:6379</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add ConfigMap for configuration</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Commit to flux-system repo</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify deployment via Flux: <code>flux reconcile kustomization apps</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test webhook endpoint from outside cluster</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>API pod running in <code>ci</code> namespace</li>
+<li>Webhook endpoint reachable</li>
+<li>Logs show successful startup</li>
+<li>Job creation functional</li>
+</ul>
+<hr/>
+<h3 id="m3-deliverables">M3 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m3-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Rust API deployed and operational</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Webhooks triggering job creation</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Job status tracking functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> API documentation (OpenAPI spec)</li>
+</ul>
+<hr/>
+<h2 id="m4-tui-client--management">M4: TUI Client &amp; Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m4-tui-client--management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Build Ratatui-based TUI for monitoring and control</p>
+<h3 id="issues-3">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-13-tui-project-setup">Issue #13: TUI Project Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-13-tui-project-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> None</p>
+<p><strong>Description:</strong>
+Initialize Ratatui TUI project with core dependencies.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Rust project: <code>cargo new raibid-tui</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add dependencies:
+<ul>
+<li><code>ratatui</code> (TUI framework)</li>
+<li><code>crossterm</code> (terminal backend)</li>
+<li><code>tokio</code> (async runtime)</li>
+<li><code>kube</code>, <code>k8s-openapi</code> (Kubernetes client)</li>
+<li><code>redis</code> (Redis client)</li>
+<li><code>serde</code>, <code>serde_json</code></li>
+<li><code>chrono</code> (timestamps)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set up app state structure</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement event loop with <code>crossterm::event</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create basic terminal initialization/cleanup</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add graceful shutdown on <code>q</code> or <code>Ctrl+C</code></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>TUI compiles and runs</li>
+<li>Terminal restores properly on exit</li>
+<li>Keyboard events processed</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#architecture-and-best-practices-1" class="internal alias" data-slug="technology-research">Ratatui examples</a></p>
+<hr/>
+<h4 id="issue-14-real-time-data-fetching">Issue #14: Real-time Data Fetching<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-14-real-time-data-fetching" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #13</p>
+<p><strong>Description:</strong>
+Implement async data fetching from k3s and Redis for dashboard updates.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create background task for data fetching (Tokio task)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fetch CI jobs from Redis: <code>XRANGE ci-jobs - +</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fetch pod list via kube-rs: <code>Api&lt;Pod>::list()</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fetch ScaledJob status via KEDA CRD</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Query job status from Redis hashes</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Use <code>tokio::sync::mpsc</code> channel to send data to UI thread</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement 1-second refresh rate</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add error handling for connection failures</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Data updates every second</li>
+<li>UI shows current jobs/pods</li>
+<li>No UI blocking during fetch</li>
+<li>Connection errors displayed gracefully</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#integration-with-k3skeda" class="internal alias" data-slug="technology-research">Ratatui async pattern</a></p>
+<hr/>
+<h4 id="issue-15-dashboard-layout">Issue #15: Dashboard Layout<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-15-dashboard-layout" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #14</p>
+<p><strong>Description:</strong>
+Design and implement multi-panel TUI layout with tables, graphs, and logs.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create layout with 3 sections: Jobs (top 50%), Agents (bottom-left 25%), Queue (bottom-right 25%)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Jobs table widget:
+<ul>
+<li>Columns: Job ID, Status, Repo, Branch, Duration, Agent</li>
+<li>Color coding: green (success), yellow (running), red (failed)</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Agents list widget:
+<ul>
+<li>Show active pods with status</li>
+<li>Display current job assignment</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement Queue depth sparkline widget:
+<ul>
+<li>Rolling history (last 60 seconds)</li>
+<li>Visual representation of queue size</li>
+</ul>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add header with system info: cluster name, CPU/RAM usage</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add footer with keybindings: <code>q: quit</code>, <code>r: refresh</code>, <code>Tab: switch view</code></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Dashboard renders correctly at 80x24 and larger</li>
+<li>Tables show live data</li>
+<li>Sparkline updates in real-time</li>
+<li>Layout responsive to terminal resize</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#example-widgets-for-ci-monitoring" class="internal alias" data-slug="technology-research">Ratatui widgets</a></p>
+<hr/>
+<h4 id="issue-16-interactive-controls">Issue #16: Interactive Controls<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-16-interactive-controls" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #15</p>
+<p><strong>Description:</strong>
+Add keyboard navigation and control commands to TUI.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Implement job detail view: press <code>Enter</code> on job row to expand</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add log streaming view: tail last 100 lines of job logs</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement job cancellation: <code>c</code> key to cancel selected job</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add manual job trigger: <code>n</code> key to create new job (prompt for repo/branch)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement agent scaling: <code>+/-</code> to adjust max replicas</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add tab switching: cycle through Jobs/Agents/System views</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement search/filter: <code>/</code> key to filter jobs by repo or status</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>All keybindings functional</li>
+<li>Job details display on demand</li>
+<li>Logs stream in real-time</li>
+<li>Scaling commands update KEDA resources</li>
+</ul>
+<hr/>
+<h4 id="issue-17-tui-deployment">Issue #17: TUI Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-17-tui-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> #16</p>
+<p><strong>Description:</strong>
+Package TUI as standalone binary and distribute for DGX Spark.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Build release binary: <code>cargo build --release --target aarch64-unknown-linux-gnu</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create installation script: copy to <code>/usr/local/bin/raibid-tui</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add shell completion scripts (bash, zsh)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create systemd service for background monitoring (optional)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Write user documentation: keybindings, usage guide</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test on DGX Spark over SSH</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize binary size with <code>strip</code> and LTO</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Binary runs on DGX Spark</li>
+<li>Installation via single script</li>
+<li>Documentation clear and complete</li>
+</ul>
+<hr/>
+<h3 id="m4-deliverables">M4 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m4-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Ratatui TUI fully functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Real-time monitoring of jobs/agents</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Interactive job management</li>
+<li class="task-list-item"><input type="checkbox" disabled/> User guide and keybindings reference</li>
+</ul>
+<hr/>
+<h2 id="m5-rust-ci-agent">M5: Rust CI Agent<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m5-rust-ci-agent" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Implement ephemeral CI agent for Rust project builds</p>
+<h3 id="issues-4">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-18-agent-container-base">Issue #18: Agent Container Base<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-18-agent-container-base" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #3</p>
+<p><strong>Description:</strong>
+Create Docker container image for CI agent with Rust toolchain and dependencies.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Dockerfile based on <code>rust:1.82-bookworm</code> (ARM64)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Install system dependencies: git, ssh, ca-certificates</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Rust toolchain: stable, ARM64 targets</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add Docker CLI for building images (Docker-in-Docker or Docker socket mount)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Install cargo tools: <code>cargo-nextest</code>, <code>cargo-audit</code>, <code>cargo-deny</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure credential helpers for Gitea</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add healthcheck script</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize image size: multi-stage build, layer caching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test build on DGX Spark</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Image builds successfully for ARM64</li>
+<li>Size &lt; 2GB</li>
+<li><code>cargo --version</code> works in container</li>
+<li>Git clone functional</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#83-build-caching-strategies" class="internal alias" data-slug="technology-research">Docker multi-platform builds</a></p>
+<hr/>
+<h4 id="issue-19-job-consumer-implementation">Issue #19: Job Consumer Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-19-job-consumer-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Critical | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #18</p>
+<p><strong>Description:</strong>
+Implement Rust agent logic to consume jobs from Redis Streams.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Connect to Redis: <code>redis::Client::open(REDIS_URL)</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Join consumer group: <code>XGROUP CREATE ci-jobs ci-workers $ MKSTREAM</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement consume loop:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">XREADGROUP</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> GROUP</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> ci</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">workers</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> $</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">HOSTNAME</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> COUNT</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> BLOCK</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 5000</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> STREAMS</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> ci</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">jobs</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ></span></span></code></pre></figure>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Parse job message: extract <code>repo</code>, <code>branch</code>, <code>commit</code>, <code>job_id</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update job status in Redis hash: <code>HSET job:&lt;id> status running</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Clone repository via HTTPS with credentials</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Acknowledge message on success: <code>XACK ci-jobs ci-workers &lt;msg_id></code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Handle errors: log and move to dead-letter queue</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement graceful shutdown (SIGTERM)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Agent consumes messages from Redis</li>
+<li>Job status updates in real-time</li>
+<li>Failed jobs requeue correctly</li>
+<li>Agent terminates cleanly</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#redis-streams--keda-integration" class="internal alias" data-slug="technology-research">Redis Streams consumer pattern</a></p>
+<hr/>
+<h4 id="issue-20-rust-build-pipeline">Issue #20: Rust Build Pipeline<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-20-rust-build-pipeline" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Large | <strong>Depends On:</strong> #19</p>
+<p><strong>Description:</strong>
+Implement full Rust build, test, and publish pipeline in agent.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Run <code>cargo check</code> to validate code</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Execute <code>cargo build --release</code> with target caching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Run tests: <code>cargo nextest run</code> or <code>cargo test</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Capture test output and store in Redis (logs field)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Run linting: <code>cargo clippy -- -D warnings</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Run security audit: <code>cargo audit</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Build Docker image if Dockerfile present:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">docker</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> buildx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> build</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --platform</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> linux/arm64</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -t</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gitea.dgx.local/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$REPO</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$COMMIT</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> .</span></span></code></pre></figure>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Push image to Gitea registry</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update job status: <code>success</code> or <code>failed</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Store build artifacts metadata in Redis</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement build timeout (30 min default)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Complete builds succeed</li>
+<li>Tests execute and report results</li>
+<li>Docker images pushed to registry</li>
+<li>Build logs available via API</li>
+</ul>
+<p><strong>Reference:</strong> <a href="https://doc.rust-lang.org/cargo/guide/build-cache.html" class="external">Cargo build optimization<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h4 id="issue-21-build-caching-strategy">Issue #21: Build Caching Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-21-build-caching-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #20</p>
+<p><strong>Description:</strong>
+Implement persistent caching for Cargo and Docker layers to speed up builds.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Mount persistent volume for Cargo cache: <code>/usr/local/cargo/registry</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure Docker BuildKit cache backend: <code>--cache-from type=registry</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Use per-architecture cache refs: <code>buildcache-arm64</code>, <code>buildcache-amd64</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Enable <code>mode=max</code> for full layer caching</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement cache pruning: delete caches older than 7 days</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Monitor cache hit rate via metrics</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure sccache for Rust compilation caching (optional)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test cache effectiveness: measure build time delta</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Cache hit rate > 70% for repeat builds</li>
+<li>Build time reduced by 2-5x with warm cache</li>
+<li>Cache storage &lt; 50GB per agent</li>
+<li>Metrics show cache usage</li>
+</ul>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#docker-buildx-with-buildkit" class="internal alias" data-slug="technology-research">Docker BuildKit caching</a></p>
+<hr/>
+<h4 id="issue-22-agent-deployment">Issue #22: Agent Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-22-agent-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> High | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> #20</p>
+<p><strong>Description:</strong>
+Deploy CI agent image and update ScaledJob to use it.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Build final agent image: <code>raibid/ci-agent:v0.1</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Push to Gitea registry</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Update ScaledJob template to use agent image</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure resource limits: 2 CPU, 4GB RAM</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mount Docker socket or use Docker-in-Docker</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set environment variables: <code>REDIS_URL</code>, <code>GITEA_URL</code>, <code>GITEA_TOKEN</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add PVC for build cache</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Commit to flux-system repo</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test end-to-end: push code → webhook → build → image published</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Agent pods spawn on job creation</li>
+<li>Builds complete successfully</li>
+<li>Images appear in Gitea registry</li>
+<li>Agents scale to zero when idle</li>
+</ul>
+<hr/>
+<h3 id="m5-deliverables">M5 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m5-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> CI agent container functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rust builds complete with tests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Build caching operational</li>
+<li class="task-list-item"><input type="checkbox" disabled/> End-to-end CI pipeline working</li>
+</ul>
+<hr/>
+<h2 id="m6-repository-mirroring">M6: Repository Mirroring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m6-repository-mirroring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>Objective:</strong> Automate GitHub to Gitea repository synchronization</p>
+<h3 id="issues-5">Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="issue-23-mirroring-strategy-design">Issue #23: Mirroring Strategy Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-23-mirroring-strategy-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> None</p>
+<p><strong>Description:</strong>
+Design mirroring architecture supporting single repo, multiple repos, and org-level sync.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Define configuration schema (YAML):
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="yaml" data-theme="github-light one-dark-pro"><code data-language="yaml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">mirrors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">single</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    source</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">https://github.com/user/repo</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    target</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">gitea.dgx.local/user/repo</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  - </span><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">type</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">org</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    source</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">https://github.com/myorg</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    include</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;^rust-.*&quot;</span></span>
+<span data-line><span style="--shiki-light:#22863A;--shiki-dark:#E06C75;">    exclude</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;.*-archive$&quot;</span></span></code></pre></figure>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Choose implementation: Gitea built-in mirroring vs custom sync tool</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Design sync frequency: webhook-based (instant) vs polling (5 min)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Plan authentication: GitHub PAT, SSH keys</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Design conflict resolution: GitHub as source of truth (force push)</li>
+</ul>
+<p><strong>Decisions:</strong></p>
+<ul>
+<li>Use Gitea’s built-in repository mirroring for simplicity</li>
+<li>Configure webhooks for instant sync</li>
+<li>Create Nushell script for org-level setup automation</li>
+</ul>
+<hr/>
+<h4 id="issue-24-gitea-mirror-configuration">Issue #24: Gitea Mirror Configuration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-24-gitea-mirror-configuration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #23</p>
+<p><strong>Description:</strong>
+Configure Gitea repository mirroring for single and multiple repositories.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Gitea API client script (Nushell or Rust)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement mirror creation via API: <code>POST /api/v1/repos/migrate</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set mirror parameters:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;clone_addr&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;https://github.com/user/repo&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;mirror&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;mirror_interval&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;1h&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;repo_name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;repo&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;repo_owner&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;user&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;service&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;github&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Configure GitHub PAT for authentication</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test single repo mirroring</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify sync on GitHub push</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add error handling for failed syncs</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Gitea mirrors GitHub repos</li>
+<li>Pushes to GitHub trigger sync within 5 minutes</li>
+<li>Mirror status visible in Gitea UI</li>
+</ul>
+<p><strong>Reference:</strong> <a href="https://docs.gitea.com/api/1.20/#tag/repository/operation/repoMigrate" class="external">Gitea API - Repository Migration<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></p>
+<hr/>
+<h4 id="issue-25-organization-level-sync">Issue #25: Organization-Level Sync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-25-organization-level-sync" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Large | <strong>Depends On:</strong> #24</p>
+<p><strong>Description:</strong>
+Implement org-level mirroring with regex filtering for selective sync.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create Nushell script: <code>mirror-org.nu</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fetch GitHub org repositories via API: <code>gh repo list myorg --json name,url</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Filter repositories with regex: <code>$repos | where name =~ $include_pattern</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Exclude repositories matching exclude pattern</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Iterate and create mirrors via Gitea API</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Store mirror configuration in Git (declarative)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Implement idempotency: skip existing mirrors</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add dry-run mode for testing</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Schedule periodic re-scan (daily cron) for new repos</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Script mirrors entire org with filtering</li>
+<li>New repos auto-detected and mirrored</li>
+<li>Configuration version-controlled</li>
+<li>Dry-run shows planned actions</li>
+</ul>
+<p><strong>Example:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nu" data-theme="github-light one-dark-pro"><code data-language="nu" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># mirror-org.nu</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> org</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;myorg&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> include</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;^rust-.*&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> exclude</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;.*-archive$&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> repo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> list</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $org</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">json</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> name</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">url</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> from json</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> where</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> name</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =~</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $include</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> where</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> name</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> !~</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $exclude</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">|</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> each</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> { |</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">repo</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">|</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">    gitea-mirror</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> create</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $repo.url</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $repo.name</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Reference:</strong> <a href="../../../.././technology-research#example-1-find-all-pending-ci-jobs" class="internal alias" data-slug="technology-research">Nushell GitHub integration</a></p>
+<hr/>
+<h4 id="issue-26-webhook-based-sync">Issue #26: Webhook-Based Sync<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-26-webhook-based-sync" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Medium | <strong>Complexity:</strong> Medium | <strong>Depends On:</strong> #24</p>
+<p><strong>Description:</strong>
+Configure GitHub webhooks to trigger immediate Gitea sync on push.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Create webhook endpoint in Rust API: <code>POST /webhook/github-sync</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Register webhook in GitHub repository settings</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate webhook signature (HMAC)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Extract repository name from payload</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Trigger Gitea mirror sync via API: <code>POST /api/v1/repos/{owner}/{repo}/mirror-sync</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Return 200 OK to GitHub</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Log sync requests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Handle rate limits (GitHub: 5000/hour, Gitea: unlimited)</li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>Pushes to GitHub trigger instant sync</li>
+<li>Webhook delivers within 5 seconds</li>
+<li>Gitea mirror updated within 30 seconds</li>
+<li>Failed syncs logged and alerted</li>
+</ul>
+<hr/>
+<h4 id="issue-27-mirror-monitoring">Issue #27: Mirror Monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issue-27-mirror-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>Priority:</strong> Low | <strong>Complexity:</strong> Small | <strong>Depends On:</strong> #26</p>
+<p><strong>Description:</strong>
+Add mirroring status to TUI dashboard and expose metrics.</p>
+<p><strong>Tasks:</strong></p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Add Mirrors tab to TUI: show all configured mirrors</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Display sync status: last sync time, next sync, errors</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fetch mirror status via Gitea API: <code>GET /api/v1/repos/{owner}/{repo}</code></li>
+<li class="task-list-item"><input type="checkbox" disabled/> Highlight stale mirrors (no sync in 24 hours)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Add manual sync trigger from TUI: <code>s</code> key</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Export Prometheus metrics: <code>mirror_sync_duration</code>, <code>mirror_sync_errors</code></li>
+</ul>
+<p><strong>Success Criteria:</strong></p>
+<ul>
+<li>TUI shows mirror health</li>
+<li>Manual sync works on-demand</li>
+<li>Metrics available for alerting</li>
+</ul>
+<hr/>
+<h3 id="m6-deliverables">M6 Deliverables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#m6-deliverables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Repository mirroring functional</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Org-level sync with filtering</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Webhook-based instant sync</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mirror monitoring in TUI</li>
+</ul>
+<hr/>
+<h2 id="dependencies--critical-path">Dependencies &amp; Critical Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies--critical-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="dependency-graph">Dependency Graph<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependency-graph" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><button class="expand-button" aria-label="Expand mermaid diagram" data-view-component="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" d="M3.72 3.72a.75.75 0 011.06 1.06L2.56 7h10.88l-2.22-2.22a.75.75 0 011.06-1.06l3.5 3.5a.75.75 0 010 1.06l-3.5 3.5a.75.75 0 11-1.06-1.06l2.22-2.22H2.56l2.22 2.22a.75.75 0 11-1.06 1.06l-3.5-3.5a.75.75 0 010-1.06l3.5-3.5z"></path></svg></button><code class="mermaid" data-clipboard="&quot;graph TD\n    I1[#1 k3s Setup] --> I2[#2 Gitea]\n    I1 --> I3[#3 Redis]\n    I1 --> I4[#4 Network/Storage]\n    I2 --> I5[#5 Flux Bootstrap]\n    I5 --> I6[#6 KEDA]\n    I6 --> I7[#7 ScaledJob]\n    I3 --> I7\n    I8[#8 API Scaffolding] --> I9[#9 Webhook Handler]\n    I9 --> I10[#10 Job Status]\n    I8 --> I11[#11 K8s Job Creator]\n    I9 --> I12[#12 API Deployment]\n    I10 --> I12\n    I13[#13 TUI Setup] --> I14[#14 Data Fetching]\n    I14 --> I15[#15 Dashboard Layout]\n    I15 --> I16[#16 Interactive Controls]\n    I16 --> I17[#17 TUI Deploy]\n    I3 --> I18[#18 Agent Base]\n    I18 --> I19[#19 Job Consumer]\n    I19 --> I20[#20 Build Pipeline]\n    I20 --> I21[#21 Build Caching]\n    I20 --> I22[#22 Agent Deploy]\n    I7 --> I22\n    I23[#23 Mirror Design] --> I24[#24 Gitea Mirror]\n    I24 --> I25[#25 Org Sync]\n    I24 --> I26[#26 Webhook Sync]\n    I26 --> I27[#27 Mirror Monitor]\n    I2 --> I24&quot;">graph TD
+    I1[#1 k3s Setup] --> I2[#2 Gitea]
+    I1 --> I3[#3 Redis]
+    I1 --> I4[#4 Network/Storage]
+    I2 --> I5[#5 Flux Bootstrap]
+    I5 --> I6[#6 KEDA]
+    I6 --> I7[#7 ScaledJob]
+    I3 --> I7
+    I8[#8 API Scaffolding] --> I9[#9 Webhook Handler]
+    I9 --> I10[#10 Job Status]
+    I8 --> I11[#11 K8s Job Creator]
+    I9 --> I12[#12 API Deployment]
+    I10 --> I12
+    I13[#13 TUI Setup] --> I14[#14 Data Fetching]
+    I14 --> I15[#15 Dashboard Layout]
+    I15 --> I16[#16 Interactive Controls]
+    I16 --> I17[#17 TUI Deploy]
+    I3 --> I18[#18 Agent Base]
+    I18 --> I19[#19 Job Consumer]
+    I19 --> I20[#20 Build Pipeline]
+    I20 --> I21[#21 Build Caching]
+    I20 --> I22[#22 Agent Deploy]
+    I7 --> I22
+    I23[#23 Mirror Design] --> I24[#24 Gitea Mirror]
+    I24 --> I25[#25 Org Sync]
+    I24 --> I26[#26 Webhook Sync]
+    I26 --> I27[#27 Mirror Monitor]
+    I2 --> I24
+</code><div id="mermaid-container" role="dialog"><div id="mermaid-space"><div class="mermaid-content"></div></div></div></pre>
+<h3 id="critical-path-longest-dependency-chain">Critical Path (Longest Dependency Chain)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#critical-path-longest-dependency-chain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>#1</strong> k3s Setup (1 day)</li>
+<li><strong>#2</strong> Gitea Deployment (1.5 days)</li>
+<li><strong>#5</strong> Flux Bootstrap (1 day)</li>
+<li><strong>#6</strong> KEDA Deployment (0.5 days)</li>
+<li><strong>#7</strong> ScaledJob Configuration (1 day)</li>
+<li><strong>#18</strong> Agent Base (1.5 days)</li>
+<li><strong>#19</strong> Job Consumer (1.5 days)</li>
+<li><strong>#20</strong> Build Pipeline (2.5 days)</li>
+<li><strong>#22</strong> Agent Deploy (0.5 days)</li>
+</ol>
+<p><strong>Critical Path Duration:</strong> ~11 days (minimum timeline if parallelizing non-dependent tasks)</p>
+<h3 id="parallelization-opportunities">Parallelization Opportunities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallelization-opportunities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Week 1:</strong></p>
+<ul>
+<li>Parallel: #1 k3s, #8 API Scaffolding, #13 TUI Setup, #23 Mirror Design</li>
+<li>Sequence: #2 Gitea → #3 Redis → #4 Network</li>
+</ul>
+<p><strong>Week 2:</strong></p>
+<ul>
+<li>Parallel: #5 Flux, #9 Webhook Handler, #14 TUI Data Fetching</li>
+<li>Sequence: #6 KEDA → #7 ScaledJob</li>
+</ul>
+<p><strong>Week 3:</strong></p>
+<ul>
+<li>Parallel: #18 Agent Base, #10 Job Status, #15 Dashboard Layout, #24 Gitea Mirror</li>
+<li>Sequence: #19 Job Consumer → #20 Build Pipeline</li>
+</ul>
+<p><strong>Week 4:</strong></p>
+<ul>
+<li>Parallel: #21 Build Caching, #16 Interactive Controls, #25 Org Sync</li>
+<li>Sequence: #22 Agent Deploy, #12 API Deploy</li>
+</ul>
+<hr/>
+<h2 id="resource-requirements">Resource Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resource-requirements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="development-environment">Development Environment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#development-environment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Hardware:</strong></p>
+<ul>
+<li>DGX Spark (ARM64)</li>
+<li>Development machine (for cross-compilation if needed)</li>
+<li>Network access to GitHub, crates.io, Docker Hub</li>
+</ul>
+<p><strong>Software:</strong></p>
+<ul>
+<li>Rust 1.82+ (stable)</li>
+<li>Docker 24+</li>
+<li>kubectl 1.28+</li>
+<li>Flux CLI 2.3+</li>
+<li>Nushell 0.103+</li>
+<li>Git 2.40+</li>
+</ul>
+<h3 id="cluster-resource-allocation">Cluster Resource Allocation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cluster-resource-allocation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Reserved for Infrastructure (always running):</strong></p>
+<ul>
+<li>k3s control plane: 2 cores, 2GB RAM</li>
+<li>Gitea: 2 cores, 4GB RAM, 100GB disk</li>
+<li>Redis: 1 core, 2GB RAM, 10GB disk</li>
+<li>Flux controllers: 0.5 cores, 512MB RAM</li>
+<li>KEDA: 0.5 cores, 512MB RAM</li>
+<li>Rust API: 0.5 cores, 512MB RAM</li>
+</ul>
+<p><strong>Total Reserved:</strong> ~6.5 cores, ~9.5GB RAM, ~110GB disk</p>
+<p><strong>Available for CI Agents:</strong> ~13.5 cores, ~102.5GB RAM</p>
+<p><strong>Max Concurrent Agents:</strong> 6 (at 2 cores, 4GB each) or 10 (at 1 core, 2GB each)</p>
+<h3 id="storage-breakdown">Storage Breakdown<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#storage-breakdown" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Component</th><th>Size</th><th>Purpose</th></tr></thead><tbody><tr><td>Gitea data</td><td>100 GB</td><td>Git repos + OCI registry</td></tr><tr><td>Redis persistence</td><td>10 GB</td><td>Job queue + status</td></tr><tr><td>Build cache (shared)</td><td>50 GB</td><td>Cargo registry + Docker layers</td></tr><tr><td>System/temp</td><td>40 GB</td><td>Logs, temp files</td></tr><tr><td><strong>Total</strong></td><td><strong>200 GB</strong></td><td>NVMe SSD</td></tr></tbody></table></div>
+<p><strong>Note:</strong> 4TB available, 200GB needed for MVP (5% utilization). Ample room for growth.</p>
+<h3 id="network-requirements">Network Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-requirements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>Bandwidth:</strong> 1 Gbps minimum (for image push/pull)</li>
+<li><strong>Latency:</strong> &lt;10ms to Gitea/Redis (same host)</li>
+<li><strong>Egress:</strong> ~10 GB/day (pulling dependencies, pushing images)</li>
+</ul>
+<h3 id="external-dependencies">External Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#external-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>crates.io:</strong> Rust dependency registry (fallback: vendored dependencies)</li>
+<li><strong>GitHub:</strong> Source repository mirroring</li>
+<li><strong>Docker Hub:</strong> Base images (mirrored in Gitea for offline operation)</li>
+</ul>
+<hr/>
+<h2 id="success-metrics">Success Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="performance-targets">Performance Targets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-targets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Agent cold start: &lt;60 seconds (pod creation to job start)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rust build (cached): &lt;5 minutes for medium project</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rust build (cold): &lt;15 minutes for medium project</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Queue to execution latency: &lt;10 seconds</li>
+<li class="task-list-item"><input type="checkbox" disabled/> TUI refresh rate: 1 second</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Cache hit rate: >70%</li>
+</ul>
+<h3 id="reliability-targets">Reliability Targets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#reliability-targets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Agent success rate: >95% (excluding code failures)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> KEDA scaling accuracy: &lt;5% overshoot/undershoot</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Zero data loss in Redis (with persistence)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Gitea uptime: >99% (single node acceptable for MVP)</li>
+</ul>
+<h3 id="usability-targets">Usability Targets<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#usability-targets" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> TUI usable over 2G SSH connection</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation complete (installation, usage, troubleshooting)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Setup time from bare metal: &lt;4 hours</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Mirroring setup: &lt;30 minutes per org</li>
+</ul>
+<hr/>
+<h2 id="risk-mitigation">Risk Mitigation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-mitigation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical-risks">Technical Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Impact</th><th>Probability</th><th>Mitigation</th></tr></thead><tbody><tr><td>ARM64 compatibility issues</td><td>High</td><td>Low</td><td>All components verified ARM64-ready; test early</td></tr><tr><td>Docker-in-Docker performance</td><td>Medium</td><td>Medium</td><td>Use Docker socket mount; benchmark both approaches</td></tr><tr><td>Cache storage exhaustion</td><td>Medium</td><td>Medium</td><td>Implement cache pruning; monitor disk usage</td></tr><tr><td>Redis memory limits</td><td>Medium</td><td>Low</td><td>Configure maxmemory policy; use persistence</td></tr><tr><td>KEDA scaling delays</td><td>Low</td><td>Medium</td><td>Tune polling interval; test under load</td></tr></tbody></table></div>
+<h3 id="operational-risks">Operational Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#operational-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Impact</th><th>Probability</th><th>Mitigation</th></tr></thead><tbody><tr><td>Single point of failure (Gitea)</td><td>High</td><td>Medium</td><td>Document backup/restore; plan HA for post-MVP</td></tr><tr><td>Network partition</td><td>High</td><td>Low</td><td>Implement offline mode; cache dependencies</td></tr><tr><td>Disk failure</td><td>High</td><td>Low</td><td>RAID or external backup; monitor SMART data</td></tr><tr><td>Certificate expiration</td><td>Low</td><td>Medium</td><td>Use Let’s Encrypt automation or long-lived certs</td></tr></tbody></table></div>
+<h3 id="deferred-features-post-mvp">Deferred Features (Post-MVP)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deferred-features-post-mvp" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>High availability (multi-node k3s)</li>
+<li>GPU time-slicing for ML testing</li>
+<li>Multi-language agents (Go, Python, Node.js)</li>
+<li>Web UI (Tauri-based)</li>
+<li>Advanced caching (sccache, remote build cache)</li>
+<li>Integration with external CI (GitHub Actions, GitLab CI)</li>
+<li>Image vulnerability scanning (Trivy, Clair)</li>
+</ul>
+<hr/>
+<h2 id="appendix">Appendix<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#appendix" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="useful-commands-reference">Useful Commands Reference<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#useful-commands-reference" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>k3s:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -sfL</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://get.k3s.io</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> -</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Uninstall</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">/usr/local/bin/k3s-uninstall.sh</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Logs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">journalctl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -u</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> k3s</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span></span></code></pre></figure>
+<p><strong>Flux:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Bootstrap</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">flux</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> bootstrap</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gitea</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --hostname=gitea.dgx.local</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --owner=admin</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --repository=flux-system</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Status</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">flux</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> all</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">flux</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> logs</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --all-namespaces</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Force reconcile</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">flux</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> reconcile</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> kustomization</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> apps</span></span></code></pre></figure>
+<p><strong>KEDA:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># List scaled jobs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scaledjobs</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Describe scaler</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> describe</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scaledjob</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci-agent-scaler</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># View metrics</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --raw</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /apis/external.metrics.k8s.io/v1beta1</span></span></code></pre></figure>
+<p><strong>Redis:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Connect</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">redis-cli</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -h</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> redis.infrastructure.svc</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check stream</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">XINFO</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> STREAM</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci-jobs</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># List consumer groups</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">XINFO</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> GROUPS</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci-jobs</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check pending</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">XPENDING</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci-jobs</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci-workers</span></span></code></pre></figure>
+<p><strong>Gitea:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># API: Create mirror</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://gitea.dgx.local/api/v1/repos/migrate</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Authorization: token </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$GITEA_TOKEN</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '{&quot;clone_addr&quot;: &quot;https://github.com/user/repo&quot;, &quot;mirror&quot;: true}'</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># API: Trigger sync</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -X</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> POST</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://gitea.dgx.local/api/v1/repos/user/repo/mirror-sync</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Authorization: token </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$GITEA_TOKEN</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span></code></pre></figure>
+<h3 id="glossary">Glossary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#glossary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><strong>DGX Spark:</strong> NVIDIA’s ARM64-based AI edge device</li>
+<li><strong>Ephemeral Agent:</strong> Short-lived CI agent that terminates after job completion</li>
+<li><strong>GitOps:</strong> Infrastructure management via Git as source of truth</li>
+<li><strong>KEDA:</strong> Kubernetes Event-Driven Autoscaling</li>
+<li><strong>OCI:</strong> Open Container Initiative (container image standard)</li>
+<li><strong>ScaledJob:</strong> KEDA CRD for creating Jobs based on events</li>
+<li><strong>TUI:</strong> Terminal User Interface (vs GUI)</li>
+<li><strong>Zero-to-N Scaling:</strong> Scaling from 0 replicas to N based on demand</li>
+</ul>
+<hr/>
+<p><strong>Document Version:</strong> 1.0
+<strong>Created:</strong> 2025-10-28
+<strong>Author:</strong> raibid-ci planning team
+<strong>License:</strong> MIT</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-247" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#raibid-ci-project-plan---dgx-spark-ci-agent-pool" data-for="raibid-ci-project-plan---dgx-spark-ci-agent-pool">raibid-ci Project Plan - DGX Spark CI Agent Pool</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#project-overview" data-for="project-overview">Project Overview</a></li><li class="depth-1"><a href="#milestones" data-for="milestones">Milestones</a></li><li class="depth-1"><a href="#m1-infrastructure-bootstrap" data-for="m1-infrastructure-bootstrap">M1: Infrastructure Bootstrap</a></li><li class="depth-2"><a href="#issues" data-for="issues">Issues</a></li><li class="depth-2"><a href="#m1-deliverables" data-for="m1-deliverables">M1 Deliverables</a></li><li class="depth-1"><a href="#m2-gitops--autoscaling" data-for="m2-gitops--autoscaling">M2: GitOps &amp; Autoscaling</a></li><li class="depth-2"><a href="#issues-1" data-for="issues-1">Issues</a></li><li class="depth-2"><a href="#m2-deliverables" data-for="m2-deliverables">M2 Deliverables</a></li><li class="depth-1"><a href="#m3-rust-api--job-orchestration" data-for="m3-rust-api--job-orchestration">M3: Rust API &amp; Job Orchestration</a></li><li class="depth-2"><a href="#issues-2" data-for="issues-2">Issues</a></li><li class="depth-2"><a href="#m3-deliverables" data-for="m3-deliverables">M3 Deliverables</a></li><li class="depth-1"><a href="#m4-tui-client--management" data-for="m4-tui-client--management">M4: TUI Client &amp; Management</a></li><li class="depth-2"><a href="#issues-3" data-for="issues-3">Issues</a></li><li class="depth-2"><a href="#m4-deliverables" data-for="m4-deliverables">M4 Deliverables</a></li><li class="depth-1"><a href="#m5-rust-ci-agent" data-for="m5-rust-ci-agent">M5: Rust CI Agent</a></li><li class="depth-2"><a href="#issues-4" data-for="issues-4">Issues</a></li><li class="depth-2"><a href="#m5-deliverables" data-for="m5-deliverables">M5 Deliverables</a></li><li class="depth-1"><a href="#m6-repository-mirroring" data-for="m6-repository-mirroring">M6: Repository Mirroring</a></li><li class="depth-2"><a href="#issues-5" data-for="issues-5">Issues</a></li><li class="depth-2"><a href="#m6-deliverables" data-for="m6-deliverables">M6 Deliverables</a></li><li class="depth-1"><a href="#dependencies--critical-path" data-for="dependencies--critical-path">Dependencies &amp; Critical Path</a></li><li class="depth-2"><a href="#dependency-graph" data-for="dependency-graph">Dependency Graph</a></li><li class="depth-2"><a href="#critical-path-longest-dependency-chain" data-for="critical-path-longest-dependency-chain">Critical Path (Longest Dependency Chain)</a></li><li class="depth-2"><a href="#parallelization-opportunities" data-for="parallelization-opportunities">Parallelization Opportunities</a></li><li class="depth-1"><a href="#resource-requirements" data-for="resource-requirements">Resource Requirements</a></li><li class="depth-2"><a href="#development-environment" data-for="development-environment">Development Environment</a></li><li class="depth-2"><a href="#cluster-resource-allocation" data-for="cluster-resource-allocation">Cluster Resource Allocation</a></li><li class="depth-2"><a href="#storage-breakdown" data-for="storage-breakdown">Storage Breakdown</a></li><li class="depth-2"><a href="#network-requirements" data-for="network-requirements">Network Requirements</a></li><li class="depth-2"><a href="#external-dependencies" data-for="external-dependencies">External Dependencies</a></li><li class="depth-1"><a href="#success-metrics" data-for="success-metrics">Success Metrics</a></li><li class="depth-2"><a href="#performance-targets" data-for="performance-targets">Performance Targets</a></li><li class="depth-2"><a href="#reliability-targets" data-for="reliability-targets">Reliability Targets</a></li><li class="depth-2"><a href="#usability-targets" data-for="usability-targets">Usability Targets</a></li><li class="depth-1"><a href="#risk-mitigation" data-for="risk-mitigation">Risk Mitigation</a></li><li class="depth-2"><a href="#technical-risks" data-for="technical-risks">Technical Risks</a></li><li class="depth-2"><a href="#operational-risks" data-for="operational-risks">Operational Risks</a></li><li class="depth-2"><a href="#deferred-features-post-mvp" data-for="deferred-features-post-mvp">Deferred Features (Post-MVP)</a></li><li class="depth-1"><a href="#appendix" data-for="appendix">Appendix</a></li><li class="depth-2"><a href="#useful-commands-reference" data-for="useful-commands-reference">Useful Commands Reference</a></li><li class="depth-2"><a href="#glossary" data-for="glossary">Glossary</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

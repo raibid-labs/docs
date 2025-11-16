@@ -1,0 +1,259 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for infrastructure tooling and automation",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "infrastructure",
+    "description": "Infrastructure tooling for {{INFRASTRUCTURE_PURPOSE}}",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "{{PRIMARY_LANGUAGE}}",
+    "secondary": ["nushell", "shell", "dockerfile"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "validate": "just validate",
+    "deploy": "just deploy"
+  },
+
+  "contextFiles": [
+    "README.md",
+    "Justfile",
+    "scripts/**/*.nu",
+    "config/**/*",
+    "{{language_specific_config}}"
+  ],
+
+  "fileStructure": {
+    "scripts/": "Automation scripts (prefer Nushell)",
+    "config/": "Configuration files and templates",
+    "tests/": "Infrastructure tests",
+    "docs/": "Runbooks and documentation",
+    "playbooks/": "Deployment playbooks (if applicable)",
+    "modules/": "Reusable infrastructure modules"
+  },
+
+  "tools": {
+    "automation": {
+      "primary": "just",
+      "scripting": "nushell",
+      "fallback": "bash/shell for compatibility"
+    },
+    "validation": {
+      "syntax": "Language-specific linters",
+      "integration": "Integration test framework",
+      "security": "Security scanning tools"
+    },
+    "deployment": {
+      "ci": "GitHub Actions",
+      "cd": "GitOps or direct deployment"
+    }
+  },
+
+  "rules": {
+    "infrastructure": [
+      "Infrastructure as Code (IaC) principles",
+      "Idempotent operations required",
+      "Validate before applying changes",
+      "Implement dry-run mode for all operations",
+      "Log all operations with timestamps",
+      "Implement rollback procedures",
+      "Test in non-production first",
+      "Document disaster recovery procedures"
+    ],
+    "scripting": [
+      "Prefer Nushell over Bash for new scripts",
+      "Include error handling in all scripts",
+      "Validate inputs and prerequisites",
+      "Use meaningful variable names",
+      "Add comments for complex logic",
+      "Make scripts idempotent",
+      "Include usage documentation"
+    ],
+    "security": [
+      "Never commit secrets or credentials",
+      "Use environment variables for sensitive data",
+      "Implement least privilege access",
+      "Audit all privileged operations",
+      "Scan for security vulnerabilities",
+      "Follow security best practices",
+      "Document security considerations"
+    ],
+    "reliability": [
+      "Implement retries with exponential backoff",
+      "Add timeouts to prevent hanging",
+      "Handle partial failures gracefully",
+      "Provide clear error messages",
+      "Log sufficient information for debugging",
+      "Implement health checks",
+      "Test failure scenarios"
+    ]
+  },
+
+  "infrastructureTypes": {
+    "cicd": {
+      "description": "Continuous Integration/Deployment",
+      "examples": ["raibid-ci"],
+      "tools": ["GitHub Actions", "Jenkins", "GitLab CI"]
+    },
+    "provisioning": {
+      "description": "Server and resource provisioning",
+      "tools": ["Terraform", "Pulumi", "CloudFormation"]
+    },
+    "configuration": {
+      "description": "Configuration management",
+      "tools": ["Ansible", "Chef", "Puppet"]
+    },
+    "monitoring": {
+      "description": "Monitoring and observability",
+      "tools": ["Prometheus", "Grafana", "ELK Stack"]
+    },
+    "networking": {
+      "description": "Network infrastructure",
+      "tools": ["Istio", "Calico", "Cilium"]
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "just setup - Initialize environment",
+      "Configure credentials (following security best practices)",
+      "Validate prerequisites"
+    ],
+    "development": [
+      "just validate - Validate configurations",
+      "just test - Run infrastructure tests",
+      "just lint - Check code quality",
+      "just plan - Show planned changes (dry-run)"
+    ],
+    "deployment": [
+      "just deploy-dev - Deploy to development",
+      "just deploy-staging - Deploy to staging",
+      "just deploy-prod - Deploy to production (requires approval)"
+    ],
+    "maintenance": [
+      "just backup - Create backups",
+      "just restore - Restore from backup",
+      "just health-check - Verify system health",
+      "just cleanup - Remove obsolete resources"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "Syntax validation",
+      "Linting",
+      "Security scanning",
+      "Integration tests",
+      "Dry-run deployment"
+    ],
+    "deployment": {
+      "dev": "Automatic on merge to main",
+      "staging": "Automatic on release tag",
+      "production": "Manual approval required"
+    }
+  },
+
+  "testing": {
+    "unit": "Test individual components",
+    "integration": "Test system integration",
+    "endToEnd": "Full deployment tests",
+    "chaosEngineering": "Failure scenario testing",
+    "loadTesting": "Performance and scaling tests"
+  },
+
+  "monitoring": {
+    "metrics": "Collect and expose key metrics",
+    "logging": "Structured logging for all operations",
+    "tracing": "Distributed tracing for complex flows",
+    "alerting": "Configure alerts for critical issues",
+    "dashboards": "Create operational dashboards"
+  },
+
+  "documentation": {
+    "readme": "Overview, setup, usage instructions",
+    "architecture": "System architecture and design",
+    "runbooks": "Operational procedures",
+    "troubleshooting": "Common issues and solutions",
+    "adr": "Architecture Decision Records",
+    "recovery": "Disaster recovery procedures"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for infrastructure projects",
+    "tasks": {
+      "default": "list",
+      "setup": "Initialize environment and dependencies",
+      "validate": "Validate all configurations",
+      "test": "Run infrastructure tests",
+      "lint": "Check code quality",
+      "fmt": "Format code",
+      "plan": "Show planned changes (dry-run)",
+      "apply": "Apply changes",
+      "deploy-dev": "Deploy to development environment",
+      "deploy-staging": "Deploy to staging environment",
+      "deploy-prod": "Deploy to production (requires approval)",
+      "rollback": "Rollback to previous version",
+      "backup": "Create backup",
+      "restore": "Restore from backup",
+      "health-check": "Verify system health",
+      "logs": "View system logs",
+      "monitor": "Open monitoring dashboard",
+      "cleanup": "Remove obsolete resources",
+      "docs": "Generate documentation"
+    }
+  },
+
+  "securityPractices": [
+    "Never store secrets in code",
+    "Use secret management systems",
+    "Implement RBAC and least privilege",
+    "Audit all privileged operations",
+    "Scan for vulnerabilities regularly",
+    "Rotate credentials periodically",
+    "Encrypt sensitive data at rest and in transit",
+    "Implement network segmentation",
+    "Use secure communication protocols",
+    "Follow compliance requirements"
+  ],
+
+  "disasterRecovery": {
+    "backups": {
+      "frequency": "Define backup schedule",
+      "retention": "Define retention policy",
+      "testing": "Regularly test restore procedures",
+      "storage": "Secure offsite backup storage"
+    },
+    "rpo": "Recovery Point Objective - maximum acceptable data loss",
+    "rto": "Recovery Time Objective - maximum acceptable downtime",
+    "procedures": "Documented recovery procedures",
+    "testing": "Regular disaster recovery drills"
+  },
+
+  "bestPractices": [
+    "Infrastructure as Code for all resources",
+    "Version control for all configurations",
+    "Automate repetitive tasks",
+    "Implement idempotent operations",
+    "Use immutable infrastructure where possible",
+    "Separate environments (dev, staging, prod)",
+    "Implement proper access controls",
+    "Monitor and alert on key metrics",
+    "Document operational procedures",
+    "Test failure scenarios regularly",
+    "Implement gradual rollouts",
+    "Keep dependencies up to date",
+    "Regular security audits",
+    "Maintain disaster recovery plans"
+  ]
+}

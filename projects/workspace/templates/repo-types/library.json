@@ -1,0 +1,252 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Generic library template for reusable code",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "library",
+    "description": "Reusable library for {{LIBRARY_PURPOSE}}",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "{{PRIMARY_LANGUAGE}}",
+    "secondary": []
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "doc": "just doc",
+    "publish": "just publish"
+  },
+
+  "contextFiles": [
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "{{language_config_file}}"
+  ],
+
+  "fileStructure": {
+    "src/": "Library source code",
+    "tests/": "Comprehensive test suite",
+    "docs/": "Documentation",
+    "examples/": "Usage examples",
+    "benches/": "Performance benchmarks (if applicable)"
+  },
+
+  "languageSpecific": {
+    "rust": {
+      "configFile": "Cargo.toml",
+      "publishTo": "crates.io",
+      "documentation": "docs.rs",
+      "standards": "Rust API Guidelines"
+    },
+    "python": {
+      "configFile": "pyproject.toml",
+      "publishTo": "PyPI",
+      "documentation": "Read the Docs or MkDocs",
+      "packageManager": "uv or poetry"
+    },
+    "typescript": {
+      "configFile": "package.json",
+      "publishTo": "npm",
+      "documentation": "TypeDoc",
+      "bundler": "tsup or rollup"
+    },
+    "go": {
+      "configFile": "go.mod",
+      "publishTo": "GitHub (go get)",
+      "documentation": "pkg.go.dev",
+      "standards": "Effective Go"
+    }
+  },
+
+  "rules": {
+    "library": [
+      "Semantic versioning (semver) is mandatory",
+      "Maintain backward compatibility within major versions",
+      "Comprehensive API documentation required",
+      "Include usage examples for all public APIs",
+      "Minimal external dependencies",
+      "Support multiple versions (LTS strategy)",
+      "Clear deprecation policy and timeline",
+      "Public APIs must be stable and well-tested"
+    ],
+    "documentation": [
+      "Document all public APIs comprehensively",
+      "Include code examples for common use cases",
+      "Maintain a detailed CHANGELOG.md",
+      "Provide migration guides for breaking changes",
+      "Document error conditions and exceptions",
+      "Include performance characteristics",
+      "Explain design decisions and trade-offs"
+    ],
+    "testing": [
+      "Minimum 90% code coverage for public APIs",
+      "Test all documented examples",
+      "Include integration tests",
+      "Test error conditions thoroughly",
+      "Performance regression tests",
+      "Test compatibility with supported versions",
+      "Benchmark critical paths"
+    ],
+    "versioning": [
+      "Follow semantic versioning strictly",
+      "Tag all releases in Git",
+      "Update CHANGELOG.md for every release",
+      "Maintain compatibility matrix",
+      "Support at least 2 major versions",
+      "Provide upgrade guides"
+    ],
+    "publishing": [
+      "Automated publishing from CI/CD",
+      "Sign releases where applicable",
+      "Include LICENSE file",
+      "Verify package contents before publishing",
+      "Test installation on clean environment",
+      "Publish to language-specific registry"
+    ]
+  },
+
+  "publicApi": {
+    "stability": "Mark stability level (stable, unstable, deprecated)",
+    "documentation": "Comprehensive docs for all public items",
+    "testing": "Extensive tests for all public APIs",
+    "examples": "Real-world usage examples",
+    "deprecation": "Clear process and timeline for deprecations"
+  },
+
+  "workflows": {
+    "development": [
+      "just dev - Development mode with file watching",
+      "just test - Run test suite",
+      "just doc - Generate documentation",
+      "just lint - Check code quality",
+      "just coverage - Generate coverage report"
+    ],
+    "release": [
+      "Update CHANGELOG.md",
+      "Bump version following semver",
+      "just release - Build and publish",
+      "Tag release in Git",
+      "Create GitHub release with notes"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "Linting and formatting",
+      "Type checking",
+      "Test suite on multiple versions",
+      "Code coverage requirements",
+      "Documentation build",
+      "Example code verification",
+      "Package build verification"
+    ],
+    "matrix": {
+      "comment": "Test across language versions and platforms",
+      "languageVersions": ["Multiple versions"],
+      "platforms": ["Linux", "macOS", "Windows"]
+    },
+    "publishing": {
+      "trigger": "Git tag (v*)",
+      "registry": "Language-specific package registry",
+      "verification": "Test installation before publishing"
+    }
+  },
+
+  "documentation": {
+    "readme": {
+      "sections": [
+        "Description and features",
+        "Installation instructions",
+        "Quick start guide",
+        "API overview",
+        "Examples",
+        "Contributing guidelines",
+        "License information"
+      ]
+    },
+    "apiDocs": "Comprehensive API reference",
+    "examples": "Working code examples",
+    "guides": "In-depth usage guides",
+    "changelog": "Detailed version history"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for library projects",
+    "tasks": {
+      "default": "list",
+      "build": "{{build_command}}",
+      "test": "{{test_command}}",
+      "test-all": "Test on all supported versions",
+      "coverage": "Generate coverage report",
+      "lint": "{{lint_command}}",
+      "fmt": "{{format_command}}",
+      "doc": "Generate documentation",
+      "doc-open": "Generate and open documentation",
+      "bench": "Run benchmarks",
+      "publish-check": "Verify package before publishing",
+      "publish": "Build and publish to registry",
+      "release": "Automated release process",
+      "clean": "Clean build artifacts",
+      "example": "Run example code"
+    }
+  },
+
+  "releaseProcess": {
+    "steps": [
+      "Run full test suite",
+      "Update CHANGELOG.md",
+      "Bump version in config file",
+      "Update documentation",
+      "Commit changes",
+      "Create Git tag",
+      "Push tag to trigger CI/CD",
+      "Verify package published successfully",
+      "Create GitHub release",
+      "Announce release (if significant)"
+    ]
+  },
+
+  "dependencies": {
+    "strategy": "Minimize dependencies",
+    "evaluation": "Carefully vet each dependency",
+    "versions": "Use conservative version constraints",
+    "updates": "Regular security updates",
+    "licenses": "Verify compatible licenses",
+    "vendoring": "Consider for critical dependencies"
+  },
+
+  "compatibility": {
+    "languageVersions": "Document minimum and tested versions",
+    "platforms": "Specify supported platforms",
+    "breakingChanges": "Only in major versions",
+    "deprecation": "One major version warning period",
+    "testing": "Test across version matrix"
+  },
+
+  "bestPractices": [
+    "Design API for ease of use",
+    "Keep public API surface minimal",
+    "Use semantic versioning strictly",
+    "Maintain detailed changelog",
+    "Provide comprehensive examples",
+    "Document performance characteristics",
+    "Handle errors gracefully",
+    "Support long-term stability",
+    "Test thoroughly across versions",
+    "Keep dependencies minimal",
+    "Make breaking changes carefully",
+    "Provide migration guides",
+    "Respond to user feedback",
+    "Monitor usage patterns"
+  ]
+}

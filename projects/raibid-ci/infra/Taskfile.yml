@@ -1,0 +1,186 @@
+version: '3'
+
+# Infrastructure Task Automation
+# Provides convenient commands for validating, deploying, and managing infrastructure
+
+vars:
+  INFRA_DIR: '{{.TASKFILE_DIR}}'
+  SCRIPTS_DIR: '{{.INFRA_DIR}}/scripts'
+
+tasks:
+  # Validation Tasks
+  validate:
+    desc: Validate all infrastructure manifests
+    cmds:
+      - '{{.SCRIPTS_DIR}}/validate-manifests.sh'
+
+  lint:
+    desc: Lint all infrastructure manifests
+    cmds:
+      - '{{.SCRIPTS_DIR}}/lint-manifests.sh'
+
+  check-deps:
+    desc: Check infrastructure component dependencies
+    cmds:
+      - '{{.SCRIPTS_DIR}}/check-dependencies.sh'
+
+  validate-all:
+    desc: Run all validation checks
+    cmds:
+      - task: validate
+      - task: lint
+      - task: check-deps
+
+  # Component-specific validation
+  validate-k3s:
+    desc: Validate k3s manifests
+    cmds:
+      - echo "Validating k3s configuration files..."
+      - test -f {{.INFRA_DIR}}/k3s/config.yaml
+      - test -f {{.INFRA_DIR}}/k3s/rootless-config.yaml
+
+  validate-gitea:
+    desc: Validate Gitea manifests
+    cmds:
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/gitea/namespace.yaml
+      - helm lint {{.INFRA_DIR}}/gitea/ || echo "Helm chart not found, checking values files..."
+      - test -f {{.INFRA_DIR}}/gitea/values.yaml
+
+  validate-redis:
+    desc: Validate Redis manifests
+    cmds:
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/redis/namespace.yaml
+      - test -f {{.INFRA_DIR}}/redis/values.yaml
+
+  validate-keda:
+    desc: Validate KEDA manifests
+    cmds:
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/keda/namespace.yaml
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/keda/scaledobject.yaml
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/keda/triggerauth.yaml
+
+  validate-flux:
+    desc: Validate Flux manifests
+    cmds:
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/flux/namespace.yaml
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/flux/gitrepository.yaml
+      - kubectl apply --dry-run=client -f {{.INFRA_DIR}}/flux/kustomization.yaml
+
+  # Deployment Tasks (via raibid-cli)
+  deploy-k3s:
+    desc: Deploy k3s cluster
+    cmds:
+      - raibid-cli setup k3s
+
+  deploy-redis:
+    desc: Deploy Redis
+    deps: [deploy-k3s]
+    cmds:
+      - raibid-cli setup redis
+
+  deploy-gitea:
+    desc: Deploy Gitea
+    deps: [deploy-k3s]
+    cmds:
+      - raibid-cli setup gitea
+
+  deploy-keda:
+    desc: Deploy KEDA
+    deps: [deploy-k3s, deploy-redis]
+    cmds:
+      - raibid-cli setup keda
+
+  deploy-flux:
+    desc: Deploy Flux
+    deps: [deploy-k3s, deploy-gitea]
+    cmds:
+      - raibid-cli setup flux
+
+  deploy-all:
+    desc: Deploy all infrastructure components in order
+    cmds:
+      - task: deploy-k3s
+      - task: deploy-redis
+      - task: deploy-gitea
+      - task: deploy-keda
+      - task: deploy-flux
+
+  # Status Tasks
+  status:
+    desc: Check status of all infrastructure components
+    cmds:
+      - echo "k3s status:"
+      - systemctl is-active k3s || systemctl is-active k3s-rootless || echo "k3s not running"
+      - echo ""
+      - echo "Redis status:"
+      - kubectl get pods -n raibid-redis 2>/dev/null || echo "Redis not deployed"
+      - echo ""
+      - echo "Gitea status:"
+      - kubectl get pods -n raibid-gitea 2>/dev/null || echo "Gitea not deployed"
+      - echo ""
+      - echo "KEDA status:"
+      - kubectl get pods -n keda 2>/dev/null || echo "KEDA not deployed"
+      - echo ""
+      - echo "Flux status:"
+      - kubectl get pods -n flux-system 2>/dev/null || echo "Flux not deployed"
+
+  # Cleanup Tasks
+  clean-k3s:
+    desc: Uninstall k3s
+    cmds:
+      - raibid-cli teardown k3s
+
+  clean-redis:
+    desc: Uninstall Redis
+    cmds:
+      - raibid-cli teardown redis
+
+  clean-gitea:
+    desc: Uninstall Gitea
+    cmds:
+      - raibid-cli teardown gitea
+
+  clean-keda:
+    desc: Uninstall KEDA
+    cmds:
+      - raibid-cli teardown keda
+
+  clean-flux:
+    desc: Uninstall Flux
+    cmds:
+      - raibid-cli teardown flux
+
+  clean-all:
+    desc: Uninstall all infrastructure components
+    cmds:
+      - task: clean-flux
+      - task: clean-keda
+      - task: clean-gitea
+      - task: clean-redis
+      - task: clean-k3s
+
+  # Development Tasks
+  dev-setup:
+    desc: Setup development environment
+    cmds:
+      - echo "Installing development dependencies..."
+      - pip3 install --user yamllint || echo "yamllint installation failed"
+      - echo "Development environment ready!"
+
+  # Testing Tasks
+  test-manifests:
+    desc: Test all manifests are valid
+    cmds:
+      - task: validate-all
+
+  # Documentation Tasks
+  docs:
+    desc: Generate or view documentation
+    cmds:
+      - echo "Infrastructure Documentation:"
+      - echo "  - Main README: {{.INFRA_DIR}}/README.md"
+      - echo "  - k3s: {{.INFRA_DIR}}/k3s/README.md"
+      - echo "  - Gitea: {{.INFRA_DIR}}/gitea/README.md"
+      - echo "  - Redis: {{.INFRA_DIR}}/redis/README.md"
+      - echo "  - KEDA: {{.INFRA_DIR}}/keda/README.md"
+      - echo "  - Flux: {{.INFRA_DIR}}/flux/README.md"

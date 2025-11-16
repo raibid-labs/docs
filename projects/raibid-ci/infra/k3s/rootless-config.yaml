@@ -1,0 +1,30 @@
+# k3s Rootless Configuration
+# Rootless mode for running k3s without root privileges
+
+# Rootless mode
+rootless: true
+
+# Kubeconfig
+write-kubeconfig-mode: "0644"
+write-kubeconfig: "~/.kube/config"
+
+# Network (rootless uses slirp4netns by default)
+cluster-cidr: "10.42.0.0/16"
+service-cidr: "10.43.0.0/16"
+
+# Snapshotter (overlayfs for rootless)
+snapshotter: "overlayfs"
+
+# Disable components that require root
+disable:
+  - traefik
+
+# Node labels
+node-label:
+  - "raibid-ci=true"
+  - "mode=rootless"
+
+# TLS SANs
+tls-san:
+  - "localhost"
+  - "127.0.0.1"

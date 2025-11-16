@@ -1,0 +1,172 @@
+---
+# Resource Quotas for raibid-ci namespace
+# Prevent CI jobs from consuming all cluster resources
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: raibid-ci-quota
+  namespace: raibid-ci
+  labels:
+    app.kubernetes.io/name: resource-quota
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  hard:
+    # Allow up to 10 CI agent pods
+    pods: "10"
+    # Limit total CPU to 10 cores (leave 10 for system + infrastructure)
+    requests.cpu: "10000m"
+    limits.cpu: "10000m"
+    # Limit total memory to 80GB (leave 48GB for system + infrastructure)
+    requests.memory: "80Gi"
+    limits.memory: "80Gi"
+    # Storage limits
+    persistentvolumeclaims: "10"
+    requests.storage: "100Gi"
+
+---
+# Resource Quotas for infrastructure namespace
+# Infrastructure services (Gitea, Redis, KEDA, Flux)
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: raibid-infrastructure-quota
+  namespace: raibid-infrastructure
+  labels:
+    app.kubernetes.io/name: resource-quota
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  hard:
+    # Allow reasonable number of infrastructure pods
+    pods: "20"
+    # Reserve 6 cores for infrastructure
+    requests.cpu: "6000m"
+    limits.cpu: "8000m"
+    # Reserve 32GB for infrastructure
+    requests.memory: "32Gi"
+    limits.memory: "40Gi"
+    # Storage for Gitea repositories and Redis
+    persistentvolumeclaims: "5"
+    requests.storage: "500Gi"
+
+---
+# Resource Quotas for monitoring namespace
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: raibid-monitoring-quota
+  namespace: raibid-monitoring
+  labels:
+    app.kubernetes.io/name: resource-quota
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  hard:
+    pods: "10"
+    requests.cpu: "2000m"
+    limits.cpu: "4000m"
+    requests.memory: "8Gi"
+    limits.memory: "16Gi"
+    persistentvolumeclaims: "3"
+    requests.storage: "100Gi"
+
+---
+# LimitRange for raibid-ci namespace
+# Set default resource limits for CI pods
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: raibid-ci-limits
+  namespace: raibid-ci
+  labels:
+    app.kubernetes.io/name: limit-range
+    app.kubernetes.io/component: ci
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  limits:
+  - max:
+      cpu: "4000m"
+      memory: "16Gi"
+    min:
+      cpu: "100m"
+      memory: "128Mi"
+    default:
+      cpu: "1000m"
+      memory: "2Gi"
+    defaultRequest:
+      cpu: "500m"
+      memory: "1Gi"
+    type: Container
+  - max:
+      cpu: "8000m"
+      memory: "32Gi"
+    type: Pod
+
+---
+# LimitRange for infrastructure namespace
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: raibid-infrastructure-limits
+  namespace: raibid-infrastructure
+  labels:
+    app.kubernetes.io/name: limit-range
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  limits:
+  - max:
+      cpu: "4000m"
+      memory: "16Gi"
+    min:
+      cpu: "50m"
+      memory: "64Mi"
+    default:
+      cpu: "500m"
+      memory: "1Gi"
+    defaultRequest:
+      cpu: "250m"
+      memory: "512Mi"
+    type: Container
+  - max:
+      cpu: "8000m"
+      memory: "32Gi"
+    type: Pod
+
+---
+# LimitRange for monitoring namespace
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: raibid-monitoring-limits
+  namespace: raibid-monitoring
+  labels:
+    app.kubernetes.io/name: limit-range
+    app.kubernetes.io/component: monitoring
+    app.kubernetes.io/part-of: raibid-ci
+spec:
+  limits:
+  - max:
+      cpu: "2000m"
+      memory: "8Gi"
+    min:
+      cpu: "50m"
+      memory: "64Mi"
+    default:
+      cpu: "500m"
+      memory: "1Gi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "256Mi"
+    type: Container
+  - max:
+      cpu: "4000m"
+      memory: "16Gi"
+    type: Pod

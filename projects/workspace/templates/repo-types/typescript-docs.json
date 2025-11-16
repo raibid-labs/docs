@@ -1,0 +1,217 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for TypeScript documentation sites (Docusaurus, VitePress)",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "typescript-docs",
+    "description": "Documentation site built with modern web technologies",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "typescript",
+    "secondary": ["javascript", "scss", "markdown"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "dev": "just dev",
+    "serve": "just serve",
+    "deploy": "just deploy"
+  },
+
+  "contextFiles": [
+    "package.json",
+    "tsconfig.json",
+    "docusaurus.config.ts",
+    "vitepress.config.ts",
+    "README.md",
+    "docs/**/*.md",
+    "src/**/*.{ts,tsx}"
+  ],
+
+  "fileStructure": {
+    "docs/": "Markdown documentation content",
+    "src/": "Custom components and pages",
+    "static/": "Static assets (images, files)",
+    "blog/": "Blog posts (if enabled)",
+    "i18n/": "Internationalization content",
+    "scripts/": "Build and deployment scripts",
+    "styles/": "SCSS/CSS stylesheets"
+  },
+
+  "framework": {
+    "docusaurus": {
+      "version": "3.x",
+      "features": [
+        "Versioned docs",
+        "Blog",
+        "Search (Algolia or local)",
+        "Dark mode",
+        "MDX support",
+        "API reference generation"
+      ]
+    },
+    "vitepress": {
+      "version": "1.x",
+      "features": [
+        "Vue 3 powered",
+        "Lightning fast",
+        "Built-in search",
+        "Dark mode",
+        "Markdown extensions"
+      ]
+    }
+  },
+
+  "tools": {
+    "packageManager": "pnpm",
+    "nodejs": ">=18.0.0",
+    "typescript": "^5.0.0",
+    "linting": {
+      "eslint": "^8.0.0",
+      "prettier": "^3.0.0",
+      "stylelint": "For SCSS/CSS linting"
+    },
+    "markdown": {
+      "remark": "Markdown processing",
+      "rehype": "HTML processing",
+      "mermaid": "Diagrams"
+    }
+  },
+
+  "rules": {
+    "typescript": [
+      "Enable strict mode in tsconfig.json",
+      "Use interfaces for props, types for unions",
+      "Prefer const over let",
+      "Use optional chaining and nullish coalescing",
+      "Document complex types",
+      "Avoid any - use unknown instead"
+    ],
+    "documentation": [
+      "Write clear, concise content",
+      "Use active voice",
+      "Include code examples",
+      "Add alt text to all images",
+      "Use frontmatter for metadata",
+      "Keep navigation structure logical",
+      "Test all links regularly"
+    ],
+    "styling": [
+      "Use CSS custom properties for theming",
+      "Mobile-first responsive design",
+      "Follow WCAG 2.1 AA accessibility standards",
+      "Use semantic HTML",
+      "Optimize images (WebP, lazy loading)",
+      "Keep CSS modular with SCSS"
+    ],
+    "content": [
+      "Check spelling and grammar",
+      "Use consistent terminology",
+      "Include table of contents for long pages",
+      "Version API documentation",
+      "Add last updated dates",
+      "Include search keywords in frontmatter"
+    ]
+  },
+
+  "mcpServers": {
+    "markdown": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-markdown"],
+      "description": "Markdown processing and linting"
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "pnpm install",
+      "just setup"
+    ],
+    "development": [
+      "just dev - Start development server with hot reload",
+      "just build - Build for production",
+      "just serve - Preview production build",
+      "just lint - Check code quality",
+      "just check-links - Verify all links work"
+    ],
+    "deployment": [
+      "just deploy - Deploy to hosting platform",
+      "GitHub Pages, Netlify, Vercel supported"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "pnpm lint",
+      "pnpm build",
+      "Link checker",
+      "Lighthouse CI for performance"
+    ],
+    "deployment": {
+      "branch": "main",
+      "platforms": ["GitHub Pages", "Netlify", "Vercel", "Cloudflare Pages"],
+      "preview": "Deploy preview for pull requests"
+    }
+  },
+
+  "seo": {
+    "sitemap": true,
+    "robots": true,
+    "openGraph": "Configure for social sharing",
+    "analytics": ["Google Analytics", "Plausible", "Umami"],
+    "canonicalUrl": "Set base URL in config"
+  },
+
+  "documentation": {
+    "readme": "Include preview link, development setup, contribution guidelines",
+    "contributing": "Documentation writing guidelines",
+    "styleGuide": "Content style and formatting standards",
+    "componentDocs": "Document custom React/Vue components"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for docs projects",
+    "tasks": {
+      "default": "list",
+      "setup": "pnpm install",
+      "dev": "pnpm start",
+      "build": "pnpm build",
+      "serve": "pnpm serve",
+      "lint": "pnpm lint",
+      "fmt": "pnpm format",
+      "type-check": "tsc --noEmit",
+      "check-links": "pnpm markdown-link-check docs/**/*.md",
+      "lighthouse": "pnpm lighthouse-ci",
+      "deploy": "pnpm deploy",
+      "clean": "rm -rf build/ .docusaurus/ node_modules/.cache",
+      "search-index": "pnpm docusaurus-search-local:index"
+    }
+  },
+
+  "accessibilityChecks": [
+    "Semantic HTML structure",
+    "ARIA labels where needed",
+    "Keyboard navigation support",
+    "Color contrast ratios",
+    "Focus indicators",
+    "Screen reader testing",
+    "Alt text for images"
+  ],
+
+  "performance": {
+    "imageOptimization": "Use WebP, modern formats, lazy loading",
+    "codesplitting": "Automatic with Vite/Webpack",
+    "caching": "Service worker or CDN caching",
+    "bundleSize": "Monitor with webpack-bundle-analyzer",
+    "lightHouse": "Target 90+ scores"
+  }
+}

@@ -1,0 +1,234 @@
+# raibid-cli justfile
+# Build automation for raibid-labs meta-management CLI
+
+# Default recipe - show available commands
+default:
+    @just --list
+
+# Build Commands
+# ==============
+
+# Compile all workspace crates in development mode
+build:
+    cargo build
+
+# Compile all crates optimized for production
+build-release:
+    cargo build --release
+
+# Build only the CLI binary
+build-cli:
+    cargo build --bin raibid
+
+# Build CLI in release mode
+build-cli-release:
+    cargo build --bin raibid --release
+
+# Build only the core library
+build-core:
+    cargo build --package raibid-core
+
+# Remove all compiled artifacts
+clean:
+    cargo clean
+
+# Run Commands
+# ============
+
+# Execute the CLI with optional arguments
+cli *ARGS:
+    cargo run --bin raibid -- {{ARGS}}
+
+# Run CLI in optimized mode
+cli-release *ARGS:
+    cargo run --bin raibid --release -- {{ARGS}}
+
+# Launch the CLI in TUI mode
+tui:
+    cargo run --bin raibid -- tui
+
+# Run TUI in release mode
+tui-release:
+    cargo run --bin raibid --release -- tui
+
+# Test Commands
+# =============
+
+# Run all unit, integration, and doc tests
+test:
+    cargo test
+
+# Execute tests with output visible
+test-verbose:
+    cargo test -- --nocapture
+
+# Run only unit tests
+test-unit:
+    cargo test --lib
+
+# Run only integration tests
+test-integration:
+    cargo test --test '*'
+
+# Run only doc tests
+test-doc:
+    cargo test --doc
+
+# Test only the CLI package
+test-cli:
+    cargo test --bin raibid
+
+# Test only the core library
+test-core:
+    cargo test --package raibid-core
+
+# Run a specific test by name
+test-name NAME:
+    cargo test {{NAME}}
+
+# Generate code coverage reports (requires tarpaulin)
+test-coverage:
+    cargo tarpaulin --out Html --output-dir coverage
+
+# Quality Checks
+# ==============
+
+# Validate code compilation
+check:
+    cargo check --all-targets
+
+# Run clippy static analyzer with strict warnings
+lint:
+    cargo clippy --all-targets -- -D warnings
+
+# Automatically correct linting issues
+lint-fix:
+    cargo clippy --all-targets --fix
+
+# Verify code formatting
+fmt-check:
+    cargo fmt --all -- --check
+
+# Apply code formatting
+fmt:
+    cargo fmt --all
+
+# Execute all quality checks (check, lint, format, test)
+ci: check lint fmt-check test
+
+# Development Commands
+# ====================
+
+# Rebuild automatically on file changes (requires cargo-watch)
+watch:
+    cargo watch -x build
+
+# Rerun tests on modifications
+watch-test:
+    cargo watch -x test
+
+# Monitor and run CLI
+watch-cli:
+    cargo watch -x 'run --bin raibid'
+
+# Installation
+# ============
+
+# Install CLI binary globally
+install-cli:
+    cargo install --path . --bin raibid
+
+# Install development utilities
+install-tools:
+    cargo install cargo-watch cargo-tarpaulin
+
+# Utilities
+# =========
+
+# Display dependency tree
+deps:
+    cargo tree
+
+# Check for outdated dependencies
+outdated:
+    cargo outdated
+
+# Update all dependencies
+update:
+    cargo update
+
+# Generate and open documentation
+docs:
+    cargo doc --open --no-deps
+
+# Display workspace metadata
+info:
+    @echo "=== Workspace Info ==="
+    @echo "Name: raibid-cli"
+    @echo "Version: $(cargo metadata --no-deps --format-version 1 | jq -r '.packages[0].version')"
+    @echo "Members:"
+    @cargo metadata --no-deps --format-version 1 | jq -r '.workspace_members[]'
+
+# Run performance benchmarks (if configured)
+bench:
+    cargo bench
+
+# Git Workflow
+# ============
+
+# Show current branch and uncommitted changes
+status:
+    @echo "=== Git Status ==="
+    @git branch --show-current
+    @git status --short
+
+# Run formatters, linters, and tests before committing
+pre-commit: fmt lint test
+    @echo "✅ Pre-commit checks passed!"
+
+# Demo Commands
+# =============
+
+# Demo: List repositories
+demo-list:
+    @echo "=== Demo: List Repositories ==="
+    cargo run --bin raibid -- list
+
+# Demo: Show help
+demo-help:
+    @echo "=== Demo: Help ==="
+    cargo run --bin raibid -- --help
+
+# Demo: Show config
+demo-config:
+    @echo "=== Demo: Config ==="
+    cargo run --bin raibid -- config show
+
+# Demo: Dry run sync
+demo-sync-dry:
+    @echo "=== Demo: Sync (Dry Run) ==="
+    cargo run --bin raibid -- sync --all --dry-run
+
+# Nushell Scripts
+# ===============
+
+# Run repository discovery script
+discover-repos:
+    nu scripts/discover-repos.nu
+
+# Validate project structure
+validate:
+    nu scripts/validate.nu
+
+# Setup
+# =====
+
+# Initialize development environment
+setup-dev:
+    @echo "Setting up development environment..."
+    @just install-tools
+    @echo "✅ Development environment ready!"
+
+# Quick start - build and run help
+quick-start: build
+    @just demo-help

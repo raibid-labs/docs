@@ -1,0 +1,209 @@
+{
+  "$schema": "https://claude.ai/schemas/project-config.json",
+  "version": "1.0.0",
+  "extends": "../repo-claude-config.json",
+  "description": "Template for Python ML/AI workloads (dgx-* pattern)",
+
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "type": "python-ml",
+    "description": "Python-based ML/AI service optimized for GPU workloads",
+    "repository": "https://github.com/raibid-labs/{{REPO_NAME}}"
+  },
+
+  "language": {
+    "primary": "python",
+    "secondary": ["rust", "nushell", "dockerfile", "cuda"]
+  },
+
+  "buildCommands": {
+    "build": "just build",
+    "test": "just test",
+    "lint": "just lint",
+    "format": "just fmt",
+    "dev": "just dev",
+    "train": "just train",
+    "notebook": "just notebook",
+    "gpu-check": "just gpu-check"
+  },
+
+  "contextFiles": [
+    "pyproject.toml",
+    "poetry.lock",
+    "uv.lock",
+    "Justfile",
+    "README.md",
+    "requirements.txt",
+    "notebooks/*.ipynb",
+    "src/**/*.py"
+  ],
+
+  "fileStructure": {
+    "src/": "Python source code",
+    "tests/": "Pytest test suite",
+    "notebooks/": "Jupyter notebooks for research and experimentation",
+    "data/": "Dataset files (gitignored)",
+    "models/": "Trained model checkpoints (gitignored)",
+    "scripts/": "Nushell automation scripts",
+    "docker/": "Docker configurations for CPU and GPU",
+    "configs/": "Training and model configurations"
+  },
+
+  "tools": {
+    "packageManager": {
+      "preferred": "uv",
+      "alternative": "poetry",
+      "reason": "uv is faster, poetry is more mature - choose based on project needs"
+    },
+    "python": {
+      "version": ">=3.10",
+      "implementation": "CPython"
+    },
+    "testing": {
+      "framework": "pytest",
+      "plugins": ["pytest-cov", "pytest-asyncio", "pytest-xdist"]
+    },
+    "linting": {
+      "ruff": "Fast Python linter and formatter",
+      "mypy": "Static type checking",
+      "black": "Code formatter (if not using ruff format)"
+    },
+    "jupyter": {
+      "lab": true,
+      "extensions": ["jupyterlab-vim", "jupyterlab-git"]
+    },
+    "gpu": {
+      "cuda": "12.x",
+      "cudnn": "8.x",
+      "frameworks": ["pytorch", "tensorflow", "jax"]
+    }
+  },
+
+  "rules": {
+    "python": [
+      "Use type hints for all function signatures",
+      "Follow PEP 8 style guide (enforced by ruff)",
+      "Docstrings required for all public functions (Google or NumPy style)",
+      "Keep functions under 50 lines",
+      "Use dataclasses or pydantic for configuration",
+      "Prefer pathlib over os.path",
+      "Use context managers for resource handling"
+    ],
+    "ml": [
+      "Reproducible experiments: seed random number generators",
+      "Log all hyperparameters and metrics",
+      "Version datasets and models",
+      "Document data preprocessing steps",
+      "Include model cards for trained models",
+      "Monitor GPU memory usage",
+      "Profile training loops for bottlenecks"
+    ],
+    "dependencies": [
+      "Pin exact versions in production",
+      "Use constraints.txt for DGX environment",
+      "Separate CPU and GPU requirements",
+      "Document GPU compute capability requirements",
+      "Test CPU fallback when GPU unavailable"
+    ],
+    "notebooks": [
+      "Clear all outputs before committing",
+      "Include markdown documentation",
+      "One notebook per experiment",
+      "Export key functions to src/ modules",
+      "Use nbstripout for git integration"
+    ]
+  },
+
+  "dgxOptimization": {
+    "multiGpu": true,
+    "distributedTraining": ["pytorch.distributed", "horovod"],
+    "mixedPrecision": true,
+    "dataLoading": "Use DataLoader with multiple workers and pin_memory=True",
+    "profiling": ["torch.profiler", "nvidia-smi", "nvtop"]
+  },
+
+  "mcpServers": {
+    "python-repl": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-python"],
+      "description": "Python REPL for interactive development"
+    }
+  },
+
+  "workflows": {
+    "setup": [
+      "uv venv",
+      "source .venv/bin/activate (or .venv/Scripts/activate on Windows)",
+      "uv pip install -r requirements.txt",
+      "just setup"
+    ],
+    "development": [
+      "just dev - Start development server",
+      "just notebook - Launch Jupyter Lab",
+      "just test - Run pytest suite",
+      "just lint - Check code quality",
+      "just gpu-check - Verify GPU availability"
+    ],
+    "training": [
+      "just train - Start training run",
+      "just train-multi-gpu - Distributed training",
+      "just tensorboard - Launch TensorBoard"
+    ]
+  },
+
+  "cicd": {
+    "githubActions": true,
+    "checks": [
+      "ruff check .",
+      "mypy src/",
+      "pytest tests/ --cov=src --cov-report=xml",
+      "Python 3.10, 3.11, 3.12 matrix testing"
+    ],
+    "gpuCI": {
+      "enabled": false,
+      "reason": "GPU runners expensive - run manually on DGX",
+      "manual": "just ci-gpu on DGX cluster"
+    }
+  },
+
+  "documentation": {
+    "readme": "Include model architecture, training instructions, inference examples",
+    "contributing": "Python and ML-specific guidelines",
+    "modelCard": "Document model capabilities, limitations, biases",
+    "dataCard": "Document dataset sources, preprocessing, splits",
+    "api": "Sphinx or MkDocs for API documentation"
+  },
+
+  "exampleJustfile": {
+    "comment": "Reference Justfile structure for Python ML projects",
+    "tasks": {
+      "default": "list",
+      "setup": "uv pip install -r requirements.txt && pre-commit install",
+      "dev": "uvicorn src.main:app --reload",
+      "test": "pytest tests/ -v --cov=src",
+      "test-fast": "pytest tests/ -v -x",
+      "lint": "ruff check . && mypy src/",
+      "fmt": "ruff format .",
+      "notebook": "jupyter lab --no-browser",
+      "train": "python -m src.train --config configs/default.yaml",
+      "train-multi-gpu": "torchrun --nproc_per_node=8 -m src.train --config configs/multi_gpu.yaml",
+      "tensorboard": "tensorboard --logdir=runs/",
+      "gpu-check": "python -c 'import torch; print(f\"CUDA: {torch.cuda.is_available()}, Devices: {torch.cuda.device_count()}\")'",
+      "profile": "python -m cProfile -o profile.stats -m src.train && snakeviz profile.stats",
+      "ci": "just lint && just test",
+      "ci-gpu": "pytest tests/ -v --run-gpu",
+      "clean": "rm -rf .pytest_cache .mypy_cache .ruff_cache __pycache__ dist/ build/ *.egg-info"
+    }
+  },
+
+  "examplePyprojectToml": {
+    "comment": "Reference pyproject.toml structure",
+    "sections": {
+      "project": "name, version, description, dependencies",
+      "tool.ruff": "linting and formatting configuration",
+      "tool.mypy": "type checking configuration",
+      "tool.pytest": "test configuration",
+      "tool.coverage": "coverage reporting"
+    }
+  }
+}

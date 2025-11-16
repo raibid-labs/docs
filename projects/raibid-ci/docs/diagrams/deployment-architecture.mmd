@@ -1,0 +1,178 @@
+---
+title: Raibid-CI Deployment Architecture on DGX Spark
+---
+graph TB
+    subgraph "NVIDIA DGX Spark - ARM64 Architecture"
+        subgraph "Hardware Layer"
+            cpu[NVIDIA Grace CPU<br/>ARM64 Neoverse V2<br/>72 Cores]
+            gpu[NVIDIA Hopper GPU<br/>Grace Hopper Superchip]
+            mem[Memory: 480GB LPDDR5X<br/>Unified Memory Architecture]
+            storage[NVMe Storage<br/>2TB+ High-Speed SSD]
+            nic[Network: 10GbE<br/>ConnectX NIC]
+        end
+
+        subgraph "k3s Single-Node Cluster"
+            k3s_control[k3s Control Plane<br/>etcd + API Server<br/>Scheduler + Controller Manager]
+            k3s_runtime[Container Runtime<br/>containerd (ARM64)]
+
+            subgraph "Namespace: kube-system"
+                coredns[CoreDNS<br/>Service Discovery]
+                traefik[Traefik Ingress<br/>HTTP/HTTPS Routing]
+                metrics[Metrics Server<br/>Resource Monitoring]
+            end
+
+            subgraph "Namespace: gitops-system"
+                flux_src[Flux Source Controller<br/>Git Sync]
+                flux_kust[Flux Kustomize Controller<br/>Manifest Apply]
+                flux_helm[Flux Helm Controller<br/>Chart Management]
+                flux_notify[Flux Notification Controller<br/>Alerts]
+
+                flux_pv[(ConfigMaps & Secrets<br/>Flux State)]
+            end
+
+            subgraph "Namespace: keda-system"
+                keda_operator[KEDA Operator<br/>Scaling Logic]
+                keda_metrics[KEDA Metrics Server<br/>External Metrics API]
+
+                keda_config[(KEDA ScaledObjects<br/>Scaling Policies)]
+            end
+
+            subgraph "Namespace: raibid-ci"
+                subgraph "Persistent Services"
+                    api_deploy[Rust API Server<br/>Deployment (replicas: 2)<br/>Resources: 500m CPU, 512Mi RAM]
+
+                    redis_sts[Redis StatefulSet<br/>Single Instance<br/>Resources: 1000m CPU, 2Gi RAM]
+                    redis_svc[Redis Service<br/>ClusterIP: 6379]
+
+                    gitea_sts[Gitea StatefulSet<br/>Git + OCI Registry<br/>Resources: 2000m CPU, 4Gi RAM]
+                    gitea_svc[Gitea Service<br/>HTTP: 3000, SSH: 22]
+                end
+
+                subgraph "Ephemeral Agent Pool"
+                    agent_deploy[CI Agent Deployment<br/>Initial Replicas: 0<br/>Resources: 4000m CPU, 8Gi RAM<br/>GPU Limit: 1]
+                    agent_hpa[KEDA ScaledObject<br/>Redis Stream Trigger<br/>Min: 0, Max: 10]
+                end
+
+                subgraph "Persistent Storage"
+                    redis_pvc[Redis PVC<br/>10Gi RWO<br/>StorageClass: local-path]
+                    gitea_pvc[Gitea Data PVC<br/>100Gi RWO<br/>StorageClass: local-path]
+                    gitea_cache_pvc[Gitea Cache PVC<br/>50Gi RWO<br/>OCI Image Layers]
+                end
+
+                subgraph "Network Policies"
+                    netpol_api[Allow: TUI → API<br/>Port 8080]
+                    netpol_redis[Allow: API/Agent → Redis<br/>Port 6379]
+                    netpol_gitea[Allow: Agent → Gitea<br/>Ports 3000, 22]
+                    netpol_egress[Allow: Agent → Internet<br/>Package Downloads]
+                end
+            end
+        end
+
+        subgraph "External Access"
+            ingress_http[Ingress: raibid-ci.local<br/>HTTP/HTTPS]
+            nodeport_api[NodePort: 30080<br/>API Server]
+            nodeport_gitea[NodePort: 30300<br/>Gitea Web UI]
+        end
+    end
+
+    subgraph "External Systems"
+        github_ext[GitHub<br/>Source Repositories]
+        tui_client[TUI Client<br/>Local Workstation]
+        external_net[Internet<br/>Package Registries]
+    end
+
+    %% Hardware to k3s
+    cpu --> k3s_control
+    mem --> k3s_control
+    storage --> k3s_runtime
+    nic --> k3s_control
+
+    %% k3s core services
+    k3s_control --> coredns
+    k3s_control --> traefik
+    k3s_control --> metrics
+
+    %% Flux connections
+    k3s_control --> flux_src
+    flux_src --> flux_kust
+    flux_src --> flux_helm
+    flux_kust --> flux_notify
+    flux_src -.->|Read| flux_pv
+
+    flux_src -->|Poll| gitea_svc
+    flux_kust -->|Apply| k3s_control
+
+    %% KEDA connections
+    k3s_control --> keda_operator
+    keda_operator --> keda_metrics
+    keda_operator -.->|Read| keda_config
+
+    keda_operator -->|Watch Queue| redis_svc
+    keda_operator -->|Scale| agent_deploy
+
+    %% raibid-ci internal
+    api_deploy --> redis_svc
+    api_deploy --> gitea_svc
+
+    agent_deploy --> redis_svc
+    agent_deploy --> gitea_svc
+    agent_hpa -.->|Control| agent_deploy
+
+    redis_sts --> redis_svc
+    redis_sts -.->|Mount| redis_pvc
+
+    gitea_sts --> gitea_svc
+    gitea_sts -.->|Mount| gitea_pvc
+    gitea_sts -.->|Mount| gitea_cache_pvc
+
+    %% Storage binding
+    redis_pvc -.->|Provision| storage
+    gitea_pvc -.->|Provision| storage
+    gitea_cache_pvc -.->|Provision| storage
+
+    %% GPU allocation
+    agent_deploy -.->|Request| gpu
+
+    %% Network policies
+    netpol_api -.->|Enforce| api_deploy
+    netpol_redis -.->|Enforce| redis_svc
+    netpol_gitea -.->|Enforce| gitea_svc
+    netpol_egress -.->|Enforce| agent_deploy
+
+    %% Ingress routing
+    traefik --> ingress_http
+    ingress_http --> api_deploy
+    ingress_http --> gitea_svc
+
+    k3s_control --> nodeport_api
+    nodeport_api --> api_deploy
+
+    k3s_control --> nodeport_gitea
+    nodeport_gitea --> gitea_svc
+
+    %% External connections
+    tui_client -->|HTTP| nodeport_api
+    github_ext -->|Webhook| nodeport_gitea
+    gitea_svc -->|Mirror| github_ext
+    agent_deploy -->|Download| external_net
+
+    %% Styling
+    classDef hardware fill:#e0e0e0,stroke:#666666,stroke-width:3px
+    classDef control fill:#326ce5,stroke:#1a4d99,stroke-width:2px,color:#fff
+    classDef gitops fill:#5468ff,stroke:#3340cc,stroke-width:2px,color:#fff
+    classDef keda fill:#41bfef,stroke:#2a8fb0,stroke-width:2px
+    classDef persistent fill:#4caf50,stroke:#2e7d32,stroke-width:2px,color:#fff
+    classDef ephemeral fill:#ff9800,stroke:#e65100,stroke-width:2px,stroke-dasharray: 5 5,color:#fff
+    classDef storage fill:#9c27b0,stroke:#6a1b9a,stroke-width:2px,color:#fff
+    classDef network fill:#00bcd4,stroke:#006064,stroke-width:2px
+    classDef external fill:#f0ccff,stroke:#9900cc,stroke-width:2px
+
+    class cpu,gpu,mem,storage,nic hardware
+    class k3s_control,k3s_runtime,coredns,traefik,metrics control
+    class flux_src,flux_kust,flux_helm,flux_notify,flux_pv gitops
+    class keda_operator,keda_metrics,keda_config,agent_hpa keda
+    class api_deploy,redis_sts,redis_svc,gitea_sts,gitea_svc persistent
+    class agent_deploy ephemeral
+    class redis_pvc,gitea_pvc,gitea_cache_pvc storage
+    class netpol_api,netpol_redis,netpol_gitea,netpol_egress,ingress_http,nodeport_api,nodeport_gitea network
+    class github_ext,tui_client,external_net external

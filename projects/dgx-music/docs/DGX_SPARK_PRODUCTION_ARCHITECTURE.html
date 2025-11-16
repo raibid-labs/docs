@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>DGX_SPARK_PRODUCTION_ARCHITECTURE</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="DGX_SPARK_PRODUCTION_ARCHITECTURE"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="DGX_SPARK_PRODUCTION_ARCHITECTURE"/><meta name="twitter:description" content="DGX Spark AI Music Generation Stack - Production Architecture Target Hardware: NVIDIA DGX Spark (128GB unified memory) Date: November 2025 Status: Production-Ready Deployment Guide Executive Summary This document specifies a production-grade architecture for AI music generation on DGX Spark optimize..."/><meta property="og:description" content="DGX Spark AI Music Generation Stack - Production Architecture Target Hardware: NVIDIA DGX Spark (128GB unified memory) Date: November 2025 Status: Production-Ready Deployment Guide Executive Summary This document specifies a production-grade architecture for AI music generation on DGX Spark optimize..."/><meta property="og:image:alt" content="DGX Spark AI Music Generation Stack - Production Architecture Target Hardware: NVIDIA DGX Spark (128GB unified memory) Date: November 2025 Status: Production-Ready Deployment Guide Executive Summary This document specifies a production-grade architecture for AI music generation on DGX Spark optimize..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="DGX Spark AI Music Generation Stack - Production Architecture Target Hardware: NVIDIA DGX Spark (128GB unified memory) Date: November 2025 Status: Production-Ready Deployment Guide Executive Summary This document specifies a production-grade architecture for AI music generation on DGX Spark optimize..."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-music/docs/DGX_SPARK_PRODUCTION_ARCHITECTURE"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-82"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-82" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-music/">dgx music</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-music/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>DGX_SPARK_PRODUCTION_ARCHITECTURE</a></div></nav><h1 class="article-title">DGX_SPARK_PRODUCTION_ARCHITECTURE</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:05.815Z">Nov 16, 2025</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="dgx-spark-ai-music-generation-stack---production-architecture">DGX Spark AI Music Generation Stack - Production Architecture<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-spark-ai-music-generation-stack---production-architecture" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Target Hardware</strong>: NVIDIA DGX Spark (128GB unified memory)
+<strong>Date</strong>: November 2025
+<strong>Status</strong>: Production-Ready Deployment Guide</p>
+<hr/>
+<h2 id="executive-summary">Executive Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#executive-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This document specifies a production-grade architecture for AI music generation on DGX Spark optimized for hip-hop/EDM workflows. Total memory allocation: 110GB (18GB reserved for OS).</p>
+<p><strong>Key Decisions</strong>:</p>
+<ul>
+<li><strong>AI Models</strong>: MusicGen (12B small) + DiffRhythm (rhythm control)</li>
+<li><strong>Rendering</strong>: FluidSynth + Carla plugin host</li>
+<li><strong>Storage</strong>: PostgreSQL metadata + FAISS vector DB for prompt indexing</li>
+<li><strong>Workflow</strong>: DAW-first (Ardour) + async generation queue</li>
+</ul>
+<hr/>
+<h2 id="1-memory-allocation-table">1. Memory Allocation Table<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-memory-allocation-table" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Service</th><th>Instance Type</th><th>Size (GB)</th><th>Purpose</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Ardour DAW</strong></td><td>Host Process</td><td>4</td><td>Session engine</td><td>With plugin chains</td></tr><tr><td><strong>MusicGen 12B</strong></td><td>GPU Model</td><td>24</td><td>Primary generation</td><td>Small variant, 12B params</td></tr><tr><td><strong>DiffRhythm</strong></td><td>GPU Model</td><td>8</td><td>Rhythm synthesis</td><td>Loaded on-demand</td></tr><tr><td><strong>Carla Host</strong></td><td>VST/LV2 Bridge</td><td>2</td><td>Virtual instruments</td><td>Helm + Surge XT loaded</td></tr><tr><td><strong>FluidSynth</strong></td><td>Synthesis Engine</td><td>1</td><td>MIDI rendering</td><td>Multiple soundfonts cached</td></tr><tr><td><strong>PostgreSQL</strong></td><td>Metadata DB</td><td>3</td><td>Project data</td><td>Connections: 20 max</td></tr><tr><td><strong>FAISS Index</strong></td><td>Vector DB</td><td>8</td><td>Prompt embeddings</td><td>Cached in memory</td></tr><tr><td><strong>Redis Cache</strong></td><td>In-Memory Cache</td><td>4</td><td>Session state + queues</td><td>Generation job queue</td></tr><tr><td><strong>Bark TTS</strong></td><td>Voice Gen (opt)</td><td>6</td><td>Vocal synthesis</td><td>Gen-Z voice for stems</td></tr><tr><td><strong>Generation Queue</strong></td><td>Job Queue</td><td>2</td><td>Async task buffer</td><td>Concurrent job tracking</td></tr><tr><td><strong>Audio Buffers</strong></td><td>Ring Buffers</td><td>18</td><td>Real-time processing</td><td>16 tracks @ 96kHz</td></tr><tr><td><strong>Temp Storage</strong></td><td>Working Disk</td><td>20</td><td>Generated files/cache</td><td>SSD scratch space</td></tr><tr><td><strong>Headroom</strong></td><td>System Reserve</td><td>10</td><td>OS + unforeseen</td><td>Safety margin</td></tr><tr><td><strong>TOTAL</strong></td><td>-</td><td>110</td><td>-</td><td><strong>Allocated Budget</strong></td></tr></tbody></table></div>
+<hr/>
+<h2 id="2-service-dependency-graph-ascii-format">2. Service Dependency Graph (ASCII Format)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-service-dependency-graph-ascii-format" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>┌─────────────────────────────────────────────────────────────────┐
+│                    ARDOUR DAW (4GB)                             │
+│            - Session management                                 │
+│            - MIDI track sequencing                              │
+│            - Audio mixing &amp; routing                             │
+└────────┬────────────────────────────────┬──────────────────────┘
+         │                                │
+         │ (Ardour-MCP)                   │ (Jack Audio)
+         │                                │
+    ┌────▼─────────────────┐        ┌────▼──────────────┐
+    │  Carla Host (2GB)    │        │ FluidSynth (1GB)  │
+    │  ├─ Helm synth       │        │ ├─ SF2 rendering  │
+    │  ├─ Surge XT         │        │ └─ 808/909 banks  │
+    │  └─ DrumGizmo        │        └────────┬──────────┘
+    └────┬─────────────────┘              │
+         │                                │
+         └────────────┬────────────────────┘
+                      │ (Audio tracks)
+                ┌─────▼────────────────────┐
+                │   Generation Pipeline    │
+                │                          │
+    ┌───────────┴────┬──────────┬──────────┴──────────┐
+    │                │          │                     │
+┌───▼──────┐ ┌──────▼───┐ ┌───▼──────┐ ┌────────────▼────┐
+│ MusicGen │ │DiffRhythm│ │FAISS Vec │ │   Redis Queue   │
+│  (24GB)  │ │  (8GB)   │ │   (8GB)  │ │ Job Management  │
+└───┬──────┘ └──────┬───┘ └───┬──────┘ │    (2GB)        │
+    │               │          │        └─────────────────┘
+    └───────────────┬──────────┘
+                    │ (Prompt embeddings)
+            ┌───────▼───────────┐
+            │  PostgreSQL (3GB) │
+            │  ├─ projects      │
+            │  ├─ generations   │
+            │  ├─ midi_stems    │
+            │  └─ audio_refs    │
+            └───────────────────┘
+
+AUDIO SIGNAL FLOW:
+┌──────────────┐      ┌──────────────┐      ┌──────────────┐
+│ Ardour MIDI  │─────▶│ Carla Host   │─────▶│ Jack Output  │
+│ Track        │      │ (Plugins)    │      │ (Ardour RX)  │
+└──────────────┘      └──────────────┘      └──────────────┘
+         │                    │
+         │                    └─▶ (VST3 plugin chain)
+         │
+         └─▶ FluidSynth (parallel) ─▶ Audio Track
+</code></pre>
+<hr/>
+<h2 id="3-apicommunication-patterns">3. API/Communication Patterns<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-apicommunication-patterns" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="31-inter-service-communication">3.1 Inter-Service Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#31-inter-service-communication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Protocol Stack</strong>:</p>
+<ul>
+<li><strong>Ardour↔MCP</strong>: JSON-RPC 2.0 (stdio)</li>
+<li><strong>MCP↔Generation</strong>: gRPC (local IPC) + REST fallback</li>
+<li><strong>Services↔Redis</strong>: Redis protocol (pipelining)</li>
+<li><strong>Services↔PostgreSQL</strong>: libpq connection pooling</li>
+<li><strong>Services↔FAISS</strong>: Direct numpy arrays in memory</li>
+</ul>
+<h3 id="32-generation-request-flow">3.2 Generation Request Flow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#32-generation-request-flow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// 1. User initiates generation in Ardour via MCP</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">POST /api/music-generation</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;prompt&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;heavy 808 bass drop trap beat 140 BPM&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;duration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">16</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;bpm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">140</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;key&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;F#m&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;style&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;trap&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;output_format&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;wav&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;priority&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;high&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// 2. MCP enqueues job in Redis</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">LPUSH generation:queue {</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">job_id,</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;"> prompt,</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;"> priority,</span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;"> timestamp</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// 3. Generation worker picks up job</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;job_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;gen_f2a1b9c&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;processing&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;model&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;musicgen_12b&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;gpu_memory_used&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">24576</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;eta_seconds&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// 4. Completion event</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;job_id&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;gen_f2a1b9c&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;complete&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;output_path&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/shared/audio/gen_f2a1b9c.wav&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;metadata&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;duration&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">16.0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;sample_rate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">48000</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;channels&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">2</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;prompt_embedding&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.23</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">-0.15</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FFFFFF;--shiki-dark-font-style:inherit;">...</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">    &quot;inference_time&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12.3</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// 5. Ardour imports via MCP</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;action&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;import_audio&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;file&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/shared/audio/gen_f2a1b9c.wav&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;track&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;AI-Generated Beat&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;position&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;warp_to_bpm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">140</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<h3 id="33-midiaudio-rendering-chain">3.3 MIDI/Audio Rendering Chain<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#33-midiaudio-rendering-chain" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>MIDI STEM (e.g., 808 bass line)
+         │
+         ▼
+    [FluidSynth or Carla]
+         │
+    (Real-time processing)
+         │
+         ▼
+    [Jack Audio Router]
+    (48kHz, 16-track mix)
+         │
+    ┌────┼────┬────────┬────────┐
+    │    │    │        │        │
+    ▼    ▼    ▼        ▼        ▼
+   Main Drum Bass Keys Vocal
+   Bus  Track Track Track Track
+    │    │    │        │        │
+    └────┼────┼────────┼────────┘
+         │    │        │
+         ▼    ▼        ▼
+    [Ardour Mixer]
+         │
+    ┌────┴─────────────────────┐
+    │    Mastering Chain        │
+    │  (Limiter + EQ)          │
+    └────┬─────────────────────┘
+         │
+         ▼
+    [48kHz WAV Output]
+</code></pre>
+<hr/>
+<h2 id="4-file-storage-layout">4. File Storage Layout<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-file-storage-layout" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>/opt/music-generation/
+├── models/
+│   ├── musicgen_12b/
+│   │   ├── compression_model.pt          (6.2GB)
+│   │   ├── language_model.pt             (14.1GB)
+│   │   ├── acoustic_model.pt             (3.7GB)
+│   │   └── config.json
+│   ├── diffrhythm/
+│   │   ├── rhythm_diffusion_model.pt    (7.8GB)
+│   │   └── config.yaml
+│   └── encoders/
+│       ├── t5_base_encoder.pt            (220MB)
+│       └── musicnet_embeddings.pt        (540MB)
+│
+├── soundfonts/
+│   ├── FluidR3_GM.sf2                    (141MB)
+│   ├── GeneralUser_GS.sf2                (89MB)
+│   ├── 808drums.sf2                      (45MB)
+│   └── trap_kicks.sf2                    (62MB)
+│
+├── carla_plugins/
+│   ├── helm/
+│   │   └── plugin.so (VST3)
+│   ├── surge_xt/
+│   │   └── plugin.so (VST3)
+│   └── drumgizmo/
+│       └── drumkit/
+│           ├── 808.xml
+│           ├── snare_samples/
+│           └── hh_samples/
+│
+├── embeddings/
+│   ├── faiss_index.bin                   (500MB)
+│   ├── prompt_cache.sqlite               (80MB)
+│   └── vocabulary.json                   (2.3MB)
+│
+├── sessions/
+│   └── [project_id]/
+│       ├── project.ardour
+│       ├── midi_stems/
+│       │   ├── drums.mid
+│       │   ├── bass.mid
+│       │   └── melody.mid
+│       ├── audio_gen/
+│       │   ├── beat_initial.wav
+│       │   ├── beat_variation_1.wav
+│       │   └── beat_variation_2.wav
+│       └── metadata.json
+│
+├── temp/
+│   ├── wav_processing/
+│   ├── midi_temp/
+│   └── inference_cache/
+│
+├── logs/
+│   ├── generation.log
+│   ├── gpu_usage.log
+│   └── performance.log
+│
+└── cache/
+    ├── lru_audio_cache/                  (4GB max)
+    └── model_weights_cache/              (2GB max)
+
+/var/lib/postgresql/
+└── music_gen_db/
+    ├── projects
+    ├── generations
+    ├── prompt_embeddings
+    ├── audio_references
+    └── user_preferences
+
+/var/cache/redis/
+└── dump.rdb                              (dynamic, ~200MB)
+</code></pre>
+<hr/>
+<h2 id="5-performance-expectations">5. Performance Expectations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-performance-expectations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="51-generation-latency">5.1 Generation Latency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#51-generation-latency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cold Start</strong> (models not loaded):</p>
+<ul>
+<li>MusicGen model load: 8-12 seconds</li>
+<li>FAISS index load: 2-3 seconds</li>
+<li>Carla plugin initialization: 1-2 seconds</li>
+<li><strong>Total</strong>: ~15 seconds (first request)</li>
+</ul>
+<p><strong>Warm Start</strong> (models cached in GPU memory):</p>
+<ul>
+<li>Prompt encoding: 0.8 seconds</li>
+<li>MusicGen inference (16s@48kHz): 10-14 seconds</li>
+<li>Audio post-processing: 1-2 seconds</li>
+<li><strong>Total</strong>: ~12-18 seconds per generation</li>
+</ul>
+<p><strong>Concurrent Requests</strong> (2 simultaneous):</p>
+<ul>
+<li>Queue latency: +8-15 seconds per queued job</li>
+<li>No GPU memory overflow (single 24GB allocation)</li>
+</ul>
+<h3 id="52-throughput-metrics">5.2 Throughput Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#52-throughput-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Scenario</th><th>Req/min</th><th>Latency (p50)</th><th>Latency (p95)</th><th>Notes</th></tr></thead><tbody><tr><td>Single 16s generation</td><td>3.5</td><td>14s</td><td>18s</td><td>Warm GPU</td></tr><tr><td>Batch 5x 16s tracks</td><td>0.7</td><td>42s</td><td>52s</td><td>Queued sequential</td></tr><tr><td>MIDI→Audio (FluidSynth)</td><td>20+</td><td>0.5s</td><td>1.2s</td><td>Near-realtime</td></tr><tr><td>Prompt embedding lookup</td><td>100+</td><td>8ms</td><td>25ms</td><td>FAISS cached</td></tr><tr><td>DAW session save</td><td>5</td><td>8s</td><td>15s</td><td>PostgreSQL + disk</td></tr></tbody></table></div>
+<h3 id="53-gpu-utilization-profile">5.3 GPU Utilization Profile<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#53-gpu-utilization-profile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>Timeline: 30-second hip-hop beat generation
+
+Time  | GPU Usage | Memory | Operation
+------|-----------|--------|-------------------------------------------
+0s    | 0%        | 24GB   | Model already loaded (warmup)
+2s    | 45%       | 24GB   | Prompt encoding (T5)
+4s    | 95%       | 24GB   | Diffusion inference (compression model)
+6s    | 95%       | 24GB   | Language model forward pass
+14s   | 95%       | 24GB   | Continuation inference
+16s   | 60%       | 24GB   | Decoding/post-processing
+18s   | 0%        | 24GB   | Model unload (if needed)
+
+Peak GPU: 95% utilization
+Peak Memory: 24GB (models + batch)
+Thermal: ~75C (sustained), ~85C (peak)
+Power: ~500W GPU + 200W CPU
+</code></pre>
+<h3 id="54-concurrent-session-behavior">5.4 Concurrent Session Behavior<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#54-concurrent-session-behavior" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Scenario</strong>: Ardour session running + background generation + user editing</p>
+<pre><code>Ardour (DAW):
+  ├─ Real-time playback: 2GB RAM, ~20% CPU
+  ├─ MIDI editing: Instant (&lt;50ms)
+  └─ Audio preview: 1-2 seconds to first audio
+
+Background Generation (in separate process):
+  ├─ GPU allocation: 24GB (dedicated)
+  ├─ RAM allocation: 8GB (separate)
+  └─ CPU allocation: 4 cores max
+
+Result:
+  - DAW remains responsive during generation
+  - No audio glitches
+  - User can edit while generation runs
+  - Multiple beat variations in parallel (queue)
+</code></pre>
+<h3 id="55-real-time-audio-streaming">5.5 Real-Time Audio Streaming<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#55-real-time-audio-streaming" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Jack Audio Configuration</strong>:</p>
+<ul>
+<li>Sample Rate: 48kHz (48,000 samples/sec)</li>
+<li>Buffer Size: 512 samples (10.67ms latency)</li>
+<li>Channels: 16 (main stereo + 7 stereo stems)</li>
+<li>CPU Load: ~30% (Ardour + plugins)</li>
+</ul>
+<pre><code>Ardour Mixer CPU Usage:
+├─ Master fader: 2%
+├─ 8 audio tracks: 12%
+├─ Carla VST host (4 plugins): 10%
+├─ Metering/UI: 6%
+└─ Total: ~30% headroom for generation
+</code></pre>
+<hr/>
+<h2 id="6-deployment-strategy">6. Deployment Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-deployment-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="61-startup-sequence">6.1 Startup Sequence<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#61-startup-sequence" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Start system services (parallel)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> start</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> redis-server</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">systemctl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> start</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> postgresql</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">jackd</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> alsa</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 48000</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 512</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Wait for services</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sleep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 3</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Pre-warm GPU models</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">python3</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /opt/music-generation/warmup.py</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Start MCP server</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">/opt/music-generation/mcp-server</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --port</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 5000</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --redis</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> localhost:6379</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --db</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> postgresql://user:pass@localhost/music_gen</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Launch Ardour</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ardour8</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Healthcheck</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -s</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:5000/health</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># { &quot;status&quot;: &quot;ready&quot;, &quot;gpu_memory&quot;: &quot;24GB cached&quot;, &quot;queue_length&quot;: 0 }</span></span></code></pre></figure>
+<h3 id="62-resource-isolation-cgroups">6.2 Resource Isolation (cgroups)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#62-resource-isolation-cgroups" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code># CPU isolation
+cgcreate -g cpuset:/music-gen
+cgset -r cpuset.cpus=0-15 /music-gen          # 16 cores (leave 4 for OS)
+
+# Memory isolation
+cgset -r memory.limit_in_bytes=110G /music-gen
+
+# GPU isolation (via NVIDIA)
+nvidia-smi -i 0 -pm 1
+nvidia-smi -i 0 --query-supported-clocks=gr_clock --format=csv,noheader
+
+# Apply to services
+cgexec -g cpuset:/music-gen \
+  python3 /opt/music-generation/generation-worker.py
+</code></pre>
+<h3 id="63-health-monitoring">6.3 Health Monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#63-health-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># /opt/music-generation/health.py</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">import</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> psutil, redis, psycopg2, subprocess</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> check_services</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    status </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;timestamp&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: time.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">time</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;gpu&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">check_gpu</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;redis&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">check_redis</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;postgresql&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">check_db</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;jack&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">check_jack</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;disk&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">check_disk</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;queue_length&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: redis_client.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">llen</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;generation:queue&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> status</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">def</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> check_gpu</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">():</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    result </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> subprocess.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">run</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">        [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;nvidia-smi&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;--query-gpu=memory.used,memory.total,temperature.gpu&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">         &quot;--format=csv,noheader&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">],</span></span>
+<span data-line><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">        capture_output</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">True</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    )</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    used, total, temp </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> result.stdout.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">decode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">().</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">strip</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">().</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">split</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;, &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">    return</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> {</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;used_gb&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">float</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(used) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1024</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;total_gb&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">float</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(total) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">/</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1024</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;temp_c&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">float</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(temp.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">strip</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()),</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">        &quot;status&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ok&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> if</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> float</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(temp.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">strip</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">()) </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">&lt;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 85</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> else</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;warning&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Expose at /health endpoint</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">app.</span><span style="--shiki-light:#24292E;--shiki-dark:#61AFEF;">get</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'/health'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, check_services)</span></span></code></pre></figure>
+<hr/>
+<h2 id="7-workflow-examples">7. Workflow Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#7-workflow-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="hip-hop-beat-generation-start-to-finish">Hip-Hop Beat Generation (Start to Finish)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hip-hop-beat-generation-start-to-finish" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>USER ACTION                     SYSTEM RESPONSE
+────────────────────────────────────────────────────────────────
+1. Open Ardour session         Load project metadata from PgSQL
+   &quot;Hip Hop Vol 2&quot;            (4 beats queued, 2 stems per beat)
+
+2. Click &quot;Generate Variation&quot;   Encode prompt in FAISS
+   Prompt: &quot;808 trap beat      Check embedding cache
+           bounce drop&quot;        Return similar past beats
+
+3. Select &quot;Dark 808&quot;           Enqueue job (priority: high)
+   from variations            ├─ MusicGen: 12-18s
+                             ├─ Post-process: 2s
+                             └─ Save to /tmp: 1s
+
+4. Wait for waveform           Watch progress bar
+   to appear                  ├─ GPU: 95% util
+                             ├─ ETA: 12s
+                             └─ (Queue: 2 other jobs)
+
+5. Preview generated beat      FluidSynth synthesis
+   (unmute track)             ├─ Render MIDI stem in parallel
+                             ├─ Jack routes to Ardour
+                             └─ Play at 140 BPM (warped)
+
+6. Edit drums in Ardour        Drum pattern + velocity adjust
+   (MIDI track)               ├─ Carla DrumGizmo renders 808
+                             ├─ 110ms latency (acceptable)
+                             └─ Auto-save to PgSQL
+
+7. Export final beat           Ardour bounce to stereo
+                             ├─ 30s processing time
+                             ├─ Master limiter (-0.3dB)
+                             └─ Save to projects/Hip_Hop_Vol_2/
+
+8. Generate variation          Re-queue with different seed
+   &quot;Darker vibe&quot;             ├─ DiffRhythm for rhythm shift
+                             ├─ Prompt: &quot;heavier drums&quot;
+                             └─ 14s generation
+</code></pre>
+<h3 id="concurrent-multi-track-session">Concurrent Multi-Track Session<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#concurrent-multi-track-session" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>TIME    ARDOUR               REDIS QUEUE         GPU STATE
+────────────────────────────────────────────────────────────
+0s      Open session        (empty)              Model loaded
+
+5s      ▶ Playback drums    (empty)              Playing (10%)
+
+12s     User: &quot;Gen bass&quot;    gen_bass enqueued    MusicGen active (95%)
+                                                 Inference: prompt
+
+18s     Playback continues  gen_bass done        Cooling down
+        (bass fades in)     gen_drums enqueued   New inference starts
+
+25s     ▶ Mix 3 tracks      gen_drums done       GPU idle waiting
+        (drums + bass)      gen_melody enqueued  MusicGen warm
+
+35s     Record vocal        gen_melody done      Generation complete
+        (4 stems active)    (queue empty)        Ready for next
+
+Result: 3x AI-generated stems + 1x human vocal = complete track
+        All concurrent, no DAW stalls, ~60 seconds total
+</code></pre>
+<hr/>
+<h2 id="8-production-checklist">8. Production Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#8-production-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="pre-deployment">Pre-Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#pre-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> GPU drivers updated (NVIDIA 550+)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> CUDA 12.1+ installed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> PyTorch 2.3+ tested</li>
+<li class="task-list-item"><input type="checkbox" disabled/> PostgreSQL 15+ running with backups</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Redis persistence enabled</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Jack audio server stable (test 4h runtime)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Ardour plugins scanned and indexed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Model weights downloaded (verify checksums)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> FAISS index built from prompt cache</li>
+<li class="task-list-item"><input type="checkbox" disabled/> SSL certificates for API endpoints</li>
+</ul>
+<h3 id="day-1-operations">Day 1 Operations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#day-1-operations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Monitor GPU temperature hourly</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Check generation queue depth (&lt;5 jobs)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Verify audio output latency &lt;20ms</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test emergency model unload</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Backup user sessions hourly</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Validate MIDI→audio pipeline</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Check disk I/O saturation</li>
+</ul>
+<h3 id="weekly">Weekly<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#weekly" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Update model cache statistics</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Optimize PostgreSQL indices</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Rotate logs (>100MB per day)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test disaster recovery (backup restore)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Analyze generation time trends</li>
+</ul>
+<hr/>
+<h2 id="9-cost-of-ownership-dgx-spark">9. Cost of Ownership (DGX Spark)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#9-cost-of-ownership-dgx-spark" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Item</th><th>Cost</th><th>Notes</th></tr></thead><tbody><tr><td>DGX Spark (one-time)</td><td>$199,000</td><td>128GB unified memory</td></tr><tr><td>Cooling + power</td><td>$5,000/year</td><td>High thermal load</td></tr><tr><td>Software licenses</td><td>$2,000/year</td><td>Ardour is free</td></tr><tr><td>Maintenance contract</td><td>$10,000/year</td><td>NVIDIA support</td></tr><tr><td>Storage expansion</td><td>$5,000/year</td><td>SSD cache aging</td></tr><tr><td><strong>Total Year 1</strong></td><td><strong>$216,000</strong></td><td>-</td></tr><tr><td><strong>Total Year 3+</strong></td><td><strong>$17,000/year</strong></td><td>Steady state</td></tr></tbody></table></div>
+<hr/>
+<h2 id="key-constraints--trade-offs">Key Constraints &amp; Trade-offs<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-constraints--trade-offs" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="memory-pressure-points">Memory Pressure Points<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-pressure-points" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>MusicGen (24GB)</strong>: Can’t reduce without model quantization</li>
+<li><strong>Audio buffers (18GB)</strong>: Required for 16-track mixing at 96kHz</li>
+<li><strong>FAISS embeddings (8GB)</strong>: Necessary for fast prompt lookup</li>
+</ol>
+<p><strong>If memory exceeds 110GB</strong>:</p>
+<ul>
+<li>Reduce MusicGen to 8GB model (quality drop)</li>
+<li>Or use DGX Spark with 256GB option</li>
+</ul>
+<h3 id="thermal-management">Thermal Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thermal-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Peak GPU temp: 85C (safe)</li>
+<li>Sustained temp: 75C</li>
+<li>Requires active cooling (included on DGX)</li>
+<li>Fan noise: ~65dB (typical for data center)</li>
+</ul>
+<h3 id="network-limitations">Network Limitations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#network-limitations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>No direct cloud sync (isolated system)</li>
+<li>Export beats via USB/SCP to NAS</li>
+<li>Can add network stack if needed (trade 2GB RAM)</li>
+</ul>
+<hr/>
+<h2 id="optimization-techniques-for-hip-hopedm">Optimization Techniques for Hip-Hop/EDM<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#optimization-techniques-for-hip-hopedm" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="prompt-engineering">Prompt Engineering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prompt-engineering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light one-dark-pro"><code data-language="python" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Effective prompts for hip-hop</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">prompts </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;808 bass drop trap beat 140 BPM punchy kick&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;hi-hat roll breakbeat funk 90 BPM polyrhythm&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;synth pad ambient chillwave with lo-fi drums&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;drill beat dark strings 150 BPM hard kick&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># MusicGen handles style+tempo+instrument+mood</span></span></code></pre></figure>
+<h3 id="fast-iteration-pattern">Fast Iteration Pattern<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fast-iteration-pattern" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Generate 3 variations (batch): 18s</li>
+<li>Pick best: 5s</li>
+<li>Export all as stems: 10s</li>
+<li>Load in Ardour: 2s</li>
+<li><strong>Total</strong>: ~35s for full creative iteration</li>
+</ol>
+<h3 id="memory-efficient-rendering">Memory-Efficient Rendering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#memory-efficient-rendering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Use FluidSynth for quick MIDI renders (not GPU)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">fluidsynth</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -g</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 1.0</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 48000</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -F</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> beat.wav</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">  /opt/soundfonts/808drums.sf2</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> drums.mid</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Output: Beat rendered in &lt;0.5s, no GPU usage</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GPU remains free for next generation</span></span></code></pre></figure>
+<hr/>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This architecture supports:</p>
+<ul>
+<li><strong>Concurrent DAW + AI generation</strong> (true parallel workflows)</li>
+<li><strong>110GB memory budget</strong> (optimized allocation)</li>
+<li><strong>12-18s generation latency</strong> (acceptable for creative flow)</li>
+<li><strong>Sub-20ms audio latency</strong> (realtime editing possible)</li>
+<li><strong>5-8 beats/hour</strong> (sustainable production pace)</li>
+</ul>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>Deploy hardware with OS image</li>
+<li>Install software stack (docker-compose available)</li>
+<li>Run 48-hour stability test</li>
+<li>Begin user workflows</li>
+</ol>
+<hr/>
+<p><strong>Document Version</strong>: 1.0
+<strong>Last Updated</strong>: November 2025
+<strong>Maintenance</strong>: Quarterly review recommended</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-25" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-spark-ai-music-generation-stack---production-architecture" data-for="dgx-spark-ai-music-generation-stack---production-architecture">DGX Spark AI Music Generation Stack - Production Architecture</a></li><li class="depth-1"><a href="#executive-summary" data-for="executive-summary">Executive Summary</a></li><li class="depth-1"><a href="#1-memory-allocation-table" data-for="1-memory-allocation-table">1. Memory Allocation Table</a></li><li class="depth-1"><a href="#2-service-dependency-graph-ascii-format" data-for="2-service-dependency-graph-ascii-format">2. Service Dependency Graph (ASCII Format)</a></li><li class="depth-1"><a href="#3-apicommunication-patterns" data-for="3-apicommunication-patterns">3. API/Communication Patterns</a></li><li class="depth-2"><a href="#31-inter-service-communication" data-for="31-inter-service-communication">3.1 Inter-Service Communication</a></li><li class="depth-2"><a href="#32-generation-request-flow" data-for="32-generation-request-flow">3.2 Generation Request Flow</a></li><li class="depth-2"><a href="#33-midiaudio-rendering-chain" data-for="33-midiaudio-rendering-chain">3.3 MIDI/Audio Rendering Chain</a></li><li class="depth-1"><a href="#4-file-storage-layout" data-for="4-file-storage-layout">4. File Storage Layout</a></li><li class="depth-1"><a href="#5-performance-expectations" data-for="5-performance-expectations">5. Performance Expectations</a></li><li class="depth-2"><a href="#51-generation-latency" data-for="51-generation-latency">5.1 Generation Latency</a></li><li class="depth-2"><a href="#52-throughput-metrics" data-for="52-throughput-metrics">5.2 Throughput Metrics</a></li><li class="depth-2"><a href="#53-gpu-utilization-profile" data-for="53-gpu-utilization-profile">5.3 GPU Utilization Profile</a></li><li class="depth-2"><a href="#54-concurrent-session-behavior" data-for="54-concurrent-session-behavior">5.4 Concurrent Session Behavior</a></li><li class="depth-2"><a href="#55-real-time-audio-streaming" data-for="55-real-time-audio-streaming">5.5 Real-Time Audio Streaming</a></li><li class="depth-1"><a href="#6-deployment-strategy" data-for="6-deployment-strategy">6. Deployment Strategy</a></li><li class="depth-2"><a href="#61-startup-sequence" data-for="61-startup-sequence">6.1 Startup Sequence</a></li><li class="depth-2"><a href="#62-resource-isolation-cgroups" data-for="62-resource-isolation-cgroups">6.2 Resource Isolation (cgroups)</a></li><li class="depth-2"><a href="#63-health-monitoring" data-for="63-health-monitoring">6.3 Health Monitoring</a></li><li class="depth-1"><a href="#7-workflow-examples" data-for="7-workflow-examples">7. Workflow Examples</a></li><li class="depth-2"><a href="#hip-hop-beat-generation-start-to-finish" data-for="hip-hop-beat-generation-start-to-finish">Hip-Hop Beat Generation (Start to Finish)</a></li><li class="depth-2"><a href="#concurrent-multi-track-session" data-for="concurrent-multi-track-session">Concurrent Multi-Track Session</a></li><li class="depth-1"><a href="#8-production-checklist" data-for="8-production-checklist">8. Production Checklist</a></li><li class="depth-2"><a href="#pre-deployment" data-for="pre-deployment">Pre-Deployment</a></li><li class="depth-2"><a href="#day-1-operations" data-for="day-1-operations">Day 1 Operations</a></li><li class="depth-2"><a href="#weekly" data-for="weekly">Weekly</a></li><li class="depth-1"><a href="#9-cost-of-ownership-dgx-spark" data-for="9-cost-of-ownership-dgx-spark">9. Cost of Ownership (DGX Spark)</a></li><li class="depth-1"><a href="#key-constraints--trade-offs" data-for="key-constraints--trade-offs">Key Constraints &amp; Trade-offs</a></li><li class="depth-2"><a href="#memory-pressure-points" data-for="memory-pressure-points">Memory Pressure Points</a></li><li class="depth-2"><a href="#thermal-management" data-for="thermal-management">Thermal Management</a></li><li class="depth-2"><a href="#network-limitations" data-for="network-limitations">Network Limitations</a></li><li class="depth-1"><a href="#optimization-techniques-for-hip-hopedm" data-for="optimization-techniques-for-hip-hopedm">Optimization Techniques for Hip-Hop/EDM</a></li><li class="depth-2"><a href="#prompt-engineering" data-for="prompt-engineering">Prompt Engineering</a></li><li class="depth-2"><a href="#fast-iteration-pattern" data-for="fast-iteration-pattern">Fast Iteration Pattern</a></li><li class="depth-2"><a href="#memory-efficient-rendering" data-for="memory-efficient-rendering">Memory-Efficient Rendering</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

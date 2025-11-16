@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>REORGANIZATION_SUMMARY</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="REORGANIZATION_SUMMARY"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="REORGANIZATION_SUMMARY"/><meta name="twitter:description" content="DGX-Pixels Reorganization Summary Date: 2025-11-10 Status: Complete ✅ Commit: f658aea This document summarizes the major reorganization of the DGX-Pixels project to follow raibid-labs patterns."/><meta property="og:description" content="DGX-Pixels Reorganization Summary Date: 2025-11-10 Status: Complete ✅ Commit: f658aea This document summarizes the major reorganization of the DGX-Pixels project to follow raibid-labs patterns."/><meta property="og:image:alt" content="DGX-Pixels Reorganization Summary Date: 2025-11-10 Status: Complete ✅ Commit: f658aea This document summarizes the major reorganization of the DGX-Pixels project to follow raibid-labs patterns."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/REORGANIZATION_SUMMARY"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/REORGANIZATION_SUMMARY"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="DGX-Pixels Reorganization Summary Date: 2025-11-10 Status: Complete ✅ Commit: f658aea This document summarizes the major reorganization of the DGX-Pixels project to follow raibid-labs patterns."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/REORGANIZATION_SUMMARY-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/REORGANIZATION_SUMMARY-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/dgx-pixels/docs/REORGANIZATION_SUMMARY-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/dgx-pixels/docs/REORGANIZATION_SUMMARY"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-163"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-163" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/">dgx pixels</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/dgx-pixels/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>REORGANIZATION_SUMMARY</a></div></nav><h1 class="article-title">REORGANIZATION_SUMMARY</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:06.769Z">Nov 16, 2025</time><span>7 min read</span></p></div></div><article class="popover-hint"><h1 id="dgx-pixels-reorganization-summary">DGX-Pixels Reorganization Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dgx-pixels-reorganization-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Date</strong>: 2025-11-10
+<strong>Status</strong>: Complete ✅
+<strong>Commit</strong>: <code>f658aea</code></p>
+<p>This document summarizes the major reorganization of the DGX-Pixels project to follow raibid-labs patterns.</p>
+<hr/>
+<h2 id="what-changed">What Changed<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-changed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-nushell-automation-4-modules-700-lines">1. Nushell Automation (4 modules, ~700 lines)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-nushell-automation-4-modules-700-lines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>scripts/nu/</code></p>
+<p>Created comprehensive nushell modules following raibid-labs patterns:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Module</th><th>Lines</th><th>Functions</th><th>Purpose</th></tr></thead><tbody><tr><td><code>config.nu</code></td><td>~250</td><td>15+</td><td>Project config, logging, git/hardware utilities</td></tr><tr><td><code>modules/comfyui.nu</code></td><td>~300</td><td>11</td><td>ComfyUI API wrapper (health, generate, queue)</td></tr><tr><td><code>modules/dgx.nu</code></td><td>~450</td><td>8</td><td>DGX-Spark hardware detection and validation</td></tr><tr><td><code>modules/github.nu</code></td><td>~500</td><td>9</td><td>GitHub automation (branch, PR, merge, rebase)</td></tr></tbody></table></div>
+<p><strong>Key Features</strong>:</p>
+<ul>
+<li>Color-coded logging (success, error, warning, info)</li>
+<li>Hardware detection (GB10 GPU, unified memory, ARM CPU, Tensor Cores)</li>
+<li>ComfyUI integration (workflows, health checks, queue management)</li>
+<li>GitHub CLI integration (automated PR workflow)</li>
+<li>Full error handling with try/catch blocks</li>
+<li>Nushell 0.96+ compatible</li>
+</ul>
+<p><strong>Usage</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Load and use modules</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx-validate-hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx-gpu-stats</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GitHub automation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">github</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-create-branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws01-hardware-baselines&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-create-pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement WS-01&quot;</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">labels</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">workstream</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">M0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-auto-merge</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">merge-method</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> squash</span></span></code></pre></figure>
+<hr/>
+<h3 id="2-justfile-task-automation-450-lines">2. Justfile Task Automation (~450 lines)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-justfile-task-automation-450-lines" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>justfile</code> (project root)</p>
+<p>Created comprehensive justfile with 40+ recipes organized in sections:</p>
+<p><strong>Sections</strong>:</p>
+<ul>
+<li>Project Initialization (<code>init</code>, <code>validate-gpu</code>)</li>
+<li>Build Commands (<code>build</code>, <code>build-release</code>, <code>clean</code>)</li>
+<li>Development (<code>tui</code>, <code>backend</code>, <code>comfyui</code>)</li>
+<li>Testing (<code>test</code>, <code>test-coverage</code>, <code>test-integration</code>)</li>
+<li>Benchmarking (<code>bench</code>, <code>bench-baseline</code>)</li>
+<li>Model Management (<code>models-list</code>, <code>download-model</code>, <code>train-lora</code>)</li>
+<li>Code Quality (<code>fmt</code>, <code>lint</code>, <code>fmt-python</code>, <code>ci</code>)</li>
+<li>Documentation (<code>docs</code>, <code>docs-serve</code>)</li>
+<li>Monitoring (<code>gpu-status</code>, <code>gpu-watch</code>, <code>gpu-stats</code>)</li>
+<li>Git Commands (<code>status</code>, <code>branch</code>, <code>pr</code>, <code>rebase</code>, <code>pre-commit</code>)</li>
+<li>Orchestration (<code>orch-foundation</code>, <code>orch-model</code>, etc.)</li>
+<li>Docker (<code>docker-build</code>, <code>docker-run</code>, <code>up</code>, <code>down</code>)</li>
+</ul>
+<p><strong>Quick Start</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Show all commands</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --list</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Initialize project</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> init</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> validate-gpu</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run all CI checks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create branch for workstream</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create PR</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement WS-01: Hardware Baselines&quot;</span></span></code></pre></figure>
+<hr/>
+<h3 id="3-documentation-restructure">3. Documentation Restructure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-documentation-restructure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Root Directory</strong> (clean - only essential files):</p>
+<ul>
+<li><code>README.md</code> - Project overview</li>
+<li><code>CLAUDE.md</code> - Claude Code instructions</li>
+<li><code>CONTRIBUTING.md</code> - Developer workflow guide (NEW)</li>
+<li><code>justfile</code> - Task automation (NEW)</li>
+</ul>
+<p><strong>Organized docs/</strong> structure:</p>
+<pre><code>docs/
+├── 01-research-findings.md          # Research docs (unchanged)
+├── 02-architecture-proposals.md
+├── 03-technology-deep-dive.md
+├── 04-bevy-integration.md
+├── 05-training-roadmap.md
+├── 06-implementation-plan.md
+├── 07-rust-python-architecture.md
+├── 08-tui-design.md
+├── 11-playbook-contribution.md
+├── hardware.md                       # Hardware specs
+├── metrics.md                        # Metrics framework
+├── ROADMAP.md                        # MOVED from root
+├── adr/                              # Architecture Decision Records
+│   └── 0001-dgx-spark-not-b200.md
+├── rfds/                             # Request for Discussion (NEW)
+│   └── gpt5-dgx-pixels.md           # MOVED from root
+└── orchestration/                    # NEW - All orchestration docs
+    ├── meta-orchestrator.md          # MOVED + renamed
+    ├── workstream-plan.md            # MOVED + renamed
+    ├── project-summary.md            # MOVED + renamed
+    ├── orchestrators/                # MOVED + renamed
+    │   ├── foundation.md             # renamed from FOUNDATION_ORCHESTRATOR.md
+    │   ├── model.md
+    │   ├── interface.md
+    │   └── integration.md
+    └── workstreams/                  # MOVED + renamed
+        ├── start-here.md             # renamed from START_HERE.md
+        ├── template.md               # renamed from WORKSTREAM_TEMPLATE.md
+        ├── ws01-hardware-baselines/  # renamed from WS-01-*
+        ├── ws08-rust-tui-core/
+        └── ws13-fastmcp-server/
+</code></pre>
+<p><strong>Naming Conventions</strong>:</p>
+<ul>
+<li><strong>Kebab-case</strong>: <code>workstream-plan.md</code>, <code>start-here.md</code></li>
+<li><strong>Lowercase directories</strong>: <code>orchestrators/</code>, <code>workstreams/</code>, <code>ws01-hardware-baselines/</code></li>
+<li><strong>No underscores</strong>: Used hyphens instead</li>
+<li><strong>Numbered research</strong>: Kept <code>01-</code>, <code>02-</code> prefix for research docs</li>
+</ul>
+<hr/>
+<h3 id="4-agent-pr-workflow">4. Agent PR Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-agent-pr-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>New File</strong>: <code>CONTRIBUTING.md</code> (~450 lines)</p>
+<p>Complete developer workflow guide with:</p>
+<p><strong>Agent Workflow</strong> (automated):</p>
+<ol>
+<li>Create branch: <code>just branch WS-XX</code></li>
+<li>Implement changes (TDD: tests first!)</li>
+<li>Run quality checks: <code>just ci</code></li>
+<li>Create PR: <code>just pr &quot;Title&quot;</code></li>
+<li>Rebase onto main: <code>just rebase</code> (via <code>gh-rebase-main</code>)</li>
+<li>Auto-merge: <code>gh-auto-merge --merge-method squash</code></li>
+</ol>
+<p><strong>Manual Workflow</strong> (human contributors):</p>
+<ul>
+<li>Detailed TDD approach (write tests first)</li>
+<li>Commit message conventions (Conventional Commits)</li>
+<li>Code style guidelines (Rust, Python, Nushell)</li>
+<li>PR template and checklist</li>
+<li>Testing requirements (≥80% coverage)</li>
+</ul>
+<p><strong>Key Points</strong>:</p>
+<ul>
+<li><strong>Always rebase</strong> before merge (stay up-to-date with main)</li>
+<li><strong>Squash merge</strong> policy (clean history)</li>
+<li><strong>TDD required</strong>: Write tests first, commit them, then implement</li>
+<li><strong>Auto-merge after CI</strong>: Agents can self-merge after checks pass</li>
+</ul>
+<hr/>
+<h3 id="5-github-actions-cicd">5. GitHub Actions CI/CD<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-github-actions-cicd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>New File</strong>: <code>.github/workflows/test.yml</code></p>
+<p>Automated testing on every PR:</p>
+<p><strong>Jobs</strong>:</p>
+<ol>
+<li><strong>Rust Tests</strong>: <code>cargo test</code>, <code>cargo clippy</code>, <code>cargo fmt --check</code></li>
+<li><strong>Python Tests</strong>: <code>pytest</code> (when tests exist)</li>
+<li><strong>Nushell Scripts Check</strong>: Syntax validation for all <code>.nu</code> files</li>
+</ol>
+<p><strong>Triggers</strong>:</p>
+<ul>
+<li>Push to <code>main</code></li>
+<li>Pull requests targeting <code>main</code></li>
+</ul>
+<hr/>
+<h3 id="6-updated-documentation">6. Updated Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-updated-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>CLAUDE.md</strong> - Added:</p>
+<ul>
+<li>Justfile command reference (40+ commands)</li>
+<li>Nushell module usage examples</li>
+<li>Agent workflow steps</li>
+<li>Updated file paths and next steps</li>
+</ul>
+<p><strong>README.md</strong> - Auto-updated by link updater:</p>
+<ul>
+<li>All links now point to new doc locations</li>
+<li>References to <code>docs/orchestration/*</code></li>
+<li>Updated quick links table</li>
+</ul>
+<p><strong>All 25+ doc files</strong> - Updated:</p>
+<ul>
+<li>Internal links changed to new paths</li>
+<li>References to orchestrators, workstreams, RFDs</li>
+<li>Cross-references between docs</li>
+</ul>
+<hr/>
+<h2 id="file-movements-summary">File Movements Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#file-movements-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Old Path</th><th>New Path</th><th>Rename</th></tr></thead><tbody><tr><td><code>ROADMAP.md</code></td><td><code>docs/ROADMAP.md</code></td><td>-</td></tr><tr><td><code>RFD_gpt5_dgx_pixels.md</code></td><td><code>docs/rfds/gpt5-dgx-pixels.md</code></td><td>Yes</td></tr><tr><td><code>docs/META_ORCHESTRATOR.md</code></td><td><code>docs/orchestration/meta-orchestrator.md</code></td><td>Yes</td></tr><tr><td><code>docs/WORKSTREAM_PLAN.md</code></td><td><code>docs/orchestration/workstream-plan.md</code></td><td>Yes</td></tr><tr><td><code>docs/PROJECT_ORCHESTRATION_SUMMARY.md</code></td><td><code>docs/orchestration/project-summary.md</code></td><td>Yes</td></tr><tr><td><code>docs/orchestrators/</code></td><td><code>docs/orchestration/orchestrators/</code></td><td>-</td></tr><tr><td><code>docs/workstreams/</code></td><td><code>docs/orchestration/workstreams/</code></td><td>-</td></tr><tr><td><code>FOUNDATION_ORCHESTRATOR.md</code></td><td><code>foundation.md</code></td><td>Yes</td></tr><tr><td><code>MODEL_ORCHESTRATOR.md</code></td><td><code>model.md</code></td><td>Yes</td></tr><tr><td><code>INTERFACE_ORCHESTRATOR.md</code></td><td><code>interface.md</code></td><td>Yes</td></tr><tr><td><code>INTEGRATION_ORCHESTRATOR.md</code></td><td><code>integration.md</code></td><td>Yes</td></tr><tr><td><code>START_HERE.md</code></td><td><code>start-here.md</code></td><td>Yes</td></tr><tr><td><code>WORKSTREAM_TEMPLATE.md</code></td><td><code>template.md</code></td><td>Yes</td></tr><tr><td><code>WS-01-hardware-baselines/</code></td><td><code>ws01-hardware-baselines/</code></td><td>Yes</td></tr><tr><td><code>WS-08-rust-tui-core/</code></td><td><code>ws08-rust-tui-core/</code></td><td>Yes</td></tr><tr><td><code>WS-13-fastmcp-server/</code></td><td><code>ws13-fastmcp-server/</code></td><td>Yes</td></tr></tbody></table></div>
+<p><strong>Total</strong>: 19 files moved/renamed, all links updated</p>
+<hr/>
+<h2 id="new-capabilities">New Capabilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#new-capabilities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="hardware-detection">Hardware Detection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hardware-detection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate DGX-Spark GB10</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx-validate-hardware</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Get GPU stats</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx-gpu-stats</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check Tensor Cores</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">dgx-check-tensor-cores</span></span></code></pre></figure>
+<h3 id="comfyui-integration">ComfyUI Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#comfyui-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">comfyui</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Health check</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">comfyui-health-check</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate image</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">let</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> workflow</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> =</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> (</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">open</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workflows/sprite-gen.json</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">comfyui-generate</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> $workflow</span></span></code></pre></figure>
+<h3 id="github-automation">GitHub Automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="nushell" data-theme="github-light one-dark-pro"><code data-language="nushell" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">use</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/modules/</span><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">github</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;"> *</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create branch for workstream</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-create-branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;ws01-hardware-baselines&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create PR with labels</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-create-pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Implement WS-01&quot;</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">labels</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">workstream</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">M0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Enable auto-merge (squash)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-auto-merge</span><span style="--shiki-light:#D73A49;--shiki-light-font-style:inherit;--shiki-dark:#C678DD;--shiki-dark-font-style:italic;"> --</span><span style="--shiki-light:#E36209;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">merge-method</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> squash</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Rebase onto main</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#E5C07B;">gh-rebase-main</span></span></code></pre></figure>
+<h3 id="task-automation">Task Automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#task-automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># All via justfile</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> init</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">              # Setup project</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> validate-gpu</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">      # Check hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">              # Run tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ci</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                # Run all checks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">      # Create branch</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> pr</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Title&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">        # Create PR</span></span></code></pre></figure>
+<hr/>
+<h2 id="project-structure">Project Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<pre><code>dgx-pixels/
+├── README.md                  # Project overview
+├── CLAUDE.md                  # Claude Code instructions
+├── CONTRIBUTING.md            # Developer workflow (NEW)
+├── justfile                   # Task automation (NEW)
+├── .github/
+│   └── workflows/
+│       └── test.yml           # CI/CD (NEW)
+├── docs/
+│   ├── 01-12 research docs   # Unchanged
+│   ├── hardware.md            # Unchanged
+│   ├── metrics.md             # Unchanged
+│   ├── ROADMAP.md             # MOVED from root
+│   ├── adr/                   # Architecture decisions
+│   ├── rfds/                  # Request for Discussion (NEW)
+│   └── orchestration/         # All orchestration (NEW)
+│       ├── meta-orchestrator.md
+│       ├── workstream-plan.md
+│       ├── project-summary.md
+│       ├── orchestrators/     # 4 domain orchestrators
+│       └── workstreams/       # 3 example workstreams
+├── scripts/
+│   └── nu/                    # Nushell scripts (NEW)
+│       ├── config.nu
+│       └── modules/
+│           ├── comfyui.nu
+│           ├── dgx.nu
+│           └── github.nu
+├── rust/                      # (to be created)
+├── python/                    # (to be created)
+├── models/                    # (to be created)
+└── workflows/                 # (to be created)
+</code></pre>
+<hr/>
+<h2 id="how-to-use">How to Use<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#how-to-use" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-quick-start">1. Quick Start<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-quick-start" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Clone the repository</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> clone</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> https://github.com/raibid-labs/dgx-pixels.git</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">cd</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dgx-pixels</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># See all available commands</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --list</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Initialize project</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> init</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Validate DGX-Spark hardware</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> validate-gpu</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Show hardware info</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hw-info</span></span></code></pre></figure>
+<h3 id="2-review-documentation">2. Review Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-review-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Start here</strong>: <code>docs/orchestration/project-summary.md</code></p>
+<p><strong>Key docs</strong>:</p>
+<ul>
+<li><code>CONTRIBUTING.md</code> - How to contribute</li>
+<li><code>docs/ROADMAP.md</code> - Project timeline (M0-M5)</li>
+<li><code>docs/orchestration/meta-orchestrator.md</code> - Orchestration strategy</li>
+<li><code>docs/orchestration/workstream-plan.md</code> - All 18 workstreams</li>
+<li><code>docs/orchestration/workstreams/start-here.md</code> - Workstream entry point</li>
+</ul>
+<h3 id="3-begin-development">3. Begin Development<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-begin-development" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Review Foundation Orchestrator</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/orchestrators/foundation.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Review first workstream</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> docs/orchestration/workstreams/ws01-hardware-baselines/README.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create branch</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">just</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> WS-01</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Follow TDD workflow (see CONTRIBUTING.md)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Write tests first</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Implement functionality</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Run: just ci</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># - Create PR: just pr &quot;Implement WS-01&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="benefits-of-reorganization">Benefits of Reorganization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#benefits-of-reorganization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-clean-structure">1. Clean Structure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-clean-structure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Root directory minimal (4 files only)</li>
+<li>All docs organized under <code>docs/</code></li>
+<li>Orchestration isolated in <code>docs/orchestration/</code></li>
+</ul>
+<h3 id="2-automation">2. Automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>40+ just recipes for common tasks</li>
+<li>Nushell scripts for hardware, ComfyUI, GitHub</li>
+<li>One command for CI checks: <code>just ci</code></li>
+</ul>
+<h3 id="3-agent-ready-workflow">3. Agent-Ready Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-agent-ready-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Branch creation automated</li>
+<li>PR creation automated</li>
+<li>Auto-merge after CI passes</li>
+<li>Rebase automation</li>
+</ul>
+<h3 id="4-consistency">4. Consistency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-consistency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Follows raibid-labs patterns exactly</li>
+<li>Kebab-case naming throughout</li>
+<li>Lowercase directories</li>
+<li>Modular nushell scripts</li>
+</ul>
+<h3 id="5-documentation">5. Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Clear contribution guide</li>
+<li>Detailed workflow examples</li>
+<li>All links updated and working</li>
+<li>Easy navigation with start-here docs</li>
+</ul>
+<hr/>
+<h2 id="patterns-followed">Patterns Followed<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#patterns-followed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Based on analysis of raibid-labs repositories:</p>
+<p><strong>From hack-agent-lightning</strong>:</p>
+<ul>
+<li>Workstream-based organization</li>
+<li>Phase-based parallel execution</li>
+<li>TDD enforcement</li>
+<li>Agent spawn patterns</li>
+</ul>
+<p><strong>From dgx-music</strong>:</p>
+<ul>
+<li>Week-by-week tracking</li>
+<li>Implementation summaries</li>
+<li>Completion reports</li>
+</ul>
+<p><strong>From raibid-ci</strong>:</p>
+<ul>
+<li>Event-driven orchestration</li>
+<li>Issue enrichment</li>
+<li>Draft → Ready → Complete workflow</li>
+<li>GitHub Actions integration</li>
+</ul>
+<p><strong>From mop</strong>:</p>
+<ul>
+<li>Nushell for automation</li>
+<li>Colored logging</li>
+<li>Module-based scripts</li>
+</ul>
+<hr/>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li><strong>Review</strong> <code>docs/orchestration/project-summary.md</code></li>
+<li><strong>Initialize</strong> project with <code>just init</code></li>
+<li><strong>Validate</strong> hardware with <code>just validate-gpu</code></li>
+<li><strong>Start</strong> Foundation Orchestrator (M0)
+<ul>
+<li>WS-01: Hardware Baselines</li>
+<li>WS-02: Reproducibility Framework</li>
+<li>WS-03: Benchmark Suite</li>
+</ul>
+</li>
+<li><strong>Follow</strong> orchestration plan through M5</li>
+</ol>
+<hr/>
+<h2 id="verification">Verification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#verification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>All reorganization complete:</p>
+<ul>
+<li>✅ 4 nushell modules created</li>
+<li>✅ Justfile with 40+ recipes</li>
+<li>✅ CONTRIBUTING.md added</li>
+<li>✅ GitHub Actions CI/CD added</li>
+<li>✅ 19 files moved/renamed</li>
+<li>✅ All 25+ docs updated with new links</li>
+<li>✅ CLAUDE.md updated with new structure</li>
+<li>✅ README.md auto-updated</li>
+<li>✅ Committed and pushed</li>
+</ul>
+<p><strong>Status</strong>: Ready for development! 🚀</p>
+<hr/>
+<p><strong>Questions?</strong> See <code>CONTRIBUTING.md</code> or <code>docs/orchestration/project-summary.md</code></p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-50" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#dgx-pixels-reorganization-summary" data-for="dgx-pixels-reorganization-summary">DGX-Pixels Reorganization Summary</a></li><li class="depth-1"><a href="#what-changed" data-for="what-changed">What Changed</a></li><li class="depth-2"><a href="#1-nushell-automation-4-modules-700-lines" data-for="1-nushell-automation-4-modules-700-lines">1. Nushell Automation (4 modules, ~700 lines)</a></li><li class="depth-2"><a href="#2-justfile-task-automation-450-lines" data-for="2-justfile-task-automation-450-lines">2. Justfile Task Automation (~450 lines)</a></li><li class="depth-2"><a href="#3-documentation-restructure" data-for="3-documentation-restructure">3. Documentation Restructure</a></li><li class="depth-2"><a href="#4-agent-pr-workflow" data-for="4-agent-pr-workflow">4. Agent PR Workflow</a></li><li class="depth-2"><a href="#5-github-actions-cicd" data-for="5-github-actions-cicd">5. GitHub Actions CI/CD</a></li><li class="depth-2"><a href="#6-updated-documentation" data-for="6-updated-documentation">6. Updated Documentation</a></li><li class="depth-1"><a href="#file-movements-summary" data-for="file-movements-summary">File Movements Summary</a></li><li class="depth-1"><a href="#new-capabilities" data-for="new-capabilities">New Capabilities</a></li><li class="depth-2"><a href="#hardware-detection" data-for="hardware-detection">Hardware Detection</a></li><li class="depth-2"><a href="#comfyui-integration" data-for="comfyui-integration">ComfyUI Integration</a></li><li class="depth-2"><a href="#github-automation" data-for="github-automation">GitHub Automation</a></li><li class="depth-2"><a href="#task-automation" data-for="task-automation">Task Automation</a></li><li class="depth-1"><a href="#project-structure" data-for="project-structure">Project Structure</a></li><li class="depth-1"><a href="#how-to-use" data-for="how-to-use">How to Use</a></li><li class="depth-2"><a href="#1-quick-start" data-for="1-quick-start">1. Quick Start</a></li><li class="depth-2"><a href="#2-review-documentation" data-for="2-review-documentation">2. Review Documentation</a></li><li class="depth-2"><a href="#3-begin-development" data-for="3-begin-development">3. Begin Development</a></li><li class="depth-1"><a href="#benefits-of-reorganization" data-for="benefits-of-reorganization">Benefits of Reorganization</a></li><li class="depth-2"><a href="#1-clean-structure" data-for="1-clean-structure">1. Clean Structure</a></li><li class="depth-2"><a href="#2-automation" data-for="2-automation">2. Automation</a></li><li class="depth-2"><a href="#3-agent-ready-workflow" data-for="3-agent-ready-workflow">3. Agent-Ready Workflow</a></li><li class="depth-2"><a href="#4-consistency" data-for="4-consistency">4. Consistency</a></li><li class="depth-2"><a href="#5-documentation" data-for="5-documentation">5. Documentation</a></li><li class="depth-1"><a href="#patterns-followed" data-for="patterns-followed">Patterns Followed</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-1"><a href="#verification" data-for="verification">Verification</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

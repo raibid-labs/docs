@@ -1,0 +1,29 @@
+# Redis Development Overrides
+# Reduced resources for development environment
+
+master:
+  persistence:
+    size: 2Gi
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+commonConfiguration: |-
+  # Persistence
+  appendonly yes
+  appendfsync everysec
+
+  # Memory management (reduced for dev)
+  maxmemory 200mb
+  maxmemory-policy allkeys-lru
+
+  # Stream configuration
+  stream-node-max-entries 100
+
+  # Logging (more verbose for dev)
+  loglevel debug

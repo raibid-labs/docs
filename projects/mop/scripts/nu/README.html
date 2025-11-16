@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>README</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="README"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="README"/><meta name="twitter:description" content="MOP Nushell Automation Scripts Comprehensive automation scripts for managing the Metrics Observability Platform (MOP)."/><meta property="og:description" content="MOP Nushell Automation Scripts Comprehensive automation scripts for managing the Metrics Observability Platform (MOP)."/><meta property="og:image:alt" content="MOP Nushell Automation Scripts Comprehensive automation scripts for managing the Metrics Observability Platform (MOP)."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/mop/scripts/nu/README"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/mop/scripts/nu/README"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="MOP Nushell Automation Scripts Comprehensive automation scripts for managing the Metrics Observability Platform (MOP)."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/mop/scripts/nu/README-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/mop/scripts/nu/README-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/mop/scripts/nu/README-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/mop/scripts/nu/README"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-396"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-396" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/">mop</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/scripts/">scripts</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/mop/scripts/nu/">nu</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>README</a></div></nav><h1 class="article-title">README</h1><p show-comma="true" class="content-meta"><time datetime="2025-11-16T03:15:11.449Z">Nov 16, 2025</time><span>8 min read</span></p></div></div><article class="popover-hint"><h1 id="mop-nushell-automation-scripts">MOP Nushell Automation Scripts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mop-nushell-automation-scripts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Comprehensive automation scripts for managing the Metrics Observability Platform (MOP).</p>
+<h2 id="prerequisites">Prerequisites<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prerequisites" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://www.nushell.sh/" class="external">Nushell<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> >= 0.80.0</li>
+<li><code>kubectl</code> - Kubernetes CLI</li>
+<li><code>tanka</code> - Jsonnet-based Kubernetes configuration tool</li>
+<li><code>helm</code> - Kubernetes package manager</li>
+<li><code>jq</code> - JSON processor</li>
+<li><code>jsonnet</code> and <code>jsonnet-bundler</code> - Jsonnet tools</li>
+</ul>
+<h2 id="scripts-overview">Scripts Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scripts-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-setupnu---environment-setup">1. setup.nu - Environment Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-setupnu---environment-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Complete environment initialization and configuration.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>✅ Prerequisites validation (kubectl, tanka, helm, jq, jsonnet, jb)</li>
+<li>✅ Kubernetes cluster connectivity testing</li>
+<li>✅ Tanka environment initialization</li>
+<li>✅ Jsonnet dependency vendoring</li>
+<li>✅ Namespace creation</li>
+<li>✅ CRD installation</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Setup development environment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Setup staging without vendoring</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --skip-vendor</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Force reinstall CRDs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --force</span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--env &lt;dev|staging|prod></code> - Environment to setup (default: dev)</li>
+<li><code>--skip-vendor</code> - Skip vendoring Jsonnet dependencies</li>
+<li><code>--force</code> - Force reinstall CRDs</li>
+</ul>
+<hr/>
+<h3 id="2-deploynu---safe-deployment">2. deploy.nu - Safe Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-deploynu---safe-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Production-ready deployment with validation and rollback support.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>🔍 Pre-deployment validation checks</li>
+<li>📊 Interactive diff review</li>
+<li>⚠️  User confirmation prompts</li>
+<li>⏳ Progressive rollout monitoring</li>
+<li>🧪 Post-deployment smoke tests</li>
+<li>🔄 Automatic rollback on failure</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy to development (with confirmation)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Deploy specific component</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --component</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mimir-ingester</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Auto-approve deployment (CI/CD)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --auto-approve</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Skip smoke tests</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-smoke-test</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom timeout</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --timeout</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 900</span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--env &lt;environment></code> - Target environment (required)</li>
+<li><code>--component &lt;name></code> - Deploy specific component only</li>
+<li><code>--auto-approve</code> - Skip confirmation prompts</li>
+<li><code>--no-smoke-test</code> - Skip post-deployment tests</li>
+<li><code>--timeout &lt;seconds></code> - Deployment timeout (default: 600)</li>
+</ul>
+<p><strong>Safety Features:</strong></p>
+<ul>
+<li>Pre-deployment validation</li>
+<li>Cluster connectivity check</li>
+<li>Configuration validation</li>
+<li>Resource availability check</li>
+<li>Pod health verification</li>
+<li>Service endpoint validation</li>
+<li>Component health monitoring</li>
+</ul>
+<hr/>
+<h3 id="3-health-checknu---system-health-monitoring">3. health-check.nu - System Health Monitoring<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-health-checknu---system-health-monitoring" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Comprehensive health verification for all MOP components.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>🏥 Pod status and readiness checks</li>
+<li>📡 Service endpoint validation</li>
+<li>📊 Metrics endpoint verification</li>
+<li>🔗 Inter-component connectivity tests</li>
+<li>💻 Resource utilization monitoring</li>
+<li>📈 Health report generation</li>
+<li>👁️  Continuous watch mode</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check all components</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check specific component</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --component</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mimir-ingester</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export report as JSON</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> health-report.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Continuous monitoring (watch mode)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --watch</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate markdown report</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> markdown</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> report.md</span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--env &lt;environment></code> - Target environment (required)</li>
+<li><code>--component &lt;name></code> - Check specific component only</li>
+<li><code>--format &lt;table|json|markdown></code> - Output format (default: table)</li>
+<li><code>--export &lt;path></code> - Export report to file</li>
+<li><code>--watch</code> - Continuous monitoring mode</li>
+</ul>
+<p><strong>Health Checks:</strong></p>
+<ul>
+<li>Pod phase and container status</li>
+<li>Container restart counts</li>
+<li>Service endpoint availability</li>
+<li>Metrics endpoint accessibility (<code>:8080/metrics</code>)</li>
+<li>Inter-component connectivity (distributor→ingester, query-frontend→querier)</li>
+<li>Resource usage (CPU, memory)</li>
+</ul>
+<hr/>
+<h3 id="4-cost-analysisnu---cost-analysis--optimization">4. cost-analysis.nu - Cost Analysis &amp; Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-cost-analysisnu---cost-analysis--optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Analyze costs and generate optimization recommendations.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>💰 Storage cost estimation</li>
+<li>⚡ Compute cost calculation</li>
+<li>📈 Ingestion cost analysis</li>
+<li>📊 Cost breakdown by service</li>
+<li>🎯 Optimization recommendations</li>
+<li>📉 Baseline comparison</li>
+<li>💡 Potential savings estimates</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Analyze current costs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom analysis period</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --period</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 30d</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Compare to baseline</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --baseline</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> baseline-2024-01.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export as CSV</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> csv</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> costs.csv</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom Mimir endpoint</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --mimir-url</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://mimir.example.com:8080</span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--env &lt;environment></code> - Target environment (required)</li>
+<li><code>--period &lt;duration></code> - Analysis period: 1h, 1d, 7d, 30d (default: 7d)</li>
+<li><code>--format &lt;table|json|csv></code> - Output format (default: table)</li>
+<li><code>--export &lt;path></code> - Export report to file</li>
+<li><code>--baseline &lt;path></code> - Compare to baseline file</li>
+<li><code>--mimir-url &lt;url></code> - Mimir query endpoint (default: <a href="http://localhost:8080" class="external">http://localhost:8080<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>)</li>
+</ul>
+<p><strong>Cost Metrics:</strong></p>
+<ul>
+<li>Active time series count</li>
+<li>Sample ingestion rate</li>
+<li>Query request rate</li>
+<li>Storage utilization</li>
+<li>Ingester instance count</li>
+<li>Storage block count</li>
+</ul>
+<p><strong>Recommendations Include:</strong></p>
+<ul>
+<li>Data retention policy optimization</li>
+<li>Ingester scaling recommendations</li>
+<li>Service-level trace sampling adjustments</li>
+<li>Adaptive sampling enablement</li>
+<li>Tiered storage strategy suggestions</li>
+</ul>
+<hr/>
+<h3 id="5-backupnu---configuration-backup">5. backup.nu - Configuration Backup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-backupnu---configuration-backup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Automated backup of configurations and dashboards.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>📊 Grafana dashboard export</li>
+<li>🔌 Grafana datasource backup</li>
+<li>⚙️  Tanka configuration backup</li>
+<li>☸️  Kubernetes resource export</li>
+<li>📦 Compressed archive creation</li>
+<li>☁️  Cloud storage upload (S3/GCS)</li>
+<li>🧹 Automatic retention cleanup</li>
+<li>✅ Backup integrity verification</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Basic backup</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom output directory</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --output</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /backups</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Upload to S3</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> s3://my-bucket/mop-backups</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Upload to GCS</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gs://my-bucket/mop-backups</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom retention period</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --retention</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 60</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># With Grafana credentials</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --grafana-url</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://grafana.local</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --grafana-token</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">toke</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">n</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--env &lt;environment></code> - Target environment (required)</li>
+<li><code>--output &lt;path></code> - Output directory (default: backups)</li>
+<li><code>--upload &lt;url></code> - Cloud storage URL (s3:// or gs://)</li>
+<li><code>--retention &lt;days></code> - Retention period (default: 30)</li>
+<li><code>--grafana-url &lt;url></code> - Grafana URL (default: <a href="http://localhost:3000" class="external">http://localhost:3000<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>)</li>
+<li><code>--grafana-token &lt;token></code> - Grafana API token (or use GRAFANA_TOKEN env var)</li>
+</ul>
+<p><strong>Backup Contents:</strong></p>
+<ul>
+<li>Grafana dashboards (JSON)</li>
+<li>Grafana datasources (JSON, credentials sanitized)</li>
+<li>Tanka environments and libraries</li>
+<li>Rendered Kubernetes manifests</li>
+<li>ConfigMaps, Secrets, Services</li>
+<li>Deployments, StatefulSets</li>
+<li>PVCs, Ingresses</li>
+</ul>
+<p><strong>Archive Format:</strong></p>
+<pre><code>mop-prod-20240106-143022.tar.gz
+├── grafana/
+│   ├── dashboards/
+│   │   ├── mimir-overview.json
+│   │   └── trace-analysis.json
+│   └── datasources/
+│       ├── mimir.json
+│       └── tempo.json
+├── tanka/
+│   ├── environments/
+│   ├── lib/
+│   ├── jsonnetfile.json
+│   └── rendered/
+│       └── prod.yaml
+└── kubernetes/
+    ├── configmaps.yaml
+    ├── deployments.yaml
+    └── services.yaml
+</code></pre>
+<hr/>
+<h3 id="6-experiment-runnernu---obi-experiment-automation">6. experiment-runner.nu - OBI Experiment Automation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#6-experiment-runnernu---obi-experiment-automation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Automated experiment execution and analysis using the Observability-by-Inference framework.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>🧪 Automated experiment execution</li>
+<li>📊 Baseline metric collection</li>
+<li>🚀 Experimental change deployment</li>
+<li>👁️  Continuous metric monitoring</li>
+<li>🔍 Statistical analysis</li>
+<li>📈 Improvement calculation</li>
+<li>🎯 Automated recommendations</li>
+<li>🔄 Automatic rollback on degradation</li>
+<li>📄 Comprehensive report generation</li>
+</ul>
+<p><strong>Usage:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Run experiment from config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> experiments/adaptive-sampling.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Custom duration</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exp.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --duration</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 7200</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Auto-rollback on degradation</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exp.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --auto-rollback</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export results</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exp.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> results.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extended baseline collection</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exp.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --baseline-duration</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 600</span></span></code></pre></figure>
+<p><strong>Options:</strong></p>
+<ul>
+<li><code>--config &lt;path></code> - Experiment configuration file (required)</li>
+<li><code>--env &lt;environment></code> - Target environment (default: dev)</li>
+<li><code>--duration &lt;seconds></code> - Experiment duration (default: 3600)</li>
+<li><code>--baseline-duration &lt;seconds></code> - Baseline collection period (default: 300)</li>
+<li><code>--auto-rollback</code> - Automatically rollback on metric degradation</li>
+<li><code>--export &lt;path></code> - Export results to file</li>
+</ul>
+<p><strong>Experiment Configuration Format:</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="json" data-theme="github-light one-dark-pro"><code data-language="json" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">{</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Adaptive Sampling Test&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;description&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Test adaptive sampling impact on cost and quality&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;changes&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;type&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;deployment&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;component&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;mimir-distributor&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;container&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;distributor&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;parameter&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;SAMPLE_RATE&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;value&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;0.5&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ],</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">  &quot;success_metrics&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: [</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;ingestion_rate&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;query&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;sum(rate(mimir_distributor_samples_in_total[5m]))&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;direction&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;lower&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;threshold&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10000</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    },</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    {</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;name&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;query_latency_p95&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;query&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;histogram_quantile(0.95, rate(mimir_request_duration_seconds_bucket[5m]))&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;direction&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;lower&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#E06C75;">      &quot;threshold&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.5</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">    }</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">  ]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span></code></pre></figure>
+<p><strong>Change Types:</strong></p>
+<ul>
+<li><code>deployment</code> - Modify deployment environment variables</li>
+<li><code>configmap</code> - Update ConfigMap values</li>
+</ul>
+<p><strong>Metric Directions:</strong></p>
+<ul>
+<li><code>lower</code> - Lower is better (latency, cost, errors)</li>
+<li><code>higher</code> - Higher is better (throughput, availability)</li>
+</ul>
+<p><strong>Analysis Recommendations:</strong></p>
+<ul>
+<li><code>adopt</code> - Score ≥ 0.8, clear improvement</li>
+<li><code>investigate</code> - Score ≥ 0.5, inconclusive results</li>
+<li><code>rollback</code> - Score &lt; 0.5, degradation detected</li>
+</ul>
+<hr/>
+<h2 id="common-workflows">Common Workflows<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-workflows" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="initial-setup">Initial Setup<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#initial-setup" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Setup environment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./setup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Deploy components</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Verify health</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span></code></pre></figure>
+<h3 id="production-deployment">Production Deployment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#production-deployment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Deploy to staging first</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Run health checks</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Create backup before prod deployment</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> s3://backups/mop</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Deploy to production</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Monitor health continuously</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --watch</span></span></code></pre></figure>
+<h3 id="cost-optimization">Cost Optimization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cost-optimization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Analyze current costs</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> baseline.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Run experiment with optimizations</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> optimize-sampling.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Compare results</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --baseline</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> baseline.json</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Deploy if successful</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --component</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mimir-distributor</span></span></code></pre></figure>
+<h3 id="disaster-recovery">Disaster Recovery<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#disaster-recovery" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Create comprehensive backup</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> s3://dr-backups/mop</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. If recovery needed, restore from backup</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (Manual restoration from backup archive)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Verify health after restoration</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --format</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> health-report.json</span></span></code></pre></figure>
+<hr/>
+<h2 id="environment-variables">Environment Variables<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#environment-variables" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="grafana-authentication">Grafana Authentication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grafana-authentication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> GRAFANA_TOKEN</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;your-api-token&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span></code></pre></figure>
+<h3 id="custom-kubernetes-context">Custom Kubernetes Context<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#custom-kubernetes-context" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> KUBECONFIG</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">path</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">to</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">/</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">kubeconfig</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span></code></pre></figure>
+<h3 id="aws-credentials-for-s3-upload">AWS Credentials (for S3 upload)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#aws-credentials-for-s3-upload" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> AWS_ACCESS_KEY_ID</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;your-key&quot;</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> AWS_SECRET_ACCESS_KEY</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;your-secret&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> s3://bucket/path</span></span></code></pre></figure>
+<h3 id="gcp-credentials-for-gcs-upload">GCP Credentials (for GCS upload)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gcp-credentials-for-gcs-upload" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">export</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;"> GOOGLE_APPLICATION_CREDENTIALS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/path/to/credentials.json&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gs://bucket/path</span></span></code></pre></figure>
+<hr/>
+<h2 id="nushell-features-used">Nushell Features Used<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#nushell-features-used" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>These scripts leverage Nushell’s powerful features:</p>
+<ul>
+<li><strong>Structured Data</strong>: All data is typed and structured</li>
+<li><strong>Pipelines</strong>: Clean data transformation with <code>|</code></li>
+<li><strong>Error Handling</strong>: Robust <code>try</code>/<code>catch</code> blocks</li>
+<li><strong>Type Safety</strong>: Strong typing for function parameters</li>
+<li><strong>Tables</strong>: Beautiful table formatting with <code>| table -e</code></li>
+<li><strong>JSON Support</strong>: Native JSON parsing with <code>from json</code> / <code>to json</code></li>
+<li><strong>YAML Support</strong>: Native YAML parsing with <code>from yaml</code> / <code>to yaml</code></li>
+<li><strong>Date/Time</strong>: Built-in date manipulation</li>
+<li><strong>Math Operations</strong>: Native math functions</li>
+<li><strong>HTTP Requests</strong>: Built-in HTTP client</li>
+<li><strong>ANSI Colors</strong>: Rich terminal output with color support</li>
+</ul>
+<hr/>
+<h2 id="troubleshooting">Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#troubleshooting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="script-permissions">Script Permissions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#script-permissions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">chmod</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +x</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scripts/nu/</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;">*</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">.nu</span></span></code></pre></figure>
+<h3 id="missing-tools">Missing Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#missing-tools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install Nushell</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">brew</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> nushell</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install Kubernetes tools</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">brew</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tanka</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> helm</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install Jsonnet tools</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">brew</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> jsonnet</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> jsonnet-bundler</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install utilities</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">brew</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> jq</span></span></code></pre></figure>
+<h3 id="port-forward-issues">Port Forward Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#port-forward-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check existing port forwards</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ps</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> aux</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> port-forward</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Kill existing port forwards</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">pkill</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -f</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;port-forward.*mimir&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Manually setup port forward</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">kubectl</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> port-forward</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> mop-prod</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> svc/mimir-query-frontend</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 8080:8080</span></span></code></pre></figure>
+<h3 id="grafana-connection">Grafana Connection<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grafana-connection" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Test Grafana connectivity</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">curl</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -H</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Authorization: Bearer </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$GRAFANA_TOKEN</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> http://localhost:3000/api/health</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate API token in Grafana</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Settings → API Keys → Add API Key</span></span></code></pre></figure>
+<hr/>
+<h2 id="best-practices">Best Practices<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#best-practices" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>Always run health checks after deployment</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> &amp;&amp; </span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Create backups before major changes</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./backup.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --upload</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> s3://backups/mop</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Test in dev/staging first</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./health-check.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> staging</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./deploy.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Use experiments for risky changes</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./experiment-runner.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> change.json</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dev</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --auto-rollback</span></span></code></pre></figure>
+</li>
+<li>
+<p><strong>Monitor costs regularly</strong></p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Weekly cost analysis</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./cost-analysis.nu</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --env</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> prod</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --export</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;costs-$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y%m%d).json&quot;</span></span></code></pre></figure>
+</li>
+</ol>
+<hr/>
+<h2 id="contributing">Contributing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#contributing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>When adding new scripts:</p>
+<ol>
+<li>Follow the existing structure and naming conventions</li>
+<li>Include comprehensive error handling</li>
+<li>Add detailed comments and documentation</li>
+<li>Use Nushell idioms (structured data, pipelines)</li>
+<li>Provide helpful output with ANSI colors</li>
+<li>Include usage examples in comments</li>
+</ol>
+<hr/>
+<h2 id="license">License<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#license" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Part of the MOP (Metrics Observability Platform) project.</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-186" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#mop-nushell-automation-scripts" data-for="mop-nushell-automation-scripts">MOP Nushell Automation Scripts</a></li><li class="depth-1"><a href="#prerequisites" data-for="prerequisites">Prerequisites</a></li><li class="depth-1"><a href="#scripts-overview" data-for="scripts-overview">Scripts Overview</a></li><li class="depth-2"><a href="#1-setupnu---environment-setup" data-for="1-setupnu---environment-setup">1. setup.nu - Environment Setup</a></li><li class="depth-2"><a href="#2-deploynu---safe-deployment" data-for="2-deploynu---safe-deployment">2. deploy.nu - Safe Deployment</a></li><li class="depth-2"><a href="#3-health-checknu---system-health-monitoring" data-for="3-health-checknu---system-health-monitoring">3. health-check.nu - System Health Monitoring</a></li><li class="depth-2"><a href="#4-cost-analysisnu---cost-analysis--optimization" data-for="4-cost-analysisnu---cost-analysis--optimization">4. cost-analysis.nu - Cost Analysis &amp; Optimization</a></li><li class="depth-2"><a href="#5-backupnu---configuration-backup" data-for="5-backupnu---configuration-backup">5. backup.nu - Configuration Backup</a></li><li class="depth-2"><a href="#6-experiment-runnernu---obi-experiment-automation" data-for="6-experiment-runnernu---obi-experiment-automation">6. experiment-runner.nu - OBI Experiment Automation</a></li><li class="depth-1"><a href="#common-workflows" data-for="common-workflows">Common Workflows</a></li><li class="depth-2"><a href="#initial-setup" data-for="initial-setup">Initial Setup</a></li><li class="depth-2"><a href="#production-deployment" data-for="production-deployment">Production Deployment</a></li><li class="depth-2"><a href="#cost-optimization" data-for="cost-optimization">Cost Optimization</a></li><li class="depth-2"><a href="#disaster-recovery" data-for="disaster-recovery">Disaster Recovery</a></li><li class="depth-1"><a href="#environment-variables" data-for="environment-variables">Environment Variables</a></li><li class="depth-2"><a href="#grafana-authentication" data-for="grafana-authentication">Grafana Authentication</a></li><li class="depth-2"><a href="#custom-kubernetes-context" data-for="custom-kubernetes-context">Custom Kubernetes Context</a></li><li class="depth-2"><a href="#aws-credentials-for-s3-upload" data-for="aws-credentials-for-s3-upload">AWS Credentials (for S3 upload)</a></li><li class="depth-2"><a href="#gcp-credentials-for-gcs-upload" data-for="gcp-credentials-for-gcs-upload">GCP Credentials (for GCS upload)</a></li><li class="depth-1"><a href="#nushell-features-used" data-for="nushell-features-used">Nushell Features Used</a></li><li class="depth-1"><a href="#troubleshooting" data-for="troubleshooting">Troubleshooting</a></li><li class="depth-2"><a href="#script-permissions" data-for="script-permissions">Script Permissions</a></li><li class="depth-2"><a href="#missing-tools" data-for="missing-tools">Missing Tools</a></li><li class="depth-2"><a href="#port-forward-issues" data-for="port-forward-issues">Port Forward Issues</a></li><li class="depth-2"><a href="#grafana-connection" data-for="grafana-connection">Grafana Connection</a></li><li class="depth-1"><a href="#best-practices" data-for="best-practices">Best Practices</a></li><li class="depth-1"><a href="#contributing" data-for="contributing">Contributing</a></li><li class="depth-1"><a href="#license" data-for="license">License</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2025</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>
