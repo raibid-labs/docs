@@ -14,16 +14,11 @@ This section contains documentation aggregated from all active raibid-labs repos
 - [[dgx-music/index|Dgx music]]
 - [[dgx-pixels/index|Dgx pixels]]
 - [[dgx-spark-mcp/index|Dgx spark-mcp]]
-- [[fsrs/index|Fsrs]]
 - [[grimware/index|Grimware]]
-- [[locust/index|Locust]]
-- [[mop/index|Mop]]
 - [[obi-mcp/index|Obi mcp]]
 - [[osai/index|Osai]]
-- [[raibid-ci/index|Raibid ci]]
-- [[raibid-cli/index|Raibid cli]]
+- [[scarab/index|Scarab]]
 - [[sparky/index|Sparky]]
-- [[workspace/index|Workspace]]
 
 ## Navigation
 
@@ -33,7 +28,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-11-18 03:09:54
+**Last Updated**: 2025-11-26 04:40:06
 
 ---
 
