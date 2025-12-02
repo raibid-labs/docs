@@ -12,7 +12,6 @@ This section contains documentation aggregated from all active raibid-labs repos
 
 - [[dgx-spark-mcp/index|Dgx spark-mcp]]
 - [[grimware/index|Grimware]]
-- [[mimic/index|Mimic]]
 - [[obi-mcp/index|Obi mcp]]
 - [[osai/index|Osai]]
 - [[scarab/index|Scarab]]
@@ -26,7 +25,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-12-01 03:47:49
+**Last Updated**: 2025-12-02 03:15:30
 
 ---
 
