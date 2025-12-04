@@ -11,9 +11,9 @@ This section contains documentation aggregated from all active raibid-labs repos
 ## Active Projects
 
 - [[dgx-spark-mcp/index|Dgx spark-mcp]]
-- [[grimware/index|Grimware]]
 - [[obi-mcp/index|Obi mcp]]
 - [[osai/index|Osai]]
+- [[ratatui-testlib/index|Ratatui testlib]]
 - [[scarab/index|Scarab]]
 - [[sparky/index|Sparky]]
 
@@ -25,7 +25,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-12-02 03:15:30
+**Last Updated**: 2025-12-04 00:36:53
 
 ---
 
