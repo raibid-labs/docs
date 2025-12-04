@@ -54,16 +54,19 @@ jobs:
           submodules: recursive
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+         node-version: '22'
+         cache: 'npm'
 
       - name: Setup Nushell
         uses: hustcer/setup-nu@v3
         with:
-          version: '*'
+         version: '*'
 
       - name: Verify GitHub CLI authentication
         env:
@@ -92,6 +95,9 @@ jobs:
 
       - name: Update documentation
         run: nu scripts/update-docs.nu --generate-index --verbose
+
+      - name: Build Rust documentation index
+        run: nu scripts/build-rustdoc.nu --output public/rustdoc.json --verbose
 
       - name: Commit submodule changes
         run: |

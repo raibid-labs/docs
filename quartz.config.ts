@@ -70,6 +70,10 @@ const config: QuartzConfig = {
       Plugin.GitHubFlavoredMarkdown(),
       Plugin.TableOfContents(),
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
+      Plugin.RustDocBridge({
+        rustdocJsonPath: "public/rustdoc.json",
+        apiDocsPath: "/api",
+      }),
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
     ],
