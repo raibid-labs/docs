@@ -36,7 +36,7 @@ export default ((opts?: Partial<VersionBadgeOptions>) => {
         {version && (
           <span class="version-tag">
             {releaseUrl ? (
-              <a href={releaseUrl} target="_blank" rel={"noopener noreferrer"}>
+              <a href={releaseUrl} target="_blank">
                 📦 {version}
               </a>
             ) : (
