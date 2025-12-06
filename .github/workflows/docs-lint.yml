@@ -1,0 +1,238 @@
+name: Documentation Linting
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - 'content/**'
+      - '.github/workflows/docs-lint.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.md'
+      - 'docs/**'
+      - 'content/**'
+      - '.github/workflows/docs-lint.yml'
+
+jobs:
+  markdown-lint:
+    name: Markdown Linting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run markdownlint
+        uses: DavidAnson/markdownlint-cli2-action@v18
+        with:
+          globs: |
+            **/*.md
+            !node_modules/**
+            !public/**
+            !quartz/**/*.md
+            !.git/**
+
+  link-check:
+    name: Link Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: |
+            --verbose
+            --no-progress
+            --exclude-mail
+            --exclude-path node_modules
+            --exclude-path public
+            --exclude-path .git
+            --exclude-path quartz
+            '**/*.md'
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  front-matter-validation:
+    name: Front Matter Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install --global js-yaml
+
+      - name: Validate front matter
+        run: |
+          cat > validate-frontmatter.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const yaml = require('js-yaml');
+
+          // Find all markdown files
+          function findMarkdownFiles(dir, fileList = []) {
+            const files = fs.readdirSync(dir);
+            files.forEach(file => {
+              const filePath = path.join(dir, file);
+              const stat = fs.statSync(filePath);
+
+              // Skip directories to ignore
+              if (stat.isDirectory()) {
+                if (!['node_modules', 'public', '.git', 'quartz'].includes(file)) {
+                  findMarkdownFiles(filePath, fileList);
+                }
+              } else if (file.endsWith('.md')) {
+                fileList.push(filePath);
+              }
+            });
+            return fileList;
+          }
+
+          // Extract and validate front matter
+          function validateFrontMatter(filePath) {
+            const content = fs.readFileSync(filePath, 'utf8');
+            const frontMatterRegex = /^---\n([\s\S]*?)\n---/;
+            const match = content.match(frontMatterRegex);
+
+            // Skip files in docs/ and content/guides/ - front matter optional
+            if (filePath.includes('docs/') || filePath.includes('content/guides/') ||
+                filePath === 'README.md' || filePath === 'STYLE.md' ||
+                filePath.includes('CONTRIBUTING') || filePath.includes('STRUCTURE')) {
+              return { valid: true, path: filePath };
+            }
+
+            if (!match) {
+              return {
+                valid: false,
+                path: filePath,
+                error: 'No front matter found (optional for governance docs)'
+              };
+            }
+
+            try {
+              const frontMatter = yaml.load(match[1]);
+
+              // Check for required fields in content files
+              if (filePath.includes('content/') && !filePath.includes('index.md')) {
+                if (!frontMatter.title) {
+                  return { valid: false, path: filePath, error: 'Missing required field: title' };
+                }
+                if (!frontMatter.description) {
+                  return { valid: false, path: filePath, error: 'Missing required field: description' };
+                }
+              }
+
+              return { valid: true, path: filePath };
+            } catch (e) {
+              return { valid: false, path: filePath, error: `Invalid YAML: ${e.message}` };
+            }
+          }
+
+          // Main validation
+          const markdownFiles = findMarkdownFiles('.');
+          let hasErrors = false;
+
+          console.log(`Validating ${markdownFiles.length} markdown files...\n`);
+
+          markdownFiles.forEach(file => {
+            const result = validateFrontMatter(file);
+            if (!result.valid) {
+              console.error(`❌ ${result.path}: ${result.error}`);
+              hasErrors = true;
+            } else {
+              console.log(`✅ ${result.path}`);
+            }
+          });
+
+          if (hasErrors) {
+            console.error('\n❌ Front matter validation failed');
+            process.exit(1);
+          } else {
+            console.log('\n✅ All front matter valid');
+          }
+          EOF
+
+          node validate-frontmatter.js
+
+  structure-validation:
+    name: Structure Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate documentation structure
+        run: |
+          echo "Checking documentation structure..."
+
+          # Check for prohibited archive directories
+          if find . -type d \( -name "archive" -o -name "archived" -o -name "old" -o -name "legacy" -o -name "backup" \) ! -path "./node_modules/*" ! -path "./.git/*" ! -path "./public/*" | grep -q .; then
+            echo "❌ Found prohibited archive directories"
+            find . -type d \( -name "archive" -o -name "archived" -o -name "old" -o -name "legacy" -o -name "backup" \) ! -path "./node_modules/*" ! -path "./.git/*" ! -path "./public/*"
+            exit 1
+          fi
+
+          # Check that landing page exists
+          if [ ! -f "content/index.md" ]; then
+            echo "❌ Landing page (content/index.md) is required"
+            exit 1
+          fi
+
+          # Check versions.json exists if versions directory exists
+          if [ -d "docs/versions" ] && [ ! -f "docs/versions.json" ]; then
+            echo "❌ versions.json is required when docs/versions/ exists"
+            exit 1
+          fi
+
+          # Validate versions.json format if it exists
+          if [ -f "docs/versions.json" ]; then
+            if ! python3 -m json.tool docs/versions.json > /dev/null 2>&1; then
+              echo "❌ versions.json is not valid JSON"
+              exit 1
+            fi
+          fi
+
+          echo "✅ Documentation structure is valid"
+
+  phage-policy:
+    name: Phage Policy Enforcement
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Enforce versioning policy
+        run: |
+          echo "Enforcing documentation policies..."
+
+          # Ensure user-facing docs are versioned
+          # Allow docs in content/ (Quartz content) and docs/versions/
+          # Prohibit user-facing docs directly in docs/ root (except governance files)
+
+          ALLOWED_ROOT_DOCS="STRUCTURE.md|CONTRIBUTING.md|RELEASE.md|versions.json"
+
+          if find docs -maxdepth 1 -type f -name "*.md" ! -path "*/versions/*" | grep -v -E "$ALLOWED_ROOT_DOCS" | grep -q .; then
+            echo "❌ Found user-facing docs in docs/ root. All user docs must be versioned under docs/versions/"
+            find docs -maxdepth 1 -type f -name "*.md" ! -path "*/versions/*" | grep -v -E "$ALLOWED_ROOT_DOCS"
+            exit 1
+          fi
+
+          # Check for AI dumps or conversation logs
+          if find . -type f \( -name "*SUMMARY*.txt" -o -name "*SUMMARY*.md" -o -name "*conversation*.txt" -o -name "*AI-*.txt" \) ! -path "./node_modules/*" ! -path "./.git/*" ! -path "./public/*" | grep -q .; then
+            echo "❌ Found AI dump or summary files that should be removed"
+            find . -type f \( -name "*SUMMARY*.txt" -o -name "*SUMMARY*.md" -o -name "*conversation*.txt" -o -name "*AI-*.txt" \) ! -path "./node_modules/*" ! -path "./.git/*" ! -path "./public/*"
+            exit 1
+          fi
+
+          echo "✅ All policies enforced"
