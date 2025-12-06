@@ -266,6 +266,26 @@ gh api rate_limit
 gh auth login --with-token < token.txt
 ```
 
+## Documentation
+
+### Versioned Documentation
+
+All user-facing documentation is versioned under `docs/versions/`:
+
+- **Latest (vNEXT)**: [docs/versions/vNEXT](./docs/versions/vNEXT/) - Unreleased changes
+- **Version Manifest**: [docs/versions.json](./docs/versions.json) - Available versions
+
+For details on documentation structure and versioning policy, see:
+- [Documentation Structure Guide](./docs/STRUCTURE.md)
+- [Contributing Guidelines](./docs/CONTRIBUTING.md)
+
+### Quick Start Guides
+
+For getting started with the documentation hub:
+- [Quick Start Guide](./QUICK_START.md)
+- [Obsidian Usage Guide](./content/guides/obsidian-usage.md)
+- [Private Docs Setup](./content/guides/private-docs-setup.md)
+
 ## Contributing
 
 ### Adding Documentation to Your Repo
@@ -279,6 +299,8 @@ To have your repository's documentation included in this hub:
    - Not in the ignorelist
    - Part of the raibid-labs organization
 4. Wait for the next scheduled sync (daily at 2 AM UTC) or trigger manually
+
+For detailed contribution guidelines, see [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md).
 
 ### Manual Sync Trigger
 
