@@ -17,9 +17,9 @@ def parse_args [] {
   let flags = $env.ARGS.named
   
   {
-    output: (($flags | get --ignore-errors output) | get 0? or $config.output_file),
-    verbose: ($flags | get --ignore-errors verbose | is-not-empty),
-    help: ($flags | get --ignore-errors help | is-not-empty),
+    output: (($flags | get -o output) | get 0? or $config.output_file),
+    verbose: ($flags | get -o verbose | is-not-empty),
+    help: ($flags | get -o help | is-not-empty),
   }
 }
 
@@ -41,7 +41,7 @@ Options:
   }
   
   # Create output directory
-  mkdir -p ($opts.output | path dirname)
+  mkdir ($opts.output | path dirname)
   
   if $opts.verbose {
     print $"📚 Starting Rust documentation build..."
@@ -129,10 +129,10 @@ Options:
           $all_crates += [($project.name)]
           
           # Merge index and paths
-          if ($doc_data | get --ignore-errors index | is-not-empty) {
+          if ($doc_data | get -o index | is-not-empty) {
             $merged_index = ($merged_index | merge ($doc_data.index))
           }
-          if ($doc_data | get --ignore-errors paths | is-not-empty) {
+          if ($doc_data | get -o paths | is-not-empty) {
             $merged_paths = ($merged_paths | merge ($doc_data.paths))
           }
           
