@@ -123,7 +123,7 @@ Options:
           let doc_data = (open $json_file)
           
           # Merge crate information
-          $all_crates += [($project.name)]
+          $all_crates = ($all_crates | append $project.name)
           
           # Merge index and paths
           if ($doc_data | get -o index | is-not-empty) {
