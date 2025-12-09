@@ -15,6 +15,9 @@ This section contains documentation aggregated from all active raibid-labs repos
 - [[osai/index|Osai]]
 - [[ratatui-testlib/index|Ratatui testlib]]
 - [[scarab/index|Scarab]]
+- [[scarab-nav/index|Scarab nav]]
+- [[scryforge/index|Scryforge]]
+- [[sigilforge/index|Sigilforge]]
 - [[sparky/index|Sparky]]
 
 ## Navigation
@@ -25,7 +28,7 @@ Use the sidebar to browse project documentation, or use the search feature to fi
 
 This documentation hub automatically aggregates content from all public raibid-labs repositories. Each project maintains its own documentation in its respective repository, and changes are synchronized daily.
 
-**Last Updated**: 2025-12-04 03:16:34
+**Last Updated**: 2025-12-09 04:27:07
 
 ---
 
