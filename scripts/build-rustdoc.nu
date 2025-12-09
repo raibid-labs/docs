@@ -95,23 +95,20 @@ Options:
       # Generate rustdoc JSON with --output-format json
       # This requires Rust with cargo installed
       cd $project.path
-      
+
       # Build rustdoc JSON output
       # Note: --output-format json is available in recent Rust versions
-      let result = (
-        cargo doc --output-format json --no-deps 2>&1
-        | complete
-      )
-      
+      let result = (do { cargo doc --output-format json --no-deps } | complete)
+
       if ($result.exit_code != 0) {
         if $opts.verbose {
           print $"    ❌ Failed to generate docs for ($project.name): ($result.stderr | str trim)"
         }
         continue
       }
-      
+
       # Look for target/doc/*.json files
-      let json_files = (glob "target/doc/*.json" 2>/dev/null || [])
+      let json_files = try { glob "target/doc/*.json" } catch { [] }
       
       if ($json_files | is-empty) {
         if $opts.verbose {
@@ -146,12 +143,12 @@ Options:
         }
       }
       
-      cd - out+err> /dev/null
+      cd -
     } catch { |err|
       if $opts.verbose {
         print $"    ❌ Error building docs for ($project.name): ($err.msg)"
       }
-      cd - out+err> /dev/null
+      cd -
     }
   }
   
@@ -169,15 +166,16 @@ Options:
   $rustdoc_output | to json | save --force $opts.output
   
   if $opts.verbose {
+    let output_size = if ($opts.output | path exists) {
+      let file_size = (ls $opts.output | get 0?.size? | default 0)
+      $"($file_size) bytes"
+    } else {
+      "0 bytes"
+    }
     let stats = {
       total_items: ($merged_index | length),
       crates: ($all_crates | length),
-      output_size: (
-        $opts.output
-        | path exists
-        | if $it { (ls $opts.output | get size.0? or 0 | $"($it) bytes") }
-        else { "0 bytes" }
-      ),
+      output_size: $output_size,
     }
     print ""
     print $"✅ Documentation generation completed!"
