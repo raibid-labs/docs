@@ -82,9 +82,9 @@ Options:
   
   # Generate rustdoc JSON for each project
   let all_docs = []
-  let mut merged_index = {}
-  let mut merged_paths = {}
-  let mut all_crates = []
+  mut merged_index = {}
+  mut merged_paths = {}
+  mut all_crates = []
   
   for project in $projects {
     if $opts.verbose {
