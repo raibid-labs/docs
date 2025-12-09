@@ -173,7 +173,7 @@ Options:
       "0 bytes"
     }
     let stats = {
-      total_items: ($merged_index | length),
+      total_items: ($merged_index | columns | length),
       crates: ($all_crates | length),
       output_size: $output_size,
     }
