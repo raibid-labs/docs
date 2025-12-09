@@ -5,63 +5,39 @@
 # Usage: nu scripts/build-rustdoc.nu [--output path] [--verbose]
 
 # Configuration
-let config = {
-  projects_dir: "content/projects",
-  output_file: "public/rustdoc.json",
-  output_format: "json",
-}
+const PROJECTS_DIR = "content/projects"
+const DEFAULT_OUTPUT = "public/rustdoc.json"
 
-# Parse command line arguments
-def parse_args [] {
-  let args = $env.ARGS.positional
-  let flags = $env.ARGS.named
-  
-  {
-    output: (($flags | get -o output) | get 0? or $config.output_file),
-    verbose: ($flags | get -o verbose | is-not-empty),
-    help: ($flags | get -o help | is-not-empty),
-  }
-}
+# Main function with proper argument handling
+def main [
+  --output (-o): string  # Output file path (default: public/rustdoc.json)
+  --verbose (-v)         # Show detailed progress
+] {
+  let output_file = if ($output | is-empty) { $DEFAULT_OUTPUT } else { $output }
 
-# Main function
-def main [] {
-  let opts = parse_args
-  
-  # Show help
-  if $opts.help {
-    print "Rust Documentation Generator
-    
-Usage: nu scripts/build-rustdoc.nu [OPTIONS]
-
-Options:
-  --output <path>     Output file path (default: public/rustdoc.json)
-  --verbose          Show detailed progress
-  --help             Show this help message"
-    exit 0
-  }
-  
   # Create output directory
-  mkdir ($opts.output | path dirname)
-  
-  if $opts.verbose {
-    print $"📚 Starting Rust documentation build..."
-    print $"📁 Projects directory: ($config.projects_dir)"
-    print $"📝 Output file: ($opts.output)"
+  let output_dir = ($output_file | path dirname)
+  if not ($output_dir | path exists) {
+    mkdir $output_dir
   }
-  
+
+  if $verbose {
+    print $"📚 Starting Rust documentation build..."
+    print $"📁 Projects directory: ($PROJECTS_DIR)"
+    print $"📝 Output file: ($output_file)"
+  }
+
   # Find all Rust projects (with Cargo.toml)
-  let projects = (
-    glob $"($config.projects_dir)/*/Cargo.toml"
-    | each { |cargo_file|
-      {
-        path: ($cargo_file | path dirname),
-        name: ($cargo_file | path dirname | path basename),
-      }
+  let cargo_files = try { glob $"($PROJECTS_DIR)/*/Cargo.toml" } catch { [] }
+  let projects = ($cargo_files | each { |cargo_file|
+    {
+      path: ($cargo_file | path dirname),
+      name: ($cargo_file | path dirname | path basename),
     }
-  )
-  
+  })
+
   if ($projects | is-empty) {
-    if $opts.verbose {
+    if $verbose {
       print "⚠️  No Rust projects found with Cargo.toml"
     }
     # Create empty rustdoc structure
@@ -72,86 +48,88 @@ Options:
       paths: {},
       root: null,
     }
-    $empty_doc | to json | save --force $opts.output
-    exit 0
+    $empty_doc | to json | save --force $output_file
+    return
   }
-  
-  if $opts.verbose {
-    print $"🔍 Found ($projects | length) Rust project(s)"
+
+  if $verbose {
+    print $"🔍 Found ($projects | length) Rust project\(s\)"
   }
-  
+
   # Generate rustdoc JSON for each project
-  let all_docs = []
   mut merged_index = {}
   mut merged_paths = {}
   mut all_crates = []
-  
+  let start_dir = (pwd)
+
   for project in $projects {
-    if $opts.verbose {
+    if $verbose {
       print $"  📦 Building docs for: ($project.name)"
     }
-    
+
     try {
       # Generate rustdoc JSON with --output-format json
-      # This requires Rust with cargo installed
       cd $project.path
 
       # Build rustdoc JSON output
-      # Note: --output-format json is available in recent Rust versions
       let result = (do { cargo doc --output-format json --no-deps } | complete)
 
       if ($result.exit_code != 0) {
-        if $opts.verbose {
+        if $verbose {
           print $"    ❌ Failed to generate docs for ($project.name): ($result.stderr | str trim)"
         }
+        cd $start_dir
         continue
       }
 
       # Look for target/doc/*.json files
       let json_files = try { glob "target/doc/*.json" } catch { [] }
-      
+
       if ($json_files | is-empty) {
-        if $opts.verbose {
-          print $"    ℹ️  No JSON output found (may not be in this Rust version)"
+        if $verbose {
+          print $"    ℹ️  No JSON output found \(may not be in this Rust version\)"
         }
+        cd $start_dir
         continue
       }
-      
+
       # Read and merge documentation
       for json_file in $json_files {
         try {
           let doc_data = (open $json_file)
-          
+
           # Merge crate information
           $all_crates = ($all_crates | append $project.name)
-          
+
           # Merge index and paths
-          if ($doc_data | get -o index | is-not-empty) {
-            $merged_index = ($merged_index | merge ($doc_data.index))
+          let idx = ($doc_data | get -o index)
+          if ($idx != null and ($idx | describe | str starts-with "record")) {
+            $merged_index = ($merged_index | merge $idx)
           }
-          if ($doc_data | get -o paths | is-not-empty) {
-            $merged_paths = ($merged_paths | merge ($doc_data.paths))
+          let pth = ($doc_data | get -o paths)
+          if ($pth != null and ($pth | describe | str starts-with "record")) {
+            $merged_paths = ($merged_paths | merge $pth)
           }
-          
-          if $opts.verbose {
+
+          if $verbose {
             print $"    ✅ Merged documentation from ($json_file)"
           }
         } catch { |err|
-          if $opts.verbose {
+          if $verbose {
             print $"    ⚠️  Error reading ($json_file): ($err.msg)"
           }
         }
       }
-      
-      cd -
+
+      cd $start_dir
     } catch { |err|
-      if $opts.verbose {
+      if $verbose {
         print $"    ❌ Error building docs for ($project.name): ($err.msg)"
       }
-      cd -
+      cd $start_dir
     }
   }
-  
+
   # Build final rustdoc JSON structure
   let rustdoc_output = {
     crate_version: "0.1.0",
@@ -159,32 +137,27 @@ Options:
     index: $merged_index,
     paths: $merged_paths,
     root: null,
-    format_version: 28,  # Current rustdoc JSON format version
+    format_version: 28,
   }
-  
+
   # Save the merged documentation
-  $rustdoc_output | to json | save --force $opts.output
-  
-  if $opts.verbose {
-    let output_size = if ($opts.output | path exists) {
-      let file_size = (ls $opts.output | get 0?.size? | default 0)
-      $"($file_size) bytes"
+  $rustdoc_output | to json | save --force $output_file
+
+  if $verbose {
+    let output_size = if ($output_file | path exists) {
+      let file_info = (ls $output_file | first)
+      $"($file_info.size)"
     } else {
-      "0 bytes"
+      "0 B"
     }
-    let stats = {
-      total_items: ($merged_index | columns | length),
-      crates: ($all_crates | length),
-      output_size: $output_size,
-    }
+    let total_items = ($merged_index | columns | length)
+    let crate_count = ($all_crates | length)
     print ""
     print $"✅ Documentation generation completed!"
     print $"📊 Statistics:"
-    print $"  - Total items indexed: ($stats.total_items)"
-    print $"  - Crates processed: ($stats.crates)"
-    print $"  - Output file: ($opts.output)"
-    print $"  - File size: ($stats.output_size)"
+    print $"  - Total items indexed: ($total_items)"
+    print $"  - Crates processed: ($crate_count)"
+    print $"  - Output file: ($output_file)"
+    print $"  - File size: ($output_size)"
   }
 }
-
-main
