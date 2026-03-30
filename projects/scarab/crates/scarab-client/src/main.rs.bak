@@ -1,0 +1,207 @@
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
+use bevy::prelude::*;
+use bevy::render::mesh::PrimitiveTopology;
+use bevy::render::render_asset::RenderAssetUsages;
+use scarab_protocol::{SharedState, SHMEM_PATH};
+use shared_memory::ShmemConf;
+use std::sync::Arc;
+
+mod rendering;
+use rendering::{
+    config::FontConfig,
+    text::{generate_terminal_mesh, update_terminal_mesh_system, TerminalMesh, TextRenderer},
+};
+
+// Marker for the grid entity
+#[derive(Component)]
+struct TerminalGrid;
+
+// Wrapper to make shared memory Send + Sync
+pub struct SharedMemWrapper(pub Arc<shared_memory::Shmem>);
+
+unsafe impl Send for SharedMemWrapper {}
+unsafe impl Sync for SharedMemWrapper {}
+
+// Resource to hold shared memory state
+#[derive(Resource)]
+pub struct SharedMemoryReader {
+    pub shmem: SharedMemWrapper,
+    pub last_sequence: u64,
+}
+
+fn main() {
+    // Initialize shared memory before Bevy app starts
+    let shmem = match ShmemConf::new()
+        .size(std::mem::size_of::<SharedState>())
+        .os_id(SHMEM_PATH)
+        .open()
+    {
+        Ok(m) => {
+            println!("✓ Connected to shared memory at: {}", SHMEM_PATH);
+            Arc::new(m)
+        }
+        Err(e) => {
+            eprintln!("✗ Failed to open shared memory: {}. Is the daemon running?", e);
+            std::process::exit(1);
+        }
+    };
+
+    let reader = SharedMemoryReader {
+        shmem: SharedMemWrapper(shmem),
+        last_sequence: 0,
+    };
+
+    // Create font configuration
+    let font_config = FontConfig::default();
+
+    println!("┌─────────────────────────────────────────┐");
+    println!("│   Scarab Terminal - Text Renderer      │");
+    println!("├─────────────────────────────────────────┤");
+    println!("│ Font: {}                │", font_config.family);
+    println!("│ Size: {:.1}pt                           │", font_config.size);
+    println!("│ Grid: 200x100 cells                     │");
+    println!("│ Target: 60+ FPS                         │");
+    println!("└─────────────────────────────────────────┘");
+
+    App::new()
+        .add_plugins(
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        title: "Scarab Terminal - GPU Accelerated".into(),
+                        resolution: (1600.0, 900.0).into(),
+                        present_mode: bevy::window::PresentMode::AutoVsync,
+                        ..default()
+                    }),
+                    ..default()
+                })
+                .set(ImagePlugin::default_nearest()),
+        )
+        // Add diagnostics plugins for performance monitoring
+        .add_plugins((
+            FrameTimeDiagnosticsPlugin::default(),
+            LogDiagnosticsPlugin::default(),
+        ))
+        .insert_resource(reader)
+        .add_systems(Startup, setup_rendering)
+        .add_systems(Update, (update_terminal_mesh_system, handle_input))
+        .run();
+}
+
+fn setup_rendering(
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<ColorMaterial>>,
+    mut images: ResMut<Assets<Image>>,
+) {
+    // Spawn 2D camera
+    commands.spawn(Camera2dBundle::default());
+
+    // Create text renderer
+    let font_config = FontConfig::default();
+    let mut renderer = TextRenderer::new(font_config, &mut images);
+
+    // Update font metrics for accurate cell sizing
+    renderer.update_metrics();
+
+    println!("✓ Text Renderer initialized");
+    println!("  Cell dimensions: {:.2}x{:.2} px", renderer.cell_width, renderer.cell_height);
+    println!("  Atlas size: 4096x4096 px (~64MB VRAM)");
+
+    // Create initial empty mesh
+    let initial_mesh = Mesh::new(
+        PrimitiveTopology::TriangleList,
+        RenderAssetUsages::RENDER_WORLD,
+    );
+
+    let mesh_handle = meshes.add(initial_mesh);
+
+    // Create material with the atlas texture
+    let material = materials.add(ColorMaterial {
+        texture: Some(renderer.atlas.texture.clone()),
+        ..default()
+    });
+
+    // Spawn terminal grid entity
+    commands.spawn((
+        TerminalGrid,
+        TerminalMesh::default(),
+        MaterialMesh2dBundle {
+            mesh: mesh_handle.into(),
+            material,
+            transform: Transform::from_xyz(0.0, 0.0, 0.0),
+            ..default()
+        },
+    ));
+
+    // Insert renderer as resource
+    commands.insert_resource(renderer);
+
+    println!("✓ Terminal grid entity spawned");
+    println!("✓ Ready to render!");
+}
+
+fn handle_input(
+    keys: Res<ButtonInput<KeyCode>>,
+    mut renderer: ResMut<TextRenderer>,
+    mut query: Query<&mut TerminalMesh, With<TerminalGrid>>,
+) {
+    // Font size controls (Ctrl +/-)
+    if keys.pressed(KeyCode::ControlLeft) || keys.pressed(KeyCode::ControlRight) {
+        if keys.just_pressed(KeyCode::Equal) || keys.just_pressed(KeyCode::NumpadAdd) {
+            // Increase font size
+            let new_size = (renderer.config.size + 1.0).min(72.0);
+            renderer.set_font_size(new_size);
+            renderer.update_metrics();
+
+            // Mark for full redraw
+            for mut terminal_mesh in query.iter_mut() {
+                terminal_mesh.dirty_region.mark_full_redraw();
+            }
+
+            println!("✓ Font size: {:.1}pt", new_size);
+        } else if keys.just_pressed(KeyCode::Minus) || keys.just_pressed(KeyCode::NumpadSubtract) {
+            // Decrease font size
+            let new_size = (renderer.config.size - 1.0).max(6.0);
+            renderer.set_font_size(new_size);
+            renderer.update_metrics();
+
+            // Mark for full redraw
+            for mut terminal_mesh in query.iter_mut() {
+                terminal_mesh.dirty_region.mark_full_redraw();
+            }
+
+            println!("✓ Font size: {:.1}pt", new_size);
+        }
+    }
+
+    // Atlas statistics (F3)
+    if keys.just_pressed(KeyCode::F3) {
+        let stats = renderer.atlas.stats();
+        println!("┌─────────────────────────────────────┐");
+        println!("│ Glyph Atlas Statistics              │");
+        println!("├─────────────────────────────────────┤");
+        println!("│ Cached glyphs: {:>6}               │", stats.glyph_count);
+        println!("│ Used height: {:>4}/{} px          │", stats.used_height, stats.total_height);
+        println!("│ Occupancy: {:>5.1}%                 │", stats.occupancy * 100.0);
+        println!("│ Memory: {:>6.2} MB                 │", stats.memory_mb);
+        println!("└─────────────────────────────────────┘");
+    }
+
+    // Full redraw (F5)
+    if keys.just_pressed(KeyCode::F5) {
+        for mut terminal_mesh in query.iter_mut() {
+            terminal_mesh.dirty_region.mark_full_redraw();
+        }
+        println!("✓ Forcing full redraw");
+    }
+
+    // Clear atlas (F6) - for debugging
+    if keys.just_pressed(KeyCode::F6) {
+        renderer.atlas.clear();
+        for mut terminal_mesh in query.iter_mut() {
+            terminal_mesh.dirty_region.mark_full_redraw();
+        }
+        println!("✓ Atlas cleared, forcing rebuild");
+    }
+}

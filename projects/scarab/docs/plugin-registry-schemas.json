@@ -1,0 +1,383 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Scarab Plugin Registry Schemas",
+  "definitions": {
+    "RegistryManifest": {
+      "type": "object",
+      "required": ["version", "metadata", "plugins", "updated_at"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Schema version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "1.0.0"
+        },
+        "metadata": {
+          "$ref": "#/definitions/RegistryMetadata"
+        },
+        "plugins": {
+          "type": "object",
+          "description": "Map of plugin name to plugin entry",
+          "additionalProperties": {
+            "$ref": "#/definitions/PluginEntry"
+          }
+        },
+        "updated_at": {
+          "type": "integer",
+          "description": "Last update timestamp (Unix epoch)",
+          "example": 1700000000
+        }
+      }
+    },
+    "RegistryMetadata": {
+      "type": "object",
+      "required": ["name", "description", "url"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Registry display name",
+          "example": "Scarab Official Registry"
+        },
+        "description": {
+          "type": "string",
+          "description": "Registry description",
+          "example": "Official plugin registry for Scarab terminal emulator"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Registry base URL",
+          "example": "https://registry.scarab.dev"
+        },
+        "maintainer": {
+          "type": "string",
+          "description": "Maintainer contact email",
+          "format": "email",
+          "example": "registry@scarab.dev"
+        }
+      }
+    },
+    "PluginEntry": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "author",
+        "license",
+        "latest_version",
+        "versions",
+        "tags",
+        "stats",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Plugin unique identifier (lowercase, alphanumeric with hyphens)",
+          "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+          "example": "auto-notify"
+        },
+        "description": {
+          "type": "string",
+          "description": "Short one-line description",
+          "maxLength": 200,
+          "example": "Automatically send desktop notifications when long-running commands complete"
+        },
+        "readme": {
+          "type": "string",
+          "description": "Full README content (Markdown)",
+          "example": "# Auto Notify\n\nThis plugin monitors command execution..."
+        },
+        "author": {
+          "type": "string",
+          "description": "Author full name",
+          "example": "Jane Developer"
+        },
+        "author_email": {
+          "type": "string",
+          "format": "email",
+          "description": "Author email address",
+          "example": "jane@example.com"
+        },
+        "homepage": {
+          "type": "string",
+          "format": "uri",
+          "description": "Plugin homepage URL",
+          "example": "https://github.com/jane/scarab-auto-notify"
+        },
+        "repository": {
+          "type": "string",
+          "format": "uri",
+          "description": "Source code repository URL",
+          "example": "https://github.com/jane/scarab-auto-notify"
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier",
+          "example": "MIT"
+        },
+        "latest_version": {
+          "type": "string",
+          "description": "Latest stable version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "1.2.0"
+        },
+        "versions": {
+          "type": "array",
+          "description": "All available versions (sorted newest first)",
+          "items": {
+            "$ref": "#/definitions/PluginVersion"
+          },
+          "minItems": 1
+        },
+        "tags": {
+          "type": "array",
+          "description": "Plugin tags/categories",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "example": ["notification", "productivity", "automation"]
+        },
+        "stats": {
+          "$ref": "#/definitions/PluginStats"
+        },
+        "created_at": {
+          "type": "integer",
+          "description": "Creation timestamp (Unix epoch)",
+          "example": 1680000000
+        },
+        "updated_at": {
+          "type": "integer",
+          "description": "Last update timestamp (Unix epoch)",
+          "example": 1700000000
+        }
+      }
+    },
+    "PluginVersion": {
+      "type": "object",
+      "required": [
+        "version",
+        "download_url",
+        "checksum",
+        "api_version",
+        "min_scarab_version",
+        "size",
+        "released_at",
+        "prerelease"
+      ],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version number (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-z0-9.]+)?$",
+          "example": "1.2.0"
+        },
+        "download_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Download URL for plugin file",
+          "example": "https://registry.scarab.dev/plugins/auto-notify/1.2.0/auto-notify.fzb"
+        },
+        "checksum": {
+          "type": "string",
+          "description": "SHA256 checksum (hex-encoded)",
+          "pattern": "^[a-f0-9]{64}$",
+          "example": "a7b3c5d9e1f2g4h6i8j0k2l4m6n8o0p2q4r6s8t0u2v4w6x8y0z2a4b6c8d0e2f4"
+        },
+        "signature": {
+          "type": "string",
+          "description": "Detached GPG signature (ASCII-armored)",
+          "example": "-----BEGIN PGP SIGNATURE-----\n...\n-----END PGP SIGNATURE-----"
+        },
+        "changelog": {
+          "type": "string",
+          "description": "Release notes (Markdown)",
+          "example": "## v1.2.0\n- Added support for custom notification icons\n- Fixed bug with multi-line commands"
+        },
+        "api_version": {
+          "type": "string",
+          "description": "Scarab plugin API version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "0.1.0"
+        },
+        "min_scarab_version": {
+          "type": "string",
+          "description": "Minimum required Scarab version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "0.1.0"
+        },
+        "size": {
+          "type": "integer",
+          "description": "File size in bytes",
+          "minimum": 0,
+          "example": 15360
+        },
+        "released_at": {
+          "type": "integer",
+          "description": "Release timestamp (Unix epoch)",
+          "example": 1700000000
+        },
+        "prerelease": {
+          "type": "boolean",
+          "description": "Whether this is a prerelease/beta version",
+          "example": false
+        }
+      }
+    },
+    "PluginStats": {
+      "type": "object",
+      "required": ["downloads", "downloads_recent", "rating", "rating_count"],
+      "properties": {
+        "downloads": {
+          "type": "integer",
+          "description": "Total downloads (all-time)",
+          "minimum": 0,
+          "example": 5420
+        },
+        "downloads_recent": {
+          "type": "integer",
+          "description": "Downloads in last 30 days",
+          "minimum": 0,
+          "example": 342
+        },
+        "rating": {
+          "type": "number",
+          "description": "Average rating (0.0 - 5.0)",
+          "minimum": 0.0,
+          "maximum": 5.0,
+          "example": 4.7
+        },
+        "rating_count": {
+          "type": "integer",
+          "description": "Total number of ratings",
+          "minimum": 0,
+          "example": 23
+        },
+        "stars": {
+          "type": "integer",
+          "description": "GitHub stars (if applicable)",
+          "minimum": 0,
+          "example": 156
+        }
+      }
+    },
+    "InstalledPluginsIndex": {
+      "type": "object",
+      "required": ["version", "plugins"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Index schema version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "1.0.0"
+        },
+        "plugins": {
+          "type": "object",
+          "description": "Map of plugin name to installed plugin metadata",
+          "additionalProperties": {
+            "$ref": "#/definitions/InstalledPlugin"
+          }
+        }
+      }
+    },
+    "InstalledPlugin": {
+      "type": "object",
+      "required": ["name", "version", "path", "installed_at", "enabled", "config"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Plugin name",
+          "example": "auto-notify"
+        },
+        "version": {
+          "type": "string",
+          "description": "Installed version (semver)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "example": "1.2.0"
+        },
+        "path": {
+          "type": "string",
+          "description": "Absolute path to plugin file",
+          "example": "/home/user/.config/scarab/plugins/auto-notify/auto-notify.fzb"
+        },
+        "installed_at": {
+          "type": "integer",
+          "description": "Installation timestamp (Unix epoch)",
+          "example": 1700000000
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether plugin is enabled",
+          "example": true
+        },
+        "config": {
+          "type": "object",
+          "description": "Plugin-specific configuration (arbitrary JSON)",
+          "additionalProperties": true,
+          "example": {
+            "threshold_seconds": 30,
+            "notification_style": "urgent",
+            "keywords": ["ERROR", "FAIL", "PANIC"]
+          }
+        }
+      }
+    },
+    "RegistryConfig": {
+      "type": "object",
+      "required": ["registry_url", "cache_dir", "plugin_dir", "security"],
+      "properties": {
+        "registry_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Remote registry base URL",
+          "example": "https://registry.scarab.dev"
+        },
+        "cache_dir": {
+          "type": "string",
+          "description": "Local cache directory path",
+          "example": "~/.config/scarab/registry"
+        },
+        "plugin_dir": {
+          "type": "string",
+          "description": "Plugin installation directory path",
+          "example": "~/.config/scarab/plugins"
+        },
+        "security": {
+          "$ref": "#/definitions/SecurityConfig"
+        }
+      }
+    },
+    "SecurityConfig": {
+      "type": "object",
+      "required": ["require_checksum", "require_signature", "allow_unsigned", "trusted_keys"],
+      "properties": {
+        "require_checksum": {
+          "type": "boolean",
+          "description": "Require SHA256 checksum verification",
+          "example": true
+        },
+        "require_signature": {
+          "type": "boolean",
+          "description": "Require GPG signature verification",
+          "example": false
+        },
+        "allow_unsigned": {
+          "type": "boolean",
+          "description": "Allow unsigned plugins (dangerous!)",
+          "example": true
+        },
+        "trusted_keys": {
+          "type": "array",
+          "description": "List of trusted GPG key IDs",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-F0-9]{16}$"
+          },
+          "example": ["A7B3C5D9E1F2G4H6", "I8J0K2L4M6N8O0P2"]
+        }
+      }
+    }
+  }
+}

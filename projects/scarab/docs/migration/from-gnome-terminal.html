@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>from-gnome-terminal</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="from-gnome-terminal"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="from-gnome-terminal"/><meta name="twitter:description" content="Migrating from GNOME Terminal to Scarab Guide for GNOME Terminal users switching to Scarab on Linux."/><meta property="og:description" content="Migrating from GNOME Terminal to Scarab Guide for GNOME Terminal users switching to Scarab on Linux."/><meta property="og:image:alt" content="Migrating from GNOME Terminal to Scarab Guide for GNOME Terminal users switching to Scarab on Linux."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/migration/from-gnome-terminal"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/migration/from-gnome-terminal"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Migrating from GNOME Terminal to Scarab Guide for GNOME Terminal users switching to Scarab on Linux."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/scarab/docs/migration/from-gnome-terminal-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/migration/from-gnome-terminal-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/scarab/docs/migration/from-gnome-terminal-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/scarab/docs/migration/from-gnome-terminal"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-397"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-397" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/scarab/">scarab</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/scarab/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/scarab/docs/migration/">migration</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>from gnome terminal</a></div></nav><h1 class="article-title">from-gnome-terminal</h1><p show-comma="true" class="content-meta"><time datetime="2026-03-30T04:42:03.803Z">Mar 30, 2026</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="migrating-from-gnome-terminal-to-scarab">Migrating from GNOME Terminal to Scarab<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migrating-from-gnome-terminal-to-scarab" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>Guide for GNOME Terminal users switching to Scarab on Linux.</p>
+<h2 id="quick-comparison">Quick Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quick-comparison" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>GNOME Terminal</th><th>Scarab</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Platform</strong></td><td>Linux</td><td>Linux (macOS/Win planned)</td><td>Both Linux-native</td></tr><tr><td><strong>Performance</strong></td><td>Good</td><td>Excellent</td><td>Scarab is GPU-accelerated</td></tr><tr><td><strong>Configuration</strong></td><td>GUI + dconf</td><td>TOML file</td><td>Scarab easier to version control</td></tr><tr><td><strong>Tabs</strong></td><td>✅</td><td>✅</td><td>Both support tabs</td></tr><tr><td><strong>Splits</strong></td><td>❌</td><td>🔄 Coming</td><td>Use tmux for now</td></tr><tr><td><strong>Profiles</strong></td><td>✅</td><td>✅ Sessions</td><td>Similar concept</td></tr><tr><td><strong>Transparency</strong></td><td>✅</td><td>✅</td><td>Both support transparency</td></tr><tr><td><strong>Color Schemes</strong></td><td>✅ Built-in</td><td>✅ Themes + custom</td><td></td></tr><tr><td><strong>Keyboard Shortcuts</strong></td><td>✅ Configurable</td><td>✅ Configurable</td><td>Different format</td></tr><tr><td><strong>VTE Compatibility</strong></td><td>✅ (Native)</td><td>✅ (Alacritty VTE)</td><td>Both excellent</td></tr><tr><td><strong>Desktop Integration</strong></td><td>✅ GNOME only</td><td>✅ All DEs</td><td>Scarab more universal</td></tr><tr><td><strong>Session Persistence</strong></td><td>❌</td><td>✅ SQLite</td><td>Scarab advantage</td></tr><tr><td><strong>Extensibility</strong></td><td>❌ Limited</td><td>✅ F# Plugins</td><td>Scarab major advantage</td></tr></tbody></table></div>
+<hr/>
+<h2 id="why-switch">Why Switch?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#why-switch" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="performance">Performance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: CPU-based rendering via GTK.</p>
+<p><strong>Scarab</strong>: GPU-accelerated rendering via Bevy + wgpu.</p>
+<p><strong>Real-world impact</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Large output (e.g., cat large-file.txt)</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GNOME Terminal: Stutters, high CPU</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Scarab: Smooth 60 FPS, low CPU</span></span></code></pre></figure>
+<h3 id="configuration-management">Configuration Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Settings in dconf (binary format).</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dump</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /org/gnome/terminal/</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gnome-terminal.conf</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Not human-readable, hard to version control</span></span></code></pre></figure>
+<p><strong>Scarab</strong>: Plain TOML file.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ~/.config/scarab/config.toml</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Easy to read, edit, and version with git</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DejaVu Sans Mono&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12.0</span></span></code></pre></figure>
+<h3 id="desktop-environment-independence">Desktop Environment Independence<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#desktop-environment-independence" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Designed for GNOME, looks out of place elsewhere.</p>
+<p><strong>Scarab</strong>: Works on any DE/WM:</p>
+<ul>
+<li>GNOME</li>
+<li>KDE Plasma</li>
+<li>XFCE</li>
+<li>i3/sway</li>
+<li>dwm/bspwm</li>
+<li>Standalone (no DE)</li>
+</ul>
+<h3 id="session-persistence">Session Persistence<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-persistence" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Sessions lost on crash/logout.</p>
+<p><strong>Scarab</strong>: Daemon preserves terminal state.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GNOME Terminal crashes → lost everything</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Scarab client crashes → daemon preserves state</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">scarab-client</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Reconnect, state intact</span></span></code></pre></figure>
+<hr/>
+<h2 id="configuration-migration">Configuration Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-migration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="export-gnome-terminal-settings">Export GNOME Terminal Settings<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#export-gnome-terminal-settings" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export all settings</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dump</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /org/gnome/terminal/</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/gnome-terminal.dconf</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export specific profile</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">PROFILE_ID</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gsettings</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> org.gnome.Terminal.ProfilesList</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> default</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> tr</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;'&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dump</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /org/gnome/terminal/legacy/profiles:/:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$PROFILE_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/profile.dconf</span></span></code></pre></figure>
+<h3 id="profile-mapping">Profile Mapping<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#profile-mapping" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal Profile</strong> → <strong>Scarab Config</strong></p>
+<h4 id="font-settings">Font Settings<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#font-settings" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>GNOME Terminal</strong> (dconf):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light one-dark-pro"><code data-language="ini" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">[/]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'Monospace 12'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use-system-font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">false</span></span></code></pre></figure>
+<p><strong>Scarab</strong> (TOML):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monospace&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Or &quot;DejaVu Sans Mono&quot;, &quot;Liberation Mono&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12.0</span></span></code></pre></figure>
+<h4 id="colors">Colors<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#colors" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>GNOME Terminal</strong> (dconf):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light one-dark-pro"><code data-language="ini" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">[/]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use-theme-colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">false</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">foreground-color</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'rgb(211,215,207)'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">background-color</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'rgb(46,52,54)'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">palette</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">[</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'rgb(0,0,0)'</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'rgb(204,0,0)'</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">, </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'rgb(78,154,6)'</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">, ...]</span></span></code></pre></figure>
+<p><strong>Scarab</strong> (TOML):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">foreground</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#d3d7cf&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">background</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#2e3436&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">palette</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">black</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#000000&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">red</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#cc0000&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">green</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#4e9a06&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">yellow</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#c4a000&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">blue</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#3465a4&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">magenta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#75507b&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">cyan</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#06989a&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">white</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#d3d7cf&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_black</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#555753&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_red</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#ef2929&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_green</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#8ae234&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_yellow</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#fce94f&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_blue</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#729fcf&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_magenta</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#ad7fa8&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_cyan</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#34e2e2&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">bright_white</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;#eeeeec&quot;</span></span></code></pre></figure>
+<h4 id="scrollback">Scrollback<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scrollback" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>GNOME Terminal</strong> (dconf):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light one-dark-pro"><code data-language="ini" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">[/]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">scrollback-lines</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">10000</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">scrollback-unlimited</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">false</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">scroll-on-output</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">false</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">scroll-on-keystroke</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">true</span></span></code></pre></figure>
+<p><strong>Scarab</strong> (TOML):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">terminal</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">scrollback_lines</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10000</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Max: 100000</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">auto_scroll</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">false</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">       # scroll-on-output</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># scroll-on-keystroke: Always enabled in Scarab</span></span></code></pre></figure>
+<h4 id="cursor">Cursor<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#cursor" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>GNOME Terminal</strong> (dconf):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light one-dark-pro"><code data-language="ini" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">[/]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">cursor-shape</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'block'</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">cursor-blink-mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">'on'</span></span></code></pre></figure>
+<p><strong>Scarab</strong> (TOML):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ui</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">cursor_style</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;block&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Options: &quot;block&quot;, &quot;beam&quot;, &quot;underline&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">cursor_blink</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">cursor_blink_interval</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">750</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # milliseconds</span></span></code></pre></figure>
+<h4 id="transparency">Transparency<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transparency" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p><strong>GNOME Terminal</strong> (dconf):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="ini" data-theme="github-light one-dark-pro"><code data-language="ini" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">[/]</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">use-transparent-background</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">true</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">background-transparency-percent</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#98C379;">15</span></span></code></pre></figure>
+<p><strong>Scarab</strong> (TOML):</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">opacity</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.85</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # 100% - 15% = 85%</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Range: 0.0 (fully transparent) to 1.0 (opaque)</span></span></code></pre></figure>
+<hr/>
+<h2 id="automated-conversion-script">Automated Conversion Script<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automated-conversion-script" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">#!/bin/bash</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># gnome-terminal2scarab.sh - Convert GNOME Terminal profile to Scarab config</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">set</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -e</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">PROFILE_ID</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gsettings</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> get</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> org.gnome.Terminal.ProfilesList</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> default</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> tr</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;'&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">DCONF_PATH</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/org/gnome/terminal/legacy/profiles:/:</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$PROFILE_ID</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">SCARAB_CONFIG</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$HOME</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">/.config/scarab/config.toml&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Converting GNOME Terminal profile to Scarab config...&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Helper function to get dconf value</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">    dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> read</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">DCONF_PATH</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}</span><span style="--shiki-light:#005CC5;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">$1</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;s/'//g&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract font</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FONT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;font&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FONT_FAMILY</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FONT</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 's/ [0-9]*$//'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FONT_SIZE</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FONT</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -o</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '[0-9]*$'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract colors</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FG_RGB</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;foreground-color&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 's/rgb(\(.*\))/\1/'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">BG_RGB</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;background-color&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> sed</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> 's/rgb(\(.*\))/\1/'</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Convert RGB to hex</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">rgb_to_hex</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">() {</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    IFS</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">','</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> read</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> g</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> b</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#005CC5;--shiki-light-font-style:inherit;--shiki-dark:#E06C75;--shiki-dark-font-style:italic;">$1</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">    printf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;#%02x%02x%02x&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$r</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$g</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$b</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">}</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FG_HEX</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">rgb_to_hex</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FG_RGB</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">BG_HEX</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">rgb_to_hex</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$BG_RGB</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract scrollback</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">SCROLLBACK</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;scrollback-lines&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">SCROLL_ON_OUTPUT</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;scroll-on-output&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract cursor</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CURSOR_SHAPE</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;cursor-shape&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CURSOR_BLINK</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;cursor-blink-mode&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract transparency</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">TRANSPARENCY</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;background-transparency-percent&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> [ </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">-n</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$TRANSPARENCY</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> ]; </span><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">then</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    OPACITY</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">$(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">awk</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;BEGIN {print 1 - (</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$TRANSPARENCY</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> / 100)}&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">else</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">    OPACITY</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">1.0</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">fi</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Generate Scarab config</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">mkdir</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -p</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/.config/scarab</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$SCARAB_CONFIG</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;">EOF</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Converted from GNOME Terminal profile on $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Profile ID: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$PROFILE_ID</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[terminal]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">default_shell = &quot;/bin/bash&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">scrollback_lines = ${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">SCROLLBACK</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">10000</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">auto_scroll = $([ &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$SCROLL_ON_OUTPUT</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot; </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;true&quot; ] &amp;&amp; </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;true&quot; </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">||</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;false&quot;)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">columns = 80</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">rows = 24</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[font]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">family = &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FONT_FAMILY</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">Monospace</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">size = ${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">FONT_SIZE</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">12</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}.0</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">line_height = 1.2</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">fallback = [&quot;DejaVu Sans Mono&quot;, &quot;Liberation Mono&quot;, &quot;Noto Color Emoji&quot;]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[colors]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">foreground = &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$FG_HEX</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">background = &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$BG_HEX</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">opacity = </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$OPACITY</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Extract full palette from GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Note: This requires manual extraction of all 16 colors</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># For now, using GNOME Terminal's default &quot;Tango&quot; palette:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[colors.palette]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">black = &quot;#000000&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">red = &quot;#cc0000&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">green = &quot;#4e9a06&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">yellow = &quot;#c4a000&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">blue = &quot;#3465a4&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">magenta = &quot;#75507b&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cyan = &quot;#06989a&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">white = &quot;#d3d7cf&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_black = &quot;#555753&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_red = &quot;#ef2929&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_green = &quot;#8ae234&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_yellow = &quot;#fce94f&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_blue = &quot;#729fcf&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_magenta = &quot;#ad7fa8&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_cyan = &quot;#34e2e2&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bright_white = &quot;#eeeeec&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[ui]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cursor_style = &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CURSOR_SHAPE</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">:-</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">block</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cursor_blink = $([ &quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$CURSOR_BLINK</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot; </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;on&quot; ] &amp;&amp; </span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;true&quot; </span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">||</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;false&quot;)</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cursor_blink_interval = 750</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[keybindings]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># GNOME Terminal-style keybindings</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">copy_mode = &quot;Ctrl+Shift+C&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">paste = &quot;Ctrl+Shift+V&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">search = &quot;Ctrl+Shift+F&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[keybindings.custom]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;new_tab&quot; = &quot;Ctrl+Shift+T&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;close_tab&quot; = &quot;Ctrl+Shift+W&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;next_tab&quot; = &quot;Ctrl+PageDown&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;prev_tab&quot; = &quot;Ctrl+PageUp&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;increase_font_size&quot; = &quot;Ctrl+Plus&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;decrease_font_size&quot; = &quot;Ctrl+Minus&quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;reset_font_size&quot; = &quot;Ctrl+0&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[sessions]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">restore_on_startup = false</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">auto_save_interval = 300</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;">EOF</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Conversion complete!&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Config written to: </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$SCARAB_CONFIG</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Note: Color palette uses default Tango theme.&quot;</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;To extract exact colors from your profile, edit </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$SCARAB_CONFIG</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> manually.&quot;</span></span></code></pre></figure>
+<p><strong>Usage</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">chmod</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +x</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> gnome-terminal2scarab.sh</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./gnome-terminal2scarab.sh</span></span></code></pre></figure>
+<hr/>
+<h2 id="keybinding-migration">Keybinding Migration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#keybinding-migration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="default-gnome-terminal-shortcuts">Default GNOME Terminal Shortcuts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#default-gnome-terminal-shortcuts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Action</th><th>GNOME Terminal</th><th>Scarab</th></tr></thead><tbody><tr><td><strong>Copy</strong></td><td><code>Ctrl+Shift+C</code></td><td><code>Ctrl+Shift+C</code> ✅ Same</td></tr><tr><td><strong>Paste</strong></td><td><code>Ctrl+Shift+V</code></td><td><code>Ctrl+Shift+V</code> ✅ Same</td></tr><tr><td><strong>New Tab</strong></td><td><code>Ctrl+Shift+T</code></td><td><code>Ctrl+Shift+T</code> ✅ Same</td></tr><tr><td><strong>Close Tab</strong></td><td><code>Ctrl+Shift+W</code></td><td><code>Ctrl+Shift+W</code> ✅ Same</td></tr><tr><td><strong>Next Tab</strong></td><td><code>Ctrl+PageDown</code></td><td><code>Ctrl+Tab</code> ⚠️ Different</td></tr><tr><td><strong>Previous Tab</strong></td><td><code>Ctrl+PageUp</code></td><td><code>Ctrl+Shift+Tab</code> ⚠️ Different</td></tr><tr><td><strong>Switch to Tab 1-9</strong></td><td><code>Alt+1-9</code></td><td><code>Ctrl+1-9</code> ⚠️ Different</td></tr><tr><td><strong>New Window</strong></td><td><code>Ctrl+Shift+N</code></td><td><code>Ctrl+Shift+N</code> ✅ Same</td></tr><tr><td><strong>Find</strong></td><td><code>Ctrl+Shift+F</code></td><td><code>Ctrl+F</code> ⚠️ Different</td></tr><tr><td><strong>Zoom In</strong></td><td><code>Ctrl++</code></td><td><code>Ctrl++</code> ✅ Same</td></tr><tr><td><strong>Zoom Out</strong></td><td><code>Ctrl+-</code></td><td><code>Ctrl+-</code> ✅ Same</td></tr><tr><td><strong>Reset Zoom</strong></td><td><code>Ctrl+0</code></td><td><code>Ctrl+0</code> ✅ Same</td></tr><tr><td><strong>Full Screen</strong></td><td><code>F11</code></td><td><code>F11</code> ✅ Same</td></tr></tbody></table></div>
+<h3 id="use-gnome-terminal-keybindings-in-scarab">Use GNOME Terminal Keybindings in Scarab<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#use-gnome-terminal-keybindings-in-scarab" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">keybindings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">copy_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+C&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">paste</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+V&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">search</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+F&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Match GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">new_window</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+N&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">close_window</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+W&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">keybindings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">custom</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">new_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+T&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">next_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+PageDown&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">   # Match GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">prev_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+PageUp&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">     # Match GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_1</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+1&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">               # Match GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_2</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+2&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_3</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+3&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_4</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+4&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_5</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+5&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_6</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+6&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_7</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+7&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_8</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+8&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">tab_9</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Alt+9&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">increase_font_size</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Plus&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">decrease_font_size</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Minus&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">reset_font_size</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+0&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">toggle_fullscreen</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;F11&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="feature-comparison">Feature Comparison<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#feature-comparison" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="gnome-terminal-features-in-scarab">GNOME Terminal Features in Scarab<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gnome-terminal-features-in-scarab" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Feature</th><th>GNOME Terminal</th><th>Scarab</th><th>Notes</th></tr></thead><tbody><tr><td><strong>Multiple tabs</strong></td><td>✅</td><td>✅</td><td></td></tr><tr><td><strong>Split terminal</strong></td><td>❌</td><td>🔄 Planned</td><td>Use tmux for now</td></tr><tr><td><strong>Color schemes</strong></td><td>✅ Few built-in</td><td>✅ Many themes</td><td>Easier customization</td></tr><tr><td><strong>Profiles</strong></td><td>✅</td><td>✅ Sessions</td><td>Similar concept</td></tr><tr><td><strong>Transparency</strong></td><td>✅</td><td>✅</td><td>Requires compositor</td></tr><tr><td><strong>Background image</strong></td><td>✅</td><td>❌</td><td>Not planned</td></tr><tr><td><strong>Scrollbar</strong></td><td>✅</td><td>❌</td><td>Use keybindings</td></tr><tr><td><strong>Menu bar</strong></td><td>✅</td><td>❌</td><td>Use command palette</td></tr><tr><td><strong>Right-click menu</strong></td><td>✅</td><td>🔄 Planned</td><td></td></tr><tr><td><strong>Bold is bright</strong></td><td>✅</td><td>✅</td><td><code>[font] bold_is_bright = true</code></td></tr><tr><td><strong>Audible bell</strong></td><td>✅</td><td>🔄 Plugin-based</td><td></td></tr><tr><td><strong>Visual bell</strong></td><td>✅</td><td>🔄 Plugin-based</td><td></td></tr><tr><td><strong>Custom commands</strong></td><td>❌</td><td>✅ Plugins</td><td>Scarab advantage</td></tr><tr><td><strong>Text reflow</strong></td><td>✅</td><td>✅</td><td></td></tr><tr><td><strong>Hyperlink detection</strong></td><td>✅</td><td>✅ Link hints</td><td></td></tr></tbody></table></div>
+<h3 id="scarab-unique-features">Scarab Unique Features<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#scarab-unique-features" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Not available in GNOME Terminal:</p>
+<ol>
+<li><strong>Session Persistence</strong>: Survives crashes</li>
+<li><strong>Plugin System</strong>: F# plugins for extensibility</li>
+<li><strong>Command Palette</strong>: Fuzzy search commands</li>
+<li><strong>GPU Acceleration</strong>: Faster rendering</li>
+<li><strong>Zero-Copy IPC</strong>: Daemon + client architecture</li>
+<li><strong>Hot-Reload Config</strong>: Changes apply instantly</li>
+<li><strong>Remote UI Protocol</strong>: Daemon controls client UI</li>
+</ol>
+<hr/>
+<h2 id="desktop-integration">Desktop Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#desktop-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="application-launcher">Application Launcher<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#application-launcher" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Shows in app grid automatically.</p>
+<p><strong>Scarab</strong>: Create desktop entry.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Create desktop file</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/.local/share/applications/scarab.desktop</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;&lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;">'EOF'</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">[Desktop Entry]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Name=Scarab Terminal</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Comment=GPU-accelerated terminal with F# plugins</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Exec=/path/to/scarab-client</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Icon=utilities-terminal</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Type=Application</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Categories=System;TerminalEmulator;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Keywords=terminal;shell;prompt;command;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">StartupNotify=true</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Terminal=false</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#ABB2BF;">EOF</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Update desktop database</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">update-desktop-database</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/.local/share/applications/</span></span></code></pre></figure>
+<h3 id="default-terminal">Default Terminal<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#default-terminal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Set Scarab as default terminal</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> update-alternatives</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /usr/bin/x-terminal-emulator</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    x-terminal-emulator</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /path/to/scarab-client</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 50</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Configure default (interactive)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> update-alternatives</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> x-terminal-emulator</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or set manually</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gsettings</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> set</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> org.gnome.desktop.default-applications.terminal</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> exec</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> '/path/to/scarab-client'</span></span></code></pre></figure>
+<h3 id="keyboard-shortcut">Keyboard Shortcut<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#keyboard-shortcut" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME</strong>: Settings → Keyboard → Custom Shortcuts</p>
+<pre><code>Name: Scarab Terminal
+Command: /path/to/scarab-client
+Shortcut: Ctrl+Alt+T
+</code></pre>
+<p><strong>Or via dconf</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Add custom keybinding</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KEYBINDINGS_PATH</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KB</span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">=</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KEYBINDINGS_PATH</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}/scarab/&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> write</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KB</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}name&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;'Scarab Terminal'&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> write</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KB</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}command&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;'/path/to/scarab-client'&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> write</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KB</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}binding&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;'&lt;Ctrl>&lt;Alt>t'&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Register the keybinding</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> write</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;${</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">CUSTOM_KEYBINDINGS_PATH</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">}/custom-list&quot;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;['scarab']&quot;</span></span></code></pre></figure>
+<hr/>
+<h2 id="common-issues">Common Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="colors-look-different">Colors look different<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#colors-look-different" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cause</strong>: GNOME Terminal uses GTK theme colors by default.</p>
+<p><strong>Solution</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Export GNOME Terminal colors</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">dconf</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> dump</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> /org/gnome/terminal/legacy/profiles:/</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> ></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> ~/colors.dconf</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Extract hex colors manually</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or use GNOME Terminal's palette names:</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[colors]</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">theme</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> =</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;tango&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # GNOME Terminal's default</span></span></code></pre></figure>
+<h3 id="font-rendering-looks-different">Font rendering looks different<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#font-rendering-looks-different" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cause</strong>: GNOME Terminal uses system font rendering (fontconfig + cairo).
+Scarab uses cosmic-text (HarfBuzz).</p>
+<p><strong>Solution</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Adjust line height to match GNOME Terminal</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">line_height</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1.0</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # GNOME Terminal typically uses 1.0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Use same font</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monospace&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # System default</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or match exactly</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;DejaVu Sans Mono&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12.0</span></span></code></pre></figure>
+<h3 id="transparency-doesnt-work">Transparency doesn’t work<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transparency-doesnt-work" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Cause</strong>: Requires compositor (same as GNOME Terminal).</p>
+<p><strong>Solution</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Ensure compositor is running</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GNOME: Built-in compositor</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Other DEs: picom, compton, etc.</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Check compositor</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">ps</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> aux</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> grep</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -i</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> composit</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Enable in Scarab</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[colors]</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">opacity</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> =</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0.9</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # 90% opaque</span></span></code></pre></figure>
+<h3 id="missing-menu-bar">Missing menu bar<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#missing-menu-bar" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Scarab</strong>: No menu bar (minimalist design).</p>
+<p><strong>Solution</strong>: Use command palette instead.</p>
+<pre><code>Ctrl+Shift+P  # Open command palette
+Type command name
+Enter to execute
+</code></pre>
+<hr/>
+<h2 id="configuration-examples">Configuration Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#configuration-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="minimal-gnome-terminal-defaults">Minimal (GNOME Terminal defaults)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#minimal-gnome-terminal-defaults" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ~/.config/scarab/config.toml</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">terminal</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">default_shell</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;/bin/bash&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">scrollback_lines</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">10000</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Monospace&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">12.0</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">theme</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;tango&quot;</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # GNOME Terminal default</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">keybindings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">copy_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+C&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">paste</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+V&quot;</span></span></code></pre></figure>
+<h3 id="power-user-enhanced-gnome-terminal">Power User (Enhanced GNOME Terminal)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#power-user-enhanced-gnome-terminal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="toml" data-theme="github-light one-dark-pro"><code data-language="toml" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">terminal</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">scrollback_lines</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">50000</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">columns</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">120</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">rows</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">40</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">font</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">family</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Fira Code&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">size</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">11.0</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">line_height</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">1.2</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">enable_ligatures</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">colors</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">theme</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;dracula&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">opacity</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">0.95</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">keybindings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GNOME Terminal-compatible</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">copy_mode</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+C&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">paste</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+V&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">search</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+F&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">keybindings</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">custom</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">next_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+PageDown&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">prev_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+PageUp&quot;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">new_tab</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;Ctrl+Shift+T&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">plugins</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">enabled</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = [</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;scarab-nav&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;scarab-palette&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">    &quot;scarab-session&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">,</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">[</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sessions</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">]</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">restore_on_startup</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">true</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">auto_save_interval</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> = </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">300</span></span></code></pre></figure>
+<hr/>
+<h2 id="migration-checklist">Migration Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#migration-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Export GNOME Terminal profile (dconf)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Run conversion script</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Review generated Scarab config</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Adjust colors if needed</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test keybindings</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Create desktop launcher</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Set as default terminal (optional)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Test with daily workflow</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Keep GNOME Terminal as backup (first week)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Fully switch after testing</li>
+</ul>
+<hr/>
+<h2 id="advantages-of-scarab">Advantages of Scarab<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#advantages-of-scarab" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="performance-1">Performance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#performance-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Large file output</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cat</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> large.log</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Stutters, high CPU</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Many lines</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">yes</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> |</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;"> head</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -100000</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Lags</span></span></code></pre></figure>
+<p><strong>Scarab</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Same operations</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Smooth 60 FPS, low CPU</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GPU-accelerated rendering</span></span></code></pre></figure>
+<h3 id="extensibility">Extensibility<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#extensibility" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Limited to built-in features.</p>
+<p><strong>Scarab</strong>: Write plugins in F#:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="fsharp" data-theme="github-light one-dark-pro"><code data-language="fsharp" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Highlight git status in prompt</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Show notifications for long commands</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Custom keybindings</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Remote session monitoring</span></span></code></pre></figure>
+<h3 id="session-management">Session Management<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-management" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>GNOME Terminal</strong>: Lost on crash.</p>
+<p><strong>Scarab</strong>: Daemon preserves state.</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Client crashes</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Restart:</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">scarab-client</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # All sessions intact</span></span></code></pre></figure>
+<hr/>
+<h2 id="going-back">Going Back<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#going-back" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>If Scarab doesn’t work for you:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># GNOME Terminal is still installed</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Just launch it again</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Or set as default</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sudo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> update-alternatives</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --config</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> x-terminal-emulator</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Select gnome-terminal</span></span></code></pre></figure>
+<p>Your GNOME Terminal settings are unchanged!</p>
+<hr/>
+<h2 id="getting-help">Getting Help<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#getting-help" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="issues-migrating">Issues Migrating?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#issues-migrating" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Check <a href="../../../.././reference/troubleshooting" class="internal alias" data-slug="reference/troubleshooting">Troubleshooting Guide</a></li>
+<li>Search <a href="https://github.com/raibid-labs/scarab/issues" class="external">GitHub Issues<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>Ask in <a href="https://github.com/raibid-labs/scarab/discussions" class="external">Discussions<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<h3 id="missing-gnome-terminal-feature">Missing GNOME Terminal Feature?<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#missing-gnome-terminal-feature" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>File feature request with:</p>
+<ul>
+<li>GNOME Terminal feature name</li>
+<li>How you use it</li>
+<li>Desired Scarab behavior</li>
+</ul>
+<hr/>
+<h2 id="see-also">See Also<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#see-also" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="../../../.././reference/configuration" class="internal alias" data-slug="reference/configuration">Configuration Reference</a></li>
+<li><a href="../../../.././reference/keybindings" class="internal alias" data-slug="reference/keybindings">Keybindings Reference</a></li>
+<li><a href="../../../.././development/plugins" class="internal alias" data-slug="development/plugins">Plugin Development</a></li>
+<li><a href="../../../../projects/scarab/docs/migration/from-alacritty" class="internal alias" data-slug="projects/scarab/docs/migration/from-alacritty">Migration from Alacritty</a></li>
+<li><a href="../../../../projects/scarab/docs/migration/from-iterm2" class="internal alias" data-slug="projects/scarab/docs/migration/from-iterm2">Migration from iTerm2</a></li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-228" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#migrating-from-gnome-terminal-to-scarab" data-for="migrating-from-gnome-terminal-to-scarab">Migrating from GNOME Terminal to Scarab</a></li><li class="depth-1"><a href="#quick-comparison" data-for="quick-comparison">Quick Comparison</a></li><li class="depth-1"><a href="#why-switch" data-for="why-switch">Why Switch?</a></li><li class="depth-2"><a href="#performance" data-for="performance">Performance</a></li><li class="depth-2"><a href="#configuration-management" data-for="configuration-management">Configuration Management</a></li><li class="depth-2"><a href="#desktop-environment-independence" data-for="desktop-environment-independence">Desktop Environment Independence</a></li><li class="depth-2"><a href="#session-persistence" data-for="session-persistence">Session Persistence</a></li><li class="depth-1"><a href="#configuration-migration" data-for="configuration-migration">Configuration Migration</a></li><li class="depth-2"><a href="#export-gnome-terminal-settings" data-for="export-gnome-terminal-settings">Export GNOME Terminal Settings</a></li><li class="depth-2"><a href="#profile-mapping" data-for="profile-mapping">Profile Mapping</a></li><li class="depth-1"><a href="#automated-conversion-script" data-for="automated-conversion-script">Automated Conversion Script</a></li><li class="depth-1"><a href="#keybinding-migration" data-for="keybinding-migration">Keybinding Migration</a></li><li class="depth-2"><a href="#default-gnome-terminal-shortcuts" data-for="default-gnome-terminal-shortcuts">Default GNOME Terminal Shortcuts</a></li><li class="depth-2"><a href="#use-gnome-terminal-keybindings-in-scarab" data-for="use-gnome-terminal-keybindings-in-scarab">Use GNOME Terminal Keybindings in Scarab</a></li><li class="depth-1"><a href="#feature-comparison" data-for="feature-comparison">Feature Comparison</a></li><li class="depth-2"><a href="#gnome-terminal-features-in-scarab" data-for="gnome-terminal-features-in-scarab">GNOME Terminal Features in Scarab</a></li><li class="depth-2"><a href="#scarab-unique-features" data-for="scarab-unique-features">Scarab Unique Features</a></li><li class="depth-1"><a href="#desktop-integration" data-for="desktop-integration">Desktop Integration</a></li><li class="depth-2"><a href="#application-launcher" data-for="application-launcher">Application Launcher</a></li><li class="depth-2"><a href="#default-terminal" data-for="default-terminal">Default Terminal</a></li><li class="depth-2"><a href="#keyboard-shortcut" data-for="keyboard-shortcut">Keyboard Shortcut</a></li><li class="depth-1"><a href="#common-issues" data-for="common-issues">Common Issues</a></li><li class="depth-2"><a href="#colors-look-different" data-for="colors-look-different">Colors look different</a></li><li class="depth-2"><a href="#font-rendering-looks-different" data-for="font-rendering-looks-different">Font rendering looks different</a></li><li class="depth-2"><a href="#transparency-doesnt-work" data-for="transparency-doesnt-work">Transparency doesn’t work</a></li><li class="depth-2"><a href="#missing-menu-bar" data-for="missing-menu-bar">Missing menu bar</a></li><li class="depth-1"><a href="#configuration-examples" data-for="configuration-examples">Configuration Examples</a></li><li class="depth-2"><a href="#minimal-gnome-terminal-defaults" data-for="minimal-gnome-terminal-defaults">Minimal (GNOME Terminal defaults)</a></li><li class="depth-2"><a href="#power-user-enhanced-gnome-terminal" data-for="power-user-enhanced-gnome-terminal">Power User (Enhanced GNOME Terminal)</a></li><li class="depth-1"><a href="#migration-checklist" data-for="migration-checklist">Migration Checklist</a></li><li class="depth-1"><a href="#advantages-of-scarab" data-for="advantages-of-scarab">Advantages of Scarab</a></li><li class="depth-2"><a href="#performance-1" data-for="performance-1">Performance</a></li><li class="depth-2"><a href="#extensibility" data-for="extensibility">Extensibility</a></li><li class="depth-2"><a href="#session-management" data-for="session-management">Session Management</a></li><li class="depth-1"><a href="#going-back" data-for="going-back">Going Back</a></li><li class="depth-1"><a href="#getting-help" data-for="getting-help">Getting Help</a></li><li class="depth-2"><a href="#issues-migrating" data-for="issues-migrating">Issues Migrating?</a></li><li class="depth-2"><a href="#missing-gnome-terminal-feature" data-for="missing-gnome-terminal-feature">Missing GNOME Terminal Feature?</a></li><li class="depth-1"><a href="#see-also" data-for="see-also">See Also</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Backlinks</h3><ul id="list-2" class="overflow"><li><a href="../../../../projects/scarab/docs/migration/from-alacritty" class="internal">from-alacritty</a></li><li><a href="../../../../projects/scarab/docs/migration/from-iterm2" class="internal">from-iterm2</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

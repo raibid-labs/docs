@@ -1,0 +1,106 @@
+// Example Fusabi script for customizing link hints behavior
+// Location: ~/.config/scarab/ui/link_hints.fusabi
+
+// Custom link detection patterns
+fn detect_custom_links(text: String) -> Array {
+    let links = [];
+
+    // Detect GitHub issue references (#123)
+    let issue_pattern = /#\d+/;
+    if (match(text, issue_pattern)) {
+        links.push({
+            type: "github_issue",
+            url: extract_issue_url(text),
+            action: open_github_issue
+        });
+    }
+
+    // Detect Jira tickets (ABC-123)
+    let jira_pattern = /[A-Z]+-\d+/;
+    if (match(text, jira_pattern)) {
+        links.push({
+            type: "jira_ticket",
+            url: extract_jira_url(text),
+            action: open_jira_ticket
+        });
+    }
+
+    // Detect file paths with line numbers (file.rs:42)
+    let file_line_pattern = /[a-zA-Z0-9_\-./]+:\d+/;
+    if (match(text, file_line_pattern)) {
+        links.push({
+            type: "file_line",
+            url: text,
+            action: open_file_at_line
+        });
+    }
+
+    return links;
+}
+
+// Custom hint key generator (using home row keys)
+fn generate_hint_keys(count: Int) -> Array {
+    let home_row = "asdfjkl;";
+    let keys = [];
+
+    for (i in 0..count) {
+        let first = i / 8;
+        let second = i % 8;
+
+        if (first == 0) {
+            keys.push(home_row[second]);
+        } else {
+            keys.push(home_row[first - 1] + home_row[second]);
+        }
+    }
+
+    return keys;
+}
+
+// Custom link activation handler
+fn on_link_activated(link: Object) -> Void {
+    print("Activating link: " + link.url);
+
+    match (link.type) {
+        "github_issue" => {
+            // Open in browser
+            shell_execute("open " + link.url);
+        },
+        "jira_ticket" => {
+            // Open Jira in browser
+            shell_execute("open " + link.url);
+        },
+        "file_line" => {
+            // Open in editor at specific line
+            let parts = link.url.split(":");
+            let file = parts[0];
+            let line = parts[1];
+            shell_execute("code -g " + file + ":" + line);
+        },
+        _ => {
+            // Default handler
+            shell_execute("open " + link.url);
+        }
+    }
+}
+
+// Styling customization
+fn get_hint_style() -> Object {
+    return {
+        font_size: 14,
+        background_color: {r: 1.0, g: 0.8, b: 0.0, a: 0.9},
+        text_color: {r: 0.0, g: 0.0, b: 0.0, a: 1.0},
+        border_width: 2,
+        border_color: {r: 0.0, g: 0.0, b: 0.0, a: 1.0},
+        padding: 4,
+        border_radius: 4
+    };
+}
+
+// Export configuration
+export {
+    detect_custom_links,
+    generate_hint_keys,
+    on_link_activated,
+    get_hint_style
+};

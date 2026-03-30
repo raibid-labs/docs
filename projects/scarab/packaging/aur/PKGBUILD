@@ -1,0 +1,162 @@
+# Maintainer: Raibid Labs <contact@raibid-labs.com>
+pkgname=scarab-terminal
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="GPU-accelerated terminal emulator with plugin system"
+arch=('x86_64' 'aarch64')
+url="https://github.com/raibid-labs/scarab"
+license=('MIT')
+depends=(
+    'gcc-libs'
+    'glibc'
+    'libx11'
+    'libxcursor'
+    'libxi'
+    'libxrandr'
+    'vulkan-icd-loader'
+    'wayland'
+)
+makedepends=(
+    'rust'
+    'cargo'
+    'git'
+    'cmake'
+    'pkg-config'
+    'fontconfig'
+    'freetype2'
+)
+optdepends=(
+    'vulkan-intel: Intel GPU support'
+    'vulkan-radeon: AMD GPU support'
+    'nvidia-utils: NVIDIA GPU support'
+    'vulkan-validation-layers: Vulkan debugging'
+)
+provides=('scarab')
+conflicts=('scarab-git')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
+sha256sums=('SKIP')  # Will be updated for releases
+
+build() {
+    cd "$srcdir/scarab-$pkgver"
+
+    # Set up cargo home
+    export CARGO_HOME="$srcdir/cargo-home"
+    export RUSTFLAGS="-C target-cpu=native -C link-arg=-s"
+
+    # Build with release profile and platform-specific features
+    cargo build --release --locked \
+        --features "x11,wayland,vulkan" \
+        --target-dir="$srcdir/target"
+}
+
+check() {
+    cd "$srcdir/scarab-$pkgver"
+
+    # Run tests
+    export CARGO_HOME="$srcdir/cargo-home"
+    cargo test --release --locked \
+        --target-dir="$srcdir/target"
+}
+
+package() {
+    cd "$srcdir/scarab-$pkgver"
+
+    # Install binaries
+    install -Dm755 "$srcdir/target/release/scarab-daemon" \
+        "$pkgdir/usr/bin/scarab-daemon"
+    install -Dm755 "$srcdir/target/release/scarab-client" \
+        "$pkgdir/usr/bin/scarab"
+
+    # Install launcher script
+    cat > scarab-terminal << 'EOF'
+#!/bin/sh
+# Start daemon if not running
+if ! pgrep -x scarab-daemon > /dev/null; then
+    scarab-daemon &
+    sleep 1
+fi
+# Launch client
+exec scarab "$@"
+EOF
+    install -Dm755 scarab-terminal "$pkgdir/usr/bin/scarab-terminal"
+
+    # Install desktop file
+    cat > scarab.desktop << EOF
+[Desktop Entry]
+Type=Application
+Name=Scarab Terminal
+Comment=GPU-accelerated terminal emulator
+Icon=utilities-terminal
+Exec=scarab-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=terminal;console;command;shell;
+StartupWMClass=scarab
+EOF
+    install -Dm644 scarab.desktop \
+        "$pkgdir/usr/share/applications/scarab.desktop"
+
+    # Install default configuration
+    install -Dm644 examples/config.toml \
+        "$pkgdir/usr/share/scarab/config.toml" || true
+
+    # Install systemd user service
+    cat > scarab-daemon.service << EOF
+[Unit]
+Description=Scarab Terminal Daemon
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/scarab-daemon
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+    install -Dm644 scarab-daemon.service \
+        "$pkgdir/usr/lib/systemd/user/scarab-daemon.service"
+
+    # Install shell completions
+    install -Dm644 completions/scarab.bash \
+        "$pkgdir/usr/share/bash-completion/completions/scarab" || true
+    install -Dm644 completions/scarab.zsh \
+        "$pkgdir/usr/share/zsh/site-functions/_scarab" || true
+    install -Dm644 completions/scarab.fish \
+        "$pkgdir/usr/share/fish/vendor_completions.d/scarab.fish" || true
+
+    # Install documentation
+    install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+    # Create runtime directories
+    install -dm755 "$pkgdir/var/lib/scarab"
+    install -dm755 "$pkgdir/etc/scarab"
+}
+
+post_install() {
+    echo ":: Scarab Terminal has been installed!"
+    echo ":: "
+    echo ":: To start the daemon as a systemd user service:"
+    echo "::   systemctl --user enable --now scarab-daemon.service"
+    echo ":: "
+    echo ":: To launch the terminal:"
+    echo "::   scarab-terminal"
+    echo ":: "
+    echo ":: Configuration file: ~/.config/scarab/config.toml"
+    echo ":: "
+    echo ":: For Wayland users: You may need to set WAYLAND_DISPLAY"
+    echo ":: For X11 users: Ensure DISPLAY is set correctly"
+}
+
+post_upgrade() {
+    echo ":: Scarab Terminal has been upgraded!"
+    echo ":: You may need to restart the daemon:"
+    echo "::   systemctl --user restart scarab-daemon.service"
+}
+
+post_remove() {
+    echo ":: Scarab Terminal has been removed."
+    echo ":: Configuration files in ~/.config/scarab/ have been preserved."
+}

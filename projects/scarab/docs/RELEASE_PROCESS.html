@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>RELEASE_PROCESS</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="RELEASE_PROCESS"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="RELEASE_PROCESS"/><meta name="twitter:description" content="Release Process This document describes the release management process for Scarab Terminal, including release types, versioning strategy, branch management, and detailed procedures."/><meta property="og:description" content="Release Process This document describes the release management process for Scarab Terminal, including release types, versioning strategy, branch management, and detailed procedures."/><meta property="og:image:alt" content="Release Process This document describes the release management process for Scarab Terminal, including release types, versioning strategy, branch management, and detailed procedures."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/RELEASE_PROCESS"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/RELEASE_PROCESS"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Release Process This document describes the release management process for Scarab Terminal, including release types, versioning strategy, branch management, and detailed procedures."/><meta name="generator" content="Quartz"/><link href="../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/scarab/docs/RELEASE_PROCESS-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/scarab/docs/RELEASE_PROCESS-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/scarab/docs/RELEASE_PROCESS-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/scarab/docs/RELEASE_PROCESS"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-334"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-334" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/scarab/">scarab</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../projects/scarab/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>RELEASE_PROCESS</a></div></nav><h1 class="article-title">RELEASE_PROCESS</h1><p show-comma="true" class="content-meta"><time datetime="2026-03-30T04:42:03.797Z">Mar 30, 2026</time><span>11 min read</span></p></div></div><article class="popover-hint"><h1 id="release-process">Release Process<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-process" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>This document describes the release management process for Scarab Terminal, including release types, versioning strategy, branch management, and detailed procedures.</p>
+<h2 id="table-of-contents">Table of Contents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#table-of-contents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="#release-types" class="internal alias">Release Types</a></li>
+<li><a href="#version-numbering" class="internal alias">Version Numbering</a></li>
+<li><a href="#branch-strategy" class="internal alias">Branch Strategy</a></li>
+<li><a href="#release-cadence" class="internal alias">Release Cadence</a></li>
+<li><a href="#release-workflow" class="internal alias">Release Workflow</a></li>
+<li><a href="#rollback-procedure" class="internal alias">Rollback Procedure</a></li>
+<li><a href="#communication-plan" class="internal alias">Communication Plan</a></li>
+<li><a href="#roles-and-responsibilities" class="internal alias">Roles and Responsibilities</a></li>
+</ul>
+<h2 id="release-types">Release Types<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-types" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Scarab follows a structured release process with multiple release types:</p>
+<h3 id="1-alpha-releases-vxyz-alphan">1. Alpha Releases (vX.Y.Z-alpha.N)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-alpha-releases-vxyz-alphan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose</strong>: Early testing of new features with known limitations.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Incomplete feature set</li>
+<li>May have known bugs</li>
+<li>API may change without notice</li>
+<li>No stability guarantees</li>
+<li>Not recommended for production use</li>
+</ul>
+<p><strong>Audience</strong>: Early adopters, testers, contributors</p>
+<p><strong>Cadence</strong>: As needed during active development</p>
+<p><strong>Example</strong>: <code>v0.1.0-alpha.1</code>, <code>v0.2.0-alpha.3</code></p>
+<p><strong>Release Criteria</strong>:</p>
+<ul>
+<li>Core functionality works</li>
+<li>No critical crashes</li>
+<li>Basic documentation exists</li>
+<li>Tests pass for implemented features</li>
+</ul>
+<h3 id="2-beta-releases-vxyz-betan">2. Beta Releases (vX.Y.Z-beta.N)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-beta-releases-vxyz-betan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose</strong>: Feature-complete releases for wider testing before stable.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>All planned features implemented</li>
+<li>API mostly stable (minor changes possible)</li>
+<li>Known bugs documented</li>
+<li>Performance not yet optimized</li>
+<li>Suitable for testing environments</li>
+</ul>
+<p><strong>Audience</strong>: Advanced users, testers, plugin developers</p>
+<p><strong>Cadence</strong>: 2-4 weeks before stable release</p>
+<p><strong>Example</strong>: <code>v0.1.0-beta.1</code>, <code>v1.0.0-beta.2</code></p>
+<p><strong>Release Criteria</strong>:</p>
+<ul>
+<li>Feature complete for milestone</li>
+<li>All critical bugs fixed</li>
+<li>Documentation complete</li>
+<li>Full test coverage</li>
+<li>Performance acceptable</li>
+</ul>
+<h3 id="3-release-candidates-vxyz-rcn">3. Release Candidates (vX.Y.Z-rc.N)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-release-candidates-vxyz-rcn" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose</strong>: Final validation before stable release.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>API frozen</li>
+<li>No new features</li>
+<li>Only critical bugfixes</li>
+<li>Production-ready quality</li>
+<li>Final documentation review</li>
+</ul>
+<p><strong>Audience</strong>: All users willing to test</p>
+<p><strong>Cadence</strong>: 1-2 weeks before stable, only if needed</p>
+<p><strong>Example</strong>: <code>v0.1.0-rc.1</code>, <code>v1.0.0-rc.2</code></p>
+<p><strong>Release Criteria</strong>:</p>
+<ul>
+<li>No known critical bugs</li>
+<li>Performance targets met</li>
+<li>Security audit passed</li>
+<li>Documentation finalized</li>
+<li>Package managers ready</li>
+</ul>
+<h3 id="4-stable-releases-vxyz">4. Stable Releases (vX.Y.Z)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-stable-releases-vxyz" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose</strong>: Production-ready releases with full support.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Fully tested and validated</li>
+<li>API stable per semver</li>
+<li>Complete documentation</li>
+<li>Performance optimized</li>
+<li>Security reviewed</li>
+<li>Full support commitment</li>
+</ul>
+<p><strong>Audience</strong>: All users</p>
+<p><strong>Cadence</strong>: Every 6-12 weeks for minor, as needed for patch</p>
+<p><strong>Example</strong>: <code>v0.1.0</code>, <code>v1.0.0</code>, <code>v1.1.0</code></p>
+<p><strong>Release Criteria</strong>:</p>
+<ul>
+<li>All release criteria met</li>
+<li>Release candidate tested successfully</li>
+<li>Zero known critical bugs</li>
+<li>Package managers updated</li>
+<li>Announcement prepared</li>
+</ul>
+<h3 id="5-hotfix-releases-vxyz1">5. Hotfix Releases (vX.Y.Z+1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-hotfix-releases-vxyz1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Purpose</strong>: Critical bugfixes for stable releases.</p>
+<p><strong>Characteristics</strong>:</p>
+<ul>
+<li>Patch version bump only</li>
+<li>Minimal changes</li>
+<li>Security fixes</li>
+<li>Critical bug fixes only</li>
+<li>Fast-tracked process</li>
+</ul>
+<p><strong>Audience</strong>: All users on affected versions</p>
+<p><strong>Cadence</strong>: As needed for critical issues</p>
+<p><strong>Example</strong>: <code>v1.0.1</code>, <code>v1.0.2</code></p>
+<p><strong>Release Criteria</strong>:</p>
+<ul>
+<li>Fixes critical issue</li>
+<li>No feature changes</li>
+<li>Minimal risk of regression</li>
+<li>Emergency approval if needed</li>
+</ul>
+<h2 id="version-numbering">Version Numbering<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version-numbering" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Scarab follows <a href="https://semver.org/" class="external">Semantic Versioning 2.0.0<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a>:</p>
+<h3 id="format-majorminorpatch-prereleasebuild">Format: MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#format-majorminorpatch-prereleasebuild" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>MAJOR</strong> (X.0.0): Breaking changes</p>
+<ul>
+<li>Incompatible API changes</li>
+<li>Major architectural changes</li>
+<li>Plugin API breaking changes</li>
+<li>Configuration format changes</li>
+<li>Shared memory protocol changes</li>
+</ul>
+<p><strong>MINOR</strong> (0.X.0): New features, backwards-compatible</p>
+<ul>
+<li>New features added</li>
+<li>Deprecations (with migration path)</li>
+<li>Performance improvements</li>
+<li>New plugin capabilities</li>
+<li>Enhanced UI features</li>
+</ul>
+<p><strong>PATCH</strong> (0.0.X): Bugfixes, backwards-compatible</p>
+<ul>
+<li>Bug fixes only</li>
+<li>Security patches</li>
+<li>Documentation fixes</li>
+<li>Performance fixes (no behavior change)</li>
+</ul>
+<p><strong>PRERELEASE</strong>: Alpha, beta, rc suffixes</p>
+<ul>
+<li>Format: <code>-alpha.N</code>, <code>-beta.N</code>, <code>-rc.N</code></li>
+<li>N starts at 1 and increments for each prerelease</li>
+<li>Order: alpha &lt; beta &lt; rc &lt; stable</li>
+</ul>
+<p><strong>BUILD</strong>: Build metadata (rarely used)</p>
+<ul>
+<li>Format: <code>+20250124.commit-hash</code></li>
+<li>Does not affect version precedence</li>
+</ul>
+<h3 id="version-progression-examples">Version Progression Examples<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version-progression-examples" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Pre-1.0 Development</strong>:</p>
+<pre><code>0.1.0-alpha.1 → 0.1.0-alpha.2 → 0.1.0-beta.1 → 0.1.0-rc.1 → 0.1.0
+0.1.1 (hotfix)
+0.2.0-alpha.1 → ... → 0.2.0
+...
+0.9.0 → 0.9.1 → 0.10.0 (last before 1.0)
+1.0.0-rc.1 → 1.0.0 (stable API commitment)
+</code></pre>
+<p><strong>Post-1.0 Development</strong>:</p>
+<pre><code>1.0.0 → 1.0.1 (hotfix) → 1.1.0-beta.1 → 1.1.0
+1.1.0 → 1.1.1 → 1.2.0
+2.0.0-alpha.1 → ... → 2.0.0-rc.1 → 2.0.0 (breaking changes)
+</code></pre>
+<h3 id="workspace-version-synchronization">Workspace Version Synchronization<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#workspace-version-synchronization" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>All workspace crates MUST have synchronized versions:</p>
+<ul>
+<li><code>scarab-daemon</code> = <code>scarab-client</code> = <code>scarab-protocol</code> = etc.</li>
+<li>Use <code>cargo-workspaces</code> or manual updates</li>
+<li>Version bumps affect all crates simultaneously</li>
+<li>Inter-crate dependencies use exact version matching</li>
+</ul>
+<h2 id="branch-strategy">Branch Strategy<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#branch-strategy" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Scarab uses a simplified Git Flow model:</p>
+<h3 id="main-branches">Main Branches<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#main-branches" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong><code>main</code></strong> (protected)</p>
+<ul>
+<li>Always deployable</li>
+<li>Contains latest stable or RC code</li>
+<li>All releases tagged from this branch</li>
+<li>Requires PR review for changes</li>
+<li>CI must pass before merge</li>
+</ul>
+<p><strong><code>develop</code></strong> (protected)</p>
+<ul>
+<li>Integration branch for features</li>
+<li>Next release staging area</li>
+<li>May be unstable</li>
+<li>Requires PR review</li>
+<li>CI must pass before merge</li>
+</ul>
+<h3 id="supporting-branches">Supporting Branches<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#supporting-branches" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Feature Branches</strong> (<code>feature/*</code>)</p>
+<ul>
+<li>Created from: <code>develop</code></li>
+<li>Merged into: <code>develop</code></li>
+<li>Naming: <code>feature/issue-number-short-description</code></li>
+<li>Example: <code>feature/123-plugin-hot-reload</code></li>
+<li>Delete after merge</li>
+</ul>
+<p><strong>Release Branches</strong> (<code>release/*</code>)</p>
+<ul>
+<li>Created from: <code>develop</code></li>
+<li>Merged into: <code>main</code> and <code>develop</code></li>
+<li>Naming: <code>release/vX.Y.Z</code></li>
+<li>Example: <code>release/v0.1.0</code></li>
+<li>Only bugfixes and polish</li>
+<li>Delete after release</li>
+</ul>
+<p><strong>Hotfix Branches</strong> (<code>hotfix/*</code>)</p>
+<ul>
+<li>Created from: <code>main</code> (specific tag)</li>
+<li>Merged into: <code>main</code> and <code>develop</code></li>
+<li>Naming: <code>hotfix/vX.Y.Z</code></li>
+<li>Example: <code>hotfix/v1.0.1</code></li>
+<li>Critical fixes only</li>
+<li>Delete after release</li>
+</ul>
+<h3 id="branch-workflow">Branch Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#branch-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<pre><code>main     ─────v0.1.0────────────v0.2.0─────────
+              │                 │
+release       └──────v0.2.0────┘
+                     │
+develop  ─────────────┴──────────────────────
+         │      │           │
+feature  ├─────┘            └────────
+</code></pre>
+<h2 id="release-cadence">Release Cadence<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-cadence" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="target-schedule">Target Schedule<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#target-schedule" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Minor Releases</strong>: Every 6-12 weeks</p>
+<ul>
+<li>Planned features complete</li>
+<li>Regular cadence for predictability</li>
+<li>Announced in roadmap</li>
+</ul>
+<p><strong>Patch Releases</strong>: As needed</p>
+<ul>
+<li>Critical bugs: within 24-48 hours</li>
+<li>Non-critical bugs: batched weekly/monthly</li>
+<li>Security issues: immediate</li>
+</ul>
+<p><strong>Pre-releases</strong>:</p>
+<ul>
+<li>Alpha: Weekly during development sprints</li>
+<li>Beta: 2-4 weeks before stable</li>
+<li>RC: 1 week before stable (if needed)</li>
+</ul>
+<h3 id="release-windows">Release Windows<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-windows" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Preferred Days</strong>: Tuesday or Wednesday</p>
+<ul>
+<li>Allows time for monitoring</li>
+<li>Avoids Monday rush and Friday risks</li>
+<li>Team available for support</li>
+</ul>
+<p><strong>Avoid</strong>: Holidays, weekends, major conferences</p>
+<h2 id="release-workflow">Release Workflow<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-workflow" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-planning-phase">1. Planning Phase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-planning-phase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: 2-4 weeks before release</p>
+<ol>
+<li>Review ROADMAP.md and milestone issues</li>
+<li>Triage remaining issues:
+<ul>
+<li>Must-have (blocks release)</li>
+<li>Should-have (delays if not ready)</li>
+<li>Nice-to-have (punts to next release)</li>
+</ul>
+</li>
+<li>Update CHANGELOG.md draft</li>
+<li>Announce planned release date to team</li>
+<li>Freeze new features (minor releases)</li>
+</ol>
+<h3 id="2-preparation-phase">2. Preparation Phase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-preparation-phase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: 1 week before release</p>
+<ol>
+<li>Create release branch: <code>git checkout -b release/vX.Y.Z develop</code></li>
+<li>Bump versions in all crates:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Option 1: Manual update</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/bump-version.sh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Option 2: Using cargo-workspaces</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> workspaces</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> version</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-git-commit</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span></span></code></pre></figure>
+</li>
+<li>Update CHANGELOG.md with final changes</li>
+<li>Update documentation for new features</li>
+<li>Run full test suite: <code>cargo test --workspace</code></li>
+<li>Run benchmarks and compare: <code>cargo bench --workspace</code></li>
+<li>Security audit: <code>cargo audit</code></li>
+<li>Build all platform targets locally</li>
+<li>Plugin compatibility testing</li>
+<li>Documentation review</li>
+</ol>
+<h3 id="3-release-candidate-phase-if-needed">3. Release Candidate Phase (if needed)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-release-candidate-phase-if-needed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: 1 week for testing</p>
+<ol>
+<li>Tag RC: <code>git tag -a vX.Y.Z-rc.1 -m &quot;Release candidate 1&quot;</code></li>
+<li>Push tag: <code>git push origin vX.Y.Z-rc.1</code></li>
+<li>Build and distribute RC binaries</li>
+<li>Announce RC to community</li>
+<li>Collect feedback (1 week)</li>
+<li>If issues found:
+<ul>
+<li>Fix in release branch</li>
+<li>Create new RC: <code>vX.Y.Z-rc.2</code></li>
+<li>Repeat testing</li>
+</ul>
+</li>
+<li>If no issues: proceed to release</li>
+</ol>
+<h3 id="4-release-execution">4. Release Execution<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-release-execution" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: Release day</p>
+<ol>
+<li>Merge release branch to main:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-ff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> release/vX.Y.Z</span></span></code></pre></figure>
+</li>
+<li>Create annotated tag:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tag</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -a</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.Z</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Release vX.Y.Z</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Summary of changes:</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">- Feature A</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">- Feature B</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">- Bug fixes</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">See CHANGELOG.md for full details.&quot;</span></span></code></pre></figure>
+</li>
+<li>Push to GitHub:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.Z</span></span></code></pre></figure>
+</li>
+<li>Monitor GitHub Actions workflow</li>
+<li>Review and publish GitHub Release</li>
+<li>Verify crates.io publication</li>
+<li>Update package managers (Homebrew, AUR)</li>
+<li>Merge release branch back to develop:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> develop</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-ff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> release/vX.Y.Z</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> develop</span></span></code></pre></figure>
+</li>
+<li>Delete release branch:
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> release/vX.Y.Z</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --delete</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> release/vX.Y.Z</span></span></code></pre></figure>
+</li>
+</ol>
+<h3 id="5-post-release-phase">5. Post-Release Phase<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-post-release-phase" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Timeline</strong>: 1-2 weeks after release</p>
+<ol>
+<li>Announce release (see Communication Plan)</li>
+<li>Monitor for critical issues</li>
+<li>Update project status</li>
+<li>Create next milestone</li>
+<li>Post-release retrospective</li>
+<li>Document lessons learned</li>
+</ol>
+<h2 id="rollback-procedure">Rollback Procedure<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-procedure" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>If critical issues are discovered after release, follow this rollback procedure:</p>
+<h3 id="severity-assessment">Severity Assessment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#severity-assessment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Critical</strong> (immediate rollback):</p>
+<ul>
+<li>Data loss or corruption</li>
+<li>Security vulnerability (CVE)</li>
+<li>Complete functionality breakdown</li>
+<li>Shared memory corruption</li>
+</ul>
+<p><strong>Major</strong> (hotfix within 24h):</p>
+<ul>
+<li>Feature completely broken</li>
+<li>Performance regression >50%</li>
+<li>Plugin system failure</li>
+</ul>
+<p><strong>Minor</strong> (hotfix within 1 week):</p>
+<ul>
+<li>UI glitches</li>
+<li>Non-critical feature issues</li>
+<li>Performance regression &lt;50%</li>
+</ul>
+<h3 id="rollback-steps">Rollback Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#rollback-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<h4 id="1-immediate-mitigation-critical-issues">1. Immediate Mitigation (Critical Issues)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-immediate-mitigation-critical-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Create incident issue</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> create</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --title</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;CRITICAL: [Brief description]&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;"> \</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">  --label</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;critical,bug&quot;</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --assignee</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;@me&quot;</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Yank crates from crates.io (if published)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yank</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --vers</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scarab-client</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yank</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --vers</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scarab-daemon</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Mark GitHub Release as &quot;This release has known issues&quot;</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (Manual step in GitHub UI)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Post urgent notice in README.md</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;⚠️ WARNING: v</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$VERSION</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> has critical issues. Do not use. Fix incoming.&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> >></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> README.md</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> commit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -am</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;docs: Add critical warning for v</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">$VERSION</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span></span></code></pre></figure>
+<h4 id="2-hotfix-development">2. Hotfix Development<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-hotfix-development" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Create hotfix branch from previous stable tag</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -b</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hotfix/vX.Y.Z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z-1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Cherry-pick fix or develop new fix</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cherry-pick</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">commit-has</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">h</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># OR</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># ... make changes ...</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Test thoroughly</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> test</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --workspace</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> build</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --release</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --workspace</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Bump patch version</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">./scripts/bump-version.sh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Update CHANGELOG.md</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">echo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;## vX.Y.(Z+1) - $(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">date</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> +%Y-%m-%d)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">### Fixed</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">- Critical issue: [description]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> >></span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> CHANGELOG.md</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 6. Commit and tag</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> commit</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -am</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;fix: Critical issue [description]&quot;</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tag</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -a</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">) </span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;">-m</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;Hotfix vX.Y.(Z+1)&quot;</span></span></code></pre></figure>
+<h4 id="3-emergency-release">3. Emergency Release<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-emergency-release" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 1. Push hotfix</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hotfix/vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 2. Monitor GitHub Actions</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 3. Publish release immediately</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 4. Un-yank previous version if needed</span></span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># (Manual decision based on severity)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 5. Merge back to main and develop</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-ff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hotfix/vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> main</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> checkout</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> develop</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> merge</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --no-ff</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hotfix/vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> develop</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># 6. Clean up</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> branch</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> hotfix/vX.Y.</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">Z+1</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span></span></code></pre></figure>
+<h4 id="4-communication">4. Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-communication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Post announcement</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> issue</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> comment</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;"> &lt;</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">incident-issu</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">e</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">></span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --body</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> &quot;</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">## Hotfix Released: vX.Y.(Z+1)</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">The critical issue has been fixed in vX.Y.(Z+1).</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">**What was wrong**: [Brief description]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">**Impact**: [Who was affected]</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">**Fix**: [What we did]</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">Please upgrade immediately:</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">\`\`\`</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">bash</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Homebrew</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">brew upgrade scarab</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Cargo</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">cargo install --force scarab-client</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Manual</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"># Download from https://github.com/raibid-labs/scarab/releases/tag/vX.Y.(Z+1)</span></span>
+<span data-line><span style="--shiki-light:#005CC5;--shiki-dark:#56B6C2;">\`\`\`</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">We apologize for the inconvenience.</span></span>
+<span data-line><span style="--shiki-light:#032F62;--shiki-dark:#98C379;">&quot;</span></span></code></pre></figure>
+<h3 id="prevention">Prevention<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#prevention" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>To minimize the need for rollbacks:</p>
+<ol>
+<li><strong>Thorough testing</strong>: Never skip RC phase for major releases</li>
+<li><strong>Gradual rollout</strong>: Consider phased releases (10% → 50% → 100%)</li>
+<li><strong>Monitoring</strong>: Set up error tracking and monitoring</li>
+<li><strong>Fast feedback</strong>: Encourage early reports from community</li>
+<li><strong>Automated testing</strong>: Expand CI/CD coverage</li>
+<li><strong>Beta program</strong>: Maintain active beta tester group</li>
+</ol>
+<h2 id="communication-plan">Communication Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Effective communication is critical for successful releases.</p>
+<h3 id="internal-communication">Internal Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#internal-communication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Team Notification</strong>:</p>
+<ul>
+<li>Announce planned release 2 weeks in advance</li>
+<li>Daily standup updates during release week</li>
+<li>Immediate notification of any issues</li>
+</ul>
+<p><strong>Channels</strong>:</p>
+<ul>
+<li>GitHub Discussions (internal)</li>
+<li>Team chat (Discord/Slack)</li>
+<li>Email for critical issues</li>
+</ul>
+<h3 id="external-communication">External Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#external-communication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Pre-Release</strong>:</p>
+<ul>
+<li>GitHub Discussions: Announce upcoming release</li>
+<li>Social media: Teaser for major features</li>
+<li>Blog post: For major releases (1.0, 2.0, etc.)</li>
+</ul>
+<p><strong>Release Day</strong>:</p>
+<ol>
+<li>GitHub Release notes (detailed)</li>
+<li>GitHub Discussions announcement</li>
+<li>Social media posts:
+<ul>
+<li>Twitter/X</li>
+<li>Reddit (r/rust, r/commandline, r/terminal_porn)</li>
+<li>Mastodon</li>
+</ul>
+</li>
+<li>Rust community Discord/Zulip</li>
+<li>Update project website</li>
+</ol>
+<p><strong>Post-Release</strong>:</p>
+<ul>
+<li>Thank contributors</li>
+<li>Gather feedback</li>
+<li>Address issues promptly</li>
+<li>Weekly summary of adoption/issues</li>
+</ul>
+<h3 id="communication-templates">Communication Templates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-templates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>See the following template files:</p>
+<ul>
+<li><code>docs/templates/release-announcement-template.md</code> - For GitHub/social media</li>
+<li><code>docs/templates/release-notes-template.md</code> - For GitHub Release page</li>
+<li><code>docs/templates/hotfix-announcement-template.md</code> - For urgent fixes</li>
+</ul>
+<h3 id="crisis-communication">Crisis Communication<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#crisis-communication" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>For critical issues:</p>
+<ol>
+<li><strong>Acknowledge immediately</strong> (within 1 hour)</li>
+<li><strong>Provide timeline</strong> for fix (within 4 hours)</li>
+<li><strong>Regular updates</strong> every 2-4 hours</li>
+<li><strong>Root cause analysis</strong> after resolution</li>
+<li><strong>Prevention plan</strong> to avoid recurrence</li>
+</ol>
+<h2 id="roles-and-responsibilities">Roles and Responsibilities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#roles-and-responsibilities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="release-manager">Release Manager<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#release-manager" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Responsibilities</strong>:</p>
+<ul>
+<li>Owns the release process end-to-end</li>
+<li>Coordinates with contributors</li>
+<li>Makes go/no-go decisions</li>
+<li>Handles communication</li>
+<li>Updates documentation</li>
+</ul>
+<p><strong>Tasks</strong>:</p>
+<ul>
+<li>Create release branch</li>
+<li>Coordinate testing</li>
+<li>Review CHANGELOG</li>
+<li>Execute release steps</li>
+<li>Monitor post-release</li>
+</ul>
+<p><strong>Authority</strong>:</p>
+<ul>
+<li>Can delay release if critical issues found</li>
+<li>Can approve hotfix releases</li>
+<li>Final say on version numbering</li>
+</ul>
+<h3 id="quality-assurance">Quality Assurance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#quality-assurance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Responsibilities</strong>:</p>
+<ul>
+<li>Verify all tests pass</li>
+<li>Manual testing on target platforms</li>
+<li>Performance testing</li>
+<li>Documentation review</li>
+</ul>
+<p><strong>Tasks</strong>:</p>
+<ul>
+<li>Run test suite</li>
+<li>Test on multiple platforms</li>
+<li>Verify package installations</li>
+<li>Check plugin compatibility</li>
+</ul>
+<h3 id="package-maintainers">Package Maintainers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#package-maintainers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Homebrew Maintainer</strong>:</p>
+<ul>
+<li>Update formula</li>
+<li>Test installation</li>
+<li>Respond to formula issues</li>
+</ul>
+<p><strong>AUR Maintainer</strong>:</p>
+<ul>
+<li>Update PKGBUILD</li>
+<li>Test build process</li>
+<li>Monitor AUR comments</li>
+</ul>
+<h3 id="communication-lead">Communication Lead<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#communication-lead" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Responsibilities</strong>:</p>
+<ul>
+<li>Draft announcements</li>
+<li>Post to social media</li>
+<li>Monitor community feedback</li>
+<li>Coordinate with release manager</li>
+</ul>
+<h2 id="automation-and-tools">Automation and Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automation-and-tools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="required-tools">Required Tools<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#required-tools" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Install release tools</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cargo-workspaces</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">  # Version management</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cargo-audit</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">       # Security auditing</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> install</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> cargo-release</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">     # Release automation (optional)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">                              # GitHub CLI</span></span></code></pre></figure>
+<h3 id="automation-scripts">Automation Scripts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#automation-scripts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The <code>scripts/</code> directory contains automation:</p>
+<ul>
+<li><code>scripts/bump-version.sh</code> - Update all crate versions</li>
+<li><code>scripts/check-release.sh</code> - Pre-release validation</li>
+<li><code>scripts/build-all-targets.sh</code> - Cross-platform builds</li>
+<li><code>scripts/update-changelog.sh</code> - CHANGELOG helpers</li>
+</ul>
+<h3 id="github-actions">GitHub Actions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#github-actions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The release process is partially automated via <code>.github/workflows/release.yml</code>:</p>
+<ul>
+<li>Triggered by pushing a version tag</li>
+<li>Builds all platform binaries</li>
+<li>Creates GitHub Release draft</li>
+<li>Publishes to crates.io</li>
+<li>Updates package managers</li>
+</ul>
+<p>Manual intervention required:</p>
+<ul>
+<li>Publishing the GitHub Release</li>
+<li>Writing release notes</li>
+<li>Announcement posting</li>
+</ul>
+<h2 id="troubleshooting">Troubleshooting<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#troubleshooting" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="common-issues">Common Issues<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#common-issues" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Problem</strong>: GitHub Actions build fails for specific platform</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check build logs for specific error</li>
+<li>Common causes:
+<ul>
+<li>Missing system dependencies</li>
+<li>Cross-compilation toolchain issues</li>
+<li>Platform-specific code bugs</li>
+</ul>
+</li>
+<li>Fix locally and re-tag or create patch release</li>
+</ol>
+<hr/>
+<p><strong>Problem</strong>: crates.io publish fails with “version already exists”</p>
+<p><strong>Solution</strong>:</p>
+<ul>
+<li>Versions cannot be republished on crates.io</li>
+<li>Must bump version and create new tag</li>
+<li>Use <code>cargo yank</code> if critical issue</li>
+</ul>
+<hr/>
+<p><strong>Problem</strong>: Homebrew formula update fails</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check SHA256 checksums match</li>
+<li>Verify release assets are available</li>
+<li>Test formula locally: <code>brew install --build-from-source ./packaging/homebrew/scarab.rb</code></li>
+<li>Check Homebrew CI: <a href="https://formulae.brew.sh/" class="external">https://formulae.brew.sh/<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ol>
+<hr/>
+<p><strong>Problem</strong>: AUR package out of sync</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Clone AUR repo: <code>git clone ssh://aur@aur.archlinux.org/scarab-terminal.git</code></li>
+<li>Update PKGBUILD and .SRCINFO</li>
+<li>Test: <code>makepkg -si</code></li>
+<li>Push update</li>
+</ol>
+<hr/>
+<p><strong>Problem</strong>: Release tag pushed but GitHub Actions didn’t trigger</p>
+<p><strong>Solution</strong>:</p>
+<ol>
+<li>Check tag format matches <code>v*</code> pattern</li>
+<li>Verify workflows file exists and is valid</li>
+<li>Manually trigger: Go to Actions → Release → Run workflow</li>
+</ol>
+<hr/>
+<p><strong>Problem</strong>: Need to cancel/delete a release</p>
+<p><strong>Solution</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="bash" data-theme="github-light one-dark-pro"><code data-language="bash" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Delete tag locally and remotely</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> tag</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> -d</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.Z</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">git</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> push</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> origin</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> :refs/tags/vX.Y.Z</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Delete GitHub Release (via UI or CLI)</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">gh</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> release</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> delete</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> vX.Y.Z</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;"># Yank from crates.io if published</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yank</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --vers</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scarab-client</span></span>
+<span data-line><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">cargo</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> yank</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> --vers</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> X.Y.Z</span><span style="--shiki-light:#032F62;--shiki-dark:#98C379;"> scarab-daemon</span></span></code></pre></figure>
+<h2 id="references">References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><a href="https://semver.org/" class="external">Semantic Versioning 2.0.0<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://doc.rust-lang.org/cargo/reference/publishing.html" class="external">Cargo Publishing Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.github.com/en/actions" class="external">GitHub Actions Documentation<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://docs.brew.sh/Formula-Cookbook" class="external">Homebrew Formula Cookbook<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://wiki.archlinux.org/title/AUR_submission_guidelines" class="external">Arch User Repository Guidelines<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h2 id="changelog">Changelog<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#changelog" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ul>
+<li><strong>2025-11-24</strong>: Initial release process documentation</li>
+</ul></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-167" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#release-process" data-for="release-process">Release Process</a></li><li class="depth-1"><a href="#table-of-contents" data-for="table-of-contents">Table of Contents</a></li><li class="depth-1"><a href="#release-types" data-for="release-types">Release Types</a></li><li class="depth-2"><a href="#1-alpha-releases-vxyz-alphan" data-for="1-alpha-releases-vxyz-alphan">1. Alpha Releases (vX.Y.Z-alpha.N)</a></li><li class="depth-2"><a href="#2-beta-releases-vxyz-betan" data-for="2-beta-releases-vxyz-betan">2. Beta Releases (vX.Y.Z-beta.N)</a></li><li class="depth-2"><a href="#3-release-candidates-vxyz-rcn" data-for="3-release-candidates-vxyz-rcn">3. Release Candidates (vX.Y.Z-rc.N)</a></li><li class="depth-2"><a href="#4-stable-releases-vxyz" data-for="4-stable-releases-vxyz">4. Stable Releases (vX.Y.Z)</a></li><li class="depth-2"><a href="#5-hotfix-releases-vxyz1" data-for="5-hotfix-releases-vxyz1">5. Hotfix Releases (vX.Y.Z+1)</a></li><li class="depth-1"><a href="#version-numbering" data-for="version-numbering">Version Numbering</a></li><li class="depth-2"><a href="#format-majorminorpatch-prereleasebuild" data-for="format-majorminorpatch-prereleasebuild">Format: MAJOR.MINOR.PATCH[-PRERELEASE][+BUILD]</a></li><li class="depth-2"><a href="#version-progression-examples" data-for="version-progression-examples">Version Progression Examples</a></li><li class="depth-2"><a href="#workspace-version-synchronization" data-for="workspace-version-synchronization">Workspace Version Synchronization</a></li><li class="depth-1"><a href="#branch-strategy" data-for="branch-strategy">Branch Strategy</a></li><li class="depth-2"><a href="#main-branches" data-for="main-branches">Main Branches</a></li><li class="depth-2"><a href="#supporting-branches" data-for="supporting-branches">Supporting Branches</a></li><li class="depth-2"><a href="#branch-workflow" data-for="branch-workflow">Branch Workflow</a></li><li class="depth-1"><a href="#release-cadence" data-for="release-cadence">Release Cadence</a></li><li class="depth-2"><a href="#target-schedule" data-for="target-schedule">Target Schedule</a></li><li class="depth-2"><a href="#release-windows" data-for="release-windows">Release Windows</a></li><li class="depth-1"><a href="#release-workflow" data-for="release-workflow">Release Workflow</a></li><li class="depth-2"><a href="#1-planning-phase" data-for="1-planning-phase">1. Planning Phase</a></li><li class="depth-2"><a href="#2-preparation-phase" data-for="2-preparation-phase">2. Preparation Phase</a></li><li class="depth-2"><a href="#3-release-candidate-phase-if-needed" data-for="3-release-candidate-phase-if-needed">3. Release Candidate Phase (if needed)</a></li><li class="depth-2"><a href="#4-release-execution" data-for="4-release-execution">4. Release Execution</a></li><li class="depth-2"><a href="#5-post-release-phase" data-for="5-post-release-phase">5. Post-Release Phase</a></li><li class="depth-1"><a href="#rollback-procedure" data-for="rollback-procedure">Rollback Procedure</a></li><li class="depth-2"><a href="#severity-assessment" data-for="severity-assessment">Severity Assessment</a></li><li class="depth-2"><a href="#rollback-steps" data-for="rollback-steps">Rollback Steps</a></li><li class="depth-2"><a href="#prevention" data-for="prevention">Prevention</a></li><li class="depth-1"><a href="#communication-plan" data-for="communication-plan">Communication Plan</a></li><li class="depth-2"><a href="#internal-communication" data-for="internal-communication">Internal Communication</a></li><li class="depth-2"><a href="#external-communication" data-for="external-communication">External Communication</a></li><li class="depth-2"><a href="#communication-templates" data-for="communication-templates">Communication Templates</a></li><li class="depth-2"><a href="#crisis-communication" data-for="crisis-communication">Crisis Communication</a></li><li class="depth-1"><a href="#roles-and-responsibilities" data-for="roles-and-responsibilities">Roles and Responsibilities</a></li><li class="depth-2"><a href="#release-manager" data-for="release-manager">Release Manager</a></li><li class="depth-2"><a href="#quality-assurance" data-for="quality-assurance">Quality Assurance</a></li><li class="depth-2"><a href="#package-maintainers" data-for="package-maintainers">Package Maintainers</a></li><li class="depth-2"><a href="#communication-lead" data-for="communication-lead">Communication Lead</a></li><li class="depth-1"><a href="#automation-and-tools" data-for="automation-and-tools">Automation and Tools</a></li><li class="depth-2"><a href="#required-tools" data-for="required-tools">Required Tools</a></li><li class="depth-2"><a href="#automation-scripts" data-for="automation-scripts">Automation Scripts</a></li><li class="depth-2"><a href="#github-actions" data-for="github-actions">GitHub Actions</a></li><li class="depth-1"><a href="#troubleshooting" data-for="troubleshooting">Troubleshooting</a></li><li class="depth-2"><a href="#common-issues" data-for="common-issues">Common Issues</a></li><li class="depth-1"><a href="#references" data-for="references">References</a></li><li class="depth-1"><a href="#changelog" data-for="changelog">Changelog</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../postscript.js" type="module"></script></html>

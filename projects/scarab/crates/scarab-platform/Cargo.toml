@@ -1,0 +1,44 @@
+[package]
+name = "scarab-platform"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Platform abstraction layer for Scarab terminal emulator"
+
+[dependencies]
+anyhow = "1.0"
+dirs = "5.0"
+log = "0.4"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc = "0.2"
+cocoa = "0.25"
+core-foundation = "0.10"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "0.2"
+x11 = { version = "2.21", features = ["xlib"], optional = true }
+wayland-client = { version = "0.31", optional = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi = { version = "0.3", features = [
+    "namedpipeapi",
+    "handleapi",
+    "synchapi",
+    "fileapi",
+    "errhandlingapi",
+    "winbase",
+    "winnt",
+    "ioapiset",
+    "minwindef",
+    "processthreadsapi"
+]}
+windows-sys = { version = "0.52", features = ["Win32_System_Pipes", "Win32_Foundation"] }
+
+[features]
+default = []
+x11 = ["dep:x11"]
+wayland = ["dep:wayland-client"]

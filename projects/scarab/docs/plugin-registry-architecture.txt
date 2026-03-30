@@ -1,0 +1,348 @@
+Scarab Plugin Registry Architecture
+===================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         REMOTE REGISTRY SERVER                              │
+│                      (https://registry.scarab.dev)                          │
+│                                                                             │
+│  Endpoints:                                                                 │
+│  • GET /v1/manifest.json        - Complete plugin catalog                  │
+│  • GET /v1/plugins/{name}/{version}/download - Plugin download             │
+│  • GET /health                  - Health check                             │
+│                                                                             │
+│  Response Headers:                                                          │
+│  • X-Plugin-Checksum: SHA256 hash                                          │
+│  • X-Plugin-Signature: GPG signature (optional)                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ HTTPS (TLS)
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          REGISTRY CLIENT (client.rs)                        │
+│                                                                             │
+│  • HTTP client with 30s timeout                                            │
+│  • User-agent: scarab/{version}                                            │
+│  • Fetches manifest and plugin files                                       │
+│  • Returns PluginDownload with content + checksums                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                    ┌───────────────┴────────────────┐
+                    │                                │
+                    ▼                                ▼
+┌──────────────────────────────────┐  ┌───────────────────────────────────────┐
+│   REGISTRY CACHE (cache.rs)     │  │   PLUGIN VERIFIER (security.rs)       │
+│                                  │  │                                       │
+│  ~/.config/scarab/registry/      │  │  • SHA256 checksum verification       │
+│                                  │  │  • GPG signature verification (TODO)  │
+│  Files:                          │  │  • Format validation (.fzb/.fsx)      │
+│  • manifest.json                 │  │  • Security policy enforcement        │
+│                                  │  │                                       │
+│  In-Memory:                      │  │  Configuration:                       │
+│  • RegistryManifest              │  │  • require_checksum: bool             │
+│  • HashMap<String, PluginEntry>  │  │  • require_signature: bool            │
+│                                  │  │  • trusted_keys: Vec<String>          │
+│  Features:                       │  │                                       │
+│  • Fast local search             │  └───────────────────────────────────────┘
+│  • Advanced filtering            │                    │
+│  • Cache staleness detection     │                    │
+│  • Offline operation             │                    │
+└──────────────────────────────────┘                    │
+                    │                                   │
+                    └───────────────┬───────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      REGISTRY MANAGER (mod.rs)                              │
+│                          (Main Facade)                                      │
+│                                                                             │
+│  Public API:                                                                │
+│  • sync() -> Result<()>                                                     │
+│  • search(filter: &PluginFilter) -> Result<Vec<PluginEntry>>              │
+│  • install(name, version) -> Result<InstalledPlugin>                       │
+│  • update(name) -> Result<InstalledPlugin>                                 │
+│  • remove(name) -> Result<()>                                              │
+│  • list_installed() -> Result<Vec<InstalledPlugin>>                        │
+│  • check_updates() -> Result<Vec<(String, String, String)>>                │
+│                                                                             │
+│  Internal Components:                                                       │
+│  • RegistryClient (HTTP)                                                   │
+│  • RegistryCache (local storage)                                           │
+│  • PluginInstaller (file management)                                       │
+│  • PluginVerifier (security)                                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PLUGIN INSTALLER (installer.rs)                          │
+│                                                                             │
+│  ~/.config/scarab/plugins/                                                  │
+│                                                                             │
+│  Directory Structure:                                                       │
+│  plugins/                                                                   │
+│  ├── installed.json          ← Installation index                          │
+│  ├── auto-notify/                                                           │
+│  │   └── auto-notify.fzb     ← Compiled plugin                             │
+│  ├── git-status/                                                            │
+│  │   └── git-status.fsx      ← Source plugin                               │
+│  └── theme-manager/                                                         │
+│      └── theme-manager.fzb                                                  │
+│                                                                             │
+│  Operations:                                                                │
+│  • Install: Create dir, write file, update index                           │
+│  • Remove: Delete dir, remove from index                                   │
+│  • Enable/Disable: Update index, keep files                                │
+│  • Config: Store plugin-specific settings                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CLI INTERFACE (bin/scarab-plugin.rs)                │
+│                                                                             │
+│  Commands:                        Examples:                                │
+│  • search <query>              →  scarab-plugin search git                 │
+│  • install <name> [version]    →  scarab-plugin install auto-notify        │
+│  • update <name>               →  scarab-plugin update auto-notify         │
+│  • remove <name>               →  scarab-plugin remove auto-notify         │
+│  • list                        →  scarab-plugin list                       │
+│  • info <name>                 →  scarab-plugin info auto-notify           │
+│  • sync                        →  scarab-plugin sync                       │
+│  • check-updates               →  scarab-plugin check-updates              │
+│  • enable <name>               →  scarab-plugin enable auto-notify         │
+│  • disable <name>              →  scarab-plugin disable auto-notify        │
+│  • help                        →  scarab-plugin help                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+DATA FLOW DIAGRAMS
+==================
+
+Installation Flow:
+──────────────────
+
+User: scarab-plugin install auto-notify
+         │
+         ▼
+┌────────────────────┐
+│ RegistryManager    │
+│ .install()         │
+└────────┬───────────┘
+         │
+         ├─► 1. Get plugin from cache (PluginEntry)
+         │
+         ├─► 2. RegistryClient.download_plugin()
+         │      → Download file from registry
+         │      → Get checksum from headers
+         │
+         ├─► 3. PluginVerifier.verify()
+         │      → Compute SHA256
+         │      → Compare with expected
+         │      → Validate format
+         │
+         └─► 4. PluginInstaller.install()
+                → Create ~/.config/scarab/plugins/auto-notify/
+                → Write auto-notify.fzb
+                → Update installed.json
+                → Return InstalledPlugin
+
+
+Search Flow:
+────────────
+
+User: scarab-plugin search notification --min-rating 4.0
+         │
+         ▼
+┌────────────────────┐
+│ RegistryManager    │
+│ .search()          │
+└────────┬───────────┘
+         │
+         ├─► 1. Check cache staleness
+         │      If stale (>24h): sync()
+         │
+         ├─► 2. RegistryCache.search(filter)
+         │      → Load manifest.json into memory
+         │      → Apply query filter (contains "notification")
+         │      → Apply rating filter (>= 4.0)
+         │      → Sort by popularity
+         │      → Return Vec<PluginEntry>
+         │
+         └─► 3. Display results
+
+
+Update Check Flow:
+──────────────────
+
+User: scarab-plugin check-updates
+         │
+         ▼
+┌────────────────────┐
+│ RegistryManager    │
+│ .check_updates()   │
+└────────┬───────────┘
+         │
+         ├─► 1. PluginInstaller.list_installed()
+         │      → Read installed.json
+         │      → Return Vec<InstalledPlugin>
+         │
+         ├─► 2. For each installed plugin:
+         │      ├─► RegistryCache.get_plugin(name)
+         │      │      → Get latest_version from manifest
+         │      │
+         │      └─► Compare versions
+         │             If installed < latest:
+         │                Add to updates list
+         │
+         └─► 3. Return Vec<(name, current, latest)>
+
+
+SECURITY LAYERS
+===============
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ Layer 1: HTTPS Transport                                            │
+│ • TLS 1.2+ encryption                                               │
+│ • Certificate verification                                          │
+│ • Man-in-the-middle protection                                      │
+└─────────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│ Layer 2: Checksum Verification (SHA256)                             │
+│ • Compute hash of downloaded content                                │
+│ • Compare with registry-provided checksum                           │
+│ • Detect corruption and tampering                                   │
+│ • MANDATORY by default                                              │
+└─────────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│ Layer 3: GPG Signature Verification (Optional)                      │
+│ • Verify detached signature                                         │
+│ • Check against trusted keys                                        │
+│ • Validate key expiration                                           │
+│ • OPTIONAL (TODO: implement)                                        │
+└─────────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│ Layer 4: Format Validation                                          │
+│ • .fzb: Check magic number (FZB\x00)                                │
+│ • .fsx: Validate F# syntax heuristics                               │
+│ • Prevent execution of invalid files                                │
+└─────────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────────┐
+│ Layer 5: Sandboxing (User Responsibility)                           │
+│ • Process isolation                                                 │
+│ • Filesystem access controls                                        │
+│ • Network restrictions                                              │
+│ • Resource limits (CPU/memory)                                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+TYPE HIERARCHY
+==============
+
+RegistryConfig
+├── registry_url: String
+├── cache_dir: PathBuf
+├── plugin_dir: PathBuf
+└── security: SecurityConfig
+    ├── require_checksum: bool
+    ├── require_signature: bool
+    ├── allow_unsigned: bool
+    └── trusted_keys: Vec<String>
+
+PluginEntry
+├── name: String
+├── description: String
+├── readme: Option<String>
+├── author: String
+├── author_email: Option<String>
+├── homepage: Option<String>
+├── repository: Option<String>
+├── license: String
+├── latest_version: String
+├── versions: Vec<PluginVersion>
+│   ├── version: String
+│   ├── download_url: String
+│   ├── checksum: String (SHA256)
+│   ├── signature: Option<String> (GPG)
+│   ├── changelog: Option<String>
+│   ├── api_version: String
+│   ├── min_scarab_version: String
+│   ├── size: u64
+│   ├── released_at: u64
+│   └── prerelease: bool
+├── tags: Vec<String>
+├── stats: PluginStats
+│   ├── downloads: u64
+│   ├── downloads_recent: u64
+│   ├── rating: f32
+│   ├── rating_count: u32
+│   └── stars: Option<u32>
+├── created_at: u64
+└── updated_at: u64
+
+InstalledPlugin
+├── name: String
+├── version: String
+├── path: PathBuf
+├── installed_at: u64
+├── enabled: bool
+└── config: HashMap<String, serde_json::Value>
+
+PluginFilter
+├── query: Option<String>
+├── tag: Option<String>
+├── author: Option<String>
+├── min_rating: Option<f32>
+├── sort: SortOrder
+│   ├── Popular
+│   ├── Rating
+│   ├── Recent
+│   └── Name
+└── limit: Option<usize>
+
+
+PERFORMANCE CHARACTERISTICS
+============================
+
+Operation          | Cold Cache | Warm Cache | Network
+-------------------+------------+------------+---------
+sync()             | 200-2000ms | 200-2000ms | Yes
+search()           | 5-50ms     | <5ms       | No
+install()          | 100-500ms  | 100-500ms  | Yes
+update()           | 100-500ms  | 100-500ms  | Yes
+remove()           | 10-50ms    | 10-50ms    | No
+list_installed()   | <5ms       | <5ms       | No
+check_updates()    | 5-20ms     | 5-20ms     | No
+get_plugin()       | <5ms       | <5ms       | No
+
+Cache Performance:
+• Load 1000 plugins: <50ms
+• Search 1000 plugins: <5ms
+• Complex filter: <10ms
+
+Storage:
+• manifest.json: ~500KB for 100 plugins
+• Average plugin size: 15-50KB
+• Index overhead: ~1KB per plugin
+
+
+FILE LOCATIONS
+==============
+
+~/.config/scarab/
+├── registry/                     ← Registry cache
+│   └── manifest.json            ← Plugin catalog
+├── plugins/                      ← Installed plugins
+│   ├── installed.json           ← Installation index
+│   ├── auto-notify/
+│   │   └── auto-notify.fzb
+│   └── git-status/
+│       └── git-status.fsx
+├── registry.toml                 ← Registry config
+├── plugins.toml                  ← Plugin config
+└── config.toml                   ← Main Scarab config
+
+Binary Location:
+~/.cargo/target/debug/scarab-plugin    ← CLI tool

@@ -1,0 +1,313 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Scarab Terminal Configuration",
+  "description": "Configuration schema for Scarab terminal emulator",
+  "type": "object",
+  "properties": {
+    "terminal": {
+      "type": "object",
+      "description": "Terminal emulator settings",
+      "properties": {
+        "default_shell": {
+          "type": "string",
+          "description": "Default shell to use",
+          "default": "/bin/zsh",
+          "examples": ["/bin/zsh", "/bin/bash", "/usr/local/bin/fish"]
+        },
+        "scrollback_lines": {
+          "type": "integer",
+          "description": "Number of lines to keep in scrollback buffer",
+          "minimum": 100,
+          "maximum": 100000,
+          "default": 10000
+        },
+        "alt_screen": {
+          "type": "boolean",
+          "description": "Enable alternate screen buffer",
+          "default": true
+        },
+        "scroll_multiplier": {
+          "type": "number",
+          "description": "Scroll speed multiplier",
+          "minimum": 0.1,
+          "maximum": 10.0,
+          "default": 3.0
+        },
+        "auto_scroll": {
+          "type": "boolean",
+          "description": "Auto-scroll to bottom on output",
+          "default": true
+        }
+      }
+    },
+    "font": {
+      "type": "object",
+      "description": "Font configuration",
+      "properties": {
+        "family": {
+          "type": "string",
+          "description": "Primary font family",
+          "default": "JetBrains Mono",
+          "examples": ["JetBrains Mono", "Fira Code", "Hack", "Menlo"]
+        },
+        "size": {
+          "type": "number",
+          "description": "Font size in points",
+          "minimum": 6.0,
+          "maximum": 72.0,
+          "default": 14.0
+        },
+        "line_height": {
+          "type": "number",
+          "description": "Line height multiplier",
+          "minimum": 0.5,
+          "maximum": 3.0,
+          "default": 1.2
+        },
+        "fallback": {
+          "type": "array",
+          "description": "Fallback font families",
+          "items": { "type": "string" },
+          "default": ["Fira Code", "DejaVu Sans Mono", "Menlo"]
+        },
+        "bold_is_bright": {
+          "type": "boolean",
+          "description": "Use bright colors for bold text",
+          "default": true
+        },
+        "use_thin_strokes": {
+          "type": "boolean",
+          "description": "Use thin stroke rendering (macOS)",
+          "default": false
+        }
+      }
+    },
+    "colors": {
+      "type": "object",
+      "description": "Color scheme configuration",
+      "properties": {
+        "theme": {
+          "type": ["string", "null"],
+          "description": "Predefined theme name",
+          "enum": ["dracula", "nord", "monokai", "solarized-dark", "solarized-light", "gruvbox", null],
+          "default": "dracula"
+        },
+        "foreground": {
+          "type": ["string", "null"],
+          "description": "Foreground color (hex)",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "background": {
+          "type": ["string", "null"],
+          "description": "Background color (hex)",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "cursor": {
+          "type": ["string", "null"],
+          "description": "Cursor color (hex)",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "selection_background": {
+          "type": ["string", "null"],
+          "description": "Selection background color (hex)",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "selection_foreground": {
+          "type": ["string", "null"],
+          "description": "Selection foreground color (hex)",
+          "pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+        },
+        "opacity": {
+          "type": "number",
+          "description": "Window opacity",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "default": 1.0
+        },
+        "dim_opacity": {
+          "type": "number",
+          "description": "Dimmed text opacity",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "default": 0.7
+        },
+        "palette": {
+          "type": "object",
+          "description": "16-color ANSI palette",
+          "properties": {
+            "black": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "red": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "green": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "yellow": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "blue": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "magenta": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "cyan": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "white": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_black": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_red": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_green": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_yellow": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_blue": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_magenta": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_cyan": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+            "bright_white": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+          }
+        }
+      }
+    },
+    "keybindings": {
+      "type": "object",
+      "description": "Keyboard shortcuts",
+      "properties": {
+        "leader_key": {
+          "type": "string",
+          "description": "Leader key for shortcuts",
+          "default": "Space"
+        },
+        "copy_mode": {
+          "type": "string",
+          "description": "Enter copy mode",
+          "default": "Ctrl+Shift+C"
+        },
+        "paste": {
+          "type": "string",
+          "description": "Paste from clipboard",
+          "default": "Ctrl+Shift+V"
+        },
+        "search": {
+          "type": "string",
+          "description": "Open search",
+          "default": "Ctrl+Shift+F"
+        },
+        "command_palette": {
+          "type": "string",
+          "description": "Open command palette",
+          "default": "Ctrl+Shift+P"
+        },
+        "new_window": {
+          "type": "string",
+          "description": "Open new window",
+          "default": "Ctrl+Shift+N"
+        },
+        "close_window": {
+          "type": "string",
+          "description": "Close current window",
+          "default": "Ctrl+Shift+W"
+        },
+        "next_tab": {
+          "type": "string",
+          "description": "Switch to next tab",
+          "default": "Ctrl+Tab"
+        },
+        "prev_tab": {
+          "type": "string",
+          "description": "Switch to previous tab",
+          "default": "Ctrl+Shift+Tab"
+        },
+        "custom": {
+          "type": "object",
+          "description": "Custom keybindings (action -> key)",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "UI behavior configuration",
+      "properties": {
+        "link_hints": {
+          "type": "boolean",
+          "description": "Enable link hints for URLs",
+          "default": true
+        },
+        "command_palette": {
+          "type": "boolean",
+          "description": "Enable command palette",
+          "default": true
+        },
+        "animations": {
+          "type": "boolean",
+          "description": "Enable UI animations",
+          "default": true
+        },
+        "smooth_scroll": {
+          "type": "boolean",
+          "description": "Enable smooth scrolling",
+          "default": true
+        },
+        "show_tabs": {
+          "type": "boolean",
+          "description": "Show tab bar",
+          "default": true
+        },
+        "tab_position": {
+          "type": "string",
+          "description": "Tab bar position",
+          "enum": ["top", "bottom", "left", "right"],
+          "default": "top"
+        },
+        "cursor_style": {
+          "type": "string",
+          "description": "Cursor style",
+          "enum": ["block", "beam", "underline"],
+          "default": "block"
+        },
+        "cursor_blink": {
+          "type": "boolean",
+          "description": "Enable cursor blinking",
+          "default": true
+        },
+        "cursor_blink_interval": {
+          "type": "integer",
+          "description": "Cursor blink interval in milliseconds",
+          "minimum": 100,
+          "maximum": 5000,
+          "default": 750
+        }
+      }
+    },
+    "plugins": {
+      "type": "object",
+      "description": "Plugin configuration",
+      "properties": {
+        "enabled": {
+          "type": "array",
+          "description": "List of enabled plugins",
+          "items": { "type": "string" }
+        },
+        "config": {
+          "type": "object",
+          "description": "Plugin-specific configuration",
+          "additionalProperties": true
+        }
+      }
+    },
+    "sessions": {
+      "type": "object",
+      "description": "Session management configuration",
+      "properties": {
+        "restore_on_startup": {
+          "type": "boolean",
+          "description": "Restore session on startup",
+          "default": false
+        },
+        "auto_save_interval": {
+          "type": "integer",
+          "description": "Auto-save interval in seconds",
+          "minimum": 60,
+          "maximum": 3600,
+          "default": 300
+        },
+        "save_scrollback": {
+          "type": "boolean",
+          "description": "Save scrollback history",
+          "default": true
+        },
+        "working_directory": {
+          "type": ["string", "null"],
+          "description": "Default working directory"
+        }
+      }
+    }
+  }
+}

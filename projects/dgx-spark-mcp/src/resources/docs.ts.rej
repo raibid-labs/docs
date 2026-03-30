@@ -1,0 +1,12 @@
+--- src/resources/docs.ts
++++ src/resources/docs.ts
+@@ -52,7 +52,7 @@ export function isDocsResourceURI(uri: string): boolean {
+ export async function getDocumentationTopics(): Promise<string[]> {
+   const allDocs = await getDocumentationResourceList();
+   // Extract topics from URIs (dgx://docs/spark/{topic})
+-  return allDocs.map(doc => {
++  return allDocs.map(doc => {
+     const match = doc.uri.match(/^dgx:\/\/docs\/spark\/(.+)$/);
+     return match ? match[1] : '';
+-  }).filter(t => t !== '');
++  }).filter((t): t is string => t !== '');

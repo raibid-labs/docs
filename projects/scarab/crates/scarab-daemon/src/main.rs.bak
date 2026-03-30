@@ -1,0 +1,92 @@
+use portable_pty::{CommandBuilder, NativePtySystem, PtySize, PtySystem};
+use anyhow::Result;
+use std::io::{Read, Write};
+use std::sync::atomic::{AtomicU64, Ordering};
+use tokio::sync::mpsc;
+use shared_memory::ShmemConf;
+use scarab_protocol::{SharedState, Cell, SHMEM_PATH, GRID_WIDTH, GRID_HEIGHT};
+use std::sync::Arc;
+
+mod vte;
+
+#[tokio::main]
+async fn main() -> Result<()> {
+    println!("Starting Scarab Daemon...");
+
+    // 1. Setup PTY System
+    let pty_system = NativePtySystem::default();
+    let pair = pty_system.openpty(PtySize {
+        rows: 24,
+        cols: 80,
+        pixel_width: 0,
+        pixel_height: 0,
+    })?;
+
+    let cmd = CommandBuilder::new("bash");
+    let _child = pair.slave.spawn_command(cmd)?;
+
+    // Important: Release slave handle in parent process
+    drop(pair.slave);
+
+    let mut reader = pair.master.try_clone_reader()?;
+    let mut writer = pair.master.take_writer()?;
+
+    // 2. Initialize Shared Memory
+    let shmem = ShmemConf::new()
+        .size(std::mem::size_of::<SharedState>())
+        .os_id(SHMEM_PATH)
+        .create()?;
+
+    println!("Created shared memory at: {}", SHMEM_PATH);
+
+    // Initialize shared state with zeroed memory
+    let shared_ptr = shmem.as_ptr() as *mut SharedState;
+    unsafe {
+        std::ptr::write_bytes(shared_ptr, 0, 1);
+    }
+
+    let sequence_counter = Arc::new(AtomicU64::new(0));
+
+    // Initialize VTE parser
+    let mut terminal_state = vte::TerminalState::new(shared_ptr, sequence_counter.clone());
+
+    println!("Daemon initialized. Listening for input...");
+    println!("VTE Parser: Active");
+    println!("Scrollback buffer: 10,000 lines");
+
+    // 3. Main Loop with VTE Parser Integration
+    let mut buf = [0u8; 4096]; // Increased buffer for better performance
+    loop {
+        // In a real implementation, use tokio::select! to handle IPC events too
+        match reader.read(&mut buf) {
+            Ok(n) if n > 0 => {
+                let data = &buf[..n];
+
+                // Debug output (can be disabled in production)
+                if cfg!(debug_assertions) {
+                    println!("PTY Output ({} bytes): {:?}", n, String::from_utf8_lossy(data));
+                }
+
+                // Process output through VTE parser
+                // This will:
+                // 1. Parse ANSI escape sequences
+                // 2. Update grid cells with proper colors and attributes
+                // 3. Handle cursor positioning
+                // 4. Manage scrollback buffer
+                // 5. Atomically update shared state
+                terminal_state.process_output(data);
+            }
+            Ok(_) => break, // EOF
+            Err(e) => {
+                eprintln!("PTY Error: {}", e);
+                break;
+            }
+        }
+    }
+
+    // Cleanup shared memory
+    drop(shmem);
+    println!("Daemon shutting down...");
+
+    Ok(())
+}

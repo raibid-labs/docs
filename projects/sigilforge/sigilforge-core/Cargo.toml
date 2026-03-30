@@ -1,0 +1,55 @@
+[package]
+name = "sigilforge-core"
+description = "Core types, traits, and logic for Sigilforge credential management"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Async
+tokio = { workspace = true }
+async-trait = { workspace = true }
+
+# Serialization
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# Error handling
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# Logging
+tracing = { workspace = true }
+
+# Time
+chrono = { workspace = true }
+
+# Identifiers
+uuid = { workspace = true }
+
+# URL parsing (for auth:// URIs)
+url = { workspace = true }
+
+# Platform-specific directories
+directories = { workspace = true }
+
+# Secret storage backends (optional features)
+keyring = { workspace = true, optional = true }
+
+# OAuth2
+oauth2 = { workspace = true, optional = true }
+reqwest = { workspace = true, optional = true }
+rand = { version = "0.8", optional = true }
+
+[features]
+default = ["keyring-store"]
+keyring-store = ["dep:keyring"]
+oauth = ["dep:oauth2", "dep:reqwest", "dep:rand"]
+full = ["keyring-store", "oauth"]
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["test-util", "macros"] }
+tempfile = "3.13"
+wiremock = "0.6"

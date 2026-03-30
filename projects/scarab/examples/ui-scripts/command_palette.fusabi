@@ -1,0 +1,189 @@
+// Example Fusabi script for customizing command palette
+// Location: ~/.config/scarab/ui/command_palette.fusabi
+
+// Register custom commands
+fn register_custom_commands() -> Array {
+    return [
+        {
+            id: "git.status",
+            name: "Git Status",
+            description: "Show git status in terminal",
+            category: "Git",
+            keybind: "Ctrl+G S",
+            action: fn() {
+                send_keys("git status\n");
+            }
+        },
+        {
+            id: "git.commit",
+            name: "Git Commit",
+            description: "Commit staged changes",
+            category: "Git",
+            keybind: "Ctrl+G C",
+            action: fn() {
+                send_keys("git commit -m \"");
+            }
+        },
+        {
+            id: "git.push",
+            name: "Git Push",
+            description: "Push to remote",
+            category: "Git",
+            keybind: "Ctrl+G P",
+            action: fn() {
+                send_keys("git push\n");
+            }
+        },
+        {
+            id: "docker.ps",
+            name: "Docker PS",
+            description: "List running containers",
+            category: "Docker",
+            action: fn() {
+                send_keys("docker ps\n");
+            }
+        },
+        {
+            id: "docker.logs",
+            name: "Docker Logs",
+            description: "Show container logs",
+            category: "Docker",
+            action: fn() {
+                send_keys("docker logs -f ");
+            }
+        },
+        {
+            id: "tmux.split_h",
+            name: "Tmux Split Horizontal",
+            description: "Split tmux pane horizontally",
+            category: "Tmux",
+            keybind: "Ctrl+B \"",
+            action: fn() {
+                send_keys("\x02\""); // Ctrl+B then "
+            }
+        },
+        {
+            id: "tmux.split_v",
+            name: "Tmux Split Vertical",
+            description: "Split tmux pane vertically",
+            category: "Tmux",
+            keybind: "Ctrl+B %",
+            action: fn() {
+                send_keys("\x02%"); // Ctrl+B then %
+            }
+        },
+        {
+            id: "cargo.build",
+            name: "Cargo Build",
+            description: "Build Rust project",
+            category: "Rust",
+            keybind: "Ctrl+Shift+B",
+            action: fn() {
+                send_keys("cargo build\n");
+            }
+        },
+        {
+            id: "cargo.test",
+            name: "Cargo Test",
+            description: "Run Rust tests",
+            category: "Rust",
+            keybind: "Ctrl+Shift+T",
+            action: fn() {
+                send_keys("cargo test\n");
+            }
+        },
+        {
+            id: "npm.install",
+            name: "NPM Install",
+            description: "Install npm dependencies",
+            category: "Node.js",
+            action: fn() {
+                send_keys("npm install\n");
+            }
+        },
+        {
+            id: "npm.run_dev",
+            name: "NPM Dev",
+            description: "Run development server",
+            category: "Node.js",
+            keybind: "Ctrl+Shift+D",
+            action: fn() {
+                send_keys("npm run dev\n");
+            }
+        }
+    ];
+}
+
+// Custom fuzzy search scoring
+fn custom_fuzzy_score(command: Object, query: String) -> Int {
+    let score = 0;
+
+    // Exact prefix match gets highest score
+    if (command.name.starts_with(query)) {
+        score += 1000;
+    }
+
+    // Category match
+    if (command.category.to_lower().contains(query.to_lower())) {
+        score += 500;
+    }
+
+    // Acronym match (e.g., "gc" matches "Git Commit")
+    if (matches_acronym(command.name, query)) {
+        score += 750;
+    }
+
+    // Description match
+    if (command.description.to_lower().contains(query.to_lower())) {
+        score += 250;
+    }
+
+    return score;
+}
+
+// Helper: Check if query matches command name acronym
+fn matches_acronym(name: String, query: String) -> Bool {
+    let words = name.split(" ");
+    let acronym = "";
+
+    for (word in words) {
+        acronym += word[0].to_lower();
+    }
+
+    return acronym.starts_with(query.to_lower());
+}
+
+// Custom palette styling
+fn get_palette_style() -> Object {
+    return {
+        width: 700,
+        height: 500,
+        background_color: {r: 0.05, g: 0.05, b: 0.05, a: 0.98},
+        border_width: 1,
+        border_color: {r: 0.3, g: 0.3, b: 0.5, a: 1.0},
+        border_radius: 8,
+        shadow: {
+            offset_x: 0,
+            offset_y: 4,
+            blur: 16,
+            color: {r: 0.0, g: 0.0, b: 0.0, a: 0.5}
+        },
+        input: {
+            font_size: 18,
+            color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0},
+            placeholder_color: {r: 0.5, g: 0.5, b: 0.5, a: 1.0}
+        },
+        item: {
+            font_size: 14,
+            selected_background: {r: 0.2, g: 0.3, b: 0.5, a: 0.8},
+            hover_background: {r: 0.15, g: 0.15, b: 0.25, a: 0.6}
+        }
+    };
+}
+
+// Export configuration
+export {
+    register_custom_commands,
+    custom_fuzzy_score,
+    get_palette_style
+};

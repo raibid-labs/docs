@@ -1,0 +1,36 @@
+[package]
+name = "scarab-nav-client"
+version = "0.2.0"
+edition = "2021"
+authors = ["Scarab Team"]
+license = "MIT"
+description = "Client library for Scarab Navigation System - enables TUI apps to report interactive elements for keyboard navigation"
+repository = "https://github.com/raibid-labs/scarab-nav"
+homepage = "https://github.com/raibid-labs/scarab-nav"
+documentation = "https://docs.rs/scarab-nav-client"
+readme = "../../README.md"
+keywords = ["tui", "navigation", "terminal", "ratatui", "client"]
+categories = ["command-line-interface", "gui", "accessibility"]
+
+[dependencies]
+scarab-nav-protocol = { version = "0.2.0", path = "../scarab-nav-protocol" }
+prost = "0.12"
+tokio = { version = "1.0", features = ["net", "io-util", "time", "sync", "rt"] }
+thiserror = "1.0"
+ratatui = { version = "0.29", optional = true }
+serde = { version = "1.0", features = ["derive"] }
+tracing = "0.1"
+uuid = { version = "1.18.1", features = ["v4", "fast-rng"] }
+
+# Plugin runtime dependencies
+fusabi-plugin-runtime = { version = "0.1.1", optional = true }
+fusabi-stdlib-ext = { version = "0.1.1", optional = true }
+
+[features]
+default = ["ratatui"]
+ratatui = ["dep:ratatui"]
+plugin-runtime = ["dep:fusabi-plugin-runtime", "dep:fusabi-stdlib-ext"]
+
+[dev-dependencies]
+ratatui-testlib = "0.1.0"
+tokio = { version = "1.0", features = ["full", "test-util", "macros"] }

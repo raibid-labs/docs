@@ -1,0 +1,143 @@
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        Scarab Clipboard Plugin Architecture                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                  USER INPUT                                    │
+└───────────────────────────────────────────────────────────────────────────────┘
+                     │
+                     │ Keyboard Events (Ctrl+Shift+C, v, y, etc.)
+                     │
+                     ▼
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                              ClipboardPlugin                                   │
+│                           (scarab-clipboard/lib.rs)                            │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                                │
+│  ┌─────────────────┐  ┌──────────────────┐  ┌─────────────────────────────┐  │
+│  │  Keybinding     │  │  Text Extraction │  │  Command Palette            │  │
+│  │  Handler        │  │  from Grid       │  │  Integration                │  │
+│  ├─────────────────┤  ├──────────────────┤  ├─────────────────────────────┤  │
+│  │ • v → Visual    │  │ • get_line(y)    │  │ • clipboard.copy            │  │
+│  │ • V → Line      │  │ • Character mode │  │ • clipboard.paste           │  │
+│  │ • Ctrl+V→Block  │  │ • Word mode      │  │ • clipboard.copy_line       │  │
+│  │ • y → Yank      │  │ • Line mode      │  │ • clipboard.visual_*        │  │
+│  │ • Esc → Cancel  │  │ • Block mode     │  │ • clipboard.toggle_bracket  │  │
+│  │ • Ctrl+Shift+C  │  │ • Trim trailing  │  │   (8 commands total)        │  │
+│  │ • Ctrl+Shift+V  │  └──────────────────┘  └─────────────────────────────┘  │
+│  └─────────────────┘                                                          │
+│                                                                                │
+│  ┌────────────────────────────────────────────────────────────────────────┐  │
+│  │                          Plugin State                                   │  │
+│  ├────────────────────────────────────────────────────────────────────────┤  │
+│  │  • SelectionState: Active selection tracking                           │  │
+│  │  • ClipboardManager: System clipboard interface                        │  │
+│  │  • PendingPaste: Awaiting user confirmation                            │  │
+│  │  • bracket_mode_enabled: Shell safety toggle                           │  │
+│  └────────────────────────────────────────────────────────────────────────┘  │
+│                                                                                │
+└──┬───────────────────────────────┬─────────────────────────────┬──────────────┘
+   │                               │                             │
+   │ Uses                          │ Uses                        │ Sends
+   │                               │                             │
+   ▼                               ▼                             ▼
+┌────────────────────┐  ┌──────────────────────┐  ┌──────────────────────────┐
+│  ClipboardManager  │  │   SelectionState     │  │    RemoteCommand        │
+│  (clipboard.rs)    │  │   (selection.rs)     │  │    (Protocol Layer)     │
+├────────────────────┤  ├──────────────────────┤  ├──────────────────────────┤
+│                    │  │                      │  │                          │
+│ • arboard wrapper  │  │ • SelectionMode      │  │ • DrawOverlay            │
+│ • copy(text, type) │  │   - Character        │  │   (visual indicators)    │
+│ • paste(type)      │  │   - Word             │  │ • ShowModal              │
+│ • ClipboardType:   │  │   - Line             │  │   (paste confirmation)   │
+│   - Standard       │  │   - Block            │  │ • ClearOverlays          │
+│   - Primary (X11)  │  │                      │  │ • PluginNotify           │
+│ • Confirmation:    │  │ • SelectionRegion    │  │   (success/error)        │
+│   - Always         │  │   - start_x, start_y │  └──────────────────────────┘
+│   - Smart          │  │   - end_x, end_y     │               │
+│   - Never          │  │   - normalize()      │               │
+│                    │  │   - contains(x, y)   │               │
+│ ┌────────────────┐ │  │   - width/height     │               │
+│ │ Platform Layer │ │  │                      │               │
+│ └────────────────┘ │  │ • start(x, y, mode)  │               ▼
+│         │          │  │ • update(x, y)       │  ┌──────────────────────────┐
+│         ▼          │  │ • clear()            │  │   Bevy Client (scarab-   │
+│  ┌──────────────┐ │  │ • has_selection()    │  │   client)                │
+│  │   arboard    │ │  └──────────────────────┘  ├──────────────────────────┤
+│  ├──────────────┤ │                             │ • Renders overlays       │
+│  │ Linux (X11)  │ │                             │ • Shows modals           │
+│  │ Linux (Way)  │ │                             │ • Displays notifications │
+│  │ macOS        │ │                             │ • Handles user input     │
+│  │ Windows      │ │                             └──────────────────────────┘
+│  └──────────────┘ │                                          │
+└────────────────────┘                                          │
+         │                                                      │
+         │ System Clipboard I/O                                │
+         │                                                      │
+         ▼                                                      ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         Operating System                                    │
+├────────────────────────────────────────────────────────────────────────────┤
+│  • X11/Wayland clipboard managers                                          │
+│  • macOS pasteboard                                                        │
+│  • Windows clipboard                                                       │
+└────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              DATA FLOW EXAMPLES                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+COPY FLOW:
+  User presses 'v' → start_selection() → DrawOverlay("-- VISUAL --")
+  User moves cursor → update_selection() → Region expands
+  User presses 'y' → extract_selection_text() → ClipboardManager.copy()
+                    → arboard → System Clipboard
+                    → notify_success("Copied N chars")
+                    → ClearOverlays → clear()
+
+PASTE FLOW:
+  User presses Ctrl+Shift+V → ClipboardManager.paste()
+                             → arboard → System Clipboard → text
+                             → requires_confirmation(text)?
+                                ├─ Yes: ShowModal("Confirm Paste")
+                                │       → User confirms → Apply bracket mode
+                                │                      → Action::Modify(bytes)
+                                └─ No:  Apply bracket mode → Action::Modify(bytes)
+
+SELECTION MODES:
+  Character (v):  ████████░░░░  (precise, char-by-char)
+                  ████░░░░░░░░
+  
+  Word (double):  [function_name]  (expand to boundaries)
+  
+  Line (V):       ████████████  (full lines, column 0 to end)
+                  ████████████
+  
+  Block (Ctrl+V): ███░░░░░░░  (rectangular, same columns)
+                  ███░░░░░░░
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                               KEY DECISIONS                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+1. Client-Side Only: No daemon dependency → Low latency
+2. arboard: Cross-platform clipboard → Unified API
+3. Vim Keybindings: Familiar to power users → Low learning curve
+4. Smart Confirmation: Only for risky pastes → Good UX balance
+5. Bracket Paste: Shell safety by default → Prevents accidents
+6. Parking Lot: Efficient locking → Better performance than std::sync
+7. Plugin API: Standard trait impl → Easy integration
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            EXTENSION POINTS                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Future enhancements can plug into:
+
+• SelectionMode: Add new modes (e.g., Semantic, Pattern)
+• ClipboardType: Add clipboard ring/history
+• RemoteCommand: Add new UI feedback mechanisms
+• Text Extraction: Add filters (strip ANSI, format as HTML)
+• Confirmation Logic: Add configurable thresholds
+• Keybindings: Add customization via config file
+

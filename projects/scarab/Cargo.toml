@@ -1,0 +1,93 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/scarab-client",
+    "crates/scarab-daemon",
+    "crates/scarab-protocol",
+    "crates/scarab-plugin-api",
+    "crates/scarab-plugin-compiler",
+    "crates/scarab-config",
+    "crates/scarab-platform",
+    "crates/scarab-nav",
+    "crates/scarab-session",
+    "crates/scarab-tabs",
+    "crates/scarab-panes",
+    "crates/scarab-clipboard",
+    "crates/scarab-mouse",
+    "crates/scarab-themes",
+]
+
+[workspace.package]
+version = "0.1.0-alpha.13"
+authors = ["Scarab Team <team@raibid-labs.com>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/raibid-labs/scarab"
+homepage = "https://github.com/raibid-labs/scarab"
+edition = "2021"
+rust-version = "1.75"
+
+[workspace.dependencies]
+# Official Fusabi dependencies (from crates.io)
+fusabi-vm = { version = "0.12.0", features = ["serde"] }
+fusabi-frontend = "0.12.0"
+bevy-fusabi = { path = "../../fusabi-lang/bevy-fusabi" }
+
+# Base Bevy configuration
+bevy = { version = "0.15", default-features = false, features = [
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_pbr",
+    "bevy_ui",
+    "bevy_render",
+    "bevy_text",
+    "bevy_sprite",
+    "multi_threaded",
+    "png",
+    "jpeg",
+    "x11",
+    "wayland",
+]}
+tokio = { version = "1.36", features = ["full"] }
+portable-pty = "0.8"
+alacritty_terminal = "0.24"
+vte = "0.13"
+rkyv = { version = "0.7", features = ["validation"] }
+bytemuck = { version = "1.14", features = ["derive"] }
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+cosmic-text = "0.11"
+shared_memory = "0.12"
+crossbeam = "0.8"
+toml = "0.8"
+
+# Profiling and benchmarking dependencies
+tracy-client = "0.17"
+puffin = "0.19"
+puffin_egui = "0.28"
+criterion = { version = "0.5", features = ["html_reports"] }
+profiling = "1.0"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+opt-level = 3
+debug = false
+strip = true
+
+[profile.release-with-debug]
+inherits = "release"
+debug = true
+strip = false
+
+[profile.bench]
+inherits = "release"
+debug = true
+
+[profile.profiling]
+inherits = "release"
+debug = true
+strip = false
+lto = false
+
+# Note: Platform-specific Bevy features should be configured in individual crate Cargo.toml files
+# Virtual workspaces cannot have target-specific dependencies

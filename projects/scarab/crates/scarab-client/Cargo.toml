@@ -1,0 +1,60 @@
+[package]
+name = "scarab-client"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Bevy-based GUI client for Scarab terminal emulator"
+
+[lib]
+name = "scarab_client"
+path = "src/lib.rs"
+
+[[bin]]
+name = "scarab-client"
+path = "src/main.rs"
+
+[dependencies]
+scarab-protocol = { path = "../scarab-protocol" }
+scarab-config = { path = "../scarab-config" }
+fusabi-frontend = { workspace = true }
+bevy = { workspace = true }
+bevy_egui = { version = "0.31", optional = true }
+serde = { workspace = true }
+serde_json = "1.0"
+cosmic-text = { workspace = true }
+anyhow = { workspace = true }
+shared_memory = { workspace = true }
+tokio = { workspace = true }
+rkyv = { workspace = true }
+crossbeam = { workspace = true }
+regex = "1.10"
+fuzzy-matcher = "0.3"
+arboard = "3.3"
+image = "0.25"
+
+# Profiling dependencies
+tracy-client = { workspace = true, optional = true }
+puffin = { workspace = true, optional = true }
+profiling = { workspace = true, optional = true }
+
+[dev-dependencies]
+criterion = { workspace = true }
+tempfile = "3.8"
+
+[features]
+default = []
+plugin-inspector = ["bevy_egui"]
+profiling = ["dep:profiling", "dep:tracy-client", "dep:puffin"]
+tracy = ["profiling", "tracy-client/default"]
+puffin-profiling = ["profiling", "puffin/default"]
+
+[[bench]]
+name = "text_rendering"
+harness = false
+
+[[bench]]
+name = "gpu_operations"
+harness = false

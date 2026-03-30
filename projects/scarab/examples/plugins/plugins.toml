@@ -1,0 +1,291 @@
+# Scarab Plugin Configuration Example
+#
+# This file demonstrates how to configure plugins for the Scarab terminal emulator.
+# Place this in ~/.config/scarab/plugins.toml or reference it from your main config.
+
+# =============================================================================
+# PLUGIN LOADING
+# =============================================================================
+
+[plugins]
+# List of plugins to load on startup
+# Can be .fsx (F# scripts) or .fzb (compiled bytecode)
+# Paths are relative to ~/.config/scarab/plugins/ or absolute
+enabled = [
+    "hello-plugin.fsx",
+    "output-filter.fsx",
+    "custom-keybind.fsx",
+    "git-status.fsx",
+    "notification-monitor.fsx",
+]
+
+# Plugins to explicitly disable (useful for troubleshooting)
+disabled = [
+    # "problematic-plugin.fsx",
+]
+
+# Plugin load order (higher priority loads first)
+# If not specified, plugins load in the order listed in 'enabled'
+[plugins.priority]
+# System plugins load first
+scarab-platform = 100
+scarab-nav = 90
+scarab-palette = 80
+
+# User plugins load after system plugins
+output-filter = 50
+git-status = 40
+notification-monitor = 30
+custom-keybind = 20
+hello-plugin = 10
+
+# =============================================================================
+# PLUGIN-SPECIFIC CONFIGURATION
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Hello Plugin (hello-plugin.fsx)
+# -----------------------------------------------------------------------------
+[plugin.hello-plugin]
+# No configuration needed for hello plugin
+
+# -----------------------------------------------------------------------------
+# Output Filter (output-filter.fsx)
+# -----------------------------------------------------------------------------
+[plugin.output-filter]
+# Enable/disable output filtering
+enabled = true
+
+# Custom patterns to detect (in addition to defaults)
+# Format: [pattern, foreground_color, background_color]
+custom_patterns = [
+    ["CRITICAL", "0xFFFFFFFF", "0xFF0000FF"],  # White on red
+    ["SUCCESS", "0xFFFFFFFF", "0x00FF00FF"],   # White on green
+]
+
+# Ignore case when matching patterns
+ignore_case = true
+
+# Maximum overlays to show at once (prevents UI clutter)
+max_overlays = 50
+
+# Auto-clear old overlays after N seconds
+auto_clear_seconds = 30
+
+# -----------------------------------------------------------------------------
+# Custom Keybind (custom-keybind.fsx)
+# -----------------------------------------------------------------------------
+[plugin.custom-keybind]
+# Enable custom keybindings
+enabled = true
+
+# Override default keybindings
+# Format: { key = "Ctrl+K", action = "command-mode" }
+keybinds = [
+    { key = "Ctrl+K", action = "command-mode", description = "Enter command mode" },
+    { key = "Ctrl+H", action = "show-help", description = "Show help" },
+    { key = "Ctrl+G", action = "show-stats", description = "Show terminal stats" },
+    { key = "Ctrl+T", action = "insert-timestamp", description = "Insert timestamp" },
+]
+
+# Timestamp format (strftime format)
+timestamp_format = "%Y-%m-%d %H:%M:%S"
+
+# Show command mode hints
+show_hints = true
+
+# Stats refresh interval (seconds)
+stats_refresh_seconds = 1.0
+
+# -----------------------------------------------------------------------------
+# Git Status (git-status.fsx)
+# -----------------------------------------------------------------------------
+[plugin.git-status]
+# Enable git status indicator
+enabled = true
+
+# Show dirty status indicator (asterisk)
+show_dirty = true
+
+# Position of status indicator
+# Options: "top-left", "top-right", "bottom-left", "bottom-right"
+position = "top-right"
+
+# Show branch name
+show_branch = true
+
+# Show ahead/behind commit count
+show_commit_count = false
+
+# Refresh interval (seconds) for auto-refresh
+auto_refresh_seconds = 5.0
+
+# Git commands that trigger status refresh
+watch_commands = ["git", "cd"]
+
+# Status indicator colors (RGBA hex)
+[plugin.git-status.colors]
+clean = "0x00AA00FF"      # Green for clean repo
+dirty = "0xFFA500FF"      # Orange for dirty repo
+detached = "0xFF0000FF"   # Red for detached HEAD
+no_repo = "0x808080FF"    # Gray for non-repo
+
+# -----------------------------------------------------------------------------
+# Notification Monitor (notification-monitor.fsx)
+# -----------------------------------------------------------------------------
+[plugin.notification-monitor]
+# Enable command duration monitoring
+enabled = true
+
+# Threshold in seconds (commands longer than this trigger notifications)
+threshold_seconds = 5.0
+
+# Show desktop notifications (requires system notification support)
+desktop_notifications = true
+
+# Show in-terminal overlays
+terminal_overlays = true
+
+# Sound notification (requires sound support)
+play_sound = false
+sound_file = "/usr/share/sounds/freedesktop/stereo/complete.oga"
+
+# Notification format
+# Available variables: {command}, {duration}, {exit_code}, {status}
+notification_format = "Command {status} after {duration}:\n{command}"
+
+# Commands to ignore (don't notify for these)
+ignore_commands = [
+    "vim",
+    "nano",
+    "less",
+    "man",
+    "ssh",
+]
+
+# Success/failure colors
+[plugin.notification-monitor.colors]
+success = "0x00AA00FF"    # Green
+failure = "0xFF0000FF"    # Red
+
+# -----------------------------------------------------------------------------
+# Scarab Palette (scarab-palette) - Core Plugin
+# -----------------------------------------------------------------------------
+[plugin.scarab-palette]
+# Trigger keybinding for command palette
+trigger_key = "Ctrl+P"
+
+# Fuzzy search in command palette
+fuzzy_search = true
+
+# Maximum items to show
+max_items = 20
+
+# Show command descriptions
+show_descriptions = true
+
+# Theme for modal
+[plugin.scarab-palette.theme]
+background = "0x2E3440FF"
+foreground = "0xECEFF4FF"
+selected = "0x5E81ACFF"
+border = "0x4C566AFF"
+
+# -----------------------------------------------------------------------------
+# Scarab Nav (scarab-nav) - Core Plugin
+# -----------------------------------------------------------------------------
+[plugin.scarab-nav]
+# Trigger key for link hints
+trigger_key = "Alt+F"
+
+# Label characters (must be unique)
+label_chars = "asdfghjkl"
+
+# URL patterns to detect
+url_patterns = [
+    "https?://[^\\s\\)]+",           # HTTP(S) URLs
+    "file://[^\\s\\)]+",             # File URLs
+    "git@[^:]+:[^\\s]+",             # Git SSH URLs
+]
+
+# Action to take when link is selected
+# Options: "copy", "open", "both"
+link_action = "open"
+
+# Browser command for opening URLs
+browser_command = "xdg-open"  # Linux
+# browser_command = "open"    # macOS
+# browser_command = "start"   # Windows
+
+# Link hint colors
+[plugin.scarab-nav.colors]
+hint_fg = "0xFFFFFFFF"
+hint_bg = "0xFF0000FF"
+url_fg = "0x88C0D0FF"
+
+# -----------------------------------------------------------------------------
+# Scarab Platform (scarab-platform) - Core Plugin
+# -----------------------------------------------------------------------------
+[plugin.scarab-platform]
+# Platform-specific configurations
+
+# IPC settings
+[plugin.scarab-platform.ipc]
+socket_path = "/tmp/scarab-daemon.sock"
+max_clients = 16
+timeout_ms = 5000
+
+# Shared memory settings
+[plugin.scarab-platform.shm]
+path = "/scarab_shm_v1"
+size_mb = 10
+
+# =============================================================================
+# GLOBAL PLUGIN SETTINGS
+# =============================================================================
+
+[plugins.global]
+# Maximum plugin execution time (milliseconds)
+# Plugins exceeding this time will be terminated
+timeout_ms = 1000
+
+# Maximum failures before auto-disabling a plugin
+max_failures = 3
+
+# Log level for plugin system
+# Options: "error", "warn", "info", "debug", "trace"
+log_level = "info"
+
+# Plugin log file
+log_file = "~/.local/share/scarab/plugins.log"
+
+# Enable hot reloading for .fsx scripts
+hot_reload = true
+
+# Scan interval for hot reload (seconds)
+hot_reload_interval = 2.0
+
+# =============================================================================
+# DEVELOPMENT SETTINGS
+# =============================================================================
+
+[plugins.dev]
+# Enable plugin development mode
+# - More verbose logging
+# - Reload on every file change
+# - Show plugin load times
+dev_mode = false
+
+# Show plugin load times
+show_load_times = false
+
+# Break on plugin errors (for debugging)
+break_on_error = false
+
+# Plugin search paths (in addition to default)
+search_paths = [
+    "~/.config/scarab/plugins",
+    "~/.local/share/scarab/plugins",
+    "/usr/share/scarab/plugins",
+    # "./plugins",  # For development
+]

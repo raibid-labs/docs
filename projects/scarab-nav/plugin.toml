@@ -1,0 +1,71 @@
+[manifest]
+# Scarab Navigation Plugin Manifest
+# Based on fusabi-plugin-runtime manifest schema
+version = "1"
+schema_version = "0.1.0"
+
+[plugin]
+name = "scarab-nav"
+display_name = "Scarab Navigation System"
+version = "0.2.0"
+description = "Keyboard-driven navigation plugin for Scarab terminal with Vimium-style link hints"
+authors = ["Scarab Team"]
+license = "MIT"
+homepage = "https://github.com/raibid-labs/scarab-nav"
+repository = "https://github.com/raibid-labs/scarab-nav"
+documentation = "https://docs.rs/scarab-nav-client"
+keywords = ["navigation", "keyboard", "tui", "terminal", "accessibility"]
+categories = ["command-line-interface", "gui", "accessibility"]
+
+[plugin.runtime]
+# Runtime requirements
+min_version = "0.1.0"
+type = "native"  # Native Rust plugin
+
+[plugin.entrypoint]
+# Main entry point for the plugin
+module = "scarab_nav_client"
+init_fn = "initialize"
+
+[capabilities]
+# Required capabilities for the plugin
+terminal.input = { level = "read-write", description = "Intercept navigation keys and inject mouse events" }
+terminal.display = { level = "overlay", description = "Render navigation hints overlay" }
+ipc.socket = { level = "server", description = "Listen for navigation updates from TUI apps" }
+system.env = { level = "read", description = "Read SCARAB_NAV_SOCKET environment variable" }
+
+[capabilities.optional]
+# Optional capabilities
+clipboard = { level = "read-write", description = "Copy element descriptions to clipboard" }
+notifications = { level = "write", description = "Show navigation mode status" }
+
+[dependencies]
+# Runtime dependencies (from fusabi-plugin-runtime)
+fusabi-plugin-runtime = "0.1.1"
+fusabi-stdlib-ext = "0.1.1"
+
+[dependencies.crates]
+# Crate dependencies for this plugin
+scarab-nav-protocol = { version = "0.2.0", path = "crates/scarab-nav-protocol" }
+scarab-nav-client = { version = "0.2.0", path = "crates/scarab-nav-client" }
+ratatui = "0.29"
+tokio = { version = "1.0", features = ["full"] }
+tracing = "0.1"
+
+[package_info]
+# Packaging information for scarab versions table
+target_platforms = ["linux", "macos"]
+binaries = []
+libraries = ["scarab-nav-protocol", "scarab-nav-client"]
+config_files = []
+
+[compatibility]
+# Compatibility with scarab versions
+scarab = ">= 0.1.0"
+terminal_protocol = "1.0"
+
+[metadata]
+# Additional metadata
+tags = ["navigation", "vim-style", "accessibility", "keyboard-nav"]
+maturity = "alpha"
+maintenance = "active"

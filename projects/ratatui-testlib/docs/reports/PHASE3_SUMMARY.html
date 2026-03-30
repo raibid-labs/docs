@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>PHASE3_SUMMARY</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="PHASE3_SUMMARY"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="PHASE3_SUMMARY"/><meta name="twitter:description" content="Phase 3 Architecture Design - Executive Summary Date: 2025-11-21 Status: Design Complete, Ready for Implementation Priority: P0 - Critical MVP Feature Estimated Duration: 2-3 weeks (15 days) Mission Accomplished Phase 3 Sixel Position Tracking architecture has been fully designed and is ready for Ru..."/><meta property="og:description" content="Phase 3 Architecture Design - Executive Summary Date: 2025-11-21 Status: Design Complete, Ready for Implementation Priority: P0 - Critical MVP Feature Estimated Duration: 2-3 weeks (15 days) Mission Accomplished Phase 3 Sixel Position Tracking architecture has been fully designed and is ready for Ru..."/><meta property="og:image:alt" content="Phase 3 Architecture Design - Executive Summary Date: 2025-11-21 Status: Design Complete, Ready for Implementation Priority: P0 - Critical MVP Feature Estimated Duration: 2-3 weeks (15 days) Mission Accomplished Phase 3 Sixel Position Tracking architecture has been fully designed and is ready for Ru..."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY"/><link rel="icon" href="../../../../static/icon.png"/><meta name="description" content="Phase 3 Architecture Design - Executive Summary Date: 2025-11-21 Status: Design Complete, Ready for Implementation Priority: P0 - Critical MVP Feature Estimated Duration: 2-3 weeks (15 days) Mission Accomplished Phase 3 Sixel Position Tracking architecture has been fully designed and is ready for Ru..."/><meta name="generator" content="Quartz"/><link href="../../../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/ratatui-testlib/docs/reports/PHASE3_SUMMARY"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-255"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-255" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/ratatui-testlib/">ratatui testlib</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/ratatui-testlib/docs/">docs</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../../projects/ratatui-testlib/docs/reports/">reports</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>PHASE3_SUMMARY</a></div></nav><h1 class="article-title">PHASE3_SUMMARY</h1><p show-comma="true" class="content-meta"><time datetime="2026-03-30T04:42:03.049Z">Mar 30, 2026</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="phase-3-architecture-design---executive-summary">Phase 3 Architecture Design - Executive Summary<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-architecture-design---executive-summary" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p><strong>Date</strong>: 2025-11-21
+<strong>Status</strong>: Design Complete, Ready for Implementation
+<strong>Priority</strong>: P0 - Critical MVP Feature
+<strong>Estimated Duration</strong>: 2-3 weeks (15 days)</p>
+<hr/>
+<h2 id="mission-accomplished">Mission Accomplished<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mission-accomplished" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Phase 3 Sixel Position Tracking architecture has been fully designed and is ready for Rust implementation agents.</p>
+<hr/>
+<h2 id="deliverables-created">Deliverables Created<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#deliverables-created" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-phase3_checklistmd---comprehensive-implementation-guide">1. <strong>PHASE3_CHECKLIST.md</strong> - Comprehensive Implementation Guide<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-phase3_checklistmd---comprehensive-implementation-guide" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/ratatui-testlib/PHASE3_CHECKLIST.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>7 major implementation sections</li>
+<li>50+ task breakdowns with code examples</li>
+<li>3-week timeline with daily breakdown</li>
+<li>Week 1: Parsing &amp; conversion</li>
+<li>Week 2: Validation APIs &amp; fixtures</li>
+<li>Week 3: Documentation &amp; polish</li>
+</ul>
+<p><strong>Key Sections</strong>:</p>
+<ol>
+<li>Sixel Raster Attribute Parsing (enhance existing stub)</li>
+<li>Pixel-to-Cell Conversion (new functionality)</li>
+<li>Validation API Implementation (harness methods)</li>
+<li>Test Data and Fixtures (real Sixel sequences)</li>
+<li>dgx-pixels Integration Validation (E2E scenarios)</li>
+<li>Documentation &amp; Polish (rustdoc, guides, examples)</li>
+<li>Testing &amp; CI Integration (50+ tests)</li>
+</ol>
+<h3 id="2-sixel_parsing_strategymd---algorithm-design">2. <strong>SIXEL_PARSING_STRATEGY.md</strong> - Algorithm Design<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-sixel_parsing_strategymd---algorithm-design" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/ratatui-testlib/docs/SIXEL_PARSING_STRATEGY.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Complete Sixel escape sequence format documentation</li>
+<li>Raster attribute parsing algorithm (Pa;Pad;Ph;Pv)</li>
+<li>Fallback dimension estimation strategy</li>
+<li>Pixel-to-cell conversion formulas (6 px/row, 8 px/col)</li>
+<li>Bounds checking mathematics</li>
+<li>Error handling strategy</li>
+<li>Test data generation approach</li>
+</ul>
+<p><strong>Key Algorithms</strong>:</p>
+<ul>
+<li>Parse: Extract width/height from “1;1;100;50” → (100px, 50px)</li>
+<li>Convert: (100px, 60px) → (13 cols, 10 rows) with ceiling rounding</li>
+<li>Validate: Clamp dimensions to (1, 10000) range</li>
+<li>Bounds: Check if (start + size) ≤ (area + area_size)</li>
+</ul>
+<h3 id="3-phase3_validation_apimd---api-specification">3. <strong>PHASE3_VALIDATION_API.md</strong> - API Specification<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-phase3_validation_apimd---api-specification" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/ratatui-testlib/docs/PHASE3_VALIDATION_API.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Complete API surface for Sixel validation</li>
+<li>4 new harness methods (assert_sixel_within_bounds, get_sixel_at, etc.)</li>
+<li>5 new SixelCapture methods (sequences_overlapping, bounding_box, etc.)</li>
+<li>Updated SixelRegion with cell dimensions</li>
+<li>Usage patterns for dgx-pixels scenarios</li>
+<li>Error message formats</li>
+<li>Wait condition helpers</li>
+</ul>
+<p><strong>Key APIs</strong>:</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="rust" data-theme="github-light one-dark-pro"><code data-language="rust" data-theme="github-light one-dark-pro" style="display:grid;"><span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// Harness methods</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">harness</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">assert_sixel_within_bounds</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">area</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">harness</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">get_sixel_at</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">row</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">, </span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">col</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">)</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">?</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">;</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">harness</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sixel_count</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">harness</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">verify_sixel_cleared</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">&amp;</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">previous</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line> </span>
+<span data-line><span style="--shiki-light:#6A737D;--shiki-light-font-style:inherit;--shiki-dark:#7F848E;--shiki-dark-font-style:italic;">// SixelCapture methods</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">capture</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">sequences_overlapping</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(</span><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">area</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">);</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">capture</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">bounding_box</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span>
+<span data-line><span style="--shiki-light:#24292E;--shiki-dark:#E06C75;">capture</span><span style="--shiki-light:#D73A49;--shiki-dark:#ABB2BF;">.</span><span style="--shiki-light:#6F42C1;--shiki-dark:#61AFEF;">total_coverage</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">();</span></span></code></pre></figure>
+<h3 id="4-phase3_test_strategymd---comprehensive-testing-plan">4. <strong>PHASE3_TEST_STRATEGY.md</strong> - Comprehensive Testing Plan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-phase3_test_strategymd---comprehensive-testing-plan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/ratatui-testlib/docs/PHASE3_TEST_STRATEGY.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Test pyramid: 30 unit + 15 integration + 5 E2E tests</li>
+<li>Unit test cases for all parsing edge cases</li>
+<li>Integration test scenarios with real Sixel sequences</li>
+<li>dgx-pixels E2E validation scenarios</li>
+<li>Test fixture specifications (5 Sixel files)</li>
+<li>CI/CD integration strategy</li>
+<li>Coverage goals (>70% for Phase 3 code)</li>
+<li>Performance benchmarks (&lt; 10µs per validation)</li>
+</ul>
+<p><strong>Test Coverage</strong>:</p>
+<ul>
+<li>Parsing: 10 unit tests (valid, missing, malformed, etc.)</li>
+<li>Conversion: 7 unit tests (rounding, edge cases)</li>
+<li>Bounds: 8 unit tests (within, outside, overlapping)</li>
+<li>Integration: 15 tests (detection, position, validation)</li>
+<li>E2E: 5 dgx-pixels scenarios (Gallery, transitions, thumbnails)</li>
+</ul>
+<h3 id="5-roadmap_phase3_updatemd---roadmap-changes">5. <strong>ROADMAP_PHASE3_UPDATE.md</strong> - ROADMAP Changes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-roadmap_phase3_updatemd---roadmap-changes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Location</strong>: <code>/home/beengud/raibid-labs/ratatui-testlib/docs/ROADMAP_PHASE3_UPDATE.md</code></p>
+<p><strong>Contents</strong>:</p>
+<ul>
+<li>Phase 2 status update (85% complete)</li>
+<li>Phase 3 detailed section replacement</li>
+<li>Timeline updates</li>
+<li>Architecture document cross-references</li>
+</ul>
+<hr/>
+<h2 id="current-state-analysis">Current State Analysis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#current-state-analysis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="whats-already-working-">What’s Already Working ✅<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#whats-already-working-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Phase 1 Infrastructure (100% Complete)</strong>:</p>
+<ul>
+<li>✅ vtparse integration with DCS callbacks</li>
+<li>✅ VTActor implementation (dcs_hook, dcs_put, dcs_unhook)</li>
+<li>✅ Sixel detection (mode == ‘q’)</li>
+<li>✅ Cursor position tracking</li>
+<li>✅ SixelRegion struct with basic fields</li>
+<li>✅ sixel_regions() accessor in ScreenState</li>
+<li>✅ SixelSequence and SixelCapture types</li>
+<li>✅ Basic unit and integration tests</li>
+</ul>
+<p><strong>Phase 2 Progress (85% Complete)</strong>:</p>
+<ul>
+<li>✅ KeyCode enum and Modifiers bitflags</li>
+<li>✅ Escape sequence generation</li>
+<li>✅ send_key() and send_keys() methods</li>
+<li>✅ Enhanced wait conditions</li>
+<li>🔶 Async support pending (doesn’t block Phase 3)</li>
+</ul>
+<h3 id="what-needs-implementation-">What Needs Implementation 🔶<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#what-needs-implementation-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Parsing Enhancement</strong>:</p>
+<ul>
+<li>🔶 Enhance parse_raster_attributes() (stub exists at src/screen.rs:120-144)
+<ul>
+<li>Add fallback defaults</li>
+<li>Validate dimensions</li>
+<li>Handle malformed sequences</li>
+<li>2-3 hours estimated</li>
+</ul>
+</li>
+</ul>
+<p><strong>Position Tracking</strong>:</p>
+<ul>
+<li>🔶 Add pixel-to-cell conversion
+<ul>
+<li>Implement pixels_to_cells() helper</li>
+<li>Update SixelRegion with width_cells, height_cells</li>
+<li>2-3 hours estimated</li>
+</ul>
+</li>
+</ul>
+<p><strong>Validation APIs</strong>:</p>
+<ul>
+<li>🔶 Add harness methods (4 methods, 4-5 hours)</li>
+<li>🔶 Enhance SixelCapture (5 methods, 2-3 hours)</li>
+<li>🔶 Add bounds checking to SixelRegion (3-4 hours)</li>
+</ul>
+<p><strong>Testing</strong>:</p>
+<ul>
+<li>🔶 Create test fixtures (5 Sixel files, 3-4 hours)</li>
+<li>🔶 Write unit tests (30 tests, 6-8 hours)</li>
+<li>🔶 Write integration tests (15 tests, 5-6 hours)</li>
+<li>🔶 Write E2E tests (5 tests, 4-5 hours)</li>
+</ul>
+<p><strong>Documentation</strong>:</p>
+<ul>
+<li>🔶 Complete rustdoc (3-4 hours)</li>
+<li>🔶 Write user guide (4-5 hours)</li>
+<li>🔶 Update examples (3-4 hours)</li>
+</ul>
+<hr/>
+<h2 id="dependencies--blockers">Dependencies &amp; Blockers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dependencies--blockers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="internal-dependencies">Internal Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#internal-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Phase 1 (All Complete)</strong> ✅:</p>
+<ul>
+<li>✅ ScreenState with vtparse</li>
+<li>✅ DCS callback infrastructure</li>
+<li>✅ Cursor position tracking</li>
+<li>✅ TuiTestHarness</li>
+<li>✅ Basic Sixel types</li>
+</ul>
+<p><strong>Phase 2 (Mostly Complete)</strong> 🔶:</p>
+<ul>
+<li>✅ Event simulation (send_key) - Phase 3 can use this</li>
+<li>✅ Wait conditions - Phase 3 needs this</li>
+<li>🔶 Async support - NOT required for Phase 3 (independent)</li>
+</ul>
+<p><strong>Status</strong>: Phase 3 can start immediately without waiting for Phase 2 async</p>
+<h3 id="external-dependencies">External Dependencies<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#external-dependencies" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>All Present</strong> ✅:</p>
+<ul>
+<li>✅ vtparse = “0.7” (already integrated)</li>
+<li>✅ portable-pty = “0.8” (already integrated)</li>
+<li>✅ No new crate dependencies needed</li>
+</ul>
+<h3 id="identified-blockers">Identified Blockers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#identified-blockers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>NONE</strong> ✅</p>
+<p>All blockers have been resolved:</p>
+<ul>
+<li>✅ Sixel support validated (vtparse DCS)</li>
+<li>✅ Cursor tracking implemented</li>
+<li>✅ Types defined (SixelRegion, SixelCapture)</li>
+<li>✅ Test infrastructure ready</li>
+<li>✅ Architecture fully designed</li>
+</ul>
+<h3 id="risk-assessment">Risk Assessment<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#risk-assessment" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Overall Risk</strong>: ✅ <strong>LOW</strong></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>Risk</th><th>Probability</th><th>Impact</th><th>Mitigation</th></tr></thead><tbody><tr><td>Raster attribute parsing edge cases</td><td>Medium</td><td>Medium</td><td>Comprehensive test suite, graceful fallbacks</td></tr><tr><td>Terminal-specific pixel ratios</td><td>Low</td><td>Medium</td><td>Configurable conversion, document defaults</td></tr><tr><td>Test fixture generation</td><td>Low</td><td>Low</td><td>Simple solid colors, document format</td></tr><tr><td>Performance concerns</td><td>Low</td><td>Low</td><td>Benchmarks, optimize if needed</td></tr></tbody></table></div>
+<p><strong>All risks have mitigation strategies in place.</strong></p>
+<hr/>
+<h2 id="implementation-path">Implementation Path<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-path" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="week-1-core-parsing--tracking-days-1-5">Week 1: Core Parsing &amp; Tracking (Days 1-5)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-1-core-parsing--tracking-days-1-5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Monday-Tuesday</strong>: Raster attribute parsing</p>
+<ul>
+<li>Enhance parse_raster_attributes()</li>
+<li>Add fallback defaults</li>
+<li>Validate dimensions</li>
+<li>Write 10 unit tests</li>
+</ul>
+<p><strong>Wednesday</strong>: Pixel-to-cell conversion</p>
+<ul>
+<li>Implement pixels_to_cells()</li>
+<li>Add configuration</li>
+<li>Write 7 unit tests</li>
+</ul>
+<p><strong>Thursday-Friday</strong>: Bounds checking</p>
+<ul>
+<li>Add is_within_cells(), overlaps_cells()</li>
+<li>Update SixelRegion structure</li>
+<li>Write 8 unit tests</li>
+</ul>
+<p><strong>Milestone</strong>: Parsing and tracking foundation complete</p>
+<h3 id="week-2-apis--testing-days-6-10">Week 2: APIs &amp; Testing (Days 6-10)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-2-apis--testing-days-6-10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Monday-Tuesday</strong>: Validation APIs</p>
+<ul>
+<li>Implement 4 harness methods</li>
+<li>Implement 5 SixelCapture methods</li>
+<li>Write integration tests</li>
+</ul>
+<p><strong>Wednesday</strong>: Test fixtures</p>
+<ul>
+<li>Create 5 Sixel test files</li>
+<li>Implement fixture helpers</li>
+<li>Document usage</li>
+</ul>
+<p><strong>Thursday-Friday</strong>: Integration tests</p>
+<ul>
+<li>Expand sixel.rs tests (15 tests)</li>
+<li>Test with real sequences</li>
+<li>Verify all APIs</li>
+</ul>
+<p><strong>Milestone</strong>: All APIs implemented and tested</p>
+<h3 id="week-3-dgx-pixels--polish-days-11-15">Week 3: dgx-pixels &amp; Polish (Days 11-15)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#week-3-dgx-pixels--polish-days-11-15" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Monday-Tuesday</strong>: dgx-pixels validation</p>
+<ul>
+<li>Create dgx_pixels_scenarios.rs</li>
+<li>Implement 5 E2E tests</li>
+<li>Verify requirements met</li>
+</ul>
+<p><strong>Wednesday-Thursday</strong>: Documentation</p>
+<ul>
+<li>Complete rustdoc (100%)</li>
+<li>Write SIXEL_TESTING.md guide</li>
+<li>Update examples</li>
+</ul>
+<p><strong>Friday</strong>: CI &amp; polish</p>
+<ul>
+<li>Integrate with CI pipeline</li>
+<li>Run quality checks</li>
+<li>Performance benchmarks</li>
+<li>Final bug fixes</li>
+</ul>
+<p><strong>Milestone</strong>: Phase 3 complete and shipped</p>
+<hr/>
+<h2 id="success-metrics">Success Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical-metrics">Technical Metrics<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-metrics" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Code Quality</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> All unit tests pass (>30 tests)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All integration tests pass (>15 tests)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All E2E tests pass (>5 dgx-pixels scenarios)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Code coverage >70% for Phase 3 code</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All clippy warnings resolved</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance &lt; 10µs per validation</li>
+</ul>
+<p><strong>Documentation</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> 100% API rustdoc coverage</li>
+<li class="task-list-item"><input type="checkbox" disabled/> User guide complete (SIXEL_TESTING.md)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> All examples working</li>
+<li class="task-list-item"><input type="checkbox" disabled/> dgx-pixels patterns documented</li>
+</ul>
+<p><strong>Integration</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> CI pipeline green</li>
+<li class="task-list-item"><input type="checkbox" disabled/> No flaky tests</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Benchmarks meet targets</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Examples in README</li>
+</ul>
+<h3 id="mvp-requirements">MVP Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mvp-requirements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>dgx-pixels Testing Capabilities</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Can detect Sixel graphics in terminal output</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can verify Sixel position (row, col)</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can verify Sixel within preview area bounds</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can detect Sixel overflow outside bounds</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can detect Sixel clearing on screen transitions</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can test Gallery preview area</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can test multiple thumbnail images</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Can prevent real Sixel positioning bugs</li>
+</ul>
+<p><strong>Developer Experience</strong>:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> APIs are intuitive and ergonomic</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Error messages are actionable</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Examples cover common patterns</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Documentation is clear and helpful</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Tests are fast and reliable</li>
+</ul>
+<hr/>
+<h2 id="next-actions">Next Actions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-actions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="for-studio-producer">For Studio Producer<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#for-studio-producer" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Review this summary</strong> - Validate architecture completeness</li>
+<li><strong>Approve implementation</strong> - Confirm ready for Rust agents</li>
+<li><strong>Assign implementation agents</strong> - Match tasks to specialists</li>
+<li><strong>Set up coordination</strong> - Establish checkpoints and reviews</li>
+</ol>
+<h3 id="for-implementation-agents">For Implementation Agents<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#for-implementation-agents" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>Read PHASE3_CHECKLIST.md</strong> - Your detailed implementation guide</li>
+<li><strong>Review architecture docs</strong> - Understand parsing, APIs, testing</li>
+<li><strong>Start with Week 1 tasks</strong> - Parsing and conversion foundation</li>
+<li><strong>Follow test-driven approach</strong> - Write tests, then implementation</li>
+<li><strong>Track progress</strong> - Update checklist as tasks complete</li>
+</ol>
+<h3 id="immediate-first-steps">Immediate First Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#immediate-first-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Day 1 Morning</strong>: Begin parsing enhancement</p>
+<ul>
+<li>File: <code>src/screen.rs</code></li>
+<li>Method: <code>parse_raster_attributes()</code> (lines 120-144)</li>
+<li>Goal: Add fallback defaults and validation</li>
+<li>Tests: Create test file with 10 parsing tests</li>
+<li>Duration: 3-4 hours</li>
+</ul>
+<p><strong>Day 1 Afternoon</strong>: Pixel-to-cell conversion</p>
+<ul>
+<li>File: <code>src/screen.rs</code> (new helper methods)</li>
+<li>Goal: Implement <code>pixels_to_cells()</code> with configuration</li>
+<li>Tests: 7 conversion unit tests</li>
+<li>Duration: 2-3 hours</li>
+</ul>
+<p><strong>Day 2</strong>: Bounds checking and region updates</p>
+<ul>
+<li>Files: <code>src/screen.rs</code>, <code>src/sixel.rs</code></li>
+<li>Goal: Add cell dimensions and bounds methods</li>
+<li>Tests: 8 bounds checking tests</li>
+<li>Duration: 3-4 hours</li>
+</ul>
+<hr/>
+<h2 id="key-design-decisions">Key Design Decisions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-design-decisions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-graceful-degradation">1. Graceful Degradation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-graceful-degradation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Use fallback defaults (100x100) for missing raster attributes
+<strong>Rationale</strong>: Some Sixel sequences may not include dimensions, tests should still work
+<strong>Impact</strong>: More robust parsing, better error handling</p>
+<h3 id="2-cell-based-validation">2. Cell-Based Validation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-cell-based-validation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Validate using terminal cells, not pixels
+<strong>Rationale</strong>: Terminal layout is in cells, more intuitive for developers
+<strong>Impact</strong>: Need pixel-to-cell conversion, but clearer API</p>
+<h3 id="3-ceiling-rounding">3. Ceiling Rounding<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-ceiling-rounding" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Round up when converting pixels to cells
+<strong>Rationale</strong>: Ensures full graphic is accounted for in bounds checking
+<strong>Impact</strong>: Conservative bounds checking, won’t miss overflows</p>
+<h3 id="4-comprehensive-test-coverage">4. Comprehensive Test Coverage<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-comprehensive-test-coverage" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: 50+ tests across unit/integration/E2E levels
+<strong>Rationale</strong>: Sixel parsing has many edge cases, MVP feature must be reliable
+<strong>Impact</strong>: Higher initial effort, but robust implementation</p>
+<h3 id="5-real-test-fixtures">5. Real Test Fixtures<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-real-test-fixtures" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Generate actual Sixel files for testing
+<strong>Rationale</strong>: Validates full pipeline with real data
+<strong>Impact</strong>: More realistic tests, catches parsing issues</p>
+<hr/>
+<h2 id="coordination-notes">Coordination Notes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#coordination-notes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="parallel-work-opportunities">Parallel Work Opportunities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#parallel-work-opportunities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Can work in parallel</strong>:</p>
+<ul>
+<li>Parsing enhancement (src/screen.rs)</li>
+<li>Validation APIs (src/harness.rs, src/sixel.rs)</li>
+<li>Test fixtures (tests/fixtures/sixel/)</li>
+<li>Documentation (docs/, examples/)</li>
+</ul>
+<p><strong>Must be sequential</strong>:</p>
+<ol>
+<li>Parsing → Conversion → Validation APIs</li>
+<li>Fixtures → Integration tests → E2E tests</li>
+<li>Implementation → Documentation</li>
+</ol>
+<h3 id="handoff-points">Handoff Points<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#handoff-points" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Week 1 → Week 2</strong>: Parsing foundation complete</p>
+<ul>
+<li>Deliverable: Working parse_raster_attributes() and pixels_to_cells()</li>
+<li>Validation: 25 unit tests passing</li>
+<li>Enables: API implementation</li>
+</ul>
+<p><strong>Week 2 → Week 3</strong>: APIs and fixtures ready</p>
+<ul>
+<li>Deliverable: All validation APIs implemented</li>
+<li>Validation: 40 tests passing</li>
+<li>Enables: dgx-pixels scenarios</li>
+</ul>
+<p><strong>Week 3 → Phase 4</strong>: Phase 3 complete</p>
+<ul>
+<li>Deliverable: All tests passing, docs complete</li>
+<li>Validation: 50+ tests, >70% coverage, CI green</li>
+<li>Enables: Bevy ECS integration</li>
+</ul>
+<hr/>
+<h2 id="resources-for-implementation">Resources for Implementation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resources-for-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="documentation-references">Documentation References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Architecture Documents</strong>:</p>
+<ul>
+<li>/home/beengud/raibid-labs/ratatui-testlib/PHASE3_CHECKLIST.md</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/docs/SIXEL_PARSING_STRATEGY.md</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/docs/PHASE3_VALIDATION_API.md</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/docs/PHASE3_TEST_STRATEGY.md</li>
+</ul>
+<p><strong>Existing Code</strong>:</p>
+<ul>
+<li>/home/beengud/raibid-labs/ratatui-testlib/src/sixel.rs (SixelSequence, SixelCapture)</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/src/screen.rs (ScreenState, SixelRegion, parse stub)</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/examples/sixel_test.rs (usage example)</li>
+<li>/home/beengud/raibid-labs/ratatui-testlib/tests/integration/sixel.rs (basic tests)</li>
+</ul>
+<p><strong>External References</strong>:</p>
+<ul>
+<li>DEC Sixel Specification: <a href="https://www.vt100.net/docs/vt3xx-gp/chapter14.html" class="external">https://www.vt100.net/docs/vt3xx-gp/chapter14.html<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>vtparse documentation: <a href="https://docs.rs/vtparse/" class="external">https://docs.rs/vtparse/<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li>libsixel: <a href="https://github.com/saitoha/libsixel" class="external">https://github.com/saitoha/libsixel<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h3 id="code-locations">Code Locations<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#code-locations" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Files to Modify</strong>:</p>
+<ul>
+<li>src/screen.rs - Enhance parsing, add conversion</li>
+<li>src/harness.rs - Add validation methods</li>
+<li>src/sixel.rs - Add query methods to SixelCapture</li>
+<li>src/error.rs - Ensure SixelValidation error exists</li>
+</ul>
+<p><strong>Files to Create</strong>:</p>
+<ul>
+<li>tests/fixtures/sixel/README.md</li>
+<li>tests/fixtures/sixel/*.sixel (5 files)</li>
+<li>tests/helpers/sixel_fixtures.rs</li>
+<li>tests/integration/dgx_pixels_scenarios.rs</li>
+<li>docs/SIXEL_TESTING.md</li>
+<li>examples/dgx_pixels_preview.rs</li>
+<li>benches/sixel_benchmarks.rs</li>
+</ul>
+<hr/>
+<h2 id="final-checklist">Final Checklist<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#final-checklist" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="architecture-design-">Architecture Design ✅<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#architecture-design-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> Implementation checklist created (PHASE3_CHECKLIST.md)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Parsing strategy documented (SIXEL_PARSING_STRATEGY.md)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> API specification complete (PHASE3_VALIDATION_API.md)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Test strategy designed (PHASE3_TEST_STRATEGY.md)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> ROADMAP updated (ROADMAP_PHASE3_UPDATE.md)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Dependencies identified (this document)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Blockers resolved (NONE)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Timeline estimated (2-3 weeks)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Risk assessment complete (LOW risk)</li>
+</ul>
+<h3 id="ready-for-implementation-">Ready for Implementation ✅<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ready-for-implementation-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> All Phase 1 dependencies met</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Phase 2 dependencies met (async not needed)</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> No external blockers</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Infrastructure in place</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Design decisions made</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Implementation path clear</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Test strategy defined</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Success metrics established</li>
+</ul>
+<h3 id="coordination-ready-">Coordination Ready ✅<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#coordination-ready-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked disabled/> Task breakdown complete</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Work packages defined</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Parallel work identified</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Handoff points clear</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Resources documented</li>
+<li class="task-list-item"><input type="checkbox" checked disabled/> Code locations specified</li>
+</ul>
+<hr/>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Phase 3 Sixel Position Tracking is <strong>fully designed and ready for implementation</strong>.</p>
+<p><strong>Status</strong>: 🎯 Ready to Start
+<strong>Risk</strong>: ✅ Low
+<strong>Blockers</strong>: None
+<strong>Dependencies</strong>: All met
+<strong>Timeline</strong>: 2-3 weeks (15 days)
+<strong>Estimated Effort</strong>: 60-80 hours total</p>
+<p>The architecture provides:</p>
+<ul>
+<li>Complete implementation guide (PHASE3_CHECKLIST.md)</li>
+<li>Detailed algorithms (SIXEL_PARSING_STRATEGY.md)</li>
+<li>Full API specification (PHASE3_VALIDATION_API.md)</li>
+<li>Comprehensive test plan (PHASE3_TEST_STRATEGY.md)</li>
+<li>Clear success metrics</li>
+<li>Week-by-week timeline</li>
+</ul>
+<p><strong>Recommendation</strong>: Begin implementation immediately.</p>
+<hr/>
+<p><strong>Document Version</strong>: 1.0
+<strong>Date</strong>: 2025-11-21
+<strong>Prepared by</strong>: Studio Producer Coordinator
+<strong>Status</strong>: Final - Ready for Handoff</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-89" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#phase-3-architecture-design---executive-summary" data-for="phase-3-architecture-design---executive-summary">Phase 3 Architecture Design - Executive Summary</a></li><li class="depth-1"><a href="#mission-accomplished" data-for="mission-accomplished">Mission Accomplished</a></li><li class="depth-1"><a href="#deliverables-created" data-for="deliverables-created">Deliverables Created</a></li><li class="depth-2"><a href="#1-phase3_checklistmd---comprehensive-implementation-guide" data-for="1-phase3_checklistmd---comprehensive-implementation-guide">1. PHASE3_CHECKLIST.md - Comprehensive Implementation Guide</a></li><li class="depth-2"><a href="#2-sixel_parsing_strategymd---algorithm-design" data-for="2-sixel_parsing_strategymd---algorithm-design">2. SIXEL_PARSING_STRATEGY.md - Algorithm Design</a></li><li class="depth-2"><a href="#3-phase3_validation_apimd---api-specification" data-for="3-phase3_validation_apimd---api-specification">3. PHASE3_VALIDATION_API.md - API Specification</a></li><li class="depth-2"><a href="#4-phase3_test_strategymd---comprehensive-testing-plan" data-for="4-phase3_test_strategymd---comprehensive-testing-plan">4. PHASE3_TEST_STRATEGY.md - Comprehensive Testing Plan</a></li><li class="depth-2"><a href="#5-roadmap_phase3_updatemd---roadmap-changes" data-for="5-roadmap_phase3_updatemd---roadmap-changes">5. ROADMAP_PHASE3_UPDATE.md - ROADMAP Changes</a></li><li class="depth-1"><a href="#current-state-analysis" data-for="current-state-analysis">Current State Analysis</a></li><li class="depth-2"><a href="#whats-already-working-" data-for="whats-already-working-">What’s Already Working ✅</a></li><li class="depth-2"><a href="#what-needs-implementation-" data-for="what-needs-implementation-">What Needs Implementation 🔶</a></li><li class="depth-1"><a href="#dependencies--blockers" data-for="dependencies--blockers">Dependencies &amp; Blockers</a></li><li class="depth-2"><a href="#internal-dependencies" data-for="internal-dependencies">Internal Dependencies</a></li><li class="depth-2"><a href="#external-dependencies" data-for="external-dependencies">External Dependencies</a></li><li class="depth-2"><a href="#identified-blockers" data-for="identified-blockers">Identified Blockers</a></li><li class="depth-2"><a href="#risk-assessment" data-for="risk-assessment">Risk Assessment</a></li><li class="depth-1"><a href="#implementation-path" data-for="implementation-path">Implementation Path</a></li><li class="depth-2"><a href="#week-1-core-parsing--tracking-days-1-5" data-for="week-1-core-parsing--tracking-days-1-5">Week 1: Core Parsing &amp; Tracking (Days 1-5)</a></li><li class="depth-2"><a href="#week-2-apis--testing-days-6-10" data-for="week-2-apis--testing-days-6-10">Week 2: APIs &amp; Testing (Days 6-10)</a></li><li class="depth-2"><a href="#week-3-dgx-pixels--polish-days-11-15" data-for="week-3-dgx-pixels--polish-days-11-15">Week 3: dgx-pixels &amp; Polish (Days 11-15)</a></li><li class="depth-1"><a href="#success-metrics" data-for="success-metrics">Success Metrics</a></li><li class="depth-2"><a href="#technical-metrics" data-for="technical-metrics">Technical Metrics</a></li><li class="depth-2"><a href="#mvp-requirements" data-for="mvp-requirements">MVP Requirements</a></li><li class="depth-1"><a href="#next-actions" data-for="next-actions">Next Actions</a></li><li class="depth-2"><a href="#for-studio-producer" data-for="for-studio-producer">For Studio Producer</a></li><li class="depth-2"><a href="#for-implementation-agents" data-for="for-implementation-agents">For Implementation Agents</a></li><li class="depth-2"><a href="#immediate-first-steps" data-for="immediate-first-steps">Immediate First Steps</a></li><li class="depth-1"><a href="#key-design-decisions" data-for="key-design-decisions">Key Design Decisions</a></li><li class="depth-2"><a href="#1-graceful-degradation" data-for="1-graceful-degradation">1. Graceful Degradation</a></li><li class="depth-2"><a href="#2-cell-based-validation" data-for="2-cell-based-validation">2. Cell-Based Validation</a></li><li class="depth-2"><a href="#3-ceiling-rounding" data-for="3-ceiling-rounding">3. Ceiling Rounding</a></li><li class="depth-2"><a href="#4-comprehensive-test-coverage" data-for="4-comprehensive-test-coverage">4. Comprehensive Test Coverage</a></li><li class="depth-2"><a href="#5-real-test-fixtures" data-for="5-real-test-fixtures">5. Real Test Fixtures</a></li><li class="depth-1"><a href="#coordination-notes" data-for="coordination-notes">Coordination Notes</a></li><li class="depth-2"><a href="#parallel-work-opportunities" data-for="parallel-work-opportunities">Parallel Work Opportunities</a></li><li class="depth-2"><a href="#handoff-points" data-for="handoff-points">Handoff Points</a></li><li class="depth-1"><a href="#resources-for-implementation" data-for="resources-for-implementation">Resources for Implementation</a></li><li class="depth-2"><a href="#documentation-references" data-for="documentation-references">Documentation References</a></li><li class="depth-2"><a href="#code-locations" data-for="code-locations">Code Locations</a></li><li class="depth-1"><a href="#final-checklist" data-for="final-checklist">Final Checklist</a></li><li class="depth-2"><a href="#architecture-design-" data-for="architecture-design-">Architecture Design ✅</a></li><li class="depth-2"><a href="#ready-for-implementation-" data-for="ready-for-implementation-">Ready for Implementation ✅</a></li><li class="depth-2"><a href="#coordination-ready-" data-for="coordination-ready-">Coordination Ready ✅</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../../../postscript.js" type="module"></script></html>

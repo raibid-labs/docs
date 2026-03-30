@@ -1,0 +1,74 @@
+[package]
+name = "scarab-daemon"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Headless daemon server for Scarab terminal emulator"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "scarab-daemon"
+path = "src/main.rs"
+
+[dependencies]
+scarab-protocol = { path = "../scarab-protocol" }
+scarab-plugin-api = { path = "../scarab-plugin-api" }
+scarab-config = { path = "../scarab-config" }
+scarab-nav = { path = "../scarab-nav" }
+scarab-palette = { path = "../scarab-palette" }
+scarab-session = { path = "../scarab-session" }
+fusabi-vm = { workspace = true }
+fusabi-frontend = { workspace = true }
+tokio = { workspace = true }
+portable-pty = { workspace = true }
+vte = { workspace = true }
+anyhow = { workspace = true }
+shared_memory = { workspace = true }
+crossbeam = { workspace = true }
+rkyv = { workspace = true }
+parking_lot = "0.12"
+log = "0.4"
+env_logger = "0.11"
+async-trait = "0.1"
+rusqlite = { version = "0.31", features = ["bundled"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.6", features = ["v4", "serde"] }
+lru = "0.12"
+
+# Profiling dependencies
+tracy-client = { workspace = true, optional = true }
+puffin = { workspace = true, optional = true }
+profiling = { workspace = true, optional = true }
+
+[dev-dependencies]
+tempfile = "3.8"
+criterion = { workspace = true }
+proptest = "1.4"
+
+[features]
+default = []
+profiling = ["dep:profiling", "dep:tracy-client", "dep:puffin"]
+tracy = ["profiling", "tracy-client/default"]
+puffin-profiling = ["profiling", "puffin/default"]
+
+[[bench]]
+name = "vte_parsing"
+harness = false
+
+[[bench]]
+name = "ipc_throughput"
+harness = false
+
+[[bench]]
+name = "shared_memory"
+harness = false
+
+[[bench]]
+name = "plugin_benchmarks"
+harness = false

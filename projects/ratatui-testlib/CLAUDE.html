@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"><head><title>CLAUDE</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Raibid Labs Documentation"/><meta property="og:title" content="CLAUDE"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="CLAUDE"/><meta name="twitter:description" content="CLAUDE.md - AI Collaboration Log Project Overview ratatui-testlib is a Rust library for integration testing of terminal user interface (TUI) applications, particularly those built with Ratatui."/><meta property="og:description" content="CLAUDE.md - AI Collaboration Log Project Overview ratatui-testlib is a Rust library for integration testing of terminal user interface (TUI) applications, particularly those built with Ratatui."/><meta property="og:image:alt" content="CLAUDE.md - AI Collaboration Log Project Overview ratatui-testlib is a Rust library for integration testing of terminal user interface (TUI) applications, particularly those built with Ratatui."/><meta property="twitter:domain" content="raibid-labs.github.io/docs"/><meta property="og:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/CLAUDE"/><meta property="twitter:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/CLAUDE"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="CLAUDE.md - AI Collaboration Log Project Overview ratatui-testlib is a Rust library for integration testing of terminal user interface (TUI) applications, particularly those built with Ratatui."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" spa-preserve/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  padding: 2rem;
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL2hvbWUvcnVubmVyL3dvcmsvZG9jcy9kb2NzL3F1YXJ0ei9jb21wb25lbnRzL3N0eWxlcyIsInNvdXJjZXMiOlsibWVybWFpZC5pbmxpbmUuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTs7QUFHRjtFQUNFO0VBQ0E7O0FBR0Y7RUFDRTs7O0FBS0Y7RUFDRTtFQUNBOzs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTs7QUFHRjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwYWRkaW5nOiAycmVtO1xuICAgICAgcG9zaXRpb246IHJlbGF0aXZlO1xuICAgICAgdHJhbnNmb3JtLW9yaWdpbjogMCAwO1xuICAgICAgdHJhbnNpdGlvbjogdHJhbnNmb3JtIDAuMXMgZWFzZTtcbiAgICAgIG92ZXJmbG93OiB2aXNpYmxlO1xuICAgICAgbWluLWhlaWdodDogMjAwcHg7XG4gICAgICBtaW4td2lkdGg6IDIwMHB4O1xuXG4gICAgICBwcmUge1xuICAgICAgICBtYXJnaW46IDA7XG4gICAgICAgIGJvcmRlcjogbm9uZTtcbiAgICAgIH1cblxuICAgICAgc3ZnIHtcbiAgICAgICAgbWF4LXdpZHRoOiBub25lO1xuICAgICAgICBoZWlnaHQ6IGF1dG87XG4gICAgICB9XG4gICAgfVxuXG4gICAgJiA+IC5tZXJtYWlkLWNvbnRyb2xzIHtcbiAgICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcbiAgICAgIGJvdHRvbTogMjBweDtcbiAgICAgIHJpZ2h0OiAyMHB4O1xuICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgIGdhcDogOHB4O1xuICAgICAgcGFkZGluZzogOHB4O1xuICAgICAgYmFja2dyb3VuZDogdmFyKC0tbGlnaHQpO1xuICAgICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICAgIGJvcmRlci1yYWRpdXM6IDZweDtcbiAgICAgIGJveC1zaGFkb3c6IDAgMnB4IDRweCByZ2JhKDAsIDAsIDAsIDAuMSk7XG4gICAgICB6LWluZGV4OiAyO1xuXG4gICAgICAubWVybWFpZC1jb250cm9sLWJ1dHRvbiB7XG4gICAgICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgICAgIGFsaWduLWl0ZW1zOiBjZW50ZXI7XG4gICAgICAgIGp1c3RpZnktY29udGVudDogY2VudGVyO1xuICAgICAgICB3aWR0aDogMzJweDtcbiAgICAgICAgaGVpZ2h0OiAzMnB4O1xuICAgICAgICBwYWRkaW5nOiAwO1xuICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICAgIGNvbG9yOiB2YXIoLS1kYXJrKTtcbiAgICAgICAgYm9yZGVyLXJhZGl1czogNHB4O1xuICAgICAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgICAgIGZvbnQtc2l6ZTogMTZweDtcbiAgICAgICAgZm9udC1mYW1pbHk6IHZhcigtLWJvZHlGb250KTtcbiAgICAgICAgdHJhbnNpdGlvbjogYWxsIDAuMnMgZWFzZTtcblxuICAgICAgICAmOmhvdmVyIHtcbiAgICAgICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgICB9XG5cbiAgICAgICAgJjphY3RpdmUge1xuICAgICAgICAgIHRyYW5zZm9ybTogdHJhbnNsYXRlWSgxcHgpO1xuICAgICAgICB9XG5cbiAgICAgICAgLy8gU3R5bGUgdGhlIHJlc2V0IGJ1dHRvbiBkaWZmZXJlbnRseVxuICAgICAgICAmOm50aC1jaGlsZCgyKSB7XG4gICAgICAgICAgd2lkdGg6IGF1dG87XG4gICAgICAgICAgcGFkZGluZzogMCAxMnB4O1xuICAgICAgICAgIGZvbnQtc2l6ZTogMTRweDtcbiAgICAgICAgfVxuICAgICAgfVxuICAgIH1cbiAgfVxufVxuIl19 */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" spa-preserve/><script src="../../prescript.js" type="application/javascript" spa-preserve></script><script type="application/javascript" spa-preserve>const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://raibid-labs.github.io/docs/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/CLAUDE-og-image.webp"/><meta property="og:image:url" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/CLAUDE-og-image.webp"/><meta name="twitter:image" content="https://raibid-labs.github.io/docs/projects/ratatui-testlib/CLAUDE-og-image.webp"/><meta property="og:image:type" content="image/.webp"/></head><body data-slug="projects/ratatui-testlib/CLAUDE"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Raibid Labs Documentation</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Search</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Search for something" placeholder="Search for something"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Dark mode"><title>Dark mode</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Light mode"><title>Light mode</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Reader mode"><title>Reader mode</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-173"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorer</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-173" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/">Projects</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../projects/ratatui-testlib/">ratatui testlib</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>CLAUDE</a></div></nav><h1 class="article-title">CLAUDE</h1><p show-comma="true" class="content-meta"><time datetime="2026-03-30T04:42:03.046Z">Mar 30, 2026</time><span>9 min read</span></p></div></div><article class="popover-hint"><h1 id="claudemd---ai-collaboration-log">CLAUDE.md - AI Collaboration Log<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#claudemd---ai-collaboration-log" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<h2 id="project-overview">Project Overview<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-overview" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p><strong>ratatui-testlib</strong> is a Rust library for integration testing of terminal user interface (TUI) applications, particularly those built with Ratatui. The library enables testing features that require actual terminal escape sequence processing, including Sixel image rendering, which cannot be tested with Ratatui’s built-in <code>TestBackend</code>.</p>
+<h2 id="project-genesis">Project Genesis<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-genesis" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="original-problem-statement">Original Problem Statement<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#original-problem-statement" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>In a previous session, the user mentioned:</p>
+<blockquote>
+<p>“Regarding tests: The tests I added earlier focused on state management and UI layout (text-based). Sixel rendering involves actual terminal escape sequences that can’t be easily tested in unit tests without a real terminal. The proper way to test this would be integration tests with a terminal emulator, which is beyond the scope of the current testing infrastructure.”</p>
+</blockquote>
+<p>This led to the creation of this repository to build the testing infrastructure that was previously out of scope.</p>
+<h3 id="user-requirements">User Requirements<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#user-requirements" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>The user requested:</p>
+<ol>
+<li>Create a Rust library for integration testing TUI behavior with WezTerm (or its underlying terminal engine)</li>
+<li>Make it importable into other rust-ratatui projects</li>
+<li>Ultra-deep research and propose a path forward</li>
+<li>Document research and design in <code>./docs</code></li>
+<li>Update README.md with summary and TOC</li>
+<li>Initialize this CLAUDE.md file</li>
+<li>Commit and push all changes</li>
+</ol>
+<h2 id="work-completed-session-2025-11-19">Work Completed (Session 2025-11-19)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#work-completed-session-2025-11-19" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-research-completed">Phase 1: Research (Completed)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-research-completed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Conducted comprehensive research across multiple domains:</p>
+<ol>
+<li>
+<p><strong>WezTerm Architecture</strong></p>
+<ul>
+<li>Discovered modular architecture with reusable crates (portable-pty, termwiz, vtparse)</li>
+<li>Identified portable-pty as ideal for cross-platform PTY support</li>
+<li>Found that WezTerm components are designed to be used independently</li>
+</ul>
+</li>
+<li>
+<p><strong>Terminal Parsing Libraries</strong></p>
+<ul>
+<li><strong>VTE (from Alacritty)</strong>: Low-level parser, table-driven, very fast</li>
+<li><strong>vt100-rust</strong>: Higher-level with built-in screen buffer, ideal for testing</li>
+<li><strong>termwiz (from WezTerm)</strong>: Comprehensive but tightly coupled to WezTerm</li>
+</ul>
+</li>
+<li>
+<p><strong>Existing Ratatui Testing Solutions</strong></p>
+<ul>
+<li><strong>TestBackend</strong>: Built-in, fast, but limited to in-memory text rendering</li>
+<li><strong>insta/expect-test</strong>: Snapshot testing frameworks, recommended by Ratatui</li>
+<li><strong>term-transcript</strong>: CLI testing tool, but can’t handle complex TUIs</li>
+<li><strong>tui-term</strong>: Pseudoterminal widget (for embedding terminals, not testing)</li>
+<li><strong>Ratatui.cs</strong>: .NET binding with headless testing (demonstrates the concept)</li>
+</ul>
+</li>
+<li>
+<p><strong>PTY Libraries</strong></p>
+<ul>
+<li><strong>portable-pty</strong>: Cross-platform, from WezTerm, well-maintained</li>
+<li>Other options exist but are less popular/maintained</li>
+</ul>
+</li>
+<li>
+<p><strong>Sixel Testing</strong></p>
+<ul>
+<li>Identified test suites: libsixel images, Jexer test suite</li>
+<li>Tools: lsix for detection, arewesixelyet.com for compatibility tracking</li>
+<li>Programmatic detection methods from Julia and R packages</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing Methodologies</strong></p>
+<ul>
+<li>Unit testing with TestBackend</li>
+<li>Snapshot testing for visual regression</li>
+<li>PTY-based integration testing</li>
+<li>Graphics protocol testing</li>
+<li>Async/event-driven testing</li>
+<li>Property-based testing</li>
+</ul>
+</li>
+</ol>
+<h3 id="phase-2-architecture-design-completed">Phase 2: Architecture Design (Completed)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-architecture-design-completed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Designed a 5-layer architecture:</p>
+<ol>
+<li><strong>Layer 1 - PTY Management</strong>: portable-pty wrapper for creating PTYs</li>
+<li><strong>Layer 2 - Terminal Emulation</strong>: vt100 parser for screen state</li>
+<li><strong>Layer 3 - Test Harness</strong>: High-level API for spawning apps and assertions</li>
+<li><strong>Layer 4 - Snapshot Integration</strong>: insta/expect-test integration</li>
+<li><strong>Layer 5 - Ratatui Helpers</strong>: Optional widget-specific utilities</li>
+</ol>
+<p>Key design decisions:</p>
+<ul>
+<li>Use vt100 over VTE for higher-level abstractions</li>
+<li>Use portable-pty for proven cross-platform support</li>
+<li>Integrate (not replace) existing snapshot testing frameworks</li>
+<li>Provide async support for modern Ratatui apps</li>
+<li>Make Sixel testing a first-class feature</li>
+</ul>
+<h3 id="phase-3-documentation-completed">Phase 3: Documentation (Completed)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-documentation-completed" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Created comprehensive documentation:</p>
+<ol>
+<li>
+<p><strong>RESEARCH.md</strong> (3,800+ words)</p>
+<ul>
+<li>Detailed analysis of all researched libraries</li>
+<li>Comparison of terminal parsers</li>
+<li>PTY library evaluation</li>
+<li>Snapshot testing frameworks</li>
+<li>Sixel testing approaches</li>
+<li>Key insights and recommendations</li>
+</ul>
+</li>
+<li>
+<p><strong>ARCHITECTURE.md</strong> (4,200+ words)</p>
+<ul>
+<li>Complete layer-by-layer design</li>
+<li>Module structure</li>
+<li>API examples for all major use cases</li>
+<li>Dependencies and feature flags</li>
+<li>Error handling strategy</li>
+<li>Performance considerations</li>
+<li>Alternative approaches considered</li>
+</ul>
+</li>
+<li>
+<p><strong>EXISTING_SOLUTIONS.md</strong> (5,000+ words)</p>
+<ul>
+<li>Deep dive into Ratatui’s TestBackend</li>
+<li>Snapshot testing with insta/expect-test</li>
+<li>Analysis of term-transcript</li>
+<li>Analysis of tui-term</li>
+<li>Comparison matrix</li>
+<li>Gap analysis showing what’s missing</li>
+<li>How mimic fits into the ecosystem</li>
+</ul>
+</li>
+<li>
+<p><strong>TESTING_APPROACHES.md</strong> (5,500+ words)</p>
+<ul>
+<li>Testing pyramid for TUI applications</li>
+<li>7 different testing approaches with examples</li>
+<li>Testing strategy recommendations</li>
+<li>Common patterns (TDD, BDD, AAA)</li>
+<li>Test organization best practices</li>
+<li>Debugging failed tests</li>
+<li>CI/CD integration</li>
+</ul>
+</li>
+<li>
+<p><strong>ROADMAP.md</strong> (4,000+ words)</p>
+<ul>
+<li>8 implementation phases with clear deliverables</li>
+<li>Version milestones (v0.1.0 through v1.0.0)</li>
+<li>Dependency specifications</li>
+<li>Risk mitigation strategies</li>
+<li>Success metrics</li>
+<li>Future enhancements</li>
+</ul>
+</li>
+<li>
+<p><strong>README.md</strong> (Updated)</p>
+<ul>
+<li>Project overview and motivation</li>
+<li>Status and quick examples</li>
+<li>Documentation table of contents</li>
+<li>Comparison matrices</li>
+<li>Architecture highlights</li>
+<li>Roadmap summary</li>
+<li>Related projects and acknowledgments</li>
+</ul>
+</li>
+<li>
+<p><strong>CLAUDE.md</strong> (This file)</p>
+<ul>
+<li>Project context</li>
+<li>Work completed</li>
+<li>Key decisions</li>
+<li>Next steps</li>
+</ul>
+</li>
+</ol>
+<h2 id="key-decisions-and-rationale">Key Decisions and Rationale<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#key-decisions-and-rationale" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-use-vt100-over-vte">1. Use vt100 over VTE<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-use-vt100-over-vte" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Use vt100-rust for terminal emulation</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Higher-level API with built-in screen buffer management</li>
+<li>Designed for the “parse and verify” use case</li>
+<li>Simpler integration than VTE which requires custom Perform trait implementation</li>
+<li>Trade-off: Less popular than VTE, but better fit for testing</li>
+</ul>
+<h3 id="2-use-portable-pty">2. Use portable-pty<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-use-portable-pty" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Use portable-pty for PTY management</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Battle-tested in WezTerm</li>
+<li>Cross-platform (Linux, macOS, Windows)</li>
+<li>Actively maintained</li>
+<li>Runtime-selectable implementations via traits</li>
+<li>No need to reinvent this wheel</li>
+</ul>
+<h3 id="3-integrate-dont-replace">3. Integrate, Don’t Replace<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-integrate-dont-replace" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Integrate with insta/expect-test rather than building custom snapshot framework</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>Both frameworks are well-established</li>
+<li>Users already familiar with them</li>
+<li>Don’t reinvent snapshot testing</li>
+<li>Focus on the unique value: PTY + graphics testing</li>
+</ul>
+<h3 id="4-complementary-not-competitive">4. Complementary, Not Competitive<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-complementary-not-competitive" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Position ratatui-testlib as complementary to TestBackend</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>TestBackend is excellent for unit tests</li>
+<li>ratatui-testlib fills the integration testing gap</li>
+<li>Different tools for different jobs</li>
+<li>Reduces adoption friction</li>
+</ul>
+<h3 id="5-sixel-as-first-class-feature">5. Sixel as First-Class Feature<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#5-sixel-as-first-class-feature" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Decision</strong>: Make Sixel testing a core feature, not an afterthought</p>
+<p><strong>Rationale</strong>:</p>
+<ul>
+<li>No existing solution tests graphics protocols</li>
+<li>Sixel support is growing in terminal ecosystem</li>
+<li>This is a unique differentiator</li>
+<li>Aligns with original problem statement</li>
+</ul>
+<h2 id="gap-analysis-what-was-missing">Gap Analysis: What Was Missing<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gap-analysis-what-was-missing" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Before ratatui-testlib, the Ratatui testing ecosystem had these gaps:</p>
+<ol>
+<li><strong>No PTY-based integration testing</strong> - TestBackend is in-memory only</li>
+<li><strong>No graphics protocol testing</strong> - Sixel rendering untestable</li>
+<li><strong>Poor integration testing UX</strong> - TestBackend requires manual buffer inspection</li>
+<li><strong>No full E2E testing</strong> - Can’t test complete user flows</li>
+<li><strong>Limited async support</strong> - No async-aware test harness</li>
+</ol>
+<p>ratatui-testlib addresses all of these gaps.</p>
+<h2 id="technical-challenges-identified">Technical Challenges Identified<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-challenges-identified" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="1-sixel-support-in-vt100">1. Sixel Support in vt100<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#1-sixel-support-in-vt100" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Challenge</strong>: vt100 crate may not support Sixel parsing</p>
+<p><strong>Mitigation Options</strong>:</p>
+<ul>
+<li>Contribute Sixel support to vt100</li>
+<li>Fork and extend vt100</li>
+<li>Use custom parser for Sixel sequences</li>
+<li>Use termwiz which has broader protocol support</li>
+</ul>
+<p><strong>Recommendation</strong>: Evaluate vt100’s Sixel support early in Phase 1. If insufficient, consider termwiz despite tighter WezTerm coupling.</p>
+<h3 id="2-cross-platform-pty-differences">2. Cross-Platform PTY Differences<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#2-cross-platform-pty-differences" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Challenge</strong>: PTY behavior varies across platforms</p>
+<p><strong>Mitigation</strong>:</p>
+<ul>
+<li>Extensive cross-platform testing</li>
+<li>Use portable-pty’s abstraction layer</li>
+<li>Document platform-specific quirks</li>
+<li>CI testing on all platforms</li>
+</ul>
+<h3 id="3-timing-and-race-conditions">3. Timing and Race Conditions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#3-timing-and-race-conditions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Challenge</strong>: Integration tests may have timing issues</p>
+<p><strong>Mitigation</strong>:</p>
+<ul>
+<li>Robust timeout handling</li>
+<li>Condition-based waiting (not time-based)</li>
+<li>Async support for better control</li>
+<li>Comprehensive error messages for debugging</li>
+</ul>
+<h3 id="4-test-determinism">4. Test Determinism<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#4-test-determinism" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p><strong>Challenge</strong>: PTY-based tests may be less deterministic than unit tests</p>
+<p><strong>Mitigation</strong>:</p>
+<ul>
+<li>Control terminal size explicitly</li>
+<li>Use deterministic input sequences</li>
+<li>Wait for specific conditions, not arbitrary delays</li>
+<li>Snapshot testing to catch regressions</li>
+</ul>
+<h2 id="implementation-priority">Implementation Priority<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-priority" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="phase-1-critical-core-pty-harness">Phase 1 (Critical): Core PTY Harness<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-critical-core-pty-harness" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Must have basic PTY functionality working</li>
+<li>Cross-platform testing essential</li>
+<li>Foundation for everything else</li>
+</ul>
+<h3 id="phase-2-critical-event-simulation">Phase 2 (Critical): Event Simulation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-2-critical-event-simulation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Essential for useful testing</li>
+<li>Smart waiting is key to reliability</li>
+</ul>
+<h3 id="phase-3-critical-snapshot-integration">Phase 3 (Critical): Snapshot Integration<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-3-critical-snapshot-integration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Makes tests maintainable</li>
+<li>Provides familiar UX for users</li>
+</ul>
+<h3 id="phase-4-high-async-support">Phase 4 (High): Async Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-4-high-async-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Modern Ratatui apps are async</li>
+<li>Important for adoption</li>
+</ul>
+<h3 id="phase-5-high-sixel-support">Phase 5 (High): Sixel Support<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-5-high-sixel-support" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Original motivation</li>
+<li>Unique differentiator</li>
+</ul>
+<h3 id="phase-6-medium-ratatui-helpers">Phase 6 (Medium): Ratatui Helpers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-6-medium-ratatui-helpers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Nice to have, not essential</li>
+<li>Can be added by community</li>
+</ul>
+<h3 id="phase-7-critical-polish">Phase 7 (Critical): Polish<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-7-critical-polish" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Required for 1.0</li>
+<li>Documentation, error messages, performance</li>
+</ul>
+<h3 id="phase-8-medium-community">Phase 8 (Medium): Community<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-8-medium-community" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Ongoing after 1.0</li>
+<li>Essential for long-term success</li>
+</ul>
+<h2 id="potential-risks">Potential Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#potential-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical-risks">Technical Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>vt100 lacks Sixel support</strong></p>
+<ul>
+<li>Impact: High</li>
+<li>Probability: Medium</li>
+<li>Mitigation: Have termwiz as backup plan</li>
+</ul>
+</li>
+<li>
+<p><strong>PTY timing issues</strong></p>
+<ul>
+<li>Impact: Medium</li>
+<li>Probability: Medium</li>
+<li>Mitigation: Robust waiting, timeouts, async support</li>
+</ul>
+</li>
+<li>
+<p><strong>Memory leaks in PTY handling</strong></p>
+<ul>
+<li>Impact: Medium</li>
+<li>Probability: Low</li>
+<li>Mitigation: Proper cleanup, leak detection tests</li>
+</ul>
+</li>
+</ol>
+<h3 id="project-risks">Project Risks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#project-risks" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Scope creep</strong></p>
+<ul>
+<li>Impact: Medium</li>
+<li>Probability: Medium</li>
+<li>Mitigation: Phased approach, MVP first</li>
+</ul>
+</li>
+<li>
+<p><strong>Maintenance burden</strong></p>
+<ul>
+<li>Impact: Medium</li>
+<li>Probability: Medium</li>
+<li>Mitigation: Good architecture, tests, docs</li>
+</ul>
+</li>
+<li>
+<p><strong>Low adoption</strong></p>
+<ul>
+<li>Impact: Low</li>
+<li>Probability: Low</li>
+<li>Mitigation: Solve real problem, quality first, community engagement</li>
+</ul>
+</li>
+</ol>
+<h2 id="success-criteria">Success Criteria<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#success-criteria" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="technical">Technical<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#technical" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" disabled/> Test coverage > 80%</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Works on Linux, macOS, Windows</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Zero critical bugs at 1.0</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Performance overhead &lt; 10% vs raw PTY</li>
+<li class="task-list-item"><input type="checkbox" disabled/> Complete API documentation</li>
+</ul>
+<h3 id="adoption">Adoption<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#adoption" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Downloads on crates.io</li>
+<li>GitHub stars</li>
+<li>Community contributions</li>
+<li>Projects using mimic</li>
+<li>Listed in Ratatui ecosystem</li>
+</ul>
+<h2 id="next-steps">Next Steps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#next-steps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="immediate-before-implementation">Immediate (Before Implementation)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#immediate-before-implementation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>
+<p><strong>Validate vt100 Sixel support</strong></p>
+<ul>
+<li>Check if vt100 can parse Sixel sequences</li>
+<li>Test with sample Sixel output</li>
+<li>Decide: vt100 vs termwiz</li>
+</ul>
+</li>
+<li>
+<p><strong>Create minimal prototype</strong></p>
+<ul>
+<li>Just PTY + vt100 integration</li>
+<li>Prove the concept works</li>
+<li>Validate cross-platform</li>
+</ul>
+</li>
+<li>
+<p><strong>Community feedback</strong></p>
+<ul>
+<li>Share design with Ratatui community</li>
+<li>Get feedback on API design</li>
+<li>Validate assumptions</li>
+</ul>
+</li>
+</ol>
+<h3 id="phase-1-tasks-see-roadmapmd">Phase 1 Tasks (See ROADMAP.md)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#phase-1-tasks-see-roadmapmd" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Project setup</li>
+<li>PTY management layer</li>
+<li>Terminal emulation layer</li>
+<li>Basic test harness</li>
+<li>Testing &amp; documentation</li>
+</ol>
+<h2 id="open-questions">Open Questions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#open-questions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<ol>
+<li>
+<p><strong>License</strong>: MIT or MIT/Apache-2.0 dual license?</p>
+<ul>
+<li>Recommendation: MIT/Apache-2.0 dual (Rust standard)</li>
+</ul>
+</li>
+<li>
+<p><strong>Repository owner</strong>: Where should this live?</p>
+<ul>
+<li>Options: Personal account, Ratatui org, new org</li>
+<li>Recommendation: Start personal, transfer if Ratatui wants it</li>
+</ul>
+</li>
+<li>
+<p><strong>Governance</strong>: Who maintains this?</p>
+<ul>
+<li>Start: Original author</li>
+<li>Goal: Multiple maintainers, community-driven</li>
+</ul>
+</li>
+<li>
+<p><strong>Funding</strong>: Is this a funded project?</p>
+<ul>
+<li>Consider: GitHub Sponsors, OpenCollective</li>
+<li>Probably not needed initially</li>
+</ul>
+</li>
+</ol>
+<h2 id="resources-and-references">Resources and References<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#resources-and-references" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="crates">Crates<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#crates" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://docs.rs/portable-pty" class="external">portable-pty<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - PTY management</li>
+<li><a href="https://docs.rs/vt100" class="external">vt100<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - Terminal emulation</li>
+<li><a href="https://docs.rs/vte" class="external">vte<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - Alternative parser</li>
+<li><a href="https://docs.rs/insta" class="external">insta<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - Snapshot testing</li>
+<li><a href="https://docs.rs/expect-test" class="external">expect-test<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - Snapshot testing</li>
+<li><a href="https://docs.rs/ratatui" class="external">ratatui<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a> - TUI framework</li>
+</ul>
+<h3 id="documentation">Documentation<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://ratatui.rs/recipes/testing/snapshots/" class="external">Ratatui Testing Guide<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://blog.waleedkhan.name/testing-tui-apps/" class="external">Testing TUI Apps<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://quantonganh.com/2024/01/21/integration-testing-tui-app-in-rust.md" class="external">Integration Testing TUI<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://www.arewesixelyet.com/" class="external">Are We Sixel Yet<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://jexer.sourceforge.io/sixel.html" class="external">Jexer Sixel Tests<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h3 id="repositories">Repositories<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#repositories" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li><a href="https://github.com/wez/wezterm" class="external">WezTerm<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/alacritty/vte" class="external">Alacritty VTE<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/doy/vt100-rust" class="external">vt100-rust<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+<li><a href="https://github.com/ratatui/ratatui" class="external">Ratatui<svg aria-hidden="true" class="external-icon" style="max-width:0.8em;max-height:0.8em;" viewBox="0 0 512 512"><path d="M320 0H288V64h32 82.7L201.4 265.4 178.7 288 224 333.3l22.6-22.6L448 109.3V192v32h64V192 32 0H480 320zM32 32H0V64 480v32H32 456h32V480 352 320H424v32 96H64V96h96 32V32H160 32z"></path></svg></a></li>
+</ul>
+<h2 id="session-notes">Session Notes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#session-notes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="research-methodology">Research Methodology<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#research-methodology" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Used web search to gather information on:</p>
+<ul>
+<li>WezTerm architecture and components</li>
+<li>Rust TUI testing solutions</li>
+<li>VT100 and terminal emulation libraries</li>
+<li>PTY libraries and testing</li>
+<li>Sixel protocol and testing</li>
+<li>Existing Ratatui testing approaches</li>
+</ul>
+<h3 id="documentation-approach">Documentation Approach<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-approach" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>Structured documentation to serve multiple audiences:</p>
+<ul>
+<li><strong>RESEARCH.md</strong>: For understanding the problem space and existing solutions</li>
+<li><strong>ARCHITECTURE.md</strong>: For implementers who will build the library</li>
+<li><strong>EXISTING_SOLUTIONS.md</strong>: For users wondering why mimic is needed</li>
+<li><strong>TESTING_APPROACHES.md</strong>: For users learning how to test TUIs</li>
+<li><strong>ROADMAP.md</strong>: For contributors and stakeholders tracking progress</li>
+<li><strong>README.md</strong>: For first-time visitors to understand the project</li>
+</ul>
+<h3 id="writing-style">Writing Style<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#writing-style" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>Technical but accessible</li>
+<li>Heavy use of examples</li>
+<li>Comparison tables for quick scanning</li>
+<li>Code samples for clarity</li>
+<li>Links to original sources</li>
+</ul>
+<h2 id="future-sessions">Future Sessions<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#future-sessions" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<h3 id="questions-to-address">Questions to Address<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#questions-to-address" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li><strong>vt100 Sixel support</strong>: Does it work? Do we need termwiz instead?</li>
+<li><strong>API ergonomics</strong>: Should we have a builder pattern for harness configuration?</li>
+<li><strong>Error types</strong>: Should we use thiserror or anyhow or custom?</li>
+<li><strong>Async runtime</strong>: Should we support both Tokio and async-std equally?</li>
+</ol>
+<h3 id="implementation-priorities">Implementation Priorities<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#implementation-priorities" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ol>
+<li>Start with Phase 1 (Core PTY Harness)</li>
+<li>Validate cross-platform early</li>
+<li>Create working examples ASAP</li>
+<li>Get community feedback before going too far</li>
+</ol>
+<h3 id="documentation-gaps">Documentation Gaps<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#documentation-gaps" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<ul>
+<li>CONTRIBUTING.md (Phase 1)</li>
+<li>CODE_OF_CONDUCT.md (Phase 1)</li>
+<li>Security policy (Phase 7)</li>
+<li>Detailed API docs (ongoing)</li>
+</ul>
+<h2 id="conclusion">Conclusion<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#conclusion" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>This session completed the research and design phase for ratatui-testlib. The library has a clear purpose (integration testing for Ratatui TUIs), a well-defined architecture (5 layers), comprehensive documentation (>20,000 words), and a concrete roadmap (8 phases to 1.0).</p>
+<p>The next session should focus on:</p>
+<ol>
+<li>Setting up the Rust project structure</li>
+<li>Validating vt100 Sixel support</li>
+<li>Creating a minimal working prototype</li>
+<li>Beginning Phase 1 implementation</li>
+</ol>
+<p>The foundation is solid. Time to build.</p>
+<hr/>
+<p><strong>Last Updated</strong>: 2025-11-19
+<strong>Session Duration</strong>: ~1 hour
+<strong>Lines of Documentation</strong>: ~1,500
+<strong>Research Sources</strong>: 20+ web searches, 10+ crates evaluated
+<strong>Status</strong>: ✅ Research &amp; Design Complete → Ready for Implementation</p></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>Graph View</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-54" aria-expanded="true"><h3>Table of Contents</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#claudemd---ai-collaboration-log" data-for="claudemd---ai-collaboration-log">CLAUDE.md - AI Collaboration Log</a></li><li class="depth-1"><a href="#project-overview" data-for="project-overview">Project Overview</a></li><li class="depth-1"><a href="#project-genesis" data-for="project-genesis">Project Genesis</a></li><li class="depth-2"><a href="#original-problem-statement" data-for="original-problem-statement">Original Problem Statement</a></li><li class="depth-2"><a href="#user-requirements" data-for="user-requirements">User Requirements</a></li><li class="depth-1"><a href="#work-completed-session-2025-11-19" data-for="work-completed-session-2025-11-19">Work Completed (Session 2025-11-19)</a></li><li class="depth-2"><a href="#phase-1-research-completed" data-for="phase-1-research-completed">Phase 1: Research (Completed)</a></li><li class="depth-2"><a href="#phase-2-architecture-design-completed" data-for="phase-2-architecture-design-completed">Phase 2: Architecture Design (Completed)</a></li><li class="depth-2"><a href="#phase-3-documentation-completed" data-for="phase-3-documentation-completed">Phase 3: Documentation (Completed)</a></li><li class="depth-1"><a href="#key-decisions-and-rationale" data-for="key-decisions-and-rationale">Key Decisions and Rationale</a></li><li class="depth-2"><a href="#1-use-vt100-over-vte" data-for="1-use-vt100-over-vte">1. Use vt100 over VTE</a></li><li class="depth-2"><a href="#2-use-portable-pty" data-for="2-use-portable-pty">2. Use portable-pty</a></li><li class="depth-2"><a href="#3-integrate-dont-replace" data-for="3-integrate-dont-replace">3. Integrate, Don’t Replace</a></li><li class="depth-2"><a href="#4-complementary-not-competitive" data-for="4-complementary-not-competitive">4. Complementary, Not Competitive</a></li><li class="depth-2"><a href="#5-sixel-as-first-class-feature" data-for="5-sixel-as-first-class-feature">5. Sixel as First-Class Feature</a></li><li class="depth-1"><a href="#gap-analysis-what-was-missing" data-for="gap-analysis-what-was-missing">Gap Analysis: What Was Missing</a></li><li class="depth-1"><a href="#technical-challenges-identified" data-for="technical-challenges-identified">Technical Challenges Identified</a></li><li class="depth-2"><a href="#1-sixel-support-in-vt100" data-for="1-sixel-support-in-vt100">1. Sixel Support in vt100</a></li><li class="depth-2"><a href="#2-cross-platform-pty-differences" data-for="2-cross-platform-pty-differences">2. Cross-Platform PTY Differences</a></li><li class="depth-2"><a href="#3-timing-and-race-conditions" data-for="3-timing-and-race-conditions">3. Timing and Race Conditions</a></li><li class="depth-2"><a href="#4-test-determinism" data-for="4-test-determinism">4. Test Determinism</a></li><li class="depth-1"><a href="#implementation-priority" data-for="implementation-priority">Implementation Priority</a></li><li class="depth-2"><a href="#phase-1-critical-core-pty-harness" data-for="phase-1-critical-core-pty-harness">Phase 1 (Critical): Core PTY Harness</a></li><li class="depth-2"><a href="#phase-2-critical-event-simulation" data-for="phase-2-critical-event-simulation">Phase 2 (Critical): Event Simulation</a></li><li class="depth-2"><a href="#phase-3-critical-snapshot-integration" data-for="phase-3-critical-snapshot-integration">Phase 3 (Critical): Snapshot Integration</a></li><li class="depth-2"><a href="#phase-4-high-async-support" data-for="phase-4-high-async-support">Phase 4 (High): Async Support</a></li><li class="depth-2"><a href="#phase-5-high-sixel-support" data-for="phase-5-high-sixel-support">Phase 5 (High): Sixel Support</a></li><li class="depth-2"><a href="#phase-6-medium-ratatui-helpers" data-for="phase-6-medium-ratatui-helpers">Phase 6 (Medium): Ratatui Helpers</a></li><li class="depth-2"><a href="#phase-7-critical-polish" data-for="phase-7-critical-polish">Phase 7 (Critical): Polish</a></li><li class="depth-2"><a href="#phase-8-medium-community" data-for="phase-8-medium-community">Phase 8 (Medium): Community</a></li><li class="depth-1"><a href="#potential-risks" data-for="potential-risks">Potential Risks</a></li><li class="depth-2"><a href="#technical-risks" data-for="technical-risks">Technical Risks</a></li><li class="depth-2"><a href="#project-risks" data-for="project-risks">Project Risks</a></li><li class="depth-1"><a href="#success-criteria" data-for="success-criteria">Success Criteria</a></li><li class="depth-2"><a href="#technical" data-for="technical">Technical</a></li><li class="depth-2"><a href="#adoption" data-for="adoption">Adoption</a></li><li class="depth-1"><a href="#next-steps" data-for="next-steps">Next Steps</a></li><li class="depth-2"><a href="#immediate-before-implementation" data-for="immediate-before-implementation">Immediate (Before Implementation)</a></li><li class="depth-2"><a href="#phase-1-tasks-see-roadmapmd" data-for="phase-1-tasks-see-roadmapmd">Phase 1 Tasks (See ROADMAP.md)</a></li><li class="depth-1"><a href="#open-questions" data-for="open-questions">Open Questions</a></li><li class="depth-1"><a href="#resources-and-references" data-for="resources-and-references">Resources and References</a></li><li class="depth-2"><a href="#crates" data-for="crates">Crates</a></li><li class="depth-2"><a href="#documentation" data-for="documentation">Documentation</a></li><li class="depth-2"><a href="#repositories" data-for="repositories">Repositories</a></li><li class="depth-1"><a href="#session-notes" data-for="session-notes">Session Notes</a></li><li class="depth-2"><a href="#research-methodology" data-for="research-methodology">Research Methodology</a></li><li class="depth-2"><a href="#documentation-approach" data-for="documentation-approach">Documentation Approach</a></li><li class="depth-2"><a href="#writing-style" data-for="writing-style">Writing Style</a></li><li class="depth-1"><a href="#future-sessions" data-for="future-sessions">Future Sessions</a></li><li class="depth-2"><a href="#questions-to-address" data-for="questions-to-address">Questions to Address</a></li><li class="depth-2"><a href="#implementation-priorities" data-for="implementation-priorities">Implementation Priorities</a></li><li class="depth-2"><a href="#documentation-gaps" data-for="documentation-gaps">Documentation Gaps</a></li><li class="depth-1"><a href="#conclusion" data-for="conclusion">Conclusion</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/raibid-labs">Raibid Labs</a></li><li><a href="https://github.com/raibid-labs/docs">Documentation Hub</a></li></ul></footer></div></div></body><script type="application/javascript">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module">function f(i,e){if(!i)return;function r(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function t(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}i?.addEventListener("click",r),window.addCleanup(()=>i?.removeEventListener("click",r)),document.addEventListener("keydown",t),window.addCleanup(()=>document.removeEventListener("keydown",t))}function y(i){for(;i.firstChild;)i.removeChild(i.firstChild)}var h=class{constructor(e,r){this.container=e;this.content=r;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),r=this.onMouseMove.bind(this),t=this.onMouseUp.bind(this),o=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",r),document.addEventListener("mouseup",t),window.addEventListener("resize",o),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",r),()=>document.removeEventListener("mouseup",t),()=>window.removeEventListener("resize",o))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let r=this.createButton("+",()=>this.zoom(.1)),t=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(t),e.appendChild(o),e.appendChild(r),this.container.appendChild(e)}createButton(e,r){let t=document.createElement("button");return t.textContent=e,t.className="mermaid-control-button",t.addEventListener("click",r),window.addCleanup(()=>t.removeEventListener("click",r)),t}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}zoom(e){let r=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),t=this.content.getBoundingClientRect(),o=t.width/2,n=t.height/2,c=r-this.scale;this.currentPan.x-=o*c,this.currentPan.y-=n*c,this.scale=r,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){this.scale=1;let e=this.content.querySelector("svg");this.currentPan={x:e.getBoundingClientRect().width/2,y:e.getBoundingClientRect().height/2},this.updateTransform()}},C=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],E;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;E||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let r=E.default,t=new WeakMap;for(let n of e)t.set(n,n.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let a=t.get(s);a&&(s.innerHTML=a)}let n=C.reduce((s,a)=>(s[a]=window.getComputedStyle(document.documentElement).getPropertyValue(a),s),{}),c=document.documentElement.getAttribute("saved-theme")==="dark";r.initialize({startOnLoad:!1,securityLevel:"loose",theme:c?"dark":"base",themeVariables:{fontFamily:n["--codeFont"],primaryColor:n["--light"],primaryTextColor:n["--darkgray"],primaryBorderColor:n["--tertiary"],lineColor:n["--darkgray"],secondaryColor:n["--secondary"],tertiaryColor:n["--tertiary"],clusterBkg:n["--light"],edgeLabelBackground:n["--highlight"]}}),await r.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let n=0;n<e.length;n++){let v=function(){let g=l.querySelector("#mermaid-space"),m=l.querySelector(".mermaid-content");if(!m)return;y(m);let w=c.querySelector("svg").cloneNode(!0);m.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new h(g,m)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},c=e[n],s=c.parentElement,a=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(a),L=a.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),f(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript"></script><script src="../../postscript.js" type="module"></script></html>

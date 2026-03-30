@@ -1,0 +1,192 @@
+// Example Fusabi script for customizing leader key menus
+// Location: ~/.config/scarab/ui/leader_key.fusabi
+
+// Custom leader key configuration
+fn get_leader_config() -> Object {
+    return {
+        key: "Space",           // Leader key
+        timeout_ms: 1200,       // Timeout before menu closes
+        show_timeout_bar: true, // Show countdown timer
+        cascade_delay_ms: 0     // Delay before showing submenu
+    };
+}
+
+// Define custom menu structure
+fn create_menu_structure() -> Object {
+    return {
+        root: {
+            title: "🚀 Scarab Leader Menu",
+            items: [
+                {key: "f", label: "Files", description: "File operations", submenu: "files"},
+                {key: "b", label: "Buffers", description: "Buffer management", submenu: "buffers"},
+                {key: "w", label: "Windows", description: "Window operations", submenu: "windows"},
+                {key: "g", label: "Git", description: "Git commands", submenu: "git"},
+                {key: "d", label: "Docker", description: "Docker commands", submenu: "docker"},
+                {key: "t", label: "Terminal", description: "Terminal operations", submenu: "terminal"},
+                {key: "s", label: "Search", description: "Search operations", submenu: "search"},
+                {key: "h", label: "Help", description: "Show help", command: "help.show"}
+            ]
+        },
+
+        files: {
+            title: "📁 File Operations",
+            items: [
+                {key: "f", label: "Find File", description: "Fuzzy find file", command: "files.find"},
+                {key: "r", label: "Recent", description: "Recent files", command: "files.recent"},
+                {key: "s", label: "Save", description: "Save current buffer", command: "files.save"},
+                {key: "S", label: "Save All", description: "Save all buffers", command: "files.save_all"},
+                {key: "o", label: "Open", description: "Open file", command: "files.open"},
+                {key: "n", label: "New", description: "New file", command: "files.new"}
+            ]
+        },
+
+        buffers: {
+            title: "📋 Buffer Management",
+            items: [
+                {key: "b", label: "Switch", description: "Switch buffer", command: "buffer.switch"},
+                {key: "n", label: "Next", description: "Next buffer", command: "buffer.next"},
+                {key: "p", label: "Previous", description: "Previous buffer", command: "buffer.prev"},
+                {key: "d", label: "Delete", description: "Delete buffer", command: "buffer.delete"},
+                {key: "c", label: "Clear", description: "Clear buffer", command: "buffer.clear"},
+                {key: "y", label: "Yank", description: "Copy buffer", command: "buffer.yank"}
+            ]
+        },
+
+        windows: {
+            title: "🪟 Window Operations",
+            items: [
+                {key: "s", label: "Split H", description: "Split horizontal", command: "window.split_h"},
+                {key: "v", label: "Split V", description: "Split vertical", command: "window.split_v"},
+                {key: "c", label: "Close", description: "Close window", command: "window.close"},
+                {key: "o", label: "Only", description: "Close other windows", command: "window.only"},
+                {key: "h", label: "Left", description: "Focus left", command: "window.focus_left"},
+                {key: "j", label: "Down", description: "Focus down", command: "window.focus_down"},
+                {key: "k", label: "Up", description: "Focus up", command: "window.focus_up"},
+                {key: "l", label: "Right", description: "Focus right", command: "window.focus_right"}
+            ]
+        },
+
+        git: {
+            title: "🌿 Git Commands",
+            items: [
+                {key: "s", label: "Status", description: "Git status", command: "git.status"},
+                {key: "c", label: "Commit", description: "Git commit", command: "git.commit"},
+                {key: "p", label: "Push", description: "Git push", command: "git.push"},
+                {key: "l", label: "Pull", description: "Git pull", command: "git.pull"},
+                {key: "d", label: "Diff", description: "Git diff", command: "git.diff"},
+                {key: "b", label: "Blame", description: "Git blame", command: "git.blame"},
+                {key: "L", label: "Log", description: "Git log", command: "git.log"},
+                {key: "B", label: "Branches", description: "List branches", command: "git.branches"}
+            ]
+        },
+
+        docker: {
+            title: "🐳 Docker Commands",
+            items: [
+                {key: "p", label: "PS", description: "List containers", command: "docker.ps"},
+                {key: "i", label: "Images", description: "List images", command: "docker.images"},
+                {key: "l", label: "Logs", description: "Container logs", command: "docker.logs"},
+                {key: "e", label: "Exec", description: "Execute in container", command: "docker.exec"},
+                {key: "s", label: "Stop", description: "Stop container", command: "docker.stop"},
+                {key: "r", label: "Restart", description: "Restart container", command: "docker.restart"},
+                {key: "c", label: "Compose", description: "Docker compose", submenu: "docker_compose"}
+            ]
+        },
+
+        docker_compose: {
+            title: "🐳 Docker Compose",
+            items: [
+                {key: "u", label: "Up", description: "Compose up", command: "docker.compose.up"},
+                {key: "d", label: "Down", description: "Compose down", command: "docker.compose.down"},
+                {key: "r", label: "Restart", description: "Compose restart", command: "docker.compose.restart"},
+                {key: "l", label: "Logs", description: "Compose logs", command: "docker.compose.logs"}
+            ]
+        },
+
+        terminal: {
+            title: "💻 Terminal Operations",
+            items: [
+                {key: "c", label: "Clear", description: "Clear terminal", command: "terminal.clear"},
+                {key: "n", label: "New Tab", description: "New terminal tab", command: "terminal.new_tab"},
+                {key: "w", label: "Close Tab", description: "Close terminal tab", command: "terminal.close_tab"},
+                {key: "r", label: "Rename", description: "Rename tab", command: "terminal.rename_tab"},
+                {key: "s", label: "Scrollback", description: "Search scrollback", command: "terminal.search"}
+            ]
+        },
+
+        search: {
+            title: "🔍 Search Operations",
+            items: [
+                {key: "f", label: "Find", description: "Find in buffer", command: "search.find"},
+                {key: "r", label: "Replace", description: "Find and replace", command: "search.replace"},
+                {key: "g", label: "Grep", description: "Search files", command: "search.grep"},
+                {key: "h", label: "Highlight", description: "Highlight matches", command: "search.highlight"}
+            ]
+        }
+    };
+}
+
+// Custom styling for menus
+fn get_menu_style() -> Object {
+    return {
+        background_color: {r: 0.08, g: 0.08, b: 0.12, a: 0.97},
+        border_width: 1,
+        border_color: {r: 0.3, g: 0.4, b: 0.6, a: 1.0},
+        border_radius: 6,
+        padding: 16,
+        item_spacing: 6,
+
+        title: {
+            font_size: 20,
+            color: {r: 0.9, g: 0.9, b: 1.0, a: 1.0},
+            margin_bottom: 12
+        },
+
+        item: {
+            key: {
+                font_size: 16,
+                color: {r: 1.0, g: 0.8, b: 0.0, a: 1.0},
+                background_color: {r: 0.2, g: 0.2, b: 0.3, a: 0.5},
+                padding: 4,
+                border_radius: 3
+            },
+            label: {
+                font_size: 16,
+                color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+            },
+            description: {
+                font_size: 12,
+                color: {r: 0.6, g: 0.6, b: 0.7, a: 1.0}
+            }
+        },
+
+        timeout_bar: {
+            height: 4,
+            color: {r: 0.0, g: 0.8, b: 0.3, a: 1.0},
+            background_color: {r: 0.2, g: 0.2, b: 0.2, a: 0.5}
+        }
+    };
+}
+
+// Command execution handler
+fn on_command_executed(command_id: String) -> Void {
+    print("Executing command: " + command_id);
+
+    match (command_id) {
+        "git.status" => send_keys("git status\n"),
+        "git.commit" => send_keys("git commit -m \""),
+        "git.push" => send_keys("git push\n"),
+        "git.pull" => send_keys("git pull\n"),
+        "docker.ps" => send_keys("docker ps\n"),
+        "terminal.clear" => send_keys("clear\n"),
+        _ => print("Unknown command: " + command_id)
+    }
+}
+
+// Export configuration
+export {
+    get_leader_config,
+    create_menu_structure,
+    get_menu_style,
+    on_command_executed
+};
