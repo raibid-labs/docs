@@ -345,16 +345,25 @@ API documentation sections.
 
 ## Branch Protection
 
-Release process requires:
+Release process requires branch protection on `main`. The full policy, the
+machine-readable ruleset, and the apply/verify steps are documented in
+[BRANCH_PROTECTION.md](./BRANCH_PROTECTION.md).
 
-- ✅ Branch protection on `main`
-- ✅ Required status checks:
-  - `markdown-lint`
-  - `link-check`
-  - `front-matter-validation`
-  - `structure-validation`
-- ✅ No direct pushes to `main`
-- ✅ PR reviews required
+Summary:
+
+- ✅ Branch protection on `main` — no direct pushes
+- ✅ Pull request with at least one approving review (Code Owner review enforced)
+- ✅ Required status checks (job names from `docs-lint.yml`):
+  - `Markdown Linting`
+  - `Link Validation`
+  - `Front Matter Validation`
+  - `Structure Validation`
+  - `Phage Policy Enforcement`
+- ✅ Linear history; force pushes and deletions disabled
+
+> Applying branch protection is an **admin-only** action. Run
+> `./scripts/apply-branch-protection.sh` with an admin token, or configure it in
+> **Settings → Branches**. See [BRANCH_PROTECTION.md](./BRANCH_PROTECTION.md).
 
 ## Permissions
 

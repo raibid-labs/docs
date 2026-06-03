@@ -10,6 +10,7 @@ Centralized documentation aggregating content from all public raibid-labs reposi
 - **[Documentation Structure](./docs/STRUCTURE.md)** - Versioning policy and organization
 - **[Contributing Guidelines](./docs/CONTRIBUTING.md)** - How to contribute to documentation
 - **[Release Process](./docs/RELEASE.md)** - Release workflow and versioning
+- **[Branch Protection Policy](./docs/BRANCH_PROTECTION.md)** - `main` ruleset and how to apply it
 - **[Quick Start Guide](./QUICK_START.md)** - Get up and running quickly
 - **[Code of Conduct](./CODE_OF_CONDUCT.md)** - Community guidelines
 
